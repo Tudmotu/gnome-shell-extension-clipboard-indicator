@@ -23,6 +23,7 @@ const readRegistry = Convenience.readRegistry;
 
 const TIMEOUT_MS = 1000;
 const MAX_REGISTRY_LENGTH = 15;
+const MAX_ENTRY_LENGTH = 50;
 
 let _clipboardTimeoutId = null;
 let clipboardHistory = [];
@@ -59,10 +60,16 @@ const ClipboardIndicator = Lang.Class({
         },
 
         _addEntry: function (clipItem, autoSelect) {
-            let menuItem = new PopupMenu.PopupMenuItem(clipItem);
+            let shortened = clipItem.substr(0,MAX_ENTRY_LENGTH);
+            if (clipItem.length > MAX_ENTRY_LENGTH) shortened += '...';
+
+            let menuItem = new PopupMenu.PopupMenuItem(shortened);
             this.clipItemsRadioGroup.push(menuItem);
+
+            menuItem.clipContents = clipItem;
             menuItem.radioGroup = this.clipItemsRadioGroup;
             menuItem.buttonPressId = menuItem.actor.connect('button-press-event', Lang.bind(menuItem, this._onMenuItemSelected));
+
             this.menu.addMenuItem(menuItem);
             if (autoSelect === true) this._selectMenuItem(menuItem);
             this._updateCache();
@@ -82,11 +89,11 @@ const ClipboardIndicator = Lang.Class({
         _onMenuItemSelected: function () {
             var that = this;
             that.radioGroup.forEach(function (menuItem) {
-                let label = that.label.get_text();
+                let clipContents = that.clipContents;
 
-                if (menuItem === that && label) {
+                if (menuItem === that && clipContents) {
                     that.setOrnament(PopupMenu.Ornament.DOT);
-                    Clipboard.set_text(CLIPBOARD_TYPE, label);
+                    Clipboard.set_text(CLIPBOARD_TYPE, clipContents);
                 }
                 else {
                     menuItem.setOrnament(PopupMenu.Ornament.NONE);
@@ -104,7 +111,7 @@ const ClipboardIndicator = Lang.Class({
 
         _updateCache: function () {
             writeRegistry(this.clipItemsRadioGroup.map(function (menuItem) {
-                return menuItem.label.get_text();
+                return menuItem.clipContents;
             }));
         },
 
@@ -112,7 +119,7 @@ const ClipboardIndicator = Lang.Class({
             let that = this;
             Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
                 let registry = that.clipItemsRadioGroup.map(function (menuItem) {
-                    return menuItem.label.get_text();
+                    return menuItem.clipContents;
                 });
                 if (text && registry.indexOf(text) < 0) {
                     that._addEntry(text, true);
