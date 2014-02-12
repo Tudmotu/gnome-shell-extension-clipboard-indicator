@@ -137,11 +137,13 @@ function init () {
 
 }
 
+let clipboardIndicator;
 function enable () {
-    let clipboardIndicator = new ClipboardIndicator();
+    clipboardIndicator = new ClipboardIndicator();
     Main.panel.addToStatusArea('clipboardIndicator', clipboardIndicator, 1);
 }
 
 function disable () {
+    clipboardIndicator.destroy();
     if (_clipboardTimeoutId) Mainloop.source_remove(_clipboardTimeoutId);
 }
