@@ -56,7 +56,9 @@ const ClipboardIndicator = Lang.Class({
                 that._addEntry(clipItem);
             });
 
-            this._selectMenuItem(clipItemsArr[lastIdx]);
+            if (lastIdx >= 0) {
+                this._selectMenuItem(clipItemsArr[lastIdx]);
+            }
         },
 
         _addEntry: function (clipItem, autoSelect) {
@@ -100,7 +102,7 @@ const ClipboardIndicator = Lang.Class({
                 }
             });
         },
-        
+
         _selectMenuItem: function (menuItem) {
             Lang.bind(menuItem, this._onMenuItemSelected).call();
         },
