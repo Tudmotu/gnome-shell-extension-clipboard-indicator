@@ -4,6 +4,9 @@ Clipboard Indicator
 
 Clipboard Manager extension for Gnome-Shell - Adds a clipboard indicator to the top panel, and caches clipboard history.
 
+Extension page on e.g.o:
+https://extensions.gnome.org/extension/779/clipboard-indicator/
+
 Installation
 ----------------
 
