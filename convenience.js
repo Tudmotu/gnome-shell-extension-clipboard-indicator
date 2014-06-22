@@ -1,4 +1,5 @@
 const GLib = imports.gi.GLib;
+const Gio = imports.gi.Gio;
 const FileTest = GLib.FileTest;
 
 const ExtensionUtils = imports.misc.extensionUtils;
@@ -39,23 +40,41 @@ function dbPrintObj (name, obj, recurse, _indent) {
 
 // I/O Files
 function writeRegistry (registry) {
-    let textContent = JSON.stringify(registry);
+    let json = JSON.stringify(registry);
+    let contents = new GLib.Bytes(json);
 
     // Make sure dir exists
     GLib.mkdir_with_parents(REGISTRY_DIR, parseInt('0775', 8));
 
-    // Write contents to file
-    GLib.file_set_contents(REGISTRY_PATH, textContent);
+    // Write contents to file asynchronously
+    let file = Gio.file_new_for_path(REGISTRY_PATH);
+    file.replace_async(null, false, Gio.FileCreateFlags.NONE,
+                        GLib.PRIORITY_DEFAULT, null, function (obj, res) {
+        let stream = obj.replace_finish(res);
+        stream.write_bytes_async(contents, GLib.PRIORITY_DEFAULT,
+                            null, function (w_obj, w_res) {
+            let success = w_obj.write_bytes_finish(w_res);
+            stream.close(null);
+        });
+    });
 }
 
-function readRegistry () {
-    if (GLib.file_test(REGISTRY_PATH, FileTest.EXISTS)) {
-        let fileContent = GLib.file_get_contents(REGISTRY_PATH)[1];
-        let textContent = fileContent.toString().trim();
+function readRegistry (callback) {
+    if (typeof callback !== 'function')
+        throw TypeError('`callback` must be a function');
 
-        return JSON.parse(textContent);
+    if (GLib.file_test(REGISTRY_PATH, FileTest.EXISTS)) {
+        let file = Gio.file_new_for_path(REGISTRY_PATH);
+        file.load_contents_async(null, function (obj, res) {
+            let success = obj.load_contents_finish(res); // Humm..
+            let content = success[0] === true ?
+                            JSON.parse(success[1]) :
+                            [];
+
+            callback(content);
+        });
     }
     else {
-        return [];
+        callback([]);
     }
 }

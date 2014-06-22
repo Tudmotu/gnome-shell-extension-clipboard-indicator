@@ -48,17 +48,18 @@ const ClipboardIndicator = Lang.Class({
 
         _buildMenu: function () {
             let that = this;
-            let clipHistory = this._getCache();
-            let lastIdx = clipHistory.length - 1;
-            let clipItemsArr = this.clipItemsRadioGroup;
+            this._getCache(function (clipHistory) {
+                let lastIdx = clipHistory.length - 1;
+                let clipItemsArr = that.clipItemsRadioGroup;
 
-            clipHistory.forEach(function (clipItem) {
-                that._addEntry(clipItem);
+                clipHistory.forEach(function (clipItem) {
+                    that._addEntry(clipItem);
+                });
+
+                if (lastIdx >= 0) {
+                    that._selectMenuItem(clipItemsArr[lastIdx]);
+                }
             });
-
-            if (lastIdx >= 0) {
-                this._selectMenuItem(clipItemsArr[lastIdx]);
-            }
         },
 
         _addEntry: function (clipItem, autoSelect) {
@@ -107,8 +108,8 @@ const ClipboardIndicator = Lang.Class({
             Lang.bind(menuItem, this._onMenuItemSelected).call();
         },
 
-        _getCache: function () {
-            return readRegistry();
+        _getCache: function (cb) {
+            return readRegistry(cb);
         },
 
         _updateCache: function () {
