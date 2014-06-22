@@ -62,7 +62,7 @@ const ClipboardIndicator = Lang.Class({
             });
         },
 
-        _addEntry: function (clipItem, autoSelect) {
+        _addEntry: function (clipItem, autoSelect, autoSetClip) {
             let shortened = clipItem.substr(0,MAX_ENTRY_LENGTH).replace(/\s+/g, ' ');
             if (clipItem.length > MAX_ENTRY_LENGTH) shortened += '...';
 
@@ -74,7 +74,7 @@ const ClipboardIndicator = Lang.Class({
             menuItem.buttonPressId = menuItem.actor.connect('button-press-event', Lang.bind(menuItem, this._onMenuItemSelected));
 
             this.menu.addMenuItem(menuItem);
-            if (autoSelect === true) this._selectMenuItem(menuItem);
+            if (autoSelect === true) this._selectMenuItem(menuItem, autoSetClip);
             this._updateCache();
         },
 
@@ -89,14 +89,15 @@ const ClipboardIndicator = Lang.Class({
             that._updateCache();
         },
 
-        _onMenuItemSelected: function () {
+        _onMenuItemSelected: function (autoSet) {
             var that = this;
             that.radioGroup.forEach(function (menuItem) {
                 let clipContents = that.clipContents;
 
                 if (menuItem === that && clipContents) {
                     that.setOrnament(PopupMenu.Ornament.DOT);
-                    Clipboard.set_text(CLIPBOARD_TYPE, clipContents);
+                    if (autoSet !== false)
+                        Clipboard.set_text(CLIPBOARD_TYPE, clipContents);
                 }
                 else {
                     menuItem.setOrnament(PopupMenu.Ornament.NONE);
@@ -104,8 +105,9 @@ const ClipboardIndicator = Lang.Class({
             });
         },
 
-        _selectMenuItem: function (menuItem) {
-            Lang.bind(menuItem, this._onMenuItemSelected).call();
+        _selectMenuItem: function (menuItem, autoSet) {
+            let fn = Lang.bind(menuItem, this._onMenuItemSelected);
+            fn(autoSet);
         },
 
         _getCache: function (cb) {
@@ -125,7 +127,7 @@ const ClipboardIndicator = Lang.Class({
                     return menuItem.clipContents;
                 });
                 if (text && registry.indexOf(text) < 0) {
-                    that._addEntry(text, true);
+                    that._addEntry(text, true, false);
                     that._removeOldestEntries();
                 }
             });
