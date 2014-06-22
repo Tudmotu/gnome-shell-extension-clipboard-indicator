@@ -26,7 +26,6 @@ const MAX_REGISTRY_LENGTH = 15;
 const MAX_ENTRY_LENGTH = 50;
 
 let _clipboardTimeoutId = null;
-let clipboardHistory = [];
 const ClipboardIndicator = Lang.Class({
         Name: 'ClipboardIndicator',
         Extends: PanelMenu.Button,
@@ -61,6 +60,7 @@ const ClipboardIndicator = Lang.Class({
                 }
             });
         },
+i: 0,
 
         _addEntry: function (clipItem, autoSelect, autoSetClip) {
             let shortened = clipItem.substr(0,MAX_ENTRY_LENGTH).replace(/\s+/g, ' ');
@@ -71,10 +71,39 @@ const ClipboardIndicator = Lang.Class({
 
             menuItem.clipContents = clipItem;
             menuItem.radioGroup = this.clipItemsRadioGroup;
-            menuItem.buttonPressId = menuItem.actor.connect('button-press-event', Lang.bind(menuItem, this._onMenuItemSelected));
+            menuItem.buttonPressId = menuItem.actor.connect('button-press-event',
+                                        Lang.bind(menuItem, this._onMenuItemSelected));
+
+           let icon = new St.Icon({
+                icon_name: 'edit-delete-symbolic', //'mail-attachment-symbolic',
+                style_class: 'system-status-icon'
+            });
+            let icoBtn = new St.Button({
+                x_fill: true,
+                can_focus: true,
+                child: icon
+            });
+            icoBtn.set_x_align(Clutter.ActorAlign.END);
+            icoBtn.set_x_expand(true);
+            icoBtn.set_y_expand(true);
+
+            menuItem.actor.add_child(icoBtn);
+            menuItem.icoBtn = icoBtn;
+            menuItem.deletePressId = icoBtn.connect('button-press-event',
+                Lang.bind(this, function () {
+                    this._removeEntry(menuItem);
+                }));
 
             this.menu.addMenuItem(menuItem);
             if (autoSelect === true) this._selectMenuItem(menuItem, autoSetClip);
+            this._updateCache();
+        },
+
+        _removeEntry: function (menuItem) {
+            let itemIdx = this.clipItemsRadioGroup.indexOf(menuItem);
+
+            menuItem.destroy();
+            this.clipItemsRadioGroup.splice(itemIdx,1);
             this._updateCache();
         },
 
@@ -96,10 +125,12 @@ const ClipboardIndicator = Lang.Class({
 
                 if (menuItem === that && clipContents) {
                     that.setOrnament(PopupMenu.Ornament.DOT);
+                    that.icoBtn.visible = false;
                     if (autoSet !== false)
                         Clipboard.set_text(CLIPBOARD_TYPE, clipContents);
                 }
                 else {
+                    menuItem.icoBtn.visible = true;
                     menuItem.setOrnament(PopupMenu.Ornament.NONE);
                 }
             });
