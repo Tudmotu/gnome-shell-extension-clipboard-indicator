@@ -63,7 +63,7 @@ const ClipboardIndicator = Lang.Class({
         },
 
         _addEntry: function (clipItem, autoSelect) {
-            let shortened = clipItem.substr(0,MAX_ENTRY_LENGTH);
+            let shortened = clipItem.substr(0,MAX_ENTRY_LENGTH).replace(/\s+/g, ' ');
             if (clipItem.length > MAX_ENTRY_LENGTH) shortened += '...';
 
             let menuItem = new PopupMenu.PopupMenuItem(shortened);
