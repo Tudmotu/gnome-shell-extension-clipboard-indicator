@@ -51,6 +51,11 @@ const ClipboardIndicator = Lang.Class({
                 let lastIdx = clipHistory.length - 1;
                 let clipItemsArr = that.clipItemsRadioGroup;
 
+                // Create menu section for items
+                that.historySection = new PopupMenu.PopupMenuSection();
+                that.menu.addMenuItem(that.historySection);
+
+                // Add cached items
                 clipHistory.forEach(function (clipItem) {
                     that._addEntry(clipItem);
                 });
@@ -94,7 +99,7 @@ i: 0,
                     this._removeEntry(menuItem);
                 }));
 
-            this.menu.addMenuItem(menuItem);
+            this.historySection.addMenuItem(menuItem);
             if (autoSelect === true) this._selectMenuItem(menuItem, autoSetClip);
             this._updateCache();
         },
