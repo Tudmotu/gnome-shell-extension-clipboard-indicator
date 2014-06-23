@@ -1,0 +1,32 @@
+<schemalist gettext-domain="gnome-shell-extensions">
+  <schema id="org.gnome.shell.extensions.clipboard-indicator"
+      path="/org/gnome/shell/extensions/clipboard-indicator/">
+    <key name="enable-deletion" type="b">
+      <default>true</default>
+		<summary>Enable the deletion of clipboard items from your history</summary>
+        <description>
+            If true, displays 'delete' buttons on each item, and a 'Clear History' option
+    	</description>
+    </key>
+    <key type="i" name="refresh-interval">
+		<default>1000</default>
+		<summary>The interval between updates in miliseconds</summary>
+		<description>The interval between updates in miliseconds </description>
+    </key>
+    <key type="i" name="history-size">
+		<default>15</default>
+		<summary>The number of items to save in history</summary>
+		<description></description>
+		<range min="1" max="50"/>
+    </key>
+    <key type="i" name="preview-size">
+		<default>30</default>
+		<summary>Amount of visible characters for clipboard items </summary>
+        <description>
+            The number of characters to display for every clipbaord item in
+            the history menu
+        </description>
+		<range min="20" max="50"/>
+    </key>
+  </schema>
+</schemalist>

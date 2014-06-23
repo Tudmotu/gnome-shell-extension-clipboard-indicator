@@ -5,6 +5,7 @@ const Mainloop = imports.mainloop;
 const Meta = imports.gi.Meta;
 const Shell = imports.gi.Shell;
 const St = imports.gi.St;
+const Util = imports.misc.util;
 
 const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
@@ -67,6 +68,11 @@ const ClipboardIndicator = Lang.Class({
                 let clearMenuItem = new PopupMenu.PopupMenuItem('Clear History');
                 that.menu.addMenuItem(clearMenuItem);
                 clearMenuItem.actor.connect('button-press-event', Lang.bind(that, that._removeAll));
+
+                // Add 'Settings' menu item to open settings
+                let settingsMenuItem = new PopupMenu.PopupMenuItem('Settings');
+                that.menu.addMenuItem(settingsMenuItem);
+                settingsMenuItem.actor.connect('button-press-event', Lang.bind(that, that._openSettings));
 
                 if (lastIdx >= 0) {
                     that._selectMenuItem(clipItemsArr[lastIdx]);
@@ -201,6 +207,13 @@ const ClipboardIndicator = Lang.Class({
                 that._refreshIndicator();
                 if (recurse) that._setupTimeout();
             });
+        },
+
+        _openSettings: function () {
+            Util.spawn([
+                "gnome-shell-extension-prefs",
+                Me.uuid
+            ]);
         }
     });
 
