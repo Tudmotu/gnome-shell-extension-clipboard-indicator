@@ -60,12 +60,19 @@ const ClipboardIndicator = Lang.Class({
                     that._addEntry(clipItem);
                 });
 
+                // Add separator
+                that.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+
+                // Add 'Clear' button which removes all items from cache
+                let clearMenuItem = new PopupMenu.PopupMenuItem('Clear History');
+                that.menu.addMenuItem(clearMenuItem);
+                clearMenuItem.actor.connect('button-press-event', Lang.bind(that, that._removeAll));
+
                 if (lastIdx >= 0) {
                     that._selectMenuItem(clipItemsArr[lastIdx]);
                 }
             });
         },
-i: 0,
 
         _addEntry: function (clipItem, autoSelect, autoSetClip) {
             let shortened = clipItem.substr(0,MAX_ENTRY_LENGTH).replace(/\s+/g, ' ');
@@ -104,6 +111,21 @@ i: 0,
             this._updateCache();
         },
 
+        _removeAll: function () {
+            let that = this;
+            // We can't actually remove all items, because the clipboard still
+            // has data that will be re-captured on next refresh, so we remove
+            // all except the currently selected item
+            that.historySection._getMenuItems().forEach(function (mItem) {
+                if (!mItem.currentlySelected) {
+                    let idx = that.clipItemsRadioGroup.indexOf(mItem);
+                    mItem.destroy();
+                    that.clipItemsRadioGroup.splice(idx,1);
+                }
+            });
+            that._updateCache();
+        },
+
         _removeEntry: function (menuItem) {
             let itemIdx = this.clipItemsRadioGroup.indexOf(menuItem);
 
@@ -131,12 +153,14 @@ i: 0,
                 if (menuItem === that && clipContents) {
                     that.setOrnament(PopupMenu.Ornament.DOT);
                     that.icoBtn.visible = false;
+                    that.currentlySelected = true;
                     if (autoSet !== false)
                         Clipboard.set_text(CLIPBOARD_TYPE, clipContents);
                 }
                 else {
                     menuItem.icoBtn.visible = true;
                     menuItem.setOrnament(PopupMenu.Ornament.NONE);
+                    menuItem.currentlySelected = false;
                 }
             });
         },
