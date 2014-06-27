@@ -18,20 +18,24 @@ const CLIPBOARD_TYPE = St.ClipboardType.CLIPBOARD;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const Convenience = Me.imports.convenience;
+const Prefs = Me.imports.prefs;
 const prettyPrint = Convenience.dbPrintObj;
 const writeRegistry = Convenience.writeRegistry;
 const readRegistry = Convenience.readRegistry;
 
-const TIMEOUT_MS = 1000;
-const MAX_REGISTRY_LENGTH = 15;
-const MAX_ENTRY_LENGTH = 50;
+let TIMEOUT_MS           = 1000;
+let MAX_REGISTRY_LENGTH  = 15;
+let MAX_ENTRY_LENGTH     = 50;
+let DELETE_ENABLED       = true;
 
 let _clipboardTimeoutId = null;
+let _settingsTimeoutId = null;
 const ClipboardIndicator = Lang.Class({
         Name: 'ClipboardIndicator',
         Extends: PanelMenu.Button,
 
         clipItemsRadioGroup: [],
+
 
         _init: function() {
             this.parent(0.0, "ClipboardIndicator");
@@ -42,6 +46,7 @@ const ClipboardIndicator = Lang.Class({
             hbox.add_child(icon);
             this.actor.add_child(hbox);
 
+            this._loadSettings();
             this._buildMenu();
             this._setupTimeout();
         },
@@ -57,8 +62,8 @@ const ClipboardIndicator = Lang.Class({
                 that.menu.addMenuItem(that.historySection);
 
                 // Add cached items
-                clipHistory.forEach(function (clipItem) {
-                    that._addEntry(clipItem);
+                clipHistory.forEach(function (buffer) {
+                    that._addEntry(buffer);
                 });
 
                 // Add separator
@@ -80,19 +85,28 @@ const ClipboardIndicator = Lang.Class({
             });
         },
 
-        _addEntry: function (clipItem, autoSelect, autoSetClip) {
-            let shortened = clipItem.substr(0,MAX_ENTRY_LENGTH).replace(/\s+/g, ' ');
-            if (clipItem.length > MAX_ENTRY_LENGTH) shortened += '...';
+        _setEntryLabel: function (menuItem) {
+            let buffer     = menuItem.clipContents,
+                shortened  = buffer.substr(0,MAX_ENTRY_LENGTH).replace(/\s+/g, ' ');
 
-            let menuItem = new PopupMenu.PopupMenuItem(shortened);
-            this.clipItemsRadioGroup.push(menuItem);
+            if (buffer.length > MAX_ENTRY_LENGTH)
+                shortened += '...';
 
-            menuItem.clipContents = clipItem;
+            menuItem.label.set_text(shortened);
+        },
+
+        _addEntry: function (buffer, autoSelect, autoSetClip) {
+            let menuItem = new PopupMenu.PopupMenuItem('');
+
+            menuItem.clipContents = buffer;
             menuItem.radioGroup = this.clipItemsRadioGroup;
             menuItem.buttonPressId = menuItem.actor.connect('button-press-event',
                                         Lang.bind(menuItem, this._onMenuItemSelected));
 
-           let icon = new St.Icon({
+            this._setEntryLabel(menuItem);
+            this.clipItemsRadioGroup.push(menuItem);
+
+            let icon = new St.Icon({
                 icon_name: 'edit-delete-symbolic', //'mail-attachment-symbolic',
                 style_class: 'system-status-icon'
             });
@@ -214,6 +228,34 @@ const ClipboardIndicator = Lang.Class({
                 "gnome-shell-extension-prefs",
                 Me.uuid
             ]);
+        },
+
+        _loadSettings: function () {
+            this._settings = Prefs.SettingsSchema;
+            _settingsTimeoutId = this._settings.connect('changed', Lang.bind(this, this._onSettingsChange));
+            this._fetchSettings();
+        },
+
+        _fetchSettings: function () {
+            TIMEOUT_MS           = this._settings.get_int(Prefs.Fields.INTERVAL);
+            MAX_REGISTRY_LENGTH  = this._settings.get_int(Prefs.Fields.HISTORY_SIZE);
+            MAX_ENTRY_LENGTH     = this._settings.get_int(Prefs.Fields.PREVIEW_SIZE);
+            DELETE_ENABLED       = this._settings.get_boolean(Prefs.Fields.DELETE);
+        },
+
+        _onSettingsChange: function () {
+            var that = this;
+
+            // Load the settings into variables
+            that._fetchSettings();
+
+            // Remove old entries in case the registry size changed
+            that._removeOldestEntries();
+
+            // Re-set menu-items lables in case preview size changed
+            that.historySection._getMenuItems().forEach(function (mItem) {
+                that._setEntryLabel(mItem);
+            });
         }
     });
 
@@ -231,4 +273,5 @@ function enable () {
 function disable () {
     clipboardIndicator.destroy();
     if (_clipboardTimeoutId) Mainloop.source_remove(_clipboardTimeoutId);
+    if (_settingsTimeoutId) Mainloop.source_remove(_settingsTimeoutId);
 }
