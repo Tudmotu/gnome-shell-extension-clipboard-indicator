@@ -50,10 +50,13 @@ function writeRegistry (registry) {
     let file = Gio.file_new_for_path(REGISTRY_PATH);
     file.replace_async(null, false, Gio.FileCreateFlags.NONE,
                         GLib.PRIORITY_DEFAULT, null, function (obj, res) {
+
         let stream = obj.replace_finish(res);
+
         stream.write_bytes_async(contents, GLib.PRIORITY_DEFAULT,
                             null, function (w_obj, w_res) {
-            let success = w_obj.write_bytes_finish(w_res);
+
+            w_obj.write_bytes_finish(w_res);
             stream.close(null);
         });
     });
@@ -66,12 +69,10 @@ function readRegistry (callback) {
     if (GLib.file_test(REGISTRY_PATH, FileTest.EXISTS)) {
         let file = Gio.file_new_for_path(REGISTRY_PATH);
         file.load_contents_async(null, function (obj, res) {
-            let success = obj.load_contents_finish(res); // Humm..
-            let content = success[0] === true ?
-                            JSON.parse(success[1]) :
-                            [];
+            let [success, contents] = obj.load_contents_finish(res);
+            let registry = success === true ? JSON.parse(contents) : [];
 
-            callback(content);
+            callback(registry);
         });
     }
     else {
