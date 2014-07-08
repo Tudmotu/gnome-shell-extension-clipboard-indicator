@@ -29,13 +29,19 @@ let MAX_ENTRY_LENGTH     = 50;
 let DELETE_ENABLED       = true;
 
 let _clipboardTimeoutId = null;
-let _settingsTimeoutId = null;
 const ClipboardIndicator = Lang.Class({
         Name: 'ClipboardIndicator',
         Extends: PanelMenu.Button,
 
         clipItemsRadioGroup: [],
 
+        destroy: function () {
+            // Disconnect the settings event
+            this._settings.disconnect(this._settingsChangedId);
+
+            // Call parent
+            this.parent();
+        },
 
         _init: function() {
             this.parent(0.0, "ClipboardIndicator");
@@ -232,7 +238,8 @@ const ClipboardIndicator = Lang.Class({
 
         _loadSettings: function () {
             this._settings = Prefs.SettingsSchema;
-            _settingsTimeoutId = this._settings.connect('changed', Lang.bind(this, this._onSettingsChange));
+            this._settingsChangedId = this._settings.connect('changed',
+                                        Lang.bind(this, this._onSettingsChange));
             this._fetchSettings();
         },
 
@@ -273,5 +280,4 @@ function enable () {
 function disable () {
     clipboardIndicator.destroy();
     if (_clipboardTimeoutId) Mainloop.source_remove(_clipboardTimeoutId);
-    if (_settingsTimeoutId) Mainloop.source_remove(_settingsTimeoutId);
 }
