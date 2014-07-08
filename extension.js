@@ -225,7 +225,7 @@ const ClipboardIndicator = Lang.Class({
 
             _clipboardTimeoutId = Mainloop.timeout_add(TIMEOUT_MS, function () {
                 that._refreshIndicator();
-                if (recurse) that._setupTimeout();
+                return recurse;
             });
         },
 
