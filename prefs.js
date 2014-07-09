@@ -9,10 +9,11 @@ const Gettext = imports.gettext;
 const _ = Gettext.gettext;
 
 const Fields = {
-    INTERVAL    : 'refresh-interval',
-    HISTORY_SIZE: 'history-size',
-    PREVIEW_SIZE: 'preview-size',
-    DELETE      : 'enable-deletion'
+    INTERVAL       : 'refresh-interval',
+    HISTORY_SIZE   : 'history-size',
+    PREVIEW_SIZE   : 'preview-size',
+    CACHE_FILE_SIZE: 'cache-size',
+    DELETE         : 'enable-deletion'
 };
 
 const SCHEMA_NAME = 'org.gnome.shell.extensions.clipboard-indicator';
@@ -65,6 +66,13 @@ const App = new Lang.Class({
                 step_increment: 1
             })
         });
+        this.field_cache_size = new Gtk.SpinButton({
+            adjustment: new Gtk.Adjustment({
+                lower: 512,
+                upper: Math.pow(2, 14),
+                step_increment: 1
+            })
+        });
         //this.field_deletion = new Gtk.Switch({
             //active: true
         //});
@@ -84,6 +92,11 @@ const App = new Lang.Class({
             hexpand: true,
             halign: Gtk.Align.START
         });
+        let cacheLabel  = new Gtk.Label({
+            label: _("Max Cache File Size (kb)"),
+            hexpand: true,
+            halign: Gtk.Align.START
+        });
         //let deleteLabel   = new Gtk.Label({
             //label: _("Enable Deletion"),
             //hexpand: true,
@@ -92,16 +105,19 @@ const App = new Lang.Class({
         this.main.attach(sizeLabel    , 2, 1, 2 ,1);
         this.main.attach(previewLabel , 2, 2, 2 ,1);
         this.main.attach(intervalLabel, 2, 3, 2 ,1);
+        this.main.attach(cacheLabel   , 2, 4, 2 ,1);
         //this.main.attach(deleteLabel  , 2, 4, 2 ,1);
 
         this.main.attach(this.field_size        , 4, 1, 2, 1);
         this.main.attach(this.field_preview_size, 4, 2, 2, 1);
         this.main.attach(this.field_interval    , 4, 3, 2, 1);
+        this.main.attach(this.field_cache_size  , 4, 4, 2, 1);
         //this.main.attach(this.field_deletion    , 4, 4, 2, 1);
 
         SettingsSchema.bind(Fields.INTERVAL    , this.field_interval    , 'value' , Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.HISTORY_SIZE, this.field_size        , 'value' , Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.PREVIEW_SIZE, this.field_preview_size, 'value' , Gio.SettingsBindFlags.DEFAULT);
+        SettingsSchema.bind(Fields.CACHE_FILE_SIZE, this.field_cache_size, 'value' , Gio.SettingsBindFlags.DEFAULT);
         //SettingsSchema.bind(Fields.DELETE      , this.field_deletion    , 'active', Gio.SettingsBindFlags.DEFAULT);
 
         this.main.show_all();

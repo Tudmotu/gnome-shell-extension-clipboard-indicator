@@ -34,5 +34,15 @@
 		<range min="10" max="100"/>
     </key>
 
+    <key type="i" name="cache-size">
+		<default>1024</default>
+		<summary>The allowed size for the registry cache file.</summary>
+        <description>
+            If the cache overflows this limit, the file will be overriden.
+            High limit might cause slowness of shell startup.
+        </description>
+		<range min="512" max="16384"/>
+    </key>
+
   </schema>
 </schemalist>
