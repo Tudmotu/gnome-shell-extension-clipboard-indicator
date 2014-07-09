@@ -69,8 +69,20 @@ function readRegistry (callback) {
     if (GLib.file_test(REGISTRY_PATH, FileTest.EXISTS)) {
         let file = Gio.file_new_for_path(REGISTRY_PATH);
         file.load_contents_async(null, function (obj, res) {
+            let registry;
             let [success, contents] = obj.load_contents_finish(res);
-            let registry = success === true ? JSON.parse(contents) : [];
+
+            if (success) {
+                try {
+                    registry = JSON.parse(contents);
+                }
+                catch (e) {
+                    registry = [];
+                }
+            }
+            else {
+                registry = [];
+            }
 
             callback(registry);
         });
