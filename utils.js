@@ -98,7 +98,7 @@ function readRegistry (callback) {
                     // In case there are more entries than the max HISTROY_SIZE,
                     // we splice the registry to return appropriate amount
                     if (registry.length > max_size) {
-                        registry.splice(registry.length - max_size);
+                        registry.splice(0, registry.length - max_size);
                     }
                 }
                 catch (e) {
