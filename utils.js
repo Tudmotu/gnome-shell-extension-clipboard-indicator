@@ -35,7 +35,7 @@ function prettyPrint (name, obj, recurse, _indent) {
     log(prefix + '--------------');
     for (let k in obj) {
         if (typeof obj[k] === 'object' && recurse) {
-            dbPrintObj(name + '::' + k, obj[k], true, indent + 1);
+            prettyPrint(name + '::' + k, obj[k], true, indent + 1);
         }
         else {
             log(prefix + k, typeof obj[k] === 'function' ? '[Func]' : obj[k]);
