@@ -17,11 +17,11 @@ const CLIPBOARD_TYPE = St.ClipboardType.CLIPBOARD;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
-const Convenience = Me.imports.convenience;
+const Utils = Me.imports.utils;
 const Prefs = Me.imports.prefs;
-const prettyPrint = Convenience.prettyPrint;
-const writeRegistry = Convenience.writeRegistry;
-const readRegistry = Convenience.readRegistry;
+const prettyPrint = Utils.prettyPrint;
+const writeRegistry = Utils.writeRegistry;
+const readRegistry = Utils.readRegistry;
 
 let TIMEOUT_MS           = 1000;
 let MAX_REGISTRY_LENGTH  = 15;
