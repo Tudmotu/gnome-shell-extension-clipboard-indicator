@@ -74,42 +74,46 @@ function readRegistry (callback) {
     if (GLib.file_test(REGISTRY_PATH, FileTest.EXISTS)) {
         let file = Gio.file_new_for_path(REGISTRY_PATH);
         let CACHE_FILE_SIZE = SettingsSchema.get_int(Prefs.Fields.CACHE_FILE_SIZE);
-        let file_info = file.query_info('*', FileQueryInfoFlags.NONE, null);
 
-        // Check if file size is larger than CACHE_FILE_SIZE
-        // If so, make a backup of file, and invoke callback with empty array
-        if (file_info.get_size() >= CACHE_FILE_SIZE * 1024) {
-            let destination = Gio.file_new_for_path(BACKUP_REGISTRY_PATH);
+        file.query_info_async('*', FileQueryInfoFlags.NONE,
+                              GLib.PRIORITY_DEFAULT, null, function (src, res) {
+            // Check if file size is larger than CACHE_FILE_SIZE
+            // If so, make a backup of file, and invoke callback with empty array
+            let file_info = src.query_info_finish(res);
 
-            file.move(destination, FileCopyFlags.OVERWRITE, null, null);
-            callback([]);
-            return;
-        }
+            if (file_info.get_size() >= CACHE_FILE_SIZE * 1024) {
+                let destination = Gio.file_new_for_path(BACKUP_REGISTRY_PATH);
 
-        file.load_contents_async(null, function (obj, res) {
-            let registry;
-            let [success, contents] = obj.load_contents_finish(res);
+                file.move(destination, FileCopyFlags.OVERWRITE, null, null);
+                callback([]);
+                return;
+            }
 
-            if (success) {
-                try {
-                    let max_size = SettingsSchema.get_int(Prefs.Fields.HISTORY_SIZE);
-                    registry = JSON.parse(contents);
+            file.load_contents_async(null, function (obj, res) {
+                let registry;
+                let [success, contents] = obj.load_contents_finish(res);
 
-                    // In case there are more entries than the max HISTROY_SIZE,
-                    // we splice the registry to return appropriate amount
-                    if (registry.length > max_size) {
-                        registry.splice(0, registry.length - max_size);
+                if (success) {
+                    try {
+                        let max_size = SettingsSchema.get_int(Prefs.Fields.HISTORY_SIZE);
+                        registry = JSON.parse(contents);
+
+                        // In case there are more entries than the max HISTROY_SIZE,
+                        // we splice the registry to return appropriate amount
+                        if (registry.length > max_size) {
+                            registry.splice(0, registry.length - max_size);
+                        }
+                    }
+                    catch (e) {
+                        registry = [];
                     }
                 }
-                catch (e) {
+                else {
                     registry = [];
                 }
-            }
-            else {
-                registry = [];
-            }
 
-            callback(registry);
+                callback(registry);
+            });
         });
     }
     else {
