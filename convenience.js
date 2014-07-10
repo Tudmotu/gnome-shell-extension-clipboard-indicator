@@ -15,12 +15,12 @@ const REGISTRY_PATH = REGISTRY_DIR + '/' + REGISTRY_FILE;
 const BACKUP_REGISTRY_PATH = REGISTRY_PATH + '~';
 
 // Print objects... why no dev tools
-function dbPrintObj (name, obj, recurse, _indent) {
-	let prefix = '';
-	let indent = typeof _indent === 'number' ? _indent : 0;
-	for (let i = 0; i < indent; i++) {
-		prefix += '    ';
-	}
+function prettyPrint (name, obj, recurse, _indent) {
+    let prefix = '';
+    let indent = typeof _indent === 'number' ? _indent : 0;
+    for (let i = 0; i < indent; i++) {
+        prefix += '    ';
+    }
 
     recurse = typeof recurse === 'boolean' ? recurse : true;
     if (typeof name !== 'string') {
@@ -30,17 +30,17 @@ function dbPrintObj (name, obj, recurse, _indent) {
         name = obj.toString();
     }
 
-	log(prefix + '--------------');
-	log(prefix + name);
-	log(prefix + '--------------');
-	for (let k in obj) {
-		if (typeof obj[k] === 'object' && recurse) {
-			dbPrintObj(name + '::' + k, obj[k], true, indent + 1);
-		}
-		else {
-			log(prefix + k, typeof obj[k] === 'function' ? '[Func]' : obj[k]);
-		}
-	}
+    log(prefix + '--------------');
+    log(prefix + name);
+    log(prefix + '--------------');
+    for (let k in obj) {
+        if (typeof obj[k] === 'object' && recurse) {
+            dbPrintObj(name + '::' + k, obj[k], true, indent + 1);
+        }
+        else {
+            log(prefix + k, typeof obj[k] === 'function' ? '[Func]' : obj[k]);
+        }
+    }
 }
 
 // I/O Files

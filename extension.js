@@ -19,7 +19,7 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const Convenience = Me.imports.convenience;
 const Prefs = Me.imports.prefs;
-const prettyPrint = Convenience.dbPrintObj;
+const prettyPrint = Convenience.prettyPrint;
 const writeRegistry = Convenience.writeRegistry;
 const readRegistry = Convenience.readRegistry;
 
