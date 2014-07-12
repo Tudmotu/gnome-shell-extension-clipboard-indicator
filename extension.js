@@ -28,16 +28,20 @@ let MAX_REGISTRY_LENGTH  = 15;
 let MAX_ENTRY_LENGTH     = 50;
 let DELETE_ENABLED       = true;
 
-let _clipboardTimeoutId = null;
 const ClipboardIndicator = Lang.Class({
         Name: 'ClipboardIndicator',
         Extends: PanelMenu.Button,
 
+        _clipboardTimeoutId: null,
         clipItemsRadioGroup: [],
 
         destroy: function () {
             // Disconnect the settings event
             this._settings.disconnect(this._settingsChangedId);
+
+            // Remove the timeout source
+            if (this._clipboardTimeoutId)
+                Mainloop.source_remove(this._clipboardTimeoutId);
 
             // Call parent
             this.parent();
@@ -223,8 +227,17 @@ const ClipboardIndicator = Lang.Class({
             let that = this;
             recurse = typeof recurse === 'boolean' ? recurse : true;
 
-            _clipboardTimeoutId = Mainloop.timeout_add(TIMEOUT_MS, function () {
+            this._clipboardTimeoutId = Mainloop.timeout_add(TIMEOUT_MS, function () {
                 that._refreshIndicator();
+
+                // If the timeout handler returns `false`, the source is
+                // automatically removed, so we reset the timeout-id so it won't
+                // be removed on `.destroy()`
+                if (recurse === false)
+                    that._clipboardTimeoutId = null;
+
+                // As long as the timeout handler returns `true`, the handler
+                // will be invoked again and again as an interval
                 return recurse;
             });
         },
@@ -279,5 +292,4 @@ function enable () {
 
 function disable () {
     clipboardIndicator.destroy();
-    if (_clipboardTimeoutId) Mainloop.source_remove(_clipboardTimeoutId);
 }
