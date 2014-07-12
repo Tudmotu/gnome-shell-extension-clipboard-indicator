@@ -223,9 +223,9 @@ const ClipboardIndicator = Lang.Class({
             });
         },
 
-        _setupTimeout: function (recurse) {
+        _setupTimeout: function (reiterate) {
             let that = this;
-            recurse = typeof recurse === 'boolean' ? recurse : true;
+            reiterate = typeof reiterate === 'boolean' ? reiterate : true;
 
             this._clipboardTimeoutId = Mainloop.timeout_add(TIMEOUT_MS, function () {
                 that._refreshIndicator();
@@ -233,12 +233,12 @@ const ClipboardIndicator = Lang.Class({
                 // If the timeout handler returns `false`, the source is
                 // automatically removed, so we reset the timeout-id so it won't
                 // be removed on `.destroy()`
-                if (recurse === false)
+                if (reiterate === false)
                     that._clipboardTimeoutId = null;
 
                 // As long as the timeout handler returns `true`, the handler
                 // will be invoked again and again as an interval
-                return recurse;
+                return reiterate;
             });
         },
 
