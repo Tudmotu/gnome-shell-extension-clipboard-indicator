@@ -56,7 +56,7 @@
       </description>
     </key>
     <key name="next-item" type="as">
-      <default><![CDATA[['<AF12']]]></default>
+      <default><![CDATA[['<Alt>F12']]]></default>
       <summary>Key to cycle to the next entry in the clipboard</summary>
       <description>
       </description>
