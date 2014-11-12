@@ -323,46 +323,34 @@ const ClipboardIndicator = Lang.Class({
 
 	},
         _previousEntry:function(){
-            let menuItems = this.historySection._getMenuItems();
-	    let length = menuItems.length;
-	    let menuItem; 
-	    let i;
+            let that = this;
 
-	    for (i = 0; i < length; i++) {
-		if (menuItems[i].currentlySelected) {
-		    i--;                    //get prev index
-		    if(i < 0)i=length-1;    //cycle
-		    menuItem = menuItems[i];
-		    break;
+            this.historySection._getMenuItems().some(function (mItem, i, menuItems){
+		if (mItem.currentlySelected) {
+		    i--;                                 //get the previous index
+		    if(i < 0)i=menuItems.length-1;       //cycle if out of bound
+                    that._selectMenuItem(menuItems[i]);  //select the item
+	            let index = i+1;                     //index to be displayed
+	            _showNotification(index + ' / ' + menuItems.length + ': ' + menuItems[i].label.text);
+		    return true;
 		}
-	    }
-
-	    let index = i + 1; //index to be displayed in the notification
-	    this._selectMenuItem(menuItem);  //actually select the item
-
-	    //tel the user what is in the clipboard now
-	    _showNotification(index + ' / ' + length + ': ' + menuItem.label.text);
+                return false;
+            });
 	},
         _nextEntry:function(){
-            let menuItems = this.historySection._getMenuItems();
-	    let length = menuItems.length;
-	    let menuItem; 
-	    let i;
+            let that = this;
 
-	    for (i = 0; i < length; i++) {
-		if (menuItems[i].currentlySelected) {
-		    i++;                     //get next index
-		    if(i == length)i=0;      //cycle
-		    menuItem = menuItems[i];
-		    break;
+            this.historySection._getMenuItems().some(function (mItem, i, menuItems) {
+		if (mItem.currentlySelected) {
+		    i++;                                 //get the next index
+		    if(i == menuItems.length)i=0;        //cycle if out of bound
+                    that._selectMenuItem(menuItems[i]);  //select the item
+	            let index = i+1;                     //index to be displayed
+	            _showNotification(index + ' / ' + menuItems.length + ': ' + menuItems[i].label.text);
+		    return true;
 		}
-	    }
-
-	    let index = i + 1; //index to be displayed in the notification
-	    this._selectMenuItem(menuItem);  //actually select the item
-
-	    //tel the user what is in the clipboard now
-	    _showNotification(index + ' / ' + length + ': ' + menuItem.label.text);
+                return false;
+           });
 	}
 });
 
