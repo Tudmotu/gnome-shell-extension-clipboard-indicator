@@ -33,8 +33,8 @@ let MAX_ENTRY_LENGTH     = 50;
 let DELETE_ENABLED       = true;
 
 
-var timeoutId=undefined;
-var text = new St.Label({ style_class:'notification-label' });
+let timeoutId=undefined;
+let text = new St.Label({ style_class:'notification-label' });
 global.stage.add_actor(text);
 
 function _showNotification(notification) {
@@ -323,10 +323,10 @@ const ClipboardIndicator = Lang.Class({
 
 	},
         _previousEntry:function(){
-            var menuItems = this.historySection._getMenuItems();
-	    var length = menuItems.length;
-	    var menuItem; 
-	    var i;
+            let menuItems = this.historySection._getMenuItems();
+	    let length = menuItems.length;
+	    let menuItem; 
+	    let i;
 
 	    for (i = 0; i < length; i++) {
 		if (menuItems[i].currentlySelected) {
@@ -337,17 +337,17 @@ const ClipboardIndicator = Lang.Class({
 		}
 	    }
 
-	    var index = i + 1; //index to be displayed in the notification
+	    let index = i + 1; //index to be displayed in the notification
 	    this._selectMenuItem(menuItem);  //actually select the item
 
 	    //tel the user what is in the clipboard now
 	    _showNotification(index + ' / ' + length + ': ' + menuItem.label.text);
 	},
         _nextEntry:function(){
-            var menuItems = this.historySection._getMenuItems();
-	    var length = menuItems.length;
-	    var menuItem; 
-	    var i;
+            let menuItems = this.historySection._getMenuItems();
+	    let length = menuItems.length;
+	    let menuItem; 
+	    let i;
 
 	    for (i = 0; i < length; i++) {
 		if (menuItems[i].currentlySelected) {
@@ -358,7 +358,7 @@ const ClipboardIndicator = Lang.Class({
 		}
 	    }
 
-	    var index = i + 1; //index to be displayed in the notification
+	    let index = i + 1; //index to be displayed in the notification
 	    this._selectMenuItem(menuItem);  //actually select the item
 
 	    //tel the user what is in the clipboard now
