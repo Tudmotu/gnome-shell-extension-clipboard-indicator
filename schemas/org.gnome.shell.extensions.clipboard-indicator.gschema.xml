@@ -49,13 +49,13 @@
       <description>
       </description>
     </key>
-    <key name="prev-item" type="as">
+    <key name="prev-entry" type="as">
       <default><![CDATA[['<Ctrl>F11']]]></default>
       <summary>Key to cycle to the previous entry in the clipboard</summary>
       <description>
       </description>
     </key>
-    <key name="next-item" type="as">
+    <key name="next-entry" type="as">
       <default><![CDATA[['<Ctrl>F12']]]></default>
       <summary>Key to cycle to the next entry in the clipboard</summary>
       <description>

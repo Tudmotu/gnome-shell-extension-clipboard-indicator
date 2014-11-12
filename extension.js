@@ -16,8 +16,8 @@ const Clipboard = St.Clipboard.get_default();
 const CLIPBOARD_TYPE = St.ClipboardType.CLIPBOARD;
 
 const SETTING_KEY_CLEAR_HISTORY = "clear-history";
-const SETTING_KEY_PREV_ITEM = "prev-item";
-const SETTING_KEY_NEXT_ITEM = "next-item";
+const SETTING_KEY_PREV_ENTRY = "prev-entry";
+const SETTING_KEY_NEXT_ENTRY = "next-entry";
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
@@ -364,8 +364,8 @@ function enable () {
     clipboardIndicator = new ClipboardIndicator();
     Main.panel.addToStatusArea('clipboardIndicator', clipboardIndicator, 1);
     clipboardIndicator._bindShortcut(SETTING_KEY_CLEAR_HISTORY, clipboardIndicator._removeAll);
-    clipboardIndicator._bindShortcut(SETTING_KEY_PREV_ITEM, clipboardIndicator._previousEntry);
-    clipboardIndicator._bindShortcut(SETTING_KEY_NEXT_ITEM, clipboardIndicator._nextEntry);
+    clipboardIndicator._bindShortcut(SETTING_KEY_PREV_ENTRY, clipboardIndicator._previousEntry);
+    clipboardIndicator._bindShortcut(SETTING_KEY_NEXT_ENTRY, clipboardIndicator._nextEntry);
 
 }
 
