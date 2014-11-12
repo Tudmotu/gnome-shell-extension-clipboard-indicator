@@ -15,6 +15,10 @@ const CheckBox = imports.ui.checkBox.CheckBox;
 const Clipboard = St.Clipboard.get_default();
 const CLIPBOARD_TYPE = St.ClipboardType.CLIPBOARD;
 
+const SETTING_KEY_CLEAR_HISTORY = "clear-history";
+const SETTING_KEY_PREV_ENTRY = "prev-entry";
+const SETTING_KEY_NEXT_ENTRY = "next-entry";
+
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const Utils = Me.imports.utils;
@@ -27,6 +31,24 @@ let TIMEOUT_MS           = 1000;
 let MAX_REGISTRY_LENGTH  = 15;
 let MAX_ENTRY_LENGTH     = 50;
 let DELETE_ENABLED       = true;
+
+
+let timeoutId=undefined;
+let text = new St.Label({ style_class:'notification-label' });
+global.stage.add_actor(text);
+text.hide();
+
+function _showNotification(notification) {
+        text.text = notification;
+    
+        let monitor = Main.layoutManager.currentMonitor;
+        text.set_position(monitor.width - text.width, Main.panel.actor.height);
+	text.show();
+    
+        //reset the timeout
+        if(timeoutId){Mainloop.source_remove(timeoutId);}
+        timeoutId = Mainloop.timeout_add(TIMEOUT_MS, function () { text.hide(); });
+}
 
 const ClipboardIndicator = Lang.Class({
         Name: 'ClipboardIndicator',
@@ -154,6 +176,7 @@ const ClipboardIndicator = Lang.Class({
                 }
             });
             that._updateCache();
+	    _showNotification("Clipboard history cleared");
         },
 
         _removeEntry: function (menuItem) {
@@ -276,8 +299,61 @@ const ClipboardIndicator = Lang.Class({
             that.historySection._getMenuItems().forEach(function (mItem) {
                 that._setEntryLabel(mItem);
             });
-        }
-    });
+        },
+        _bindShortcut: function(schema, cb) {
+            if (Main.wm.addKeybinding && Shell.KeyBindingMode)
+		Main.wm.addKeybinding(schema, this._settings,
+                                      Meta.KeyBindingFlags.NONE,
+                                      Shell.KeyBindingMode.NORMAL |
+				      Shell.KeyBindingMode.MESSAGE_TRAY,
+                                      Lang.bind(this, cb)
+				 );
+            else if (Main.wm.addKeybinding && Main.KeybindingMode)
+                     Main.wm.addKeybinding(schema, this._settings, 
+					   Meta.KeyBindingFlags.NONE,
+					   Main.KeybindingMode.NORMAL | 
+					   Main.KeybindingMode.MESSAGE_TRAY,
+					   Lang.bind(this, cb));
+            else{
+		global.display.add_keybinding(schema,
+					      this._settings, 
+					      Meta.KeyBindingFlags.NONE,
+                                              Lang.bind(this, cb)
+					     );
+	    }
+
+	},
+        _previousEntry:function(){
+            let that = this;
+
+            this.historySection._getMenuItems().some(function (mItem, i, menuItems){
+		if (mItem.currentlySelected) {
+		    i--;                                 //get the previous index
+		    if(i < 0)i=menuItems.length-1;       //cycle if out of bound
+                    that._selectMenuItem(menuItems[i]);  //select the item
+	            let index = i+1;                     //index to be displayed
+	            _showNotification(index + ' / ' + menuItems.length + ': ' + menuItems[i].label.text);
+		    return true;
+		}
+                return false;
+            });
+	},
+        _nextEntry:function(){
+            let that = this;
+
+            this.historySection._getMenuItems().some(function (mItem, i, menuItems) {
+		if (mItem.currentlySelected) {
+		    i++;                                 //get the next index
+		    if(i == menuItems.length)i=0;        //cycle if out of bound
+                    that._selectMenuItem(menuItems[i]);  //select the item
+	            let index = i+1;                     //index to be displayed
+	            _showNotification(index + ' / ' + menuItems.length + ': ' + menuItems[i].label.text);
+		    return true;
+		}
+                return false;
+           });
+	}
+});
 
 
 function init () {
@@ -288,6 +364,10 @@ let clipboardIndicator;
 function enable () {
     clipboardIndicator = new ClipboardIndicator();
     Main.panel.addToStatusArea('clipboardIndicator', clipboardIndicator, 1);
+    clipboardIndicator._bindShortcut(SETTING_KEY_CLEAR_HISTORY, clipboardIndicator._removeAll);
+    clipboardIndicator._bindShortcut(SETTING_KEY_PREV_ENTRY, clipboardIndicator._previousEntry);
+    clipboardIndicator._bindShortcut(SETTING_KEY_NEXT_ENTRY, clipboardIndicator._nextEntry);
+
 }
 
 function disable () {

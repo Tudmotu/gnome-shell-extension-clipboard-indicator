@@ -43,6 +43,24 @@
         </description>
         <range min="512" max="16384"/>
     </key>
+    <key name="clear-history" type="as">
+      <default><![CDATA[['<Ctrl>F10']]]></default>
+      <summary>Key to clear the history</summary>
+      <description>
+      </description>
+    </key>
+    <key name="prev-entry" type="as">
+      <default><![CDATA[['<Ctrl>F11']]]></default>
+      <summary>Key to cycle to the previous entry in the clipboard</summary>
+      <description>
+      </description>
+    </key>
+    <key name="next-entry" type="as">
+      <default><![CDATA[['<Ctrl>F12']]]></default>
+      <summary>Key to cycle to the next entry in the clipboard</summary>
+      <description>
+      </description>
+    </key>
 
   </schema>
 </schemalist>

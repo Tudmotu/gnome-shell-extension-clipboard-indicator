@@ -1,0 +1,9 @@
+.notification-label {
+    font-weight: bold;
+    color: #ffffff;
+    background-color: rgba(10,10,10,0.7);
+    border-radius: 6px;
+    font-size:2em;
+    padding:.5em;
+    width:400px;
+}
