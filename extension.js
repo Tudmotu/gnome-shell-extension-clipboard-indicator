@@ -36,6 +36,7 @@ let DELETE_ENABLED       = true;
 let timeoutId=undefined;
 let text = new St.Label({ style_class:'notification-label' });
 global.stage.add_actor(text);
+text.hide();
 
 function _showNotification(notification) {
         text.text = notification;
