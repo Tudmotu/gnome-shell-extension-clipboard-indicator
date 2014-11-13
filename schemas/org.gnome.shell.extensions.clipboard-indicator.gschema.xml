@@ -69,6 +69,12 @@
         Key to cycle to the next entry in the clipboard
       </description>
     </key>
-
+    <key name="toggle-menu" type="as">
+      <default><![CDATA[['<Ctrl>F9']]]></default>
+      <summary>Toggle the menu</summary>
+      <description>
+        Key to toggle the clipboard menu
+      </description>
+    </key>
   </schema>
 </schemalist>

@@ -18,6 +18,7 @@ const CLIPBOARD_TYPE = St.ClipboardType.CLIPBOARD;
 const SETTING_KEY_CLEAR_HISTORY = "clear-history";
 const SETTING_KEY_PREV_ENTRY = "prev-entry";
 const SETTING_KEY_NEXT_ENTRY = "next-entry";
+const SETTING_KEY_TOGGLE_MENU = "toggle-menu";
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
@@ -82,7 +83,6 @@ const ClipboardIndicator = Lang.Class({
             this._buildMenu();
             this._setupTimeout();
         },
-
         _buildMenu: function () {
             let that = this;
             this._getCache(function (clipHistory) {
@@ -282,6 +282,7 @@ const ClipboardIndicator = Lang.Class({
                 this._bindShortcut(SETTING_KEY_CLEAR_HISTORY, this._removeAll);
                 this._bindShortcut(SETTING_KEY_PREV_ENTRY, this._previousEntry);
                 this._bindShortcut(SETTING_KEY_NEXT_ENTRY, this._nextEntry);
+                this._bindShortcut(SETTING_KEY_TOGGLE_MENU, this._toggleMenu);
             }
 
         },
@@ -313,11 +314,13 @@ const ClipboardIndicator = Lang.Class({
                 that._bindShortcut(SETTING_KEY_CLEAR_HISTORY, that._removeAll);
                 that._bindShortcut(SETTING_KEY_PREV_ENTRY, that._previousEntry);
                 that._bindShortcut(SETTING_KEY_NEXT_ENTRY, that._nextEntry);
+                that._bindShortcut(SETTING_KEY_TOGGLE_MENU, that._toggleMenu);
             }
             else{
 	        Main.wm.removeKeybinding(SETTING_KEY_CLEAR_HISTORY);
 	        Main.wm.removeKeybinding(SETTING_KEY_PREV_ENTRY);
 	        Main.wm.removeKeybinding(SETTING_KEY_NEXT_ENTRY);
+                Main.wm.removeKeybinding(SETTING_KEY_TOGGLE_MENU);
             }
         },
         _bindShortcut: function(schema, cb) {
@@ -372,7 +375,13 @@ const ClipboardIndicator = Lang.Class({
 		}
                 return false;
            });
-	}
+	},
+        _toggleMenu:function(){
+            if(this.menu.visible)
+                this.menu.close();
+            else 
+                this.menu.open();
+        }
 });
 
 

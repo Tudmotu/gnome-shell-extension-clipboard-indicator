@@ -15,7 +15,7 @@ const Fields = {
     PREVIEW_SIZE   : 'preview-size',
     CACHE_FILE_SIZE: 'cache-size',
     DELETE         : 'enable-deletion',
-    ENABLE_KEYBINDING : 'enable-keybindings'
+    ENABLE_KEYBINDING : 'enable-keybindings',
 };
 
 const SCHEMA_NAME = 'org.gnome.shell.extensions.clipboard-indicator';
@@ -77,6 +77,8 @@ const App = new Lang.Class({
         });
 
         this.field_keybinding = createKeybindingWidget(SettingsSchema);
+        addKeybinding(this.field_keybinding.model, SettingsSchema, "toggle-menu",
+                      "Toggle the menu");
         addKeybinding(this.field_keybinding.model, SettingsSchema, "clear-history",
                       "Clear history");
         addKeybinding(this.field_keybinding.model, SettingsSchema, "prev-entry",
