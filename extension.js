@@ -31,7 +31,7 @@ let TIMEOUT_MS           = 1000;
 let MAX_REGISTRY_LENGTH  = 15;
 let MAX_ENTRY_LENGTH     = 50;
 let DELETE_ENABLED       = true;
-
+let ENABLE_KEYBINDING    = true;
 
 let timeoutId=undefined;
 let text = new St.Label({ style_class:'notification-label' });
@@ -277,6 +277,13 @@ const ClipboardIndicator = Lang.Class({
             this._settingsChangedId = this._settings.connect('changed',
                                         Lang.bind(this, this._onSettingsChange));
             this._fetchSettings();
+
+            if(ENABLE_KEYBINDING){
+                this._bindShortcut(SETTING_KEY_CLEAR_HISTORY, this._removeAll);
+                this._bindShortcut(SETTING_KEY_PREV_ENTRY, this._previousEntry);
+                this._bindShortcut(SETTING_KEY_NEXT_ENTRY, this._nextEntry);
+            }
+
         },
 
         _fetchSettings: function () {
@@ -284,6 +291,7 @@ const ClipboardIndicator = Lang.Class({
             MAX_REGISTRY_LENGTH  = this._settings.get_int(Prefs.Fields.HISTORY_SIZE);
             MAX_ENTRY_LENGTH     = this._settings.get_int(Prefs.Fields.PREVIEW_SIZE);
             DELETE_ENABLED       = this._settings.get_boolean(Prefs.Fields.DELETE);
+            ENABLE_KEYBINDING    = this._settings.get_boolean(Prefs.Fields.ENABLE_KEYBINDING);
         },
 
         _onSettingsChange: function () {
@@ -299,6 +307,18 @@ const ClipboardIndicator = Lang.Class({
             that.historySection._getMenuItems().forEach(function (mItem) {
                 that._setEntryLabel(mItem);
             });
+
+            //bind or unbind shortcuts
+            if(ENABLE_KEYBINDING){
+                that._bindShortcut(SETTING_KEY_CLEAR_HISTORY, that._removeAll);
+                that._bindShortcut(SETTING_KEY_PREV_ENTRY, that._previousEntry);
+                that._bindShortcut(SETTING_KEY_NEXT_ENTRY, that._nextEntry);
+            }
+            else{
+	        Main.wm.removeKeybinding(SETTING_KEY_CLEAR_HISTORY);
+	        Main.wm.removeKeybinding(SETTING_KEY_PREV_ENTRY);
+	        Main.wm.removeKeybinding(SETTING_KEY_NEXT_ENTRY);
+            }
         },
         _bindShortcut: function(schema, cb) {
             if (Main.wm.addKeybinding && Shell.KeyBindingMode)
@@ -364,10 +384,6 @@ let clipboardIndicator;
 function enable () {
     clipboardIndicator = new ClipboardIndicator();
     Main.panel.addToStatusArea('clipboardIndicator', clipboardIndicator, 1);
-    clipboardIndicator._bindShortcut(SETTING_KEY_CLEAR_HISTORY, clipboardIndicator._removeAll);
-    clipboardIndicator._bindShortcut(SETTING_KEY_PREV_ENTRY, clipboardIndicator._previousEntry);
-    clipboardIndicator._bindShortcut(SETTING_KEY_NEXT_ENTRY, clipboardIndicator._nextEntry);
-
 }
 
 function disable () {

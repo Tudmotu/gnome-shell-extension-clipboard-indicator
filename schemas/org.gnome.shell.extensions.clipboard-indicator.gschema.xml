@@ -43,6 +43,13 @@
         </description>
         <range min="512" max="16384"/>
     </key>
+    <key name="enable-keybindings" type="b">
+      <default>true</default>
+        <summary>Enable the keyboard shortcuts</summary>
+        <description>
+            If true, user can delete and cycle through the history with keyboard shortcuts
+        </description>
+    </key>
     <key name="clear-history" type="as">
       <default><![CDATA[['<Ctrl>F10']]]></default>
       <summary>Key to clear the history</summary>
@@ -57,8 +64,9 @@
     </key>
     <key name="next-entry" type="as">
       <default><![CDATA[['<Ctrl>F12']]]></default>
-      <summary>Key to cycle to the next entry in the clipboard</summary>
+      <summary>Next entry</summary>
       <description>
+        Key to cycle to the next entry in the clipboard
       </description>
     </key>
 

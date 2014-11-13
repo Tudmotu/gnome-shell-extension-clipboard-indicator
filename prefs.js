@@ -14,7 +14,8 @@ const Fields = {
     HISTORY_SIZE   : 'history-size',
     PREVIEW_SIZE   : 'preview-size',
     CACHE_FILE_SIZE: 'cache-size',
-    DELETE         : 'enable-deletion'
+    DELETE         : 'enable-deletion',
+    ENABLE_KEYBINDING : 'enable-keybindings'
 };
 
 const SCHEMA_NAME = 'org.gnome.shell.extensions.clipboard-indicator';
@@ -74,6 +75,7 @@ const App = new Lang.Class({
                 step_increment: 1
             })
         });
+
         this.field_keybinding = createKeybindingWidget(SettingsSchema);
         addKeybinding(this.field_keybinding.model, SettingsSchema, "clear-history",
                       "Clear history");
@@ -81,6 +83,12 @@ const App = new Lang.Class({
                       "Previous entry");
         addKeybinding(this.field_keybinding.model, SettingsSchema, "next-entry",
                       "Next entry");
+
+        var that = this;
+        this.field_keybinding_activation = new Gtk.Switch();
+        this.field_keybinding_activation.connect("notify::active", function(widget){
+            that.field_keybinding.set_sensitive(widget.active);
+        });
 
         //this.field_deletion = new Gtk.Switch({
             //active: true
@@ -128,7 +136,8 @@ const App = new Lang.Class({
         this.main.attach(this.field_preview_size, 4, 2, 2, 1);
         this.main.attach(this.field_interval    , 4, 3, 2, 1);
         this.main.attach(this.field_cache_size  , 4, 4, 2, 1);
-        this.main.attach(this.field_keybinding  , 4, 5, 2, 1);
+        this.main.attach(this.field_keybinding_activation  , 4, 5, 2, 1);
+        this.main.attach(this.field_keybinding  , 2, 6, 4, 2);
         //this.main.attach(this.field_deletion    , 4, 4, 2, 1);
 
         SettingsSchema.bind(Fields.INTERVAL    , this.field_interval    , 'value' , Gio.SettingsBindFlags.DEFAULT);
@@ -136,7 +145,8 @@ const App = new Lang.Class({
         SettingsSchema.bind(Fields.PREVIEW_SIZE, this.field_preview_size, 'value' , Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.CACHE_FILE_SIZE, this.field_cache_size, 'value' , Gio.SettingsBindFlags.DEFAULT);
         //SettingsSchema.bind(Fields.DELETE      , this.field_deletion    , 'active', Gio.SettingsBindFlags.DEFAULT);
-
+	SettingsSchema.bind(Fields.ENABLE_KEYBINDING, this.field_keybinding_activation, 'active', Gio.SettingsBindFlags.DEFAULT);
+        
         this.main.show_all();
     }
 });
@@ -183,7 +193,6 @@ function createKeybindingWidget(SettingsSchema) {
     let treeView = new Gtk.TreeView();
     treeView.model = model;
     treeView.headers_visible = false;
-    treeView.expand = true;
 
     let column, renderer;
 
