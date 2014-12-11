@@ -1,16 +1,17 @@
-const Clutter = imports.gi.Clutter;
-const Gio = imports.gi.Gio;
-const Lang = imports.lang;
-const Mainloop = imports.mainloop;
-const Meta = imports.gi.Meta;
-const Shell = imports.gi.Shell;
-const St = imports.gi.St;
-const Util = imports.misc.util;
+const Clutter    = imports.gi.Clutter;
+const Gio        = imports.gi.Gio;
+const Lang       = imports.lang;
+const Mainloop   = imports.mainloop;
+const Meta       = imports.gi.Meta;
+const Shell      = imports.gi.Shell;
+const St         = imports.gi.St;
+const PolicyType = imports.gi.Gtk.PolicyType;
+const Util       = imports.misc.util;
 
-const Main = imports.ui.main;
+const Main      = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
-const CheckBox = imports.ui.checkBox.CheckBox;
+const CheckBox  = imports.ui.checkBox.CheckBox;
 
 const Clipboard = St.Clipboard.get_default();
 const CLIPBOARD_TYPE = St.ClipboardType.CLIPBOARD;
@@ -91,7 +92,18 @@ const ClipboardIndicator = Lang.Class({
 
                 // Create menu section for items
                 that.historySection = new PopupMenu.PopupMenuSection();
-                that.menu.addMenuItem(that.historySection);
+
+                let scrollViewMenuSection = new PopupMenu.PopupMenuSection();
+                let historyScrollView = new St.ScrollView({
+                    overlay_scrollbars: true
+                });
+                historyScrollView.add_style_class_name('history-menu-section');
+                historyScrollView.set_policy(PolicyType.NEVER, PolicyType.AUTOMATIC);
+                historyScrollView.add_actor(that.historySection.actor);
+
+                scrollViewMenuSection.actor.add_actor(historyScrollView);
+
+                that.menu.addMenuItem(scrollViewMenuSection);
 
                 // Add cached items
                 clipHistory.forEach(function (buffer) {
