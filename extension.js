@@ -35,41 +35,28 @@ let MAX_ENTRY_LENGTH     = 50;
 let DELETE_ENABLED       = true;
 let ENABLE_KEYBINDING    = true;
 
-let timeoutId = null;
-let text = new St.Label({ style_class:'notification-label' });
-global.stage.add_actor(text);
-text.hide();
-
-function _showNotification(notification) {
-    text.text = notification;
-
-    let monitor = Main.layoutManager.currentMonitor;
-    text.set_position(monitor.width - text.width, Main.panel.actor.height);
-    text.show();
-
-    //reset the timeout
-    if (timeoutId)
-        Mainloop.source_remove(timeoutId);
-
-    timeoutId = Mainloop.timeout_add(TIMEOUT_MS, function () {
-        text.hide();
-    });
-}
-
 const ClipboardIndicator = Lang.Class({
     Name: 'ClipboardIndicator',
     Extends: PanelMenu.Button,
 
     _clipboardTimeoutId: null,
+    _historyLabelTimeoutId: null,
+    _historyLabel: null,
+    _shortcutsBindingIds: [],
     clipItemsRadioGroup: [],
 
     destroy: function () {
-        // Disconnect the settings event
+        // Disconnect all sources
+
         this._settings.disconnect(this._settingsChangedId);
 
-        // Remove the timeout source
+        this._unbindShortcuts();
+
         if (this._clipboardTimeoutId)
             Mainloop.source_remove(this._clipboardTimeoutId);
+
+        if (this._historyLabelTimeoutId)
+            Mainloop.source_remove(this._historyLabelTimeoutId);
 
         // Call parent
         this.parent();
@@ -84,6 +71,7 @@ const ClipboardIndicator = Lang.Class({
         hbox.add_child(icon);
         this.actor.add_child(hbox);
 
+        this._createHistoryLabel();
         this._loadSettings();
         this._buildMenu();
         this._setupTimeout();
@@ -199,7 +187,7 @@ const ClipboardIndicator = Lang.Class({
             }
         });
         that._updateCache();
-        _showNotification("Clipboard history cleared");
+        that._showNotification("Clipboard history cleared");
     },
 
     _removeEntry: function (menuItem) {
@@ -258,6 +246,7 @@ const ClipboardIndicator = Lang.Class({
 
     _refreshIndicator: function () {
         let that = this;
+
         Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
             let registry = that.clipItemsRadioGroup.map(function (menuItem) {
                 return menuItem.clipContents;
@@ -296,19 +285,43 @@ const ClipboardIndicator = Lang.Class({
         ]);
     },
 
+    _showNotification: function (notification) {
+        let monitor = Main.layoutManager.currentMonitor;
+        let position = {
+            x: monitor.width - this._historyLabel.width,
+            y: Main.panel.actor.height
+        };
+
+        this._historyLabel.set_position(position.x, position.y);
+        this._historyLabel.text = notification;
+        this._historyLabel.show();
+
+        if (this._historyLabelTimeoutId)
+            Mainloop.source_remove(this._historyLabelTimeoutId);
+
+        this._historyLabelTimeoutId = Mainloop.timeout_add(TIMEOUT_MS, function () {
+            this._historyLabel.hide();
+            this._historyLabelTimeoutId = null;
+        }.bind(this));
+    },
+
+    _createHistoryLabel: function () {
+        this._historyLabel = new St.Label({ style_class: 'notification-label' });
+
+        global.stage.add_actor(this._historyLabel);
+
+        this._historyLabel.hide();
+    },
+
     _loadSettings: function () {
         this._settings = Prefs.SettingsSchema;
         this._settingsChangedId = this._settings.connect('changed',
             Lang.bind(this, this._onSettingsChange));
-            this._fetchSettings();
 
-        if (ENABLE_KEYBINDING) {
-            this._bindShortcut(SETTING_KEY_CLEAR_HISTORY, this._removeAll);
-            this._bindShortcut(SETTING_KEY_PREV_ENTRY, this._previousEntry);
-            this._bindShortcut(SETTING_KEY_NEXT_ENTRY, this._nextEntry);
-            this._bindShortcut(SETTING_KEY_TOGGLE_MENU, this._toggleMenu);
-        }
+        this._fetchSettings();
 
+        if (ENABLE_KEYBINDING)
+            this._bindShortcuts();
     },
 
     _fetchSettings: function () {
@@ -333,40 +346,36 @@ const ClipboardIndicator = Lang.Class({
             that._setEntryLabel(mItem);
         });
 
-        //bind or unbind shortcuts
-        if (ENABLE_KEYBINDING) {
-            that._bindShortcut(SETTING_KEY_CLEAR_HISTORY, that._removeAll);
-            that._bindShortcut(SETTING_KEY_PREV_ENTRY, that._previousEntry);
-            that._bindShortcut(SETTING_KEY_NEXT_ENTRY, that._nextEntry);
-            that._bindShortcut(SETTING_KEY_TOGGLE_MENU, that._toggleMenu);
-        }
-        else {
-            Main.wm.removeKeybinding(SETTING_KEY_CLEAR_HISTORY);
-            Main.wm.removeKeybinding(SETTING_KEY_PREV_ENTRY);
-            Main.wm.removeKeybinding(SETTING_KEY_NEXT_ENTRY);
-            Main.wm.removeKeybinding(SETTING_KEY_TOGGLE_MENU);
-        }
-    },
-    _bindShortcut: function(schema, cb) {
-        if (Main.wm.addKeybinding && Shell.KeyBindingMode)
-            Main.wm.addKeybinding(schema, this._settings,
-                Meta.KeyBindingFlags.NONE,
-                Shell.KeyBindingMode.NORMAL |
-                Shell.KeyBindingMode.MESSAGE_TRAY,
-                Lang.bind(this, cb)
-            );
-        else if (Main.wm.addKeybinding && Main.KeybindingMode)
-            Main.wm.addKeybinding(schema, this._settings,
-                Meta.KeyBindingFlags.NONE,
-                Main.KeybindingMode.NORMAL |
-                Main.KeybindingMode.MESSAGE_TRAY,
-                Lang.bind(this, cb));
+        // Bind or unbind shortcuts
+        if (ENABLE_KEYBINDING)
+            that._bindShortcuts();
         else
-            global.display.add_keybinding(schema,
-                this._settings,
-                Meta.KeyBindingFlags.NONE,
-                Lang.bind(this, cb)
-            );
+            that._unbindShortcuts();
+    },
+    _bindShortcuts: function () {
+        this._unbindShortcuts();
+        this._bindShortcut(SETTING_KEY_CLEAR_HISTORY, this._removeAll);
+        this._bindShortcut(SETTING_KEY_PREV_ENTRY, this._previousEntry);
+        this._bindShortcut(SETTING_KEY_NEXT_ENTRY, this._nextEntry);
+        this._bindShortcut(SETTING_KEY_TOGGLE_MENU, this._toggleMenu);
+    },
+    _unbindShortcuts: function () {
+        this._shortcutsBindingIds.forEach(
+            (id) => Main.wm.removeKeybinding(id)
+        );
+
+        this._shortcutsBindingIds = [];
+    },
+    _bindShortcut: function(name, cb) {
+        Main.wm.addKeybinding(
+            name,
+            this._settings,
+            Meta.KeyBindingFlags.NONE,
+            Shell.KeyBindingMode.ALL,
+            Lang.bind(this, cb)
+        );
+
+        this._shortcutsBindingIds.push(name);
     },
     _previousEntry: function() {
         let that = this;
@@ -376,8 +385,8 @@ const ClipboardIndicator = Lang.Class({
                 i--;                                 //get the previous index
                 if (i < 0) i = menuItems.length - 1; //cycle if out of bound
                 that._selectMenuItem(menuItems[i]);  //select the item
-                let index = i + 1;                     //index to be displayed
-                _showNotification(index + ' / ' + menuItems.length + ': ' + menuItems[i].label.text);
+                let index = i + 1;                   //index to be displayed
+                that._showNotification(index + ' / ' + menuItems.length + ': ' + menuItems[i].label.text);
                 return true;
             }
             return false;
@@ -392,7 +401,7 @@ const ClipboardIndicator = Lang.Class({
                 if (i === menuItems.length) i = 0;   //cycle if out of bound
                 that._selectMenuItem(menuItems[i]);  //select the item
                 let index = i + 1;                     //index to be displayed
-                _showNotification(index + ' / ' + menuItems.length + ': ' + menuItems[i].label.text);
+                that._showNotification(index + ' / ' + menuItems.length + ': ' + menuItems[i].label.text);
                 return true;
             }
             return false;
