@@ -8,6 +8,11 @@
     width:400px;
 }
 
+.popup-menu-item StButton {
+    height:1em;
+    width:1.5em;
+}
+
 .history-menu-section {
     max-height:450px;
 }
