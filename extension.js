@@ -367,11 +367,14 @@ const ClipboardIndicator = Lang.Class({
     },
 
     _bindShortcut: function(name, cb) {
+        var ModeType = Shell.hasOwnProperty('ActionMode') ?
+            Shell.ActionMode : Shell.KeyBindingMode;
+
         Main.wm.addKeybinding(
             name,
             this._settings,
             Meta.KeyBindingFlags.NONE,
-            Shell.KeyBindingMode.ALL,
+            ModeType.ALL,
             Lang.bind(this, cb)
         );
 
