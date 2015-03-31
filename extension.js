@@ -39,6 +39,7 @@ const ClipboardIndicator = Lang.Class({
     Name: 'ClipboardIndicator',
     Extends: PanelMenu.Button,
 
+    _settingsChangedId: null,
     _clipboardTimeoutId: null,
     _historyLabelTimeoutId: null,
     _historyLabel: null,
@@ -46,17 +47,10 @@ const ClipboardIndicator = Lang.Class({
     clipItemsRadioGroup: [],
 
     destroy: function () {
-        // Disconnect all sources
-
-        this._settings.disconnect(this._settingsChangedId);
-
+        this._disconnectSettings();
         this._unbindShortcuts();
-
-        if (this._clipboardTimeoutId)
-            Mainloop.source_remove(this._clipboardTimeoutId);
-
-        if (this._historyLabelTimeoutId)
-            Mainloop.source_remove(this._historyLabelTimeoutId);
+        this._clearClipboardTimeout();
+        this._clearLabelTimeout();
 
         // Call parent
         this.parent();
@@ -306,7 +300,10 @@ const ClipboardIndicator = Lang.Class({
     },
 
     _createHistoryLabel: function () {
-        this._historyLabel = new St.Label({ style_class: 'notification-label' });
+        this._historyLabel = new St.Label({
+            style_class: 'notification-label',
+            text: ''
+        });
 
         global.stage.add_actor(this._historyLabel);
 
@@ -352,6 +349,7 @@ const ClipboardIndicator = Lang.Class({
         else
             that._unbindShortcuts();
     },
+
     _bindShortcuts: function () {
         this._unbindShortcuts();
         this._bindShortcut(SETTING_KEY_CLEAR_HISTORY, this._removeAll);
@@ -359,6 +357,7 @@ const ClipboardIndicator = Lang.Class({
         this._bindShortcut(SETTING_KEY_NEXT_ENTRY, this._nextEntry);
         this._bindShortcut(SETTING_KEY_TOGGLE_MENU, this._toggleMenu);
     },
+
     _unbindShortcuts: function () {
         this._shortcutsBindingIds.forEach(
             (id) => Main.wm.removeKeybinding(id)
@@ -366,6 +365,7 @@ const ClipboardIndicator = Lang.Class({
 
         this._shortcutsBindingIds = [];
     },
+
     _bindShortcut: function(name, cb) {
         Main.wm.addKeybinding(
             name,
@@ -377,6 +377,31 @@ const ClipboardIndicator = Lang.Class({
 
         this._shortcutsBindingIds.push(name);
     },
+
+    _disconnectSettings: function () {
+        if (!this._settingsChangedId)
+            return;
+
+        this._settings.disconnect(this._settingsChangedId);
+        this._settingsChangedId = null;
+    },
+
+    _clearClipboardTimeout: function () {
+        if (!this._clipboardTimeoutId)
+            return;
+
+        Mainloop.source_remove(this._clipboardTimeoutId);
+        this._clipboardTimeoutId = null;
+    },
+
+    _clearLabelTimeout: function () {
+        if (!this._historyLabelTimeoutId)
+            return;
+
+        Mainloop.source_remove(this._historyLabelTimeoutId);
+        this._historyLabelTimeoutId = null;
+    },
+
     _previousEntry: function() {
         let that = this;
 
@@ -392,6 +417,7 @@ const ClipboardIndicator = Lang.Class({
             return false;
         });
     },
+
     _nextEntry: function() {
         let that = this;
 
@@ -407,6 +433,7 @@ const ClipboardIndicator = Lang.Class({
             return false;
         });
     },
+
     _toggleMenu:function(){
         if(this.menu.visible)
             this.menu.close();
