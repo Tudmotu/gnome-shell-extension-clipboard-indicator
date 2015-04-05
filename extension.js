@@ -143,6 +143,7 @@ const ClipboardIndicator = Lang.Class({
         });
 
         let icoBtn = new St.Button({
+            style_class: 'ci-action-btn',
             x_fill: true,
             can_focus: true,
             child: icon
