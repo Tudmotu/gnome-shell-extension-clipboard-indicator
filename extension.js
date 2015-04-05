@@ -82,10 +82,9 @@ const ClipboardIndicator = Lang.Class({
 
             let scrollViewMenuSection = new PopupMenu.PopupMenuSection();
             let historyScrollView = new St.ScrollView({
+                style_class: 'ci-history-menu-section',
                 overlay_scrollbars: true
             });
-            historyScrollView.add_style_class_name('ci-history-menu-section');
-            historyScrollView.set_policy(PolicyType.NEVER, PolicyType.AUTOMATIC);
             historyScrollView.add_actor(that.historySection.actor);
 
             scrollViewMenuSection.actor.add_actor(historyScrollView);
