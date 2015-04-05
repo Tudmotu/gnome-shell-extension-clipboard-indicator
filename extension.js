@@ -84,7 +84,7 @@ const ClipboardIndicator = Lang.Class({
             let historyScrollView = new St.ScrollView({
                 overlay_scrollbars: true
             });
-            historyScrollView.add_style_class_name('history-menu-section');
+            historyScrollView.add_style_class_name('ci-history-menu-section');
             historyScrollView.set_policy(PolicyType.NEVER, PolicyType.AUTOMATIC);
             historyScrollView.add_actor(that.historySection.actor);
 
@@ -302,7 +302,7 @@ const ClipboardIndicator = Lang.Class({
 
     _createHistoryLabel: function () {
         this._historyLabel = new St.Label({
-            style_class: 'notification-label',
+            style_class: 'ci-notification-label',
             text: ''
         });
 

@@ -1,4 +1,4 @@
-.notification-label {
+.ci-notification-label {
     font-weight: bold;
     color: #ffffff;
     background-color: rgba(10,10,10,0.7);
@@ -13,6 +13,6 @@
     width:1.5em;
 }
 
-.history-menu-section {
+.ci-history-menu-section {
     max-height:450px;
 }
