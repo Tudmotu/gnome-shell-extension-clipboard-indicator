@@ -13,6 +13,9 @@ const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 const CheckBox  = imports.ui.checkBox.CheckBox;
 
+const Gettext = imports.gettext;
+const _ = Gettext.domain('clipboard-indicator').gettext;
+
 const Clipboard = St.Clipboard.get_default();
 const CLIPBOARD_TYPE = St.ClipboardType.CLIPBOARD;
 
@@ -100,12 +103,12 @@ const ClipboardIndicator = Lang.Class({
             that.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 
             // Add 'Clear' button which removes all items from cache
-            let clearMenuItem = new PopupMenu.PopupMenuItem('Clear History');
+            let clearMenuItem = new PopupMenu.PopupMenuItem(_('Clear History'));
             that.menu.addMenuItem(clearMenuItem);
             clearMenuItem.actor.connect('button-press-event', Lang.bind(that, that._removeAll));
 
             // Add 'Settings' menu item to open settings
-            let settingsMenuItem = new PopupMenu.PopupMenuItem('Settings');
+            let settingsMenuItem = new PopupMenu.PopupMenuItem(_('Settings'));
             that.menu.addMenuItem(settingsMenuItem);
             settingsMenuItem.actor.connect('button-press-event', Lang.bind(that, that._openSettings));
 
@@ -181,7 +184,7 @@ const ClipboardIndicator = Lang.Class({
             }
         });
         that._updateCache();
-        that._showNotification("Clipboard history cleared");
+        that._showNotification(_("Clipboard history cleared"));
     },
 
     _removeEntry: function (menuItem) {
@@ -447,7 +450,8 @@ const ClipboardIndicator = Lang.Class({
 
 
 function init () {
-
+    let localeDir = Me.dir.get_child('locale');
+    Gettext.bindtextdomain('clipboard-indicator', localeDir.get_path());
 }
 
 let clipboardIndicator;

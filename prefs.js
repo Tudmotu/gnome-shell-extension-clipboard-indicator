@@ -7,7 +7,7 @@ const Utils = Extension.imports.utils;
 const prettyPrint = Utils.prettyPrint;
 
 const Gettext = imports.gettext;
-const _ = Gettext.gettext;
+const _ = Gettext.domain('clipboard-indicator').gettext;
 
 const Fields = {
     INTERVAL       : 'refresh-interval',
@@ -78,13 +78,13 @@ const App = new Lang.Class({
 
         this.field_keybinding = createKeybindingWidget(SettingsSchema);
         addKeybinding(this.field_keybinding.model, SettingsSchema, "toggle-menu",
-                      "Toggle the menu");
+                      _("Toggle the menu"));
         addKeybinding(this.field_keybinding.model, SettingsSchema, "clear-history",
-                      "Clear history");
+                      _("Clear history"));
         addKeybinding(this.field_keybinding.model, SettingsSchema, "prev-entry",
-                      "Previous entry");
+                      _("Previous entry"));
         addKeybinding(this.field_keybinding.model, SettingsSchema, "next-entry",
-                      "Next entry");
+                      _("Next entry"));
 
         var that = this;
         this.field_keybinding_activation = new Gtk.Switch();
