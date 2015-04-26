@@ -62,7 +62,7 @@ const ClipboardIndicator = Lang.Class({
     _init: function() {
         this.parent(0.0, "ClipboardIndicator");
         let hbox = new St.BoxLayout({ style_class: 'panel-status-menu-box clipboard-indicator-hbox' });
-        let icon = new St.Icon({ icon_name: 'edit-cut-symbolic', //'mail-attachment-symbolic',
+        let icon = new St.Icon({ icon_name: 'edit-paste-symbolic', //'mail-attachment-symbolic',
             style_class: 'system-status-icon clipboard-indicator-icon' });
 
         hbox.add_child(icon);
