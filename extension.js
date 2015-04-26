@@ -103,7 +103,7 @@ const ClipboardIndicator = Lang.Class({
             that.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 
             // Add 'Clear' button which removes all items from cache
-            let clearMenuItem = new PopupMenu.PopupMenuItem(_('Clear History'));
+            let clearMenuItem = new PopupMenu.PopupMenuItem(_('Clear history'));
             that.menu.addMenuItem(clearMenuItem);
             clearMenuItem.actor.connect('button-press-event', Lang.bind(that, that._removeAll));
 
