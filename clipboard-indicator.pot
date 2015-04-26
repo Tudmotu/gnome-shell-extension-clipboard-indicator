@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-22 11:41+0200\n"
+"POT-Creation-Date: 2015-04-26 16:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,7 +21,7 @@ msgstr ""
 msgid "Toggle the menu"
 msgstr ""
 
-#: prefs.js:83
+#: prefs.js:83 extension.js:106
 msgid "Clear history"
 msgstr ""
 
@@ -51,10 +51,6 @@ msgstr ""
 
 #: prefs.js:120
 msgid "Keyboard shortcuts"
-msgstr ""
-
-#: extension.js:106
-msgid "Clear History"
 msgstr ""
 
 #: extension.js:111

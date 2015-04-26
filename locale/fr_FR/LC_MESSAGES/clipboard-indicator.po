@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-22 11:41+0200\n"
+"POT-Creation-Date: 2015-04-26 16:21+0200\n"
 "PO-Revision-Date: 2015-04-22 11:47+0100\n"
 "Last-Translator: Raphael Rochet <raphael@rri.fr>\n"
 "Language-Team: \n"
@@ -22,7 +22,7 @@ msgstr ""
 msgid "Toggle the menu"
 msgstr "Afficher/cacher le menu"
 
-#: prefs.js:83
+#: prefs.js:83 extension.js:106
 msgid "Clear history"
 msgstr "Vider l'historique"
 
@@ -54,10 +54,6 @@ msgstr "Taille max du cache (Kio)"
 msgid "Keyboard shortcuts"
 msgstr "Raccourcis clavier"
 
-#: extension.js:106
-msgid "Clear History"
-msgstr "Vider l'historique"
-
 #: extension.js:111
 msgid "Settings"
 msgstr "Paramètres"
@@ -65,3 +61,4 @@ msgstr "Paramètres"
 #: extension.js:187
 msgid "Clipboard history cleared"
 msgstr "Historique vidé"
+
