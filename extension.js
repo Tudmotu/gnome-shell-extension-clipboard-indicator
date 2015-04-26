@@ -163,7 +163,7 @@ const ClipboardIndicator = Lang.Class({
             })
         );
 
-        this.historySection.addMenuItem(menuItem);
+        this.historySection.addMenuItem(menuItem, 0);
 
         if (autoSelect === true)
             this._selectMenuItem(menuItem, autoSetClip);
