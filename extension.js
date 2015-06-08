@@ -105,12 +105,12 @@ const ClipboardIndicator = Lang.Class({
             // Add 'Clear' button which removes all items from cache
             let clearMenuItem = new PopupMenu.PopupMenuItem(_('Clear history'));
             that.menu.addMenuItem(clearMenuItem);
-            clearMenuItem.actor.connect('button-press-event', Lang.bind(that, that._removeAll));
+            clearMenuItem.connect('activate', Lang.bind(that, that._removeAll));
 
             // Add 'Settings' menu item to open settings
             let settingsMenuItem = new PopupMenu.PopupMenuItem(_('Settings'));
             that.menu.addMenuItem(settingsMenuItem);
-            settingsMenuItem.actor.connect('button-press-event', Lang.bind(that, that._openSettings));
+            settingsMenuItem.connect('activate', Lang.bind(that, that._openSettings));
 
             if (lastIdx >= 0) {
                 that._selectMenuItem(clipItemsArr[lastIdx]);
@@ -131,9 +131,10 @@ const ClipboardIndicator = Lang.Class({
     _addEntry: function (buffer, autoSelect, autoSetClip) {
         let menuItem = new PopupMenu.PopupMenuItem('');
 
+        menuItem.menu = this.menu;
         menuItem.clipContents = buffer;
         menuItem.radioGroup = this.clipItemsRadioGroup;
-        menuItem.buttonPressId = menuItem.actor.connect('button-press-event',
+        menuItem.buttonPressId = menuItem.connect('activate',
             Lang.bind(menuItem, this._onMenuItemSelected));
 
         this._setEntryLabel(menuItem);
@@ -224,6 +225,8 @@ const ClipboardIndicator = Lang.Class({
                 menuItem.currentlySelected = false;
             }
         });
+
+        that.menu.close();
     },
 
     _selectMenuItem: function (menuItem, autoSet) {
