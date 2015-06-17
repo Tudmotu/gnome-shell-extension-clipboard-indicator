@@ -1,0 +1,63 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-06-17 12:52+0100\n"
+"PO-Revision-Date: 2015-06-17 12:56+0100\n"
+"Last-Translator: Marek Pikuła <marek@pikula.co>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.1\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Language: pl_PL\n"
+
+#: prefs.js:81
+msgid "Toggle the menu"
+msgstr "Przełącz menu"
+
+#: prefs.js:83 extension.js:106
+msgid "Clear history"
+msgstr "Wyczyść historię"
+
+#: prefs.js:85
+msgid "Previous entry"
+msgstr "Poprzednia pozycja"
+
+#: prefs.js:87
+msgid "Next entry"
+msgstr "Następna pozycja"
+
+#: prefs.js:100
+msgid "History Size"
+msgstr "Rozmiar historii"
+
+#: prefs.js:105
+msgid "Refresh Interval (ms)"
+msgstr "Interwał odświeżania (ms)"
+
+#: prefs.js:110
+msgid "Preview Size (characters)"
+msgstr "Rozmiar podglądu (znaki)"
+
+#: prefs.js:115
+msgid "Max Cache File Size (kb)"
+msgstr "Maksymalny rozmiar pliku cache (kb)"
+
+#: prefs.js:120
+msgid "Keyboard shortcuts"
+msgstr "Skróty klawiszowe"
+
+#: extension.js:111
+msgid "Settings"
+msgstr "Ustawienia"
+
+#: extension.js:187
+msgid "Clipboard history cleared"
+msgstr "Wyczyszczono historię schowka"
