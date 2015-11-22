@@ -105,7 +105,7 @@ const ClipboardIndicator = Lang.Class({
             that.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 
             // Private mode switch
-            that.privateModeMenuItem = new PopupMenu.PopupSwitchMenuItem(_("Active"), !PRIVATEMODE, { reactive: true });
+            that.privateModeMenuItem = new PopupMenu.PopupSwitchMenuItem(_("Private mode"), PRIVATEMODE, { reactive: true });
             that.privateModeMenuItem.connect('toggled', Lang.bind(that, that._onPrivateModeSwitch));
             that.menu.addMenuItem(that.privateModeMenuItem);
 
@@ -326,7 +326,7 @@ const ClipboardIndicator = Lang.Class({
     },
 
     _onPrivateModeSwitch: function() {
-        PRIVATEMODE = !(this.privateModeMenuItem.state);
+        PRIVATEMODE = this.privateModeMenuItem.state;
         // We hide the history in private mode because it will be out of sync (selected item will not reflect clipboard)
         this.scrollViewMenuSection.actor.visible = !PRIVATEMODE;
 
