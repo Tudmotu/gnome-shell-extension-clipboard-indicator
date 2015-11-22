@@ -37,6 +37,7 @@ let MAX_REGISTRY_LENGTH  = 15;
 let MAX_ENTRY_LENGTH     = 50;
 let DELETE_ENABLED       = true;
 let ENABLE_KEYBINDING    = true;
+let PRIVATEMODE          = false;
 
 const ClipboardIndicator = Lang.Class({
     Name: 'ClipboardIndicator',
@@ -83,16 +84,16 @@ const ClipboardIndicator = Lang.Class({
             // Create menu section for items
             that.historySection = new PopupMenu.PopupMenuSection();
 
-            let scrollViewMenuSection = new PopupMenu.PopupMenuSection();
+            that.scrollViewMenuSection = new PopupMenu.PopupMenuSection();
             let historyScrollView = new St.ScrollView({
                 style_class: 'ci-history-menu-section',
                 overlay_scrollbars: true
             });
             historyScrollView.add_actor(that.historySection.actor);
 
-            scrollViewMenuSection.actor.add_actor(historyScrollView);
+            that.scrollViewMenuSection.actor.add_actor(historyScrollView);
 
-            that.menu.addMenuItem(scrollViewMenuSection);
+            that.menu.addMenuItem(that.scrollViewMenuSection);
 
             // Add cached items
             clipHistory.forEach(function (buffer) {
@@ -101,6 +102,11 @@ const ClipboardIndicator = Lang.Class({
 
             // Add separator
             that.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+
+            // Private mode switch
+            that.privateModeMenuItem = new PopupMenu.PopupSwitchMenuItem(_("Active"), !PRIVATEMODE, { reactive: true });
+            that.privateModeMenuItem.connect('toggled', Lang.bind(that, that._onPrivateModeSwitch));
+            that.menu.addMenuItem(that.privateModeMenuItem);
 
             // Add 'Clear' button which removes all items from cache
             let clearMenuItem = new PopupMenu.PopupMenuItem(_('Clear history'));
@@ -245,6 +251,8 @@ const ClipboardIndicator = Lang.Class({
     },
 
     _refreshIndicator: function () {
+        if (PRIVATEMODE) return; // Private mode, do not.
+
         let that = this;
 
         Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
@@ -314,6 +322,23 @@ const ClipboardIndicator = Lang.Class({
         global.stage.add_actor(this._historyLabel);
 
         this._historyLabel.hide();
+    },
+
+    _onPrivateModeSwitch: function() {
+        PRIVATEMODE = !(this.privateModeMenuItem.state);
+        // We hide the history in private mode because it will be out of sync (selected item will not reflect clipboard)
+        this.scrollViewMenuSection.actor.visible = !PRIVATEMODE;
+
+        // If we get out of private mode then we restore the clipboard to old state
+        if (!PRIVATEMODE) {
+            let previousSelectedItem = this.historySection.firstMenuItem;
+            if (previousSelectedItem) {
+                this._selectMenuItem(previousSelectedItem);
+            } else {
+                // Nothing to return to, let's empty it instead
+                Clipboard.set_text(CLIPBOARD_TYPE, "");
+            }
+        }
     },
 
     _loadSettings: function () {
