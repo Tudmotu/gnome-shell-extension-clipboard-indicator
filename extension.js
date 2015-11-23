@@ -332,8 +332,9 @@ const ClipboardIndicator = Lang.Class({
 
         // If we get out of private mode then we restore the clipboard to old state
         if (!PRIVATEMODE) {
-            let selectList = this.clipItemsRadioGroup.filter(function(item) { return item.currentlySelected === true });
-            if (selectList) {
+            let selectList = this.clipItemsRadioGroup.filter((item) => !!item.currentlySelected);
+
+            if (selectList.length) {
                 this._selectMenuItem(selectList[0]);
             } else {
                 // Nothing to return to, let's empty it instead
