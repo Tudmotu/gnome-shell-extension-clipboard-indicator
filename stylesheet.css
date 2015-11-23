@@ -8,9 +8,8 @@
     width:400px;
 }
 
-.popup-menu-item .ci-action-btn {
-    height:1em;
-    width:1.5em;
+.popup-menu-item .ci-action-btn StIcon {
+    icon-size:16px;
 }
 
 .ci-history-menu-section {
