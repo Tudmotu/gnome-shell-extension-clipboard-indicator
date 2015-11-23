@@ -1,6 +1,5 @@
 const Clutter    = imports.gi.Clutter;
 const Gio        = imports.gi.Gio;
-const Gtk        = imports.gi.Gtk;
 const Lang       = imports.lang;
 const Mainloop   = imports.mainloop;
 const Meta       = imports.gi.Meta;
@@ -63,9 +62,9 @@ const ClipboardIndicator = Lang.Class({
 
     _init: function() {
         this.parent(0.0, "ClipboardIndicator");
-        Gtk.IconTheme.get_default().append_search_path(Me.dir.get_child('icons').get_path());
         let hbox = new St.BoxLayout({ style_class: 'panel-status-menu-box clipboard-indicator-hbox' });
-        this.icon = new St.Icon({ icon_name: 'clipboard-indicator-symbolic', style_class: 'system-status-icon' });
+        this.icon = new St.Icon({ icon_name: 'edit-paste-symbolic',
+            style_class: 'system-status-icon clipboard-indicator-icon' });
 
         hbox.add_child(this.icon);
         this.actor.add_child(hbox);
@@ -340,9 +339,10 @@ const ClipboardIndicator = Lang.Class({
                 // Nothing to return to, let's empty it instead
                 Clipboard.set_text(CLIPBOARD_TYPE, "");
             }
-            this.icon.set_icon_name('clipboard-indicator-symbolic');
+
+            this.icon.remove_style_class_name('private-mode');
         } else {
-            this.icon.set_icon_name('clipboard-indicator-disabled-symbolic');
+            this.icon.add_style_class_name('private-mode');
         }
     },
 
