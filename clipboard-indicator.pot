@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-26 16:21+0200\n"
+"POT-Creation-Date: 2015-11-22 18:12+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,12 +17,24 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: prefs.js:81
-msgid "Toggle the menu"
+#: extension.js:108
+msgid "Private mode"
 msgstr ""
 
-#: prefs.js:83 extension.js:106
+#: extension.js:113 prefs.js:83
 msgid "Clear history"
+msgstr ""
+
+#: extension.js:118
+msgid "Settings"
+msgstr ""
+
+#: extension.js:195
+msgid "Clipboard history cleared"
+msgstr ""
+
+#: prefs.js:81
+msgid "Toggle the menu"
 msgstr ""
 
 #: prefs.js:85
@@ -51,12 +63,4 @@ msgstr ""
 
 #: prefs.js:120
 msgid "Keyboard shortcuts"
-msgstr ""
-
-#: extension.js:111
-msgid "Settings"
-msgstr ""
-
-#: extension.js:187
-msgid "Clipboard history cleared"
 msgstr ""
