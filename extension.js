@@ -191,7 +191,7 @@ const ClipboardIndicator = Lang.Class({
             }
         });
         that._updateCache();
-        Main.notify(_("Clipboard history cleared"));
+        that._showNotification(_("Clipboard history cleared"));
     },
 
     _removeEntry: function (menuItem) {
@@ -291,6 +291,10 @@ const ClipboardIndicator = Lang.Class({
             "gnome-shell-extension-prefs",
             Me.uuid
         ]);
+    },
+
+    _showNotification: function (notification) {
+         Main.notify(notification);
     },
 
     _createHistoryLabel: function () {
