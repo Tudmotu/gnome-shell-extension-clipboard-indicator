@@ -191,7 +191,7 @@ const ClipboardIndicator = Lang.Class({
             }
         });
         that._updateCache();
-        that._showNotification(_("Clipboard history cleared"));
+        Main.notify(_("Clipboard history cleared"));
     },
 
     _removeEntry: function (menuItem) {
@@ -291,26 +291,6 @@ const ClipboardIndicator = Lang.Class({
             "gnome-shell-extension-prefs",
             Me.uuid
         ]);
-    },
-
-    _showNotification: function (notification) {
-        let monitor = Main.layoutManager.currentMonitor;
-        let position = {
-            x: monitor.width - this._historyLabel.width,
-            y: Main.panel.actor.height
-        };
-
-        this._historyLabel.set_position(position.x, position.y);
-        this._historyLabel.text = notification;
-        this._historyLabel.show();
-
-        if (this._historyLabelTimeoutId)
-            Mainloop.source_remove(this._historyLabelTimeoutId);
-
-        this._historyLabelTimeoutId = Mainloop.timeout_add(TIMEOUT_MS, function () {
-            this._historyLabel.hide();
-            this._historyLabelTimeoutId = null;
-        }.bind(this));
     },
 
     _createHistoryLabel: function () {
