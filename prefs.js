@@ -40,12 +40,12 @@ function init() {
 const App = new Lang.Class({
     Name: 'ClipboardIndicator.App',
     _init: function() {
-        this.main = new Gtk.Grid({
+  	this.main = new Gtk.Grid({
             margin: 10,
-            row_spacing: 10,
-            column_spacing: 20,
+            row_spacing: 12,
+            column_spacing: 18,
             column_homogeneous: false,
-            row_homogeneous: true
+            row_homogeneous: false
         });
         this.field_interval = new Gtk.SpinButton({
             adjustment: new Gtk.Adjustment({
