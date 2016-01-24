@@ -7,6 +7,7 @@ const Shell      = imports.gi.Shell;
 const St         = imports.gi.St;
 const PolicyType = imports.gi.Gtk.PolicyType;
 const Util       = imports.misc.util;
+const MessageTray = imports.ui.messageTray;
 
 const Main      = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
