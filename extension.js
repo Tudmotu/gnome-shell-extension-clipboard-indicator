@@ -293,8 +293,20 @@ const ClipboardIndicator = Lang.Class({
         ]);
     },
 
-    _showNotification: function (notification) {
-         Main.notify(notification);
+   _showNotification: function (message) {
+        if (this._notifSource == null) {
+            this._notifSource = new MessageTray.Source('ClipboardIndicator', 'dialog-information-symbolic');
+        }
+        Main.messageTray.add(this._notifSource);
+        let notification = null;
+        if (this._notifSource.notifications.length == 0) {
+            notification = new MessageTray.Notification(this._notifSource, message);
+        } else {
+            notification = this._notifSource.notifications[0];
+            notification.update(message, { clear: true });
+        }
+        notification.setTransient(true);
+        this._notifSource.notify(notification);      
     },
 
     _createHistoryLabel: function () {
