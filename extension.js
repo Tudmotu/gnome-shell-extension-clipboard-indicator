@@ -305,7 +305,7 @@ const ClipboardIndicator = Lang.Class({
             notification = this._notifSource.notifications[0];
             notification.update(message, { clear: true });
         }
-        notification.setTransient(true);
+        notification.setTransient(false);
         this._notifSource.notify(notification);      
     },
 
