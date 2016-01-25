@@ -294,11 +294,15 @@ const ClipboardIndicator = Lang.Class({
         ]);
     },
 
-   _showNotification: function (message) {
+    _showNotification: function (message) {
         if (this._notifSource == null) {
-            this._notifSource = new MessageTray.Source('ClipboardIndicator', 'dialog-information-symbolic');
+            this._notifSource = new MessageTray.Source('ClipboardIndicator',
+                                    'dialog-information-symbolic');
+            this._notifSource.connect('destroy', Lang.bind(this, function() {
+                this._notifSource = null;
+            }));
+            Main.messageTray.add(this._notifSource);
         }
-        Main.messageTray.add(this._notifSource);
         let notification = null;
         if (this._notifSource.notifications.length == 0) {
             notification = new MessageTray.Notification(this._notifSource, message);
