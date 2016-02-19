@@ -7,6 +7,7 @@ const Shell      = imports.gi.Shell;
 const St         = imports.gi.St;
 const PolicyType = imports.gi.Gtk.PolicyType;
 const Util       = imports.misc.util;
+const MessageTray = imports.ui.messageTray;
 
 const Main      = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
@@ -293,24 +294,24 @@ const ClipboardIndicator = Lang.Class({
         ]);
     },
 
-    _showNotification: function (notification) {
-        let monitor = Main.layoutManager.currentMonitor;
-        let position = {
-            x: monitor.width - this._historyLabel.width,
-            y: Main.panel.actor.height
-        };
-
-        this._historyLabel.set_position(position.x, position.y);
-        this._historyLabel.text = notification;
-        this._historyLabel.show();
-
-        if (this._historyLabelTimeoutId)
-            Mainloop.source_remove(this._historyLabelTimeoutId);
-
-        this._historyLabelTimeoutId = Mainloop.timeout_add(TIMEOUT_MS, function () {
-            this._historyLabel.hide();
-            this._historyLabelTimeoutId = null;
-        }.bind(this));
+    _showNotification: function (message) {
+        if (this._notifSource == null) {
+            this._notifSource = new MessageTray.Source('ClipboardIndicator',
+                                    'dialog-information-symbolic');
+            this._notifSource.connect('destroy', Lang.bind(this, function() {
+                this._notifSource = null;
+            }));
+            Main.messageTray.add(this._notifSource);
+        }
+        let notification = null;
+        if (this._notifSource.notifications.length == 0) {
+            notification = new MessageTray.Notification(this._notifSource, message);
+        } else {
+            notification = this._notifSource.notifications[0];
+            notification.update(message, { clear: true });
+        }
+        notification.setTransient(false);
+        this._notifSource.notify(notification);      
     },
 
     _createHistoryLabel: function () {
