@@ -49,8 +49,6 @@ const ClipboardIndicator = Lang.Class({
     _clipboardTimeoutId: null,
     _historyLabelTimeoutId: null,
     _historyLabel: null,
-    _shortcutsBindingIds: [],
-    clipItemsRadioGroup: [],
 
     destroy: function () {
         this._disconnectSettings();
@@ -70,6 +68,9 @@ const ClipboardIndicator = Lang.Class({
 
         hbox.add_child(this.icon);
         this.actor.add_child(hbox);
+
+        this._shortcutsBindingIds = [];
+        this.clipItemsRadioGroup = [];
 
         this._createHistoryLabel();
         this._loadSettings();
