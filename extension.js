@@ -24,6 +24,7 @@ const SETTING_KEY_CLEAR_HISTORY = "clear-history";
 const SETTING_KEY_PREV_ENTRY = "prev-entry";
 const SETTING_KEY_NEXT_ENTRY = "next-entry";
 const SETTING_KEY_TOGGLE_MENU = "toggle-menu";
+const INDICATOR_ICON = 'edit-paste-symbolic';
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
@@ -64,7 +65,7 @@ const ClipboardIndicator = Lang.Class({
     _init: function() {
         this.parent(0.0, "ClipboardIndicator");
         let hbox = new St.BoxLayout({ style_class: 'panel-status-menu-box clipboard-indicator-hbox' });
-        this.icon = new St.Icon({ icon_name: 'edit-paste-symbolic',
+        this.icon = new St.Icon({ icon_name: INDICATOR_ICON,
             style_class: 'system-status-icon clipboard-indicator-icon' });
 
         hbox.add_child(this.icon);
@@ -294,23 +295,31 @@ const ClipboardIndicator = Lang.Class({
         ]);
     },
 
-    _showNotification: function (message) {
-        if (this._notifSource == null) {
+    _initNotifSource: function () {
+        if (!this._notifSource) {
             this._notifSource = new MessageTray.Source('ClipboardIndicator',
-                                    'dialog-information-symbolic');
+                                    INDICATOR_ICON);
             this._notifSource.connect('destroy', Lang.bind(this, function() {
                 this._notifSource = null;
             }));
             Main.messageTray.add(this._notifSource);
         }
+    },
+
+    _showNotification: function (message) {
         let notification = null;
-        if (this._notifSource.notifications.length == 0) {
+
+        this._initNotifSource();
+
+        if (this._notifSource.count === 0) {
             notification = new MessageTray.Notification(this._notifSource, message);
-        } else {
-            notification = this._notifSource.notifications[0];
-            notification.update(message, { clear: true });
         }
-        notification.setTransient(false);
+        else {
+            notification = this._notifSource.notifications[0];
+            notification.update(message, '', { clear: true });
+        }
+
+        notification.setTransient(true);
         this._notifSource.notify(notification);      
     },
 
