@@ -107,9 +107,12 @@ const ClipboardIndicator = Lang.Class({
             that.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 
             // Private mode switch
-            that.privateModeMenuItem = new PopupMenu.PopupSwitchMenuItem(_("Private mode"), PRIVATEMODE, { reactive: true });
-            that.privateModeMenuItem.connect('toggled', Lang.bind(that, that._onPrivateModeSwitch));
+            that.privateModeMenuItem = new PopupMenu.PopupSwitchMenuItem(
+                _("Private mode"), PRIVATEMODE, { reactive: true });
+            that.privateModeMenuItem.connect('toggled',
+                Lang.bind(that, that._onPrivateModeSwitch));
             that.menu.addMenuItem(that.privateModeMenuItem);
+            that._onPrivateModeSwitch();
 
             // Add 'Clear' button which removes all items from cache
             let clearMenuItem = new PopupMenu.PopupMenuItem(_('Clear history'));
