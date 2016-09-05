@@ -55,6 +55,7 @@ const ClipboardIndicator = Lang.Class({
         this._unbindShortcuts();
         this._clearClipboardTimeout();
         this._clearLabelTimeout();
+        this._clearDelayedSelectionTimeout();
 
         // Call parent
         this.parent();
@@ -271,7 +272,23 @@ const ClipboardIndicator = Lang.Class({
                 that._removeOldestEntries();
                 that._showNotification(_("Copied to clipboard"));
             }
+            else if (text && registry.indexOf(text) >= 0 &&
+                    registry.indexOf(text) < registry.length - 1) {
+                // If exists, but not already first, move it to be first
+                that._moveItemFirst(text);
+            }
         });
+    },
+
+    _moveItemFirst: function (text) {
+        let item = this._findItem(text);
+        this._removeEntry(item);
+        this._addEntry(text, true, false);
+    },
+
+    _findItem: function (text) {
+        return this.clipItemsRadioGroup.filter(
+            item => item.clipContents === text)[0];
     },
 
     _setupTimeout: function (reiterate) {
@@ -456,16 +473,38 @@ const ClipboardIndicator = Lang.Class({
         this._historyLabelTimeoutId = null;
     },
 
+    _clearDelayedSelectionTimeout: function () {
+        if (this._delayedSelectionTimeoutId) {
+            Mainloop.source_remove(this._delayedSelectionTimeoutId);
+        }
+    },
+
+    _selectEntryWithDelay: function (entry) {
+        let that = this;
+
+        that._selectMenuItem(entry, false);
+        that._delayedSelectionTimeoutId = Mainloop.timeout_add(
+                TIMEOUT_MS * 0.75, function () {
+
+            that._selectMenuItem(entry);  //select the item
+
+            that._delayedSelectionTimeoutId = null;
+            return false;
+        });
+    },
+
     _previousEntry: function() {
         let that = this;
+
+        that._clearDelayedSelectionTimeout();
 
         this.historySection._getMenuItems().some(function (mItem, i, menuItems){
             if (mItem.currentlySelected) {
                 i--;                                 //get the previous index
                 if (i < 0) i = menuItems.length - 1; //cycle if out of bound
-                that._selectMenuItem(menuItems[i]);  //select the item
                 let index = i + 1;                   //index to be displayed
                 that._showNotification(index + ' / ' + menuItems.length + ': ' + menuItems[i].label.text);
+                that._selectEntryWithDelay(menuItems[i]);
                 return true;
             }
             return false;
@@ -475,13 +514,15 @@ const ClipboardIndicator = Lang.Class({
     _nextEntry: function() {
         let that = this;
 
+        that._clearDelayedSelectionTimeout();
+
         this.historySection._getMenuItems().some(function (mItem, i, menuItems) {
             if (mItem.currentlySelected) {
                 i++;                                 //get the next index
                 if (i === menuItems.length) i = 0;   //cycle if out of bound
-                that._selectMenuItem(menuItems[i]);  //select the item
                 let index = i + 1;                     //index to be displayed
                 that._showNotification(index + ' / ' + menuItems.length + ': ' + menuItems[i].label.text);
+                that._selectEntryWithDelay(menuItems[i]);
                 return true;
             }
             return false;
