@@ -269,6 +269,7 @@ const ClipboardIndicator = Lang.Class({
             if (text && registry.indexOf(text) < 0) {
                 that._addEntry(text, true, false);
                 that._removeOldestEntries();
+                that._showNotification(_("Copied to clipboard"));
             }
         });
     },
