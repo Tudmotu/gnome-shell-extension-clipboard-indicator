@@ -40,6 +40,7 @@ let MAX_ENTRY_LENGTH     = 50;
 let DELETE_ENABLED       = true;
 let ENABLE_KEYBINDING    = true;
 let PRIVATEMODE          = false;
+let NOTIFY_ON_COPY       = true;
 
 const ClipboardIndicator = Lang.Class({
     Name: 'ClipboardIndicator',
@@ -270,7 +271,8 @@ const ClipboardIndicator = Lang.Class({
             if (text && registry.indexOf(text) < 0) {
                 that._addEntry(text, true, false);
                 that._removeOldestEntries();
-                that._showNotification(_("Copied to clipboard"));
+                if(NOTIFY_ON_COPY)
+                    that._showNotification(_("Copied to clipboard"));
             }
             else if (text && registry.indexOf(text) >= 0 &&
                     registry.indexOf(text) < registry.length - 1) {
@@ -395,6 +397,7 @@ const ClipboardIndicator = Lang.Class({
         MAX_ENTRY_LENGTH     = this._settings.get_int(Prefs.Fields.PREVIEW_SIZE);
         DELETE_ENABLED       = this._settings.get_boolean(Prefs.Fields.DELETE);
         ENABLE_KEYBINDING    = this._settings.get_boolean(Prefs.Fields.ENABLE_KEYBINDING);
+        NOTIFY_ON_COPY       = this._settings.get_boolean(Prefs.Fields.NOTIFY_ON_COPY);
     },
 
     _onSettingsChange: function () {

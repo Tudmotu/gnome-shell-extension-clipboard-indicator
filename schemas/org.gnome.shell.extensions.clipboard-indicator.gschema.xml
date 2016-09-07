@@ -43,6 +43,15 @@
         </description>
         <range min="512" max="16384"/>
     </key>
+
+    <key name="notify-on-copy" type="b">
+      <default>true</default>
+        <summary>Show notification on copy to clipboard</summary>
+        <description>
+            If true, a notification is shown when content is copied to clipboard.
+        </description>
+    </key>
+
     <key name="enable-keybindings" type="b">
       <default>true</default>
         <summary>Enable the keyboard shortcuts</summary>
