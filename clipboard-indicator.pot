@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-22 18:12+0100\n"
+"POT-Creation-Date: 2016-09-17 19:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,50 +17,58 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: extension.js:108
+#: extension.js:113
 msgid "Private mode"
 msgstr ""
 
-#: extension.js:113 prefs.js:83
+#: extension.js:120 prefs.js:86
 msgid "Clear history"
 msgstr ""
 
-#: extension.js:118
+#: extension.js:125
 msgid "Settings"
 msgstr ""
 
-#: extension.js:195
+#: extension.js:202
 msgid "Clipboard history cleared"
 msgstr ""
 
-#: prefs.js:81
+#: extension.js:275
+msgid "Copied to clipboard"
+msgstr ""
+
+#: prefs.js:84
 msgid "Toggle the menu"
 msgstr ""
 
-#: prefs.js:85
+#: prefs.js:88
 msgid "Previous entry"
 msgstr ""
 
-#: prefs.js:87
+#: prefs.js:90
 msgid "Next entry"
 msgstr ""
 
-#: prefs.js:100
+#: prefs.js:103
 msgid "History Size"
 msgstr ""
 
-#: prefs.js:105
+#: prefs.js:108
 msgid "Refresh Interval (ms)"
 msgstr ""
 
-#: prefs.js:110
+#: prefs.js:113
 msgid "Preview Size (characters)"
 msgstr ""
 
-#: prefs.js:115
+#: prefs.js:118
 msgid "Max Cache File Size (kb)"
 msgstr ""
 
-#: prefs.js:120
+#: prefs.js:123
+msgid "Show notification on copy"
+msgstr ""
+
+#: prefs.js:128
 msgid "Keyboard shortcuts"
 msgstr ""
