@@ -1,0 +1,67 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-11-22 18:14+0100\n"
+"PO-Revision-Date: 2017-04-19 14:47+0200\n"
+"Last-Translator: Raphael Rochet <raphael@rri.fr>\n"
+"Language-Team: \n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.7.1\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: extension.js:108
+msgid "Private mode"
+msgstr "Modalità privata\t"
+
+#: extension.js:113 prefs.js:83
+msgid "Clear history"
+msgstr "Elimina la cronologia"
+
+#: extension.js:118
+msgid "Settings"
+msgstr "Impostazioni"
+
+#: extension.js:195
+msgid "Clipboard history cleared"
+msgstr "Cronologia eliminata"
+
+#: prefs.js:81
+msgid "Toggle the menu"
+msgstr "Mostra/nascondi il menu"
+
+#: prefs.js:85
+msgid "Previous entry"
+msgstr "Voce precedente"
+
+#: prefs.js:87
+msgid "Next entry"
+msgstr "Voce successiva"
+
+#: prefs.js:100
+msgid "History Size"
+msgstr "Dimensioni della cronologia"
+
+#: prefs.js:105
+msgid "Refresh Interval (ms)"
+msgstr "Intervallo di aggiornamento (ms)"
+
+#: prefs.js:110
+msgid "Preview Size (characters)"
+msgstr "Dimensioni dell'anteprima (caractères)"
+
+#: prefs.js:115
+msgid "Max Cache File Size (kb)"
+msgstr "Dimensioni massime della cache (kb)"
+
+#: prefs.js:120
+msgid "Keyboard shortcuts"
+msgstr "Scorciatoie da tastiera"
