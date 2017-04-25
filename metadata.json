@@ -6,7 +6,8 @@
         "3.16",
         "3.18",
         "3.20",
-        "3.22"
+        "3.22",
+        "3.24"
     ],
     "uuid": "clipboard-indicator@tudmotu.com",
     "name": "Clipboard Indicator",
