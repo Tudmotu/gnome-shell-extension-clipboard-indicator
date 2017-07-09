@@ -532,11 +532,8 @@ const ClipboardIndicator = Lang.Class({
         });
     },
 
-    _toggleMenu:function(){
-        if(this.menu.visible)
-            this.menu.close();
-        else
-            this.menu.open();
+    _toggleMenu: function(){
+        this.menu.toggle();
     }
 });
 
