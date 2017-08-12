@@ -69,6 +69,7 @@ const ClipboardIndicator = Lang.Class({
             style_class: 'system-status-icon clipboard-indicator-icon' });
 
         hbox.add_child(this.icon);
+        hbox.add(PopupMenu.arrowIcon(St.Side.BOTTOM));
         this.actor.add_child(hbox);
 
         this._shortcutsBindingIds = [];
@@ -214,7 +215,7 @@ const ClipboardIndicator = Lang.Class({
         let that = this;
         while (that.clipItemsRadioGroup.length > MAX_REGISTRY_LENGTH) {
             let oldest = that.clipItemsRadioGroup.shift();
-            oldest.actor.disconnect(oldest.buttonPressId);
+            oldest.disconnect(oldest.buttonPressId);
             oldest.destroy();
         }
 
