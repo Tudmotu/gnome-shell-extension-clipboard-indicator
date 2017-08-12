@@ -214,7 +214,7 @@ const ClipboardIndicator = Lang.Class({
         let that = this;
         while (that.clipItemsRadioGroup.length > MAX_REGISTRY_LENGTH) {
             let oldest = that.clipItemsRadioGroup.shift();
-            oldest.actor.disconnect(oldest.buttonPressId);
+            oldest.disconnect(oldest.buttonPressId);
             oldest.destroy();
         }
 
