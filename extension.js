@@ -254,6 +254,8 @@ const ClipboardIndicator = Lang.Class({
     },
 
     _updateCache: function () {
+        if (DISABLE_CACHE_FILE) return; // disable file cache
+
         writeRegistry(this.clipItemsRadioGroup.map(function (menuItem) {
             return menuItem.clipContents;
         }));
@@ -345,7 +347,7 @@ const ClipboardIndicator = Lang.Class({
         }
 
         notification.setTransient(true);
-        this._notifSource.notify(notification);      
+        this._notifSource.notify(notification);
     },
 
     _createHistoryLabel: function () {
@@ -396,9 +398,10 @@ const ClipboardIndicator = Lang.Class({
         TIMEOUT_MS           = this._settings.get_int(Prefs.Fields.INTERVAL);
         MAX_REGISTRY_LENGTH  = this._settings.get_int(Prefs.Fields.HISTORY_SIZE);
         MAX_ENTRY_LENGTH     = this._settings.get_int(Prefs.Fields.PREVIEW_SIZE);
+        DISABLE_CACHE_FILE   = this._settings.get_boolean(Prefs.Fields.DISABLE_CACHE_FILE);
         DELETE_ENABLED       = this._settings.get_boolean(Prefs.Fields.DELETE);
-        ENABLE_KEYBINDING    = this._settings.get_boolean(Prefs.Fields.ENABLE_KEYBINDING);
         NOTIFY_ON_COPY       = this._settings.get_boolean(Prefs.Fields.NOTIFY_ON_COPY);
+        ENABLE_KEYBINDING    = this._settings.get_boolean(Prefs.Fields.ENABLE_KEYBINDING);
     },
 
     _onSettingsChange: function () {
