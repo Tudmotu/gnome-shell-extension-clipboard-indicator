@@ -36,12 +36,20 @@
 
     <key type="i" name="cache-size">
         <default>1024</default>
-        <summary>The allowed size for the registry cache file.</summary>
+        <summary>The allowed size for the registry cache file</summary>
         <description>
             If the cache overflows this limit, the file will be overriden.
             High limit might cause slowness of shell startup.
         </description>
         <range min="512" max="16384"/>
+    </key>
+
+    <key name="cache-disable" type="b">
+      <default>false</default>
+        <summary>Disable the registry cache file and use memory only</summary>
+        <description>
+            If true, content is not stored and retrieved from a cache (registry.txt) file. If the extension is reloaded, then your copy paste history is lost. However, if you copy and paste passwords, then this helps avoid writing them to a plaintext file.
+        </description>
     </key>
 
     <key name="notify-on-copy" type="b">
