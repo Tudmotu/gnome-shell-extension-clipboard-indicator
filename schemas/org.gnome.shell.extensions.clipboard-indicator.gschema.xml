@@ -48,7 +48,9 @@
       <default>false</default>
         <summary>Disable the registry cache file and use memory only</summary>
         <description>
-            If true, content is not stored and retrieved from a cache (registry.txt) file. If the extension is reloaded, then your copy paste history is lost. However, if you copy and paste passwords, then this helps avoid writing them to a plaintext file.
+            Content is not stored and retrieved from a cache (registry.txt) file.
+            This avoid writing passwords to a plaintext file, but at the cost of persistant history.
+            Your clipboard history is lost after a gnome-shell session ends or the extension is reloaded.
         </description>
     </key>
 

@@ -14,7 +14,7 @@ const Fields = {
     HISTORY_SIZE       : 'history-size',
     PREVIEW_SIZE       : 'preview-size',
     CACHE_FILE_SIZE    : 'cache-size',
-    DISABLE_CACHE_FILE : 'cache-disable',
+    CACHE_FILE_DISABLE : 'cache-disable',
     DELETE             : 'enable-deletion',
     NOTIFY_ON_COPY     : 'notify-on-copy',
     ENABLE_KEYBINDING  : 'enable-keybindings'
@@ -146,8 +146,8 @@ const App = new Lang.Class({
         this.main.attach(cacheSizeLabel     , 2, 4, 2 ,1);
         this.main.attach(cacheDisableLabel  , 2, 5, 2 ,1);
         //this.main.attach(deleteLabel        , 2, 4, 2 ,1);
-        this.main.attach(notificationLabel  , 2, 7, 2 ,1);
-        this.main.attach(keybindingLabel    , 2, 8, 2 ,1);
+        this.main.attach(notificationLabel  , 2, 6, 2 ,1);
+        this.main.attach(keybindingLabel    , 2, 7, 2 ,1);
 
         this.main.attach(this.field_size                   , 4, 1, 2, 1);
         this.main.attach(this.field_preview_size           , 4, 2, 2, 1);
