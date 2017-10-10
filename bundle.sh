@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 zip -r bundle.zip \
     extension.js \
     locale/ \

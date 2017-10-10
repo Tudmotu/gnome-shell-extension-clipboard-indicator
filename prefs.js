@@ -10,13 +10,14 @@ const Gettext = imports.gettext;
 const _ = Gettext.domain('clipboard-indicator').gettext;
 
 const Fields = {
-    INTERVAL       : 'refresh-interval',
-    HISTORY_SIZE   : 'history-size',
-    PREVIEW_SIZE   : 'preview-size',
-    CACHE_FILE_SIZE: 'cache-size',
-    DELETE         : 'enable-deletion',
-    NOTIFY_ON_COPY : 'notify-on-copy',
-    ENABLE_KEYBINDING : 'enable-keybindings'
+    INTERVAL           : 'refresh-interval',
+    HISTORY_SIZE       : 'history-size',
+    PREVIEW_SIZE       : 'preview-size',
+    CACHE_FILE_SIZE    : 'cache-size',
+    CACHE_FILE_DISABLE : 'cache-disable',
+    DELETE             : 'enable-deletion',
+    NOTIFY_ON_COPY     : 'notify-on-copy',
+    ENABLE_KEYBINDING  : 'enable-keybindings'
 };
 
 const SCHEMA_NAME = 'org.gnome.shell.extensions.clipboard-indicator';
@@ -27,7 +28,7 @@ const getSchema = function () {
     let schema = schemaSource.lookup(SCHEMA_NAME, false);
 
     return new Gio.Settings({ settings_schema: schema });
-}
+};
 
 const SettingsSchema = getSchema();
 
@@ -76,9 +77,8 @@ const App = new Lang.Class({
                 step_increment: 1
             })
         });
-
+        this.field_cache_disable = new Gtk.Switch();
         this.field_notification_toggle = new Gtk.Switch();
-
         this.field_keybinding = createKeybindingWidget(SettingsSchema);
         addKeybinding(this.field_keybinding.model, SettingsSchema, "toggle-menu",
                       _("Toggle the menu"));
@@ -114,8 +114,13 @@ const App = new Lang.Class({
             hexpand: true,
             halign: Gtk.Align.START
         });
-        let cacheLabel  = new Gtk.Label({
-            label: _("Max Cache File Size (kb)"),
+        let cacheSizeLabel  = new Gtk.Label({
+            label: _("Max cache file size (kb)"),
+            hexpand: true,
+            halign: Gtk.Align.START
+        });
+        let cacheDisableLabel  = new Gtk.Label({
+            label: _("Disable cache file"),
             hexpand: true,
             halign: Gtk.Align.START
         });
@@ -135,32 +140,34 @@ const App = new Lang.Class({
             //hexpand: true,
             //halign: Gtk.Align.START
         //});
-        this.main.attach(sizeLabel       , 2, 1, 2 ,1);
-        this.main.attach(previewLabel    , 2, 2, 2 ,1);
-        this.main.attach(intervalLabel   , 2, 3, 2 ,1);
-        this.main.attach(cacheLabel      , 2, 4, 2 ,1)
-        this.main.attach(notificationLabel  , 2, 5, 2 ,1)
-        this.main.attach(keybindingLabel , 2, 6, 2 ,1);
-        //this.main.attach(deleteLabel  , 2, 4, 2 ,1);
+        this.main.attach(sizeLabel          , 2, 1, 2 ,1);
+        this.main.attach(previewLabel       , 2, 2, 2 ,1);
+        this.main.attach(intervalLabel      , 2, 3, 2 ,1);
+        this.main.attach(cacheSizeLabel     , 2, 4, 2 ,1);
+        this.main.attach(cacheDisableLabel  , 2, 5, 2 ,1);
+        //this.main.attach(deleteLabel        , 2, 4, 2 ,1);
+        this.main.attach(notificationLabel  , 2, 6, 2 ,1);
+        this.main.attach(keybindingLabel    , 2, 7, 2 ,1);
 
-        this.main.attach(this.field_size        , 4, 1, 2, 1);
-        this.main.attach(this.field_preview_size, 4, 2, 2, 1);
-        this.main.attach(this.field_interval    , 4, 3, 2, 1);
-        this.main.attach(this.field_cache_size  , 4, 4, 2, 1);
-        this.main.attach(this.field_notification_toggle, 4, 5, 2, 1);
-        this.main.attach(this.field_keybinding_activation  , 4, 6, 2, 1);
-        this.main.attach(this.field_keybinding  , 2, 7, 4, 2);
-        //this.main.attach(this.field_deletion    , 4, 4, 2, 1);
+        this.main.attach(this.field_size                   , 4, 1, 2, 1);
+        this.main.attach(this.field_preview_size           , 4, 2, 2, 1);
+        this.main.attach(this.field_interval               , 4, 3, 2, 1);
+        this.main.attach(this.field_cache_size             , 4, 4, 2, 1);
+        this.main.attach(this.field_cache_disable          , 4, 5, 2, 1);
+        //this.main.attach(this.field_deletion               , 4, 4, 2, 1);
+        this.main.attach(this.field_notification_toggle    , 4, 6, 2, 1);
+        this.main.attach(this.field_keybinding_activation  , 4, 7, 2, 1);
+        this.main.attach(this.field_keybinding             , 2, 8, 4, 2);
 
-        SettingsSchema.bind(Fields.INTERVAL    , this.field_interval    , 'value' , Gio.SettingsBindFlags.DEFAULT);
-        SettingsSchema.bind(Fields.HISTORY_SIZE, this.field_size        , 'value' , Gio.SettingsBindFlags.DEFAULT);
-        SettingsSchema.bind(Fields.PREVIEW_SIZE, this.field_preview_size, 'value' , Gio.SettingsBindFlags.DEFAULT);
-        SettingsSchema.bind(Fields.CACHE_FILE_SIZE, this.field_cache_size, 'value' , Gio.SettingsBindFlags.DEFAULT);
+        SettingsSchema.bind(Fields.INTERVAL, this.field_interval, 'value', Gio.SettingsBindFlags.DEFAULT);
+        SettingsSchema.bind(Fields.HISTORY_SIZE, this.field_size, 'value', Gio.SettingsBindFlags.DEFAULT);
+        SettingsSchema.bind(Fields.PREVIEW_SIZE, this.field_preview_size, 'value', Gio.SettingsBindFlags.DEFAULT);
+        SettingsSchema.bind(Fields.CACHE_FILE_SIZE, this.field_cache_size, 'value', Gio.SettingsBindFlags.DEFAULT);
+        SettingsSchema.bind(Fields.CACHE_FILE_DISABLE, this.field_cache_disable, 'active', Gio.SettingsBindFlags.DEFAULT);
+        //SettingsSchema.bind(Fields.DELETE, this.field_deletion, 'active', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.NOTIFY_ON_COPY, this.field_notification_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
+	      SettingsSchema.bind(Fields.ENABLE_KEYBINDING, this.field_keybinding_activation, 'active', Gio.SettingsBindFlags.DEFAULT);
 
-        //SettingsSchema.bind(Fields.DELETE      , this.field_deletion    , 'active', Gio.SettingsBindFlags.DEFAULT);
-	SettingsSchema.bind(Fields.ENABLE_KEYBINDING, this.field_keybinding_activation, 'active', Gio.SettingsBindFlags.DEFAULT);
-        
         this.main.show_all();
     }
 });
@@ -168,7 +175,7 @@ const App = new Lang.Class({
 function buildPrefsWidget(){
     let widget = new App();
     return widget.main;
-};
+}
 
 
 //binding widgets
