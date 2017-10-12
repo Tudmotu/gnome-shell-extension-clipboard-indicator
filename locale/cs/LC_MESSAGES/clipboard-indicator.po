@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-17 19:20+0200\n"
-"PO-Revision-Date: 2017-08-11 20:46+0200\n"
+"PO-Revision-Date: 2017-10-12 22:20+0200\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -17,23 +17,23 @@ msgstr ""
 "Language-Team: \n"
 "X-Generator: Poedit 2.0.3\n"
 
-#: extension.js:113
+#: extension.js:114
 msgid "Private mode"
 msgstr "Soukromý mód"
 
-#: extension.js:120 prefs.js:86
+#: extension.js:121 prefs.js:86
 msgid "Clear history"
 msgstr "Vyčistit historii"
 
-#: extension.js:125
+#: extension.js:126
 msgid "Settings"
 msgstr "Nastavení"
 
-#: extension.js:202
+#: extension.js:203
 msgid "Clipboard history cleared"
 msgstr "Historie schránky vyčištěna"
 
-#: extension.js:275
+#: extension.js:278
 msgid "Copied to clipboard"
 msgstr "Zkopírováno do schránky"
 
@@ -62,13 +62,17 @@ msgid "Preview Size (characters)"
 msgstr "Velikost náhledu (znaky)"
 
 #: prefs.js:118
-msgid "Max Cache File Size (kb)"
+msgid "Max cache file size (kb)"
 msgstr "Maximální velikost mezipaměti (kb)"
 
 #: prefs.js:123
+msgid "Disable cache file"
+msgstr "Zakázat soubor mezipaměti"
+
+#: prefs.js:128
 msgid "Show notification on copy"
 msgstr "Zobrazit oznámení při kopírování"
 
-#: prefs.js:128
+#: prefs.js:133
 msgid "Keyboard shortcuts"
 msgstr "Klávesové zkratky"
