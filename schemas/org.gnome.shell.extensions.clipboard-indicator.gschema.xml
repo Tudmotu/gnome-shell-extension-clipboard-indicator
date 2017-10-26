@@ -24,14 +24,29 @@
         <range min="1" max="50"/>
     </key>
 
+    <key type="i" name="display-mode">
+        <default>1</default>
+        <summary>What to display in top bar</summary>
+        <range min="0" max="2"/>
+    </key>
+
     <key type="i" name="preview-size">
         <default>30</default>
         <summary>Amount of visible characters for clipboard items </summary>
         <description>
-            The number of characters to display for every clipbaord item in
+            The number of characters to display for every clipboard item in
             the history menu
         </description>
         <range min="10" max="100"/>
+    </key>
+    
+    <key type="i" name="topbar-preview-size">
+        <default>10</default>
+        <summary>Amount of visible characters in topbar </summary>
+        <description>
+            The number of characters to display for current clipboard item in the topbar
+        </description>
+        <range min="1" max="20"/>
     </key>
 
     <key type="i" name="cache-size">
