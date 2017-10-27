@@ -42,7 +42,7 @@ let ENABLE_KEYBINDING    = true;
 let PRIVATEMODE          = false;
 let NOTIFY_ON_COPY       = true;
 let MAX_TOPBAR_LENGTH	 = 15;
-let DISPLAY_MODE = 1; //0 - only icon, 1 - only clipbord content, 2 - both
+let TOPBAR_DISPLAY_MODE = 1; //0 - only icon, 1 - only clipbord content, 2 - both
 
 const ClipboardIndicator = Lang.Class({
     Name: 'ClipboardIndicator',
@@ -86,15 +86,15 @@ const ClipboardIndicator = Lang.Class({
         this._loadSettings();
         this._buildMenu();
 
-        if(DISPLAY_MODE == 0){
+        if(TOPBAR_DISPLAY_MODE == 0){
         	this.icon.visible = true;
         	this._buttonText.visible = false;
         }
-        if(DISPLAY_MODE == 1){
+        if(TOPBAR_DISPLAY_MODE == 1){
         	this.icon.visible = false;
         	this._buttonText.visible = true;
         }
-        if(DISPLAY_MODE == 2){
+        if(TOPBAR_DISPLAY_MODE == 2){
         	this.icon.visible = true;
         	this._buttonText.visible = true;
         }
@@ -215,7 +215,7 @@ const ClipboardIndicator = Lang.Class({
         this.historySection.addMenuItem(menuItem, 0);
         if (autoSelect === true)
             this._selectMenuItem(menuItem, autoSetClip);
-        if(DISPLAY_MODE == 1 || DISPLAY_MODE == 2) {
+        if(TOPBAR_DISPLAY_MODE == 1 || TOPBAR_DISPLAY_MODE == 2) {
         	this._updateButtonText(buffer);
        	}
         this._updateCache();
@@ -440,7 +440,7 @@ const ClipboardIndicator = Lang.Class({
         NOTIFY_ON_COPY       = this._settings.get_boolean(Prefs.Fields.NOTIFY_ON_COPY);
         ENABLE_KEYBINDING    = this._settings.get_boolean(Prefs.Fields.ENABLE_KEYBINDING);
         MAX_TOPBAR_LENGTH	 = this._settings.get_int(Prefs.Fields.TOPBAR_PREVIEW_SIZE);
-        DISPLAY_MODE 		 = this._settings.get_int(Prefs.Fields.DISPLAY_MODE_ID);
+        TOPBAR_DISPLAY_MODE 		 = this._settings.get_int(Prefs.Fields.TOPBAR_DISPLAY_MODE_ID);
     },
 
     _onSettingsChange: function () {
@@ -457,22 +457,22 @@ const ClipboardIndicator = Lang.Class({
             that._setEntryLabel(mItem);
         });
 
-        log(DISPLAY_MODE);
+        log(TOPBAR_DISPLAY_MODE);
 
         //update topbar
-        if(DISPLAY_MODE == 0){
+        if(TOPBAR_DISPLAY_MODE == 0){
         	this.icon.visible = true;
         	this._buttonText.visible = false;
         }
-        if(DISPLAY_MODE == 1){
+        if(TOPBAR_DISPLAY_MODE == 1){
         	this.icon.visible = false;
         	this._buttonText.visible = true;
         }
-        if(DISPLAY_MODE == 2){
+        if(TOPBAR_DISPLAY_MODE == 2){
         	this.icon.visible = true;
         	this._buttonText.visible = true;
         }
-        if(DISPLAY_MODE == 1 || DISPLAY_MODE == 2) {
+        if(TOPBAR_DISPLAY_MODE == 1 || TOPBAR_DISPLAY_MODE == 2) {
 	        Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
 	        	that._updateButtonText(text);
 	        });

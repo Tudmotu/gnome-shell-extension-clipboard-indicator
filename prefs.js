@@ -19,7 +19,7 @@ const Fields = {
     NOTIFY_ON_COPY     : 'notify-on-copy',
     ENABLE_KEYBINDING  : 'enable-keybindings',
     TOPBAR_PREVIEW_SIZE: 'topbar-preview-size',
-    DISPLAY_MODE_ID    : 'display-mode'
+    TOPBAR_DISPLAY_MODE_ID    : 'display-mode'
 };
 
 const SCHEMA_NAME = 'org.gnome.shell.extensions.clipboard-indicator';
