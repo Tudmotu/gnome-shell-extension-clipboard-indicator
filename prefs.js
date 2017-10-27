@@ -195,7 +195,7 @@ const App = new Lang.Class({
         SettingsSchema.bind(Fields.CACHE_FILE_DISABLE, this.field_cache_disable, 'active', Gio.SettingsBindFlags.DEFAULT);
         //SettingsSchema.bind(Fields.DELETE, this.field_deletion, 'active', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.NOTIFY_ON_COPY, this.field_notification_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
-        SettingsSchema.bind(Fields.DISPLAY_MODE_ID, this.field_display_mode, 'active', Gio.SettingsBindFlags.DEFAULT);
+        SettingsSchema.bind(Fields.TOPBAR_DISPLAY_MODE_ID, this.field_display_mode, 'active', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.TOPBAR_PREVIEW_SIZE, this.field_topbar_preview_size, 'value', Gio.SettingsBindFlags.DEFAULT);
 	    SettingsSchema.bind(Fields.ENABLE_KEYBINDING, this.field_keybinding_activation, 'active', Gio.SettingsBindFlags.DEFAULT);
 

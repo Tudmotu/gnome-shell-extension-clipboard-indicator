@@ -86,18 +86,7 @@ const ClipboardIndicator = Lang.Class({
         this._loadSettings();
         this._buildMenu();
 
-        if(TOPBAR_DISPLAY_MODE == 0){
-        	this.icon.visible = true;
-        	this._buttonText.visible = false;
-        }
-        if(TOPBAR_DISPLAY_MODE == 1){
-        	this.icon.visible = false;
-        	this._buttonText.visible = true;
-        }
-        if(TOPBAR_DISPLAY_MODE == 2){
-        	this.icon.visible = true;
-        	this._buttonText.visible = true;
-        }
+        this._updateTopbarLayout();
 
         this._setupTimeout();
     },
@@ -457,21 +446,8 @@ const ClipboardIndicator = Lang.Class({
             that._setEntryLabel(mItem);
         });
 
-        log(TOPBAR_DISPLAY_MODE);
-
         //update topbar
-        if(TOPBAR_DISPLAY_MODE == 0){
-        	this.icon.visible = true;
-        	this._buttonText.visible = false;
-        }
-        if(TOPBAR_DISPLAY_MODE == 1){
-        	this.icon.visible = false;
-        	this._buttonText.visible = true;
-        }
-        if(TOPBAR_DISPLAY_MODE == 2){
-        	this.icon.visible = true;
-        	this._buttonText.visible = true;
-        }
+        this._updateTopbarLayout();
         if(TOPBAR_DISPLAY_MODE == 1 || TOPBAR_DISPLAY_MODE == 2) {
 	        Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
 	        	that._updateButtonText(text);
@@ -514,6 +490,21 @@ const ClipboardIndicator = Lang.Class({
         );
 
         this._shortcutsBindingIds.push(name);
+    },
+
+    _updateTopbarLayout: function(){
+        if(TOPBAR_DISPLAY_MODE == 0){
+        	this.icon.visible = true;
+        	this._buttonText.visible = false;
+        }
+        if(TOPBAR_DISPLAY_MODE == 1){
+        	this.icon.visible = false;
+        	this._buttonText.visible = true;
+        }
+        if(TOPBAR_DISPLAY_MODE == 2){
+        	this.icon.visible = true;
+        	this._buttonText.visible = true;
+        }
     },
 
     _disconnectSettings: function () {
