@@ -86,7 +86,42 @@ const ClipboardIndicator = Lang.Class({
         this._getCache(function (clipHistory) {
             let lastIdx = clipHistory.length - 1;
             let clipItemsArr = that.clipItemsRadioGroup;
-
+			
+			/* This create the search entry, which is add to a menuItem.
+			The searchEntry is connected to the function for research.
+			The menu itself is connected to some shitty hack in order to
+			grab the focus of the keyboard. */
+			that._entryItem = new PopupMenu.PopupBaseMenuItem({
+				reactive: false,
+				can_focus: false
+			});
+			that.searchEntry = new St.Entry({
+				name: 'searchEntry',
+				style_class: 'search-entry',
+				can_focus: true,
+				hint_text: _('Type here to search...'),
+				track_hover: true
+			});
+		
+			that.searchEntry.get_clutter_text().connect(
+				'text-changed', 
+				Lang.bind(that, that._onSearchTextChanged)
+			);
+		
+			that._entryItem.actor.add(that.searchEntry, { expand: true });
+		
+			that.menu.addMenuItem(that._entryItem);
+			
+			that.menu.connect('open-state-changed', Lang.bind(this, function(self, open){
+				let a = Mainloop.timeout_add(50, Lang.bind(this, function() {
+					if (open) {
+						that.searchEntry.set_text('');
+						global.stage.set_key_focus(that.searchEntry);
+					}
+					Mainloop.source_remove(a);
+				}));
+			}));		
+			
             // Create menu section for items
             that.historySection = new PopupMenu.PopupMenuSection();
 
@@ -132,7 +167,35 @@ const ClipboardIndicator = Lang.Class({
             }
         });
     },
+	
+	
+	/* When text change, this function will check, for each item of the 
+	historySection, if it should be visible or not (based on words contained
+	in the clipContents attribute of the item). It doesn't destroy or create 
+	items. It the entry is empty, the section is restored with all items 
+	set as visible. */
+	_onSearchTextChanged: function() {		
+		let searchedText = this.searchEntry.get_text();
 
+		if(searchedText === '') {
+			this.historySection._getMenuItems().forEach(function(mItem){
+				mItem.actor.visible = true;
+			});
+		} else {
+			this.historySection._getMenuItems().forEach(function(mItem){
+				mItem.actor.visible = false;
+			});
+			this.historySection._getMenuItems().forEach(function(mItem){
+				let itemWords = mItem.clipContents.split(' ');
+				itemWords.forEach(function(word){
+					if(searchedText.substr(0, searchedText.length) == word.substr(0, searchedText.length)) {
+						mItem.actor.visible = true;
+					}
+				});				
+			});
+		}
+	},
+	
     _setEntryLabel: function (menuItem) {
         let buffer = menuItem.clipContents,
         shortened = buffer.substr(0,MAX_ENTRY_LENGTH).replace(/\s+/g, ' ');
