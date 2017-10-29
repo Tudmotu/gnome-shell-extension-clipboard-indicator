@@ -151,10 +151,10 @@ const ClipboardIndicator = Lang.Class({
     },
 
     _truncate: function(string, length) {
-    	let shortened = string.substring(0,length).replace(/\s+/g, ' ');
+    	let shortened = string.replace(/\s+/g, ' ');
 
-        if (string.length > length)
-            shortened += '...';
+        if (shortened.length > length)
+            shortened = shortened.substring(0,length-1) + '...';
        	return shortened;
     },
 
