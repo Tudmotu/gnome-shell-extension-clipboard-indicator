@@ -81,8 +81,8 @@ const App = new Lang.Class({
         });
         this.field_topbar_preview_size = new Gtk.SpinButton({
             adjustment: new Gtk.Adjustment({
-                lower: 3,
-                upper: 20,
+                lower: 1,
+                upper: 100,
                 step_increment: 1
             })
         });

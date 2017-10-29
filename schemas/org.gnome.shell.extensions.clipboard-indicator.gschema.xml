@@ -46,7 +46,7 @@
         <description>
             The number of characters to display for current clipboard item in the topbar
         </description>
-        <range min="1" max="20"/>
+        <range min="1" max="100"/>
     </key>
 
     <key type="i" name="cache-size">
