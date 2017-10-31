@@ -191,23 +191,18 @@ const ClipboardIndicator = Lang.Class({
     items. It the entry is empty, the section is restored with all items
     set as visible. */
     _onSearchTextChanged: function() {
-        let searchedText = this.searchEntry.get_text();
+        let searchedText = this.searchEntry.get_text().toLowerCase();
 
         if(searchedText === '') {
             this.historySection._getMenuItems().forEach(function(mItem){
                 mItem.actor.visible = true;
             });
-        } else {
+        }
+        else {
             this.historySection._getMenuItems().forEach(function(mItem){
-                mItem.actor.visible = false;
-            });
-            this.historySection._getMenuItems().forEach(function(mItem){
-                let itemWords = mItem.clipContents.split(' ');
-                itemWords.forEach(function(word){
-                    if(searchedText.substr(0, searchedText.length) === word.substr(0, searchedText.length)) {
-                        mItem.actor.visible = true;
-                    }
-                });
+                let text = mItem.clipContents.toLowerCase();
+                let isMatched = text.includes(searchedText);
+                mItem.actor.visible = isMatched;
             });
         }
     },
