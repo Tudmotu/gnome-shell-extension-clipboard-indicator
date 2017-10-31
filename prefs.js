@@ -17,7 +17,9 @@ const Fields = {
     CACHE_FILE_DISABLE : 'cache-disable',
     DELETE             : 'enable-deletion',
     NOTIFY_ON_COPY     : 'notify-on-copy',
-    ENABLE_KEYBINDING  : 'enable-keybindings'
+    ENABLE_KEYBINDING  : 'enable-keybindings',
+    TOPBAR_PREVIEW_SIZE: 'topbar-preview-size',
+    TOPBAR_DISPLAY_MODE_ID    : 'display-mode'
 };
 
 const SCHEMA_NAME = 'org.gnome.shell.extensions.clipboard-indicator';
@@ -42,7 +44,7 @@ function init() {
 const App = new Lang.Class({
     Name: 'ClipboardIndicator.App',
     _init: function() {
-  	this.main = new Gtk.Grid({
+      this.main = new Gtk.Grid({
             margin: 10,
             row_spacing: 12,
             column_spacing: 18,
@@ -77,6 +79,20 @@ const App = new Lang.Class({
                 step_increment: 1
             })
         });
+        this.field_topbar_preview_size = new Gtk.SpinButton({
+            adjustment: new Gtk.Adjustment({
+                lower: 1,
+                upper: 100,
+                step_increment: 1
+            })
+        });
+        this.field_display_mode = new Gtk.ComboBox({
+            model: this._create_display_mode_options()});
+
+        let rendererText = new Gtk.CellRendererText();
+        this.field_display_mode.pack_start (rendererText, false);
+        this.field_display_mode.add_attribute (rendererText, "text", 0);
+
         this.field_cache_disable = new Gtk.Switch();
         this.field_notification_toggle = new Gtk.Switch();
         this.field_keybinding = createKeybindingWidget(SettingsSchema);
@@ -134,7 +150,16 @@ const App = new Lang.Class({
             hexpand: true,
             halign: Gtk.Align.START
         });
-
+        let topbarPreviewLabel  = new Gtk.Label({
+            label: _("Number of characters in top bar"),
+            hexpand: true,
+            halign: Gtk.Align.START
+        });
+        let displayModeLabel  = new Gtk.Label({
+            label: _("What to show in top bar"),
+            hexpand: true,
+            halign: Gtk.Align.START
+        });
         //let deleteLabel   = new Gtk.Label({
             //label: _("Enable Deletion"),
             //hexpand: true,
@@ -147,7 +172,9 @@ const App = new Lang.Class({
         this.main.attach(cacheDisableLabel  , 2, 5, 2 ,1);
         //this.main.attach(deleteLabel        , 2, 4, 2 ,1);
         this.main.attach(notificationLabel  , 2, 6, 2 ,1);
-        this.main.attach(keybindingLabel    , 2, 7, 2 ,1);
+        this.main.attach(displayModeLabel   , 2, 7, 2, 1);
+        this.main.attach(topbarPreviewLabel , 2, 8, 2 ,1);
+        this.main.attach(keybindingLabel    , 2, 9, 2 ,1);
 
         this.main.attach(this.field_size                   , 4, 1, 2, 1);
         this.main.attach(this.field_preview_size           , 4, 2, 2, 1);
@@ -156,8 +183,10 @@ const App = new Lang.Class({
         this.main.attach(this.field_cache_disable          , 4, 5, 2, 1);
         //this.main.attach(this.field_deletion               , 4, 4, 2, 1);
         this.main.attach(this.field_notification_toggle    , 4, 6, 2, 1);
-        this.main.attach(this.field_keybinding_activation  , 4, 7, 2, 1);
-        this.main.attach(this.field_keybinding             , 2, 8, 4, 2);
+        this.main.attach(this.field_display_mode           , 4, 7, 2, 1);
+        this.main.attach(this.field_topbar_preview_size    , 4, 8, 2, 1);
+        this.main.attach(this.field_keybinding_activation  , 4, 9, 2, 1);
+        this.main.attach(this.field_keybinding             , 2, 10, 4, 2);
 
         SettingsSchema.bind(Fields.INTERVAL, this.field_interval, 'value', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.HISTORY_SIZE, this.field_size, 'value', Gio.SettingsBindFlags.DEFAULT);
@@ -166,9 +195,24 @@ const App = new Lang.Class({
         SettingsSchema.bind(Fields.CACHE_FILE_DISABLE, this.field_cache_disable, 'active', Gio.SettingsBindFlags.DEFAULT);
         //SettingsSchema.bind(Fields.DELETE, this.field_deletion, 'active', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.NOTIFY_ON_COPY, this.field_notification_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
-	      SettingsSchema.bind(Fields.ENABLE_KEYBINDING, this.field_keybinding_activation, 'active', Gio.SettingsBindFlags.DEFAULT);
+        SettingsSchema.bind(Fields.TOPBAR_DISPLAY_MODE_ID, this.field_display_mode, 'active', Gio.SettingsBindFlags.DEFAULT);
+        SettingsSchema.bind(Fields.TOPBAR_PREVIEW_SIZE, this.field_topbar_preview_size, 'value', Gio.SettingsBindFlags.DEFAULT);
+        SettingsSchema.bind(Fields.ENABLE_KEYBINDING, this.field_keybinding_activation, 'active', Gio.SettingsBindFlags.DEFAULT);
 
         this.main.show_all();
+    },
+    _create_display_mode_options : function(){
+        let options = [{ name: "Icon" },
+        { name: "Clipboard Content",},
+        { name: "Both"}];
+        let liststore = new Gtk.ListStore();
+        liststore.set_column_types([GObject.TYPE_STRING])
+        for (let i = 0; i < options.length; i++ ) {
+            let option = options[i];
+            let iter = liststore.append();
+            liststore.set (iter, [0], [option.name]);
+        }
+        return liststore;
     }
 });
 
