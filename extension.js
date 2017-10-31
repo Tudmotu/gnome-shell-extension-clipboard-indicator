@@ -253,7 +253,7 @@ const ClipboardIndicator = Lang.Class({
         menuItem.icoBtn = icoBtn;
         menuItem.deletePressId = icoBtn.connect('button-press-event',
             Lang.bind(this, function () {
-                this._removeEntry(menuItem);
+                this._removeEntry(menuItem, 'delete');
             })
         );
 
@@ -285,11 +285,16 @@ const ClipboardIndicator = Lang.Class({
         that._showNotification(_("Clipboard history cleared"));
     },
 
-    _removeEntry: function (menuItem) {
+    _removeEntry: function (menuItem, event) {
         let itemIdx = this.clipItemsRadioGroup.indexOf(menuItem);
+
+        if(event == 'delete' && menuItem.currentlySelected) {
+            Clipboard.set_text(CLIPBOARD_TYPE, "");
+        }
 
         menuItem.destroy();
         this.clipItemsRadioGroup.splice(itemIdx,1);
+
         this._updateCache();
     },
 
@@ -311,13 +316,11 @@ const ClipboardIndicator = Lang.Class({
 
             if (menuItem === that && clipContents) {
                 that.setOrnament(PopupMenu.Ornament.DOT);
-                that.icoBtn.visible = false;
                 that.currentlySelected = true;
                 if (autoSet !== false)
                     Clipboard.set_text(CLIPBOARD_TYPE, clipContents);
             }
             else {
-                menuItem.icoBtn.visible = true;
                 menuItem.setOrnament(PopupMenu.Ornament.NONE);
                 menuItem.currentlySelected = false;
             }
@@ -349,27 +352,29 @@ const ClipboardIndicator = Lang.Class({
         let that = this;
 
         Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
-            let registry = that.clipItemsRadioGroup.map(function (menuItem) {
-                return menuItem.clipContents;
-            });
+            if (text != "") {
+                let registry = that.clipItemsRadioGroup.map(function (menuItem) {
+                    return menuItem.clipContents;
+                });
 
-            if (text && registry.indexOf(text) < 0) {
-                that._addEntry(text, true, false);
-                that._removeOldestEntries();
-                if(NOTIFY_ON_COPY)
-                    that._showNotification(_("Copied to clipboard"));
-            }
-            else if (text && registry.indexOf(text) >= 0 &&
-                    registry.indexOf(text) < registry.length - 1) {
-                // If exists, but not already first, move it to be first
-                that._moveItemFirst(text);
+                if (text && registry.indexOf(text) < 0) {
+                    that._addEntry(text, true, false);
+                    that._removeOldestEntries();
+                    if(NOTIFY_ON_COPY)
+                        that._showNotification(_("Copied to clipboard"));
+                }
+                else if (text && registry.indexOf(text) >= 0 &&
+                        registry.indexOf(text) < registry.length - 1) {
+                    // If exists, but not already first, move it to be first
+                    that._moveItemFirst(text);
+                }
             }
         });
     },
 
     _moveItemFirst: function (text) {
         let item = this._findItem(text);
-        this._removeEntry(item);
+        this._removeEntry(item, 'move');
         this._addEntry(text, true, false);
     },
 
