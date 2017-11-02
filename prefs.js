@@ -136,7 +136,7 @@ const App = new Lang.Class({
             halign: Gtk.Align.START
         });
         let cacheDisableLabel  = new Gtk.Label({
-            label: _("Disable cache file"),
+            label: _("Cache only favorites"),
             hexpand: true,
             halign: Gtk.Align.START
         });

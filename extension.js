@@ -155,7 +155,7 @@ const ClipboardIndicator = Lang.Class({
 
             // Add cached items
             clipHistory.forEach(function (buffer) {
-                that._addEntry(buffer);
+                that._addEntry(buffer[0], buffer[1]);
             });
 
             // Add separator
@@ -221,11 +221,12 @@ const ClipboardIndicator = Lang.Class({
         menuItem.label.set_text(this._truncate(buffer, MAX_ENTRY_LENGTH));
     },
 
-    _addEntry: function (buffer, autoSelect, autoSetClip) {
+    _addEntry: function (buffer, favorite, autoSelect, autoSetClip) {
         let menuItem = new PopupMenu.PopupMenuItem('');
 
         menuItem.menu = this.menu;
         menuItem.clipContents = buffer;
+        menuItem.clipFavorite = favorite;
         menuItem.radioGroup = this.clipItemsRadioGroup;
         menuItem.buttonPressId = menuItem.connect('activate',
             Lang.bind(menuItem, this._onMenuItemSelected));
@@ -233,6 +234,33 @@ const ClipboardIndicator = Lang.Class({
         this._setEntryLabel(menuItem);
         this.clipItemsRadioGroup.push(menuItem);
 
+	// Favorite button
+	let icon_name = favorite == '0' ? 'non-starred-symbolic' : 'starred-symbolic' ;
+        let iconfav = new St.Icon({
+            icon_name: icon_name,
+            style_class: 'system-status-icon'
+        });
+
+        let icofavBtn = new St.Button({
+            style_class: 'ci-action-btn',
+            x_fill: true,
+            can_focus: true,
+            child: iconfav
+        });
+
+        icofavBtn.set_x_align(Clutter.ActorAlign.END);
+        icofavBtn.set_x_expand(true);
+        icofavBtn.set_y_expand(true);
+
+        menuItem.actor.add_child(icofavBtn);
+        menuItem.icofavBtn = icofavBtn;
+        menuItem.favoritePressId = icofavBtn.connect('button-press-event',
+            Lang.bind(this, function () {
+                this._favoriteToggle(menuItem);
+            })
+        );
+
+	// Delete button
         let icon = new St.Icon({
             icon_name: 'edit-delete-symbolic', //'mail-attachment-symbolic',
             style_class: 'system-status-icon'
@@ -246,7 +274,7 @@ const ClipboardIndicator = Lang.Class({
         });
 
         icoBtn.set_x_align(Clutter.ActorAlign.END);
-        icoBtn.set_x_expand(true);
+        icoBtn.set_x_expand(false);
         icoBtn.set_y_expand(true);
 
         menuItem.actor.add_child(icoBtn);
@@ -269,13 +297,25 @@ const ClipboardIndicator = Lang.Class({
         this._updateCache();
     },
 
+    _favoriteToggle: function (menuItem) {
+        if (menuItem.clipFavorite == '0') {
+            menuItem.clipFavorite = '1';
+            menuItem.icofavBtn.child.icon_name = 'starred-symbolic';
+	} else {
+	    menuItem.clipFavorite = '0';
+	    menuItem.icofavBtn.child.icon_name = 'non-starred-symbolic';
+	}
+        this._updateCache();
+    },
+
     _removeAll: function () {
         let that = this;
         // We can't actually remove all items, because the clipboard still
         // has data that will be re-captured on next refresh, so we remove
         // all except the currently selected item
+        // Don't remove favorites here
         that.historySection._getMenuItems().forEach(function (mItem) {
-            if (!mItem.currentlySelected) {
+            if (!mItem.currentlySelected && mItem.clipFavorite == '0') {
                 let idx = that.clipItemsRadioGroup.indexOf(mItem);
                 mItem.destroy();
                 that.clipItemsRadioGroup.splice(idx,1);
@@ -336,10 +376,20 @@ const ClipboardIndicator = Lang.Class({
     },
 
     _updateCache: function () {
-        if (CACHE_FILE_DISABLE) return; // disable file cache
+        let registry = this.clipItemsRadioGroup.map(function (menuItem) {
+            if (CACHE_FILE_DISABLE) {
+                if (menuItem.clipFavorite == '1') {
+                    return [menuItem.clipContents, menuItem.clipFavorite];
+                }
+            } else {
+                return [menuItem.clipContents, menuItem.clipFavorite];
+            }
+        });
 
-        writeRegistry(this.clipItemsRadioGroup.map(function (menuItem) {
-            return menuItem.clipContents;
+        writeRegistry(registry.filter(function (menuItem) {
+            if (menuItem != 'null') {
+                return menuItem;
+            }
         }));
     },
 
@@ -354,7 +404,7 @@ const ClipboardIndicator = Lang.Class({
             });
 
             if (text && registry.indexOf(text) < 0) {
-                that._addEntry(text, true, false);
+                that._addEntry(text, '0', true, false);
                 that._removeOldestEntries();
                 if(NOTIFY_ON_COPY)
                     that._showNotification(_("Copied to clipboard"));
@@ -369,8 +419,9 @@ const ClipboardIndicator = Lang.Class({
 
     _moveItemFirst: function (text) {
         let item = this._findItem(text);
+        let favorite = item.clipFavorite;
         this._removeEntry(item);
-        this._addEntry(text, true, false);
+        this._addEntry(text, favorite, true, false);
     },
 
     _findItem: function (text) {
