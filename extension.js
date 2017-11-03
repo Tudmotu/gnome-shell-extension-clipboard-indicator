@@ -349,20 +349,22 @@ const ClipboardIndicator = Lang.Class({
         let that = this;
 
         Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
-            let registry = that.clipItemsRadioGroup.map(function (menuItem) {
-                return menuItem.clipContents;
-            });
+            if (text != "") {
+                let registry = that.clipItemsRadioGroup.map(function (menuItem) {
+                    return menuItem.clipContents;
+                });
 
-            if (text && registry.indexOf(text) < 0) {
-                that._addEntry(text, true, false);
-                that._removeOldestEntries();
-                if(NOTIFY_ON_COPY)
-                    that._showNotification(_("Copied to clipboard"));
-            }
-            else if (text && registry.indexOf(text) >= 0 &&
-                    registry.indexOf(text) < registry.length - 1) {
-                // If exists, but not already first, move it to be first
-                that._moveItemFirst(text);
+                if (text && registry.indexOf(text) < 0) {
+                    that._addEntry(text, true, false);
+                    that._removeOldestEntries();
+                    if(NOTIFY_ON_COPY)
+                        that._showNotification(_("Copied to clipboard"));
+                }
+                else if (text && registry.indexOf(text) >= 0 &&
+                        registry.indexOf(text) < registry.length - 1) {
+                    // If exists, but not already first, move it to be first
+                    that._moveItemFirst(text);
+                }
             }
         });
     },
@@ -415,6 +417,21 @@ const ClipboardIndicator = Lang.Class({
         }
     },
 
+    _cancelNotification: function() {
+        if (this.clipItemsRadioGroup.length >= 2) {
+            let clipSecond = this.clipItemsRadioGroup.length - 2;
+            let previousClip = this.clipItemsRadioGroup[clipSecond];
+            Clipboard.set_text(CLIPBOARD_TYPE, previousClip.clipContents);
+            previousClip.setOrnament(PopupMenu.Ornament.DOT);
+            previousClip.icoBtn.visible = false;
+            previousClip.currentlySelected = true;
+        } else {
+            Clipboard.set_text(CLIPBOARD_TYPE, "");
+        }
+        let clipFirst = this.clipItemsRadioGroup.length - 1;
+        this._removeEntry(this.clipItemsRadioGroup[clipFirst]);
+    },
+
     _showNotification: function (message) {
         let notification = null;
 
@@ -422,8 +439,11 @@ const ClipboardIndicator = Lang.Class({
 
         if (this._notifSource.count === 0) {
             notification = new MessageTray.Notification(this._notifSource, message);
+            if (message == _("Copied to clipboard")) {
+                notification.addAction( _('Cancel') , Lang.bind(this, function() {this._cancelNotification();}) );
+            }
         }
-        else {
+        else if (message != _("Copied to clipboard")) {
             notification = this._notifSource.notifications[0];
             notification.update(message, '', { clear: true });
         }
