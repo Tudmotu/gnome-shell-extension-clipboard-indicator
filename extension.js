@@ -335,10 +335,17 @@ const ClipboardIndicator = Lang.Class({
 
     _removeOldestEntries: function () {
         let that = this;
-        while (that.clipItemsRadioGroup.length > MAX_REGISTRY_LENGTH) {
-            let oldest = that.clipItemsRadioGroup.shift();
-            oldest.disconnect(oldest.buttonPressId);
-            oldest.destroy();
+
+        let clipItemsRadioGroupNoFavorite = that.clipItemsRadioGroup.filter(
+            item => item.clipFavorite === '0');
+
+        while (clipItemsRadioGroupNoFavorite.length > MAX_REGISTRY_LENGTH) {
+            let oldestNoFavorite = clipItemsRadioGroupNoFavorite.shift();
+            let oldestToDelete = that._findItem(oldestNoFavorite.clipContents)
+            that._removeEntry(oldestToDelete);
+
+            clipItemsRadioGroupNoFavorite = that.clipItemsRadioGroup.filter(
+                item => item.clipFavorite === '0');
         }
 
         that._updateCache();
