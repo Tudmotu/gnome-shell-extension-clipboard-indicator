@@ -288,7 +288,7 @@ const ClipboardIndicator = Lang.Class({
     _removeEntry: function (menuItem, event) {
         let itemIdx = this.clipItemsRadioGroup.indexOf(menuItem);
 
-        if(event == 'delete' && menuItem.currentlySelected) {
+        if(event === 'delete' && menuItem.currentlySelected) {
             Clipboard.set_text(CLIPBOARD_TYPE, "");
         }
 
@@ -352,7 +352,7 @@ const ClipboardIndicator = Lang.Class({
         let that = this;
 
         Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
-            if (text != "") {
+            if (text !== "") {
                 let registry = that.clipItemsRadioGroup.map(function (menuItem) {
                     return menuItem.clipContents;
                 });
