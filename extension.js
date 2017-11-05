@@ -349,7 +349,7 @@ const ClipboardIndicator = Lang.Class({
         let that = this;
 
         Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
-            if (text != "") {
+            if (text !== "") {
                 let registry = that.clipItemsRadioGroup.map(function (menuItem) {
                     return menuItem.clipContents;
                 });
