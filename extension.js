@@ -392,7 +392,7 @@ const ClipboardIndicator = Lang.Class({
         });
 
         writeRegistry(registry.filter(function (menuItem) {
-            if (CACHE_FILE_DISABLE) {
+            if (CACHE_ONLY_FAVORITE) {
                 if (menuItem["favorite"]) {
                     return menuItem;
                 }
@@ -543,7 +543,7 @@ const ClipboardIndicator = Lang.Class({
         TIMEOUT_MS           = this._settings.get_int(Prefs.Fields.INTERVAL);
         MAX_REGISTRY_LENGTH  = this._settings.get_int(Prefs.Fields.HISTORY_SIZE);
         MAX_ENTRY_LENGTH     = this._settings.get_int(Prefs.Fields.PREVIEW_SIZE);
-        CACHE_FILE_DISABLE   = this._settings.get_boolean(Prefs.Fields.CACHE_FILE_DISABLE);
+        CACHE_ONLY_FAVORITE   = this._settings.get_boolean(Prefs.Fields.CACHE_ONLY_FAVORITE);
         DELETE_ENABLED       = this._settings.get_boolean(Prefs.Fields.DELETE);
         NOTIFY_ON_COPY       = this._settings.get_boolean(Prefs.Fields.NOTIFY_ON_COPY);
         ENABLE_KEYBINDING    = this._settings.get_boolean(Prefs.Fields.ENABLE_KEYBINDING);
