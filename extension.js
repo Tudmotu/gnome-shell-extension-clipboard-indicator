@@ -155,7 +155,12 @@ const ClipboardIndicator = Lang.Class({
 
             // Add cached items
             clipHistory.forEach(function (buffer) {
-                that._addEntry(buffer[0], buffer[1]);
+                if (typeof buffer === 'string') {
+                    // Old cache format
+                    that._addEntry(buffer);
+                } else {
+                    that._addEntry(buffer["contents"], buffer["favorite"]);
+                }
             });
 
             // Add separator
@@ -235,7 +240,7 @@ const ClipboardIndicator = Lang.Class({
         this.clipItemsRadioGroup.push(menuItem);
 
 	// Favorite button
-	let icon_name = favorite == '0' ? 'non-starred-symbolic' : 'starred-symbolic' ;
+        let icon_name = favorite ? 'starred-symbolic' : 'non-starred-symbolic';
         let iconfav = new St.Icon({
             icon_name: icon_name,
             style_class: 'system-status-icon'
@@ -298,13 +303,9 @@ const ClipboardIndicator = Lang.Class({
     },
 
     _favoriteToggle: function (menuItem) {
-        if (menuItem.clipFavorite == '0') {
-            menuItem.clipFavorite = '1';
-            menuItem.icofavBtn.child.icon_name = 'starred-symbolic';
-	} else {
-	    menuItem.clipFavorite = '0';
-	    menuItem.icofavBtn.child.icon_name = 'non-starred-symbolic';
-	}
+        menuItem.icofavBtn.child.icon_name = menuItem.clipFavorite ? 'non-starred-symbolic' : 'starred-symbolic';
+        menuItem.clipFavorite = menuItem.clipFavorite ? false: true;
+
         this._updateCache();
     },
 
@@ -315,7 +316,7 @@ const ClipboardIndicator = Lang.Class({
         // all except the currently selected item
         // Don't remove favorites here
         that.historySection._getMenuItems().forEach(function (mItem) {
-            if (!mItem.currentlySelected && mItem.clipFavorite == '0') {
+            if (!mItem.currentlySelected && !mItem.clipFavorite) {
                 let idx = that.clipItemsRadioGroup.indexOf(mItem);
                 mItem.destroy();
                 that.clipItemsRadioGroup.splice(idx,1);
@@ -337,7 +338,7 @@ const ClipboardIndicator = Lang.Class({
         let that = this;
 
         let clipItemsRadioGroupNoFavorite = that.clipItemsRadioGroup.filter(
-            item => item.clipFavorite === '0');
+            item => item.clipFavorite === false);
 
         while (clipItemsRadioGroupNoFavorite.length > MAX_REGISTRY_LENGTH) {
             let oldestNoFavorite = clipItemsRadioGroupNoFavorite.shift();
@@ -345,7 +346,7 @@ const ClipboardIndicator = Lang.Class({
             that._removeEntry(oldestToDelete);
 
             clipItemsRadioGroupNoFavorite = that.clipItemsRadioGroup.filter(
-                item => item.clipFavorite === '0');
+                item => item.clipFavorite === false);
         }
 
         that._updateCache();
@@ -384,17 +385,18 @@ const ClipboardIndicator = Lang.Class({
 
     _updateCache: function () {
         let registry = this.clipItemsRadioGroup.map(function (menuItem) {
-            if (CACHE_FILE_DISABLE) {
-                if (menuItem.clipFavorite == '1') {
-                    return [menuItem.clipContents, menuItem.clipFavorite];
-                }
-            } else {
-                return [menuItem.clipContents, menuItem.clipFavorite];
-            }
+            return {
+                      "contents" : menuItem.clipContents,
+                      "favorite" : menuItem.clipFavorite
+                   };
         });
 
         writeRegistry(registry.filter(function (menuItem) {
-            if (menuItem != 'null') {
+            if (CACHE_FILE_DISABLE) {
+                if (menuItem["favorite"]) {
+                    return menuItem;
+                }
+            } else {
                 return menuItem;
             }
         }));
@@ -411,7 +413,7 @@ const ClipboardIndicator = Lang.Class({
             });
 
             if (text && registry.indexOf(text) < 0) {
-                that._addEntry(text, '0', true, false);
+                that._addEntry(text, false, true, false);
                 that._removeOldestEntries();
                 if(NOTIFY_ON_COPY)
                     that._showNotification(_("Copied to clipboard"));
