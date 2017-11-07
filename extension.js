@@ -201,8 +201,8 @@ const ClipboardIndicator = Lang.Class({
         else {
             this.historySection._getMenuItems().forEach(function(mItem){
                 let text = mItem.clipContents.toLowerCase();
-                let isMatched = text.includes(searchedText);
-                mItem.actor.visible = isMatched;
+                let isMatching = text.indexOf(searchedText) >= 0;
+                mItem.actor.visible = isMatching
             });
         }
     },
