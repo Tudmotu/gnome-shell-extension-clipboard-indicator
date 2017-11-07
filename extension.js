@@ -417,7 +417,7 @@ const ClipboardIndicator = Lang.Class({
                 });
 
                 if (text && registry.indexOf(text) < 0) {
-                    that._addEntry(text, true, false);
+                    that._addEntry(text, false, true, false);
                     that._removeOldestEntries();
                     if(NOTIFY_ON_COPY)
                         that._showNotification(_("Copied to clipboard"));
