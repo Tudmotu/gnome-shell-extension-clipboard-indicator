@@ -37,12 +37,13 @@ const readRegistry = Utils.readRegistry;
 let TIMEOUT_MS           = 1000;
 let MAX_REGISTRY_LENGTH  = 15;
 let MAX_ENTRY_LENGTH     = 50;
+let CACHE_ONLY_FAVORITE  = false;
 let DELETE_ENABLED       = true;
 let ENABLE_KEYBINDING    = true;
 let PRIVATEMODE          = false;
 let NOTIFY_ON_COPY       = true;
-let MAX_TOPBAR_LENGTH     = 15;
-let TOPBAR_DISPLAY_MODE = 1; //0 - only icon, 1 - only clipbord content, 2 - both
+let MAX_TOPBAR_LENGTH    = 15;
+let TOPBAR_DISPLAY_MODE  = 1; //0 - only icon, 1 - only clipbord content, 2 - both
 
 const ClipboardIndicator = Lang.Class({
     Name: 'ClipboardIndicator',
@@ -548,7 +549,7 @@ const ClipboardIndicator = Lang.Class({
         TIMEOUT_MS           = this._settings.get_int(Prefs.Fields.INTERVAL);
         MAX_REGISTRY_LENGTH  = this._settings.get_int(Prefs.Fields.HISTORY_SIZE);
         MAX_ENTRY_LENGTH     = this._settings.get_int(Prefs.Fields.PREVIEW_SIZE);
-        CACHE_ONLY_FAVORITE   = this._settings.get_boolean(Prefs.Fields.CACHE_ONLY_FAVORITE);
+        CACHE_ONLY_FAVORITE  = this._settings.get_boolean(Prefs.Fields.CACHE_ONLY_FAVORITE);
         DELETE_ENABLED       = this._settings.get_boolean(Prefs.Fields.DELETE);
         NOTIFY_ON_COPY       = this._settings.get_boolean(Prefs.Fields.NOTIFY_ON_COPY);
         ENABLE_KEYBINDING    = this._settings.get_boolean(Prefs.Fields.ENABLE_KEYBINDING);
