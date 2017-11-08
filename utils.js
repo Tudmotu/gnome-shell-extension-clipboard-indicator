@@ -95,7 +95,20 @@ function readRegistry (callback) {
 
                 if (success) {
                     try {
+                        let max_size = SettingsSchema.get_int(Prefs.Fields.HISTORY_SIZE);
                         registry = JSON.parse(contents);
+
+                        let registryNoFavorite = registry.filter(
+                            item => item['favorite'] === false);
+
+                        while (registryNoFavorite.length > max_size) {
+                            let oldestNoFavorite = registryNoFavorite.shift();
+                            let itemIdx = registry.indexOf(oldestNoFavorite);
+                            registry.splice(itemIdx,1);
+
+                            registryNoFavorite = registry.filter(
+                                item => item["favorite"] === false);
+                        }
                     }
                     catch (e) {
                         registry = [];

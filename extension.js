@@ -348,8 +348,7 @@ const ClipboardIndicator = Lang.Class({
 
         while (clipItemsRadioGroupNoFavorite.length > MAX_REGISTRY_LENGTH) {
             let oldestNoFavorite = clipItemsRadioGroupNoFavorite.shift();
-            let oldestToDelete = that._findItem(oldestNoFavorite.clipContents)
-            that._removeEntry(oldestToDelete);
+            that._removeEntry(oldestNoFavorite);
 
             clipItemsRadioGroupNoFavorite = that.clipItemsRadioGroup.filter(
                 item => item.clipFavorite === false);
