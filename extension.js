@@ -34,16 +34,16 @@ const prettyPrint = Utils.prettyPrint;
 const writeRegistry = Utils.writeRegistry;
 const readRegistry = Utils.readRegistry;
 
-let TIMEOUT_MS           = 1000;
-let MAX_REGISTRY_LENGTH  = 15;
-let MAX_ENTRY_LENGTH     = 50;
-let CACHE_ONLY_FAVORITE  = false;
-let DELETE_ENABLED       = true;
-let ENABLE_KEYBINDING    = true;
-let PRIVATEMODE          = false;
-let NOTIFY_ON_COPY       = true;
-let MAX_TOPBAR_LENGTH    = 15;
-let TOPBAR_DISPLAY_MODE  = 1; //0 - only icon, 1 - only clipbord content, 2 - both
+var TIMEOUT_MS           = 1000;
+var MAX_REGISTRY_LENGTH  = 15;
+var MAX_ENTRY_LENGTH     = 50;
+var CACHE_ONLY_FAVORITE  = false;
+var DELETE_ENABLED       = true;
+var ENABLE_KEYBINDING    = true;
+var PRIVATEMODE          = false;
+var NOTIFY_ON_COPY       = true;
+var MAX_TOPBAR_LENGTH    = 15;
+var TOPBAR_DISPLAY_MODE  = 1; //0 - only icon, 1 - only clipbord content, 2 - both
 
 const ClipboardIndicator = Lang.Class({
     Name: 'ClipboardIndicator',
@@ -140,7 +140,22 @@ const ClipboardIndicator = Lang.Class({
                 }));
             }));
 
-            // Create menu section for items
+            // Create menu sections for items
+            // Favorites
+            that.favoritesSection = new PopupMenu.PopupMenuSection();
+
+            that.scrollViewFavoritesMenuSection = new PopupMenu.PopupMenuSection();
+            let favoritesScrollView = new St.ScrollView({
+                style_class: 'ci-history-menu-section',
+                overlay_scrollbars: true
+            });
+            favoritesScrollView.add_actor(that.favoritesSection.actor);
+
+            that.scrollViewFavoritesMenuSection.actor.add_actor(favoritesScrollView);
+
+            that.menu.addMenuItem(that.scrollViewFavoritesMenuSection);
+
+            // History
             that.historySection = new PopupMenu.PopupMenuSection();
 
             that.scrollViewMenuSection = new PopupMenu.PopupMenuSection();
@@ -192,7 +207,7 @@ const ClipboardIndicator = Lang.Class({
     },
 
     /* When text change, this function will check, for each item of the
-    historySection, if it should be visible or not (based on words contained
+    historySection and favoritesSestion, if it should be visible or not (based on words contained
     in the clipContents attribute of the item). It doesn't destroy or create
     items. It the entry is empty, the section is restored with all items
     set as visible. */
@@ -200,12 +215,12 @@ const ClipboardIndicator = Lang.Class({
         let searchedText = this.searchEntry.get_text().toLowerCase();
 
         if(searchedText === '') {
-            this.historySection._getMenuItems().forEach(function(mItem){
+            this._getAllIMenuItems().forEach(function(mItem){
                 mItem.actor.visible = true;
             });
         }
         else {
-            this.historySection._getMenuItems().forEach(function(mItem){
+            this._getAllIMenuItems().forEach(function(mItem){
                 let text = mItem.clipContents.toLowerCase();
                 let isMatching = text.indexOf(searchedText) >= 0;
                 mItem.actor.visible = isMatching
@@ -235,7 +250,7 @@ const ClipboardIndicator = Lang.Class({
         menuItem.clipFavorite = favorite;
         menuItem.radioGroup = this.clipItemsRadioGroup;
         menuItem.buttonPressId = menuItem.connect('activate',
-            Lang.bind(menuItem, this._onMenuItemSelected));
+            Lang.bind(menuItem, this._onMenuItemSelectedAndMenuClose));
 
         this._setEntryLabel(menuItem);
         this.clipItemsRadioGroup.push(menuItem);
@@ -291,7 +306,11 @@ const ClipboardIndicator = Lang.Class({
             })
         );
 
-        this.historySection.addMenuItem(menuItem, 0);
+        if (favorite) {
+            this.favoritesSection.addMenuItem(menuItem, 0);
+        } else {
+            this.historySection.addMenuItem(menuItem, 0);
+        }
 
         if (autoSelect === true)
             this._selectMenuItem(menuItem, autoSetClip);
@@ -304,8 +323,8 @@ const ClipboardIndicator = Lang.Class({
     },
 
     _favoriteToggle: function (menuItem) {
-        menuItem.icofavBtn.child.icon_name = menuItem.clipFavorite ? 'non-starred-symbolic' : 'starred-symbolic';
-        menuItem.clipFavorite = menuItem.clipFavorite ? false: true;
+        menuItem.clipFavorite = menuItem.clipFavorite ? false : true;
+        this._moveItemFirst(menuItem);
 
         this._updateCache();
     },
@@ -317,7 +336,7 @@ const ClipboardIndicator = Lang.Class({
         // all except the currently selected item
         // Don't remove favorites here
         that.historySection._getMenuItems().forEach(function (mItem) {
-            if (!mItem.currentlySelected && !mItem.clipFavorite) {
+            if (!mItem.currentlySelected) {
                 let idx = that.clipItemsRadioGroup.indexOf(mItem);
                 mItem.destroy();
                 that.clipItemsRadioGroup.splice(idx,1);
@@ -373,13 +392,31 @@ const ClipboardIndicator = Lang.Class({
                 menuItem.currentlySelected = false;
             }
         });
-
-        that.menu.close();
     },
 
     _selectMenuItem: function (menuItem, autoSet) {
         let fn = Lang.bind(menuItem, this._onMenuItemSelected);
         fn(autoSet);
+    },
+
+    _onMenuItemSelectedAndMenuClose: function (autoSet) {
+        var that = this;
+        that.radioGroup.forEach(function (menuItem) {
+            let clipContents = that.clipContents;
+
+            if (menuItem === that && clipContents) {
+                that.setOrnament(PopupMenu.Ornament.DOT);
+                that.currentlySelected = true;
+                if (autoSet !== false)
+                    Clipboard.set_text(CLIPBOARD_TYPE, clipContents);
+            }
+            else {
+                menuItem.setOrnament(PopupMenu.Ornament.NONE);
+                menuItem.currentlySelected = false;
+            }
+        });
+
+        that.menu.close();
     },
 
     _getCache: function (cb) {
@@ -424,23 +461,31 @@ const ClipboardIndicator = Lang.Class({
                 }
                 else if (text && registry.indexOf(text) >= 0 &&
                         registry.indexOf(text) < registry.length - 1) {
-                    // If exists, but not already first, move it to be first
-                    that._moveItemFirst(text);
+                    // If exists
+                    let item = that._findItem(text);
+                    if (item.clipFavorite) {
+                        that._selectMenuItem(item);
+                    } else {
+                        item.currentlySelected = true;
+                        that._moveItemFirst(item);
+                    }
                 }
             }
         });
     },
 
-    _moveItemFirst: function (text) {
-        let item = this._findItem(text);
-        let favorite = item.clipFavorite;
+    _moveItemFirst: function (item) {
         this._removeEntry(item);
-        this._addEntry(text, favorite, true, false);
+        this._addEntry(item.clipContents, item.clipFavorite, item.currentlySelected, false);
     },
 
     _findItem: function (text) {
         return this.clipItemsRadioGroup.filter(
             item => item.clipContents === text)[0];
+    },
+
+    _getAllIMenuItems: function (text) {
+        return this.historySection._getMenuItems().concat(this.favoritesSection._getMenuItems());
     },
 
     _setupTimeout: function (reiterate) {
@@ -513,6 +558,7 @@ const ClipboardIndicator = Lang.Class({
         PRIVATEMODE = this.privateModeMenuItem.state;
         // We hide the history in private ModeTypee because it will be out of sync (selected item will not reflect clipboard)
         this.scrollViewMenuSection.actor.visible = !PRIVATEMODE;
+        this.scrollViewFavoritesMenuSection.actor.visible = !PRIVATEMODE;
         // If we get out of private mode then we restore the clipboard to old state
         if (!PRIVATEMODE) {
             let selectList = this.clipItemsRadioGroup.filter((item) => !!item.currentlySelected);
@@ -566,7 +612,7 @@ const ClipboardIndicator = Lang.Class({
         that._removeOldestEntries();
 
         // Re-set menu-items lables in case preview size changed
-        that.historySection._getMenuItems().forEach(function (mItem) {
+        this._getAllIMenuItems().forEach(function (mItem) {
             that._setEntryLabel(mItem);
         });
 
@@ -680,7 +726,7 @@ const ClipboardIndicator = Lang.Class({
 
         that._clearDelayedSelectionTimeout();
 
-        this.historySection._getMenuItems().some(function (mItem, i, menuItems){
+        this._getAllIMenuItems().some(function (mItem, i, menuItems){
             if (mItem.currentlySelected) {
                 i--;                                 //get the previous index
                 if (i < 0) i = menuItems.length - 1; //cycle if out of bound
@@ -698,7 +744,7 @@ const ClipboardIndicator = Lang.Class({
 
         that._clearDelayedSelectionTimeout();
 
-        this.historySection._getMenuItems().some(function (mItem, i, menuItems) {
+        this._getAllIMenuItems().some(function (mItem, i, menuItems){
             if (mItem.currentlySelected) {
                 i++;                                 //get the next index
                 if (i === menuItems.length) i = 0;   //cycle if out of bound
