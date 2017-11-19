@@ -41,7 +41,7 @@ let DELETE_ENABLED       = true;
 let ENABLE_KEYBINDING    = true;
 let PRIVATEMODE          = false;
 let NOTIFY_ON_COPY       = true;
-let MAX_TOPBAR_LENGTH	 = 15;
+let MAX_TOPBAR_LENGTH     = 15;
 let TOPBAR_DISPLAY_MODE = 1; //0 - only icon, 1 - only clipbord content, 2 - both
 
 const ClipboardIndicator = Lang.Class({
@@ -73,12 +73,12 @@ const ClipboardIndicator = Lang.Class({
         let hbox = new St.BoxLayout({ style_class: 'panel-status-menu-box clipboard-indicator-hbox' });
         this.icon = new St.Icon({ icon_name: INDICATOR_ICON,
             style_class: 'system-status-icon clipboard-indicator-icon' });
-    	hbox.add_child(this.icon);
-    	this._buttonText = new St.Label({
-        text: _('Text will be here'),
-        y_align: Clutter.ActorAlign.CENTER
-    	});
-    	hbox.add_child(this._buttonText);	
+        hbox.add_child(this.icon);
+        this._buttonText = new St.Label({
+            text: _('Text will be here'),
+            y_align: Clutter.ActorAlign.CENTER
+        });
+        hbox.add_child(this._buttonText);
         hbox.add(PopupMenu.arrowIcon(St.Side.BOTTOM));
         this.actor.add_child(hbox);
 
@@ -92,10 +92,10 @@ const ClipboardIndicator = Lang.Class({
     },
 
     _updateButtonText: function(content){
-    	if (content.length == 0 || PRIVATEMODE){
-    		this._buttonText.set_text("...")
-    	}
-    	this._buttonText.set_text(this._truncate(content, MAX_TOPBAR_LENGTH));
+        if (content.length === 0 || PRIVATEMODE){
+            this._buttonText.set_text("...")
+        }
+        this._buttonText.set_text(this._truncate(content, MAX_TOPBAR_LENGTH));
     },
 
     _buildMenu: function () {
@@ -103,6 +103,41 @@ const ClipboardIndicator = Lang.Class({
         this._getCache(function (clipHistory) {
             let lastIdx = clipHistory.length - 1;
             let clipItemsArr = that.clipItemsRadioGroup;
+
+            /* This create the search entry, which is add to a menuItem.
+            The searchEntry is connected to the function for research.
+            The menu itself is connected to some shitty hack in order to
+            grab the focus of the keyboard. */
+            that._entryItem = new PopupMenu.PopupBaseMenuItem({
+                reactive: false,
+                can_focus: false
+            });
+            that.searchEntry = new St.Entry({
+                name: 'searchEntry',
+                style_class: 'search-entry',
+                can_focus: true,
+                hint_text: _('Type here to search...'),
+                track_hover: true
+            });
+
+            that.searchEntry.get_clutter_text().connect(
+                'text-changed',
+                Lang.bind(that, that._onSearchTextChanged)
+            );
+
+            that._entryItem.actor.add(that.searchEntry, { expand: true });
+
+            that.menu.addMenuItem(that._entryItem);
+
+            that.menu.connect('open-state-changed', Lang.bind(this, function(self, open){
+                let a = Mainloop.timeout_add(50, Lang.bind(this, function() {
+                    if (open) {
+                        that.searchEntry.set_text('');
+                        global.stage.set_key_focus(that.searchEntry);
+                    }
+                    Mainloop.source_remove(a);
+                }));
+            }));
 
             // Create menu section for items
             that.historySection = new PopupMenu.PopupMenuSection();
@@ -150,18 +185,39 @@ const ClipboardIndicator = Lang.Class({
         });
     },
 
+    /* When text change, this function will check, for each item of the
+    historySection, if it should be visible or not (based on words contained
+    in the clipContents attribute of the item). It doesn't destroy or create
+    items. It the entry is empty, the section is restored with all items
+    set as visible. */
+    _onSearchTextChanged: function() {
+        let searchedText = this.searchEntry.get_text().toLowerCase();
+
+        if(searchedText === '') {
+            this.historySection._getMenuItems().forEach(function(mItem){
+                mItem.actor.visible = true;
+            });
+        }
+        else {
+            this.historySection._getMenuItems().forEach(function(mItem){
+                let text = mItem.clipContents.toLowerCase();
+                let isMatching = text.indexOf(searchedText) >= 0;
+                mItem.actor.visible = isMatching
+            });
+        }
+    },
+
     _truncate: function(string, length) {
-    	let shortened = string.replace(/\s+/g, ' ');
+        let shortened = string.replace(/\s+/g, ' ');
 
         if (shortened.length > length)
             shortened = shortened.substring(0,length-1) + '...';
-       	return shortened;
+
+        return shortened;
     },
 
     _setEntryLabel: function (menuItem) {
         let buffer = menuItem.clipContents;
-
-
         menuItem.label.set_text(this._truncate(buffer, MAX_ENTRY_LENGTH));
     },
 
@@ -197,16 +253,19 @@ const ClipboardIndicator = Lang.Class({
         menuItem.icoBtn = icoBtn;
         menuItem.deletePressId = icoBtn.connect('button-press-event',
             Lang.bind(this, function () {
-                this._removeEntry(menuItem);
+                this._removeEntry(menuItem, 'delete');
             })
         );
 
         this.historySection.addMenuItem(menuItem, 0);
+
         if (autoSelect === true)
             this._selectMenuItem(menuItem, autoSetClip);
-        if(TOPBAR_DISPLAY_MODE == 1 || TOPBAR_DISPLAY_MODE == 2) {
-        	this._updateButtonText(buffer);
-       	}
+
+        if (TOPBAR_DISPLAY_MODE === 1 || TOPBAR_DISPLAY_MODE === 2) {
+            this._updateButtonText(buffer);
+        }
+
         this._updateCache();
     },
 
@@ -226,11 +285,16 @@ const ClipboardIndicator = Lang.Class({
         that._showNotification(_("Clipboard history cleared"));
     },
 
-    _removeEntry: function (menuItem) {
+    _removeEntry: function (menuItem, event) {
         let itemIdx = this.clipItemsRadioGroup.indexOf(menuItem);
+
+        if(event === 'delete' && menuItem.currentlySelected) {
+            Clipboard.set_text(CLIPBOARD_TYPE, "");
+        }
 
         menuItem.destroy();
         this.clipItemsRadioGroup.splice(itemIdx,1);
+
         this._updateCache();
     },
 
@@ -252,13 +316,11 @@ const ClipboardIndicator = Lang.Class({
 
             if (menuItem === that && clipContents) {
                 that.setOrnament(PopupMenu.Ornament.DOT);
-                that.icoBtn.visible = false;
                 that.currentlySelected = true;
                 if (autoSet !== false)
                     Clipboard.set_text(CLIPBOARD_TYPE, clipContents);
             }
             else {
-                menuItem.icoBtn.visible = true;
                 menuItem.setOrnament(PopupMenu.Ornament.NONE);
                 menuItem.currentlySelected = false;
             }
@@ -290,27 +352,29 @@ const ClipboardIndicator = Lang.Class({
         let that = this;
 
         Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
-            let registry = that.clipItemsRadioGroup.map(function (menuItem) {
-                return menuItem.clipContents;
-            });
+            if (text !== "") {
+                let registry = that.clipItemsRadioGroup.map(function (menuItem) {
+                    return menuItem.clipContents;
+                });
 
-            if (text && registry.indexOf(text) < 0) {
-                that._addEntry(text, true, false);
-                that._removeOldestEntries();
-                if(NOTIFY_ON_COPY)
-                    that._showNotification(_("Copied to clipboard"));
-            }
-            else if (text && registry.indexOf(text) >= 0 &&
-                    registry.indexOf(text) < registry.length - 1) {
-                // If exists, but not already first, move it to be first
-                that._moveItemFirst(text);
+                if (text && registry.indexOf(text) < 0) {
+                    that._addEntry(text, true, false);
+                    that._removeOldestEntries();
+                    if(NOTIFY_ON_COPY)
+                        that._showNotification(_("Copied to clipboard"));
+                }
+                else if (text && registry.indexOf(text) >= 0 &&
+                        registry.indexOf(text) < registry.length - 1) {
+                    // If exists, but not already first, move it to be first
+                    that._moveItemFirst(text);
+                }
             }
         });
     },
 
     _moveItemFirst: function (text) {
         let item = this._findItem(text);
-        this._removeEntry(item);
+        this._removeEntry(item, 'move');
         this._addEntry(text, true, false);
     },
 
@@ -385,16 +449,16 @@ const ClipboardIndicator = Lang.Class({
     },
 
     _onPrivateModeSwitch: function() {
-    	let that = this;
+        let that = this;
         PRIVATEMODE = this.privateModeMenuItem.state;
         // We hide the history in private ModeTypee because it will be out of sync (selected item will not reflect clipboard)
         this.scrollViewMenuSection.actor.visible = !PRIVATEMODE;
         // If we get out of private mode then we restore the clipboard to old state
         if (!PRIVATEMODE) {
             let selectList = this.clipItemsRadioGroup.filter((item) => !!item.currentlySelected);
-			Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
-				        	that._updateButtonText(text);
-				        });
+            Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
+                            that._updateButtonText(text);
+                        });
             if (selectList.length) {
                 this._selectMenuItem(selectList[0]);
             } else {
@@ -404,7 +468,7 @@ const ClipboardIndicator = Lang.Class({
 
             this.icon.remove_style_class_name('private-mode');
         } else {
-        	this._buttonText.set_text('...');
+            this._buttonText.set_text('...');
             this.icon.add_style_class_name('private-mode');
         }
     },
@@ -428,8 +492,8 @@ const ClipboardIndicator = Lang.Class({
         DELETE_ENABLED       = this._settings.get_boolean(Prefs.Fields.DELETE);
         NOTIFY_ON_COPY       = this._settings.get_boolean(Prefs.Fields.NOTIFY_ON_COPY);
         ENABLE_KEYBINDING    = this._settings.get_boolean(Prefs.Fields.ENABLE_KEYBINDING);
-        MAX_TOPBAR_LENGTH	 = this._settings.get_int(Prefs.Fields.TOPBAR_PREVIEW_SIZE);
-        TOPBAR_DISPLAY_MODE 		 = this._settings.get_int(Prefs.Fields.TOPBAR_DISPLAY_MODE_ID);
+        MAX_TOPBAR_LENGTH    = this._settings.get_int(Prefs.Fields.TOPBAR_PREVIEW_SIZE);
+        TOPBAR_DISPLAY_MODE  = this._settings.get_int(Prefs.Fields.TOPBAR_DISPLAY_MODE_ID);
     },
 
     _onSettingsChange: function () {
@@ -448,11 +512,11 @@ const ClipboardIndicator = Lang.Class({
 
         //update topbar
         this._updateTopbarLayout();
-        if(TOPBAR_DISPLAY_MODE == 1 || TOPBAR_DISPLAY_MODE == 2) {
-	        Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
-	        	that._updateButtonText(text);
-	        });
-	    }
+        if(TOPBAR_DISPLAY_MODE === 1 || TOPBAR_DISPLAY_MODE === 2) {
+            Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
+                that._updateButtonText(text);
+            });
+        }
 
         // Bind or unbind shortcuts
         if (ENABLE_KEYBINDING)
@@ -493,17 +557,17 @@ const ClipboardIndicator = Lang.Class({
     },
 
     _updateTopbarLayout: function(){
-        if(TOPBAR_DISPLAY_MODE == 0){
-        	this.icon.visible = true;
-        	this._buttonText.visible = false;
+        if(TOPBAR_DISPLAY_MODE === 0){
+            this.icon.visible = true;
+            this._buttonText.visible = false;
         }
-        if(TOPBAR_DISPLAY_MODE == 1){
-        	this.icon.visible = false;
-        	this._buttonText.visible = true;
+        if(TOPBAR_DISPLAY_MODE === 1){
+            this.icon.visible = false;
+            this._buttonText.visible = true;
         }
-        if(TOPBAR_DISPLAY_MODE == 2){
-        	this.icon.visible = true;
-        	this._buttonText.visible = true;
+        if(TOPBAR_DISPLAY_MODE === 2){
+            this.icon.visible = true;
+            this._buttonText.visible = true;
         }
     },
 

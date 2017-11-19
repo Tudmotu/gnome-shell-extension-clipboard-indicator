@@ -44,7 +44,7 @@ function init() {
 const App = new Lang.Class({
     Name: 'ClipboardIndicator.App',
     _init: function() {
-  	this.main = new Gtk.Grid({
+      this.main = new Gtk.Grid({
             margin: 10,
             row_spacing: 12,
             column_spacing: 18,
@@ -197,7 +197,7 @@ const App = new Lang.Class({
         SettingsSchema.bind(Fields.NOTIFY_ON_COPY, this.field_notification_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.TOPBAR_DISPLAY_MODE_ID, this.field_display_mode, 'active', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.TOPBAR_PREVIEW_SIZE, this.field_topbar_preview_size, 'value', Gio.SettingsBindFlags.DEFAULT);
-	    SettingsSchema.bind(Fields.ENABLE_KEYBINDING, this.field_keybinding_activation, 'active', Gio.SettingsBindFlags.DEFAULT);
+        SettingsSchema.bind(Fields.ENABLE_KEYBINDING, this.field_keybinding_activation, 'active', Gio.SettingsBindFlags.DEFAULT);
 
         this.main.show_all();
     },
