@@ -24,7 +24,7 @@ const Fields = {
 
 const SCHEMA_NAME = 'org.gnome.shell.extensions.clipboard-indicator';
 
-const getSchema = function () {
+const getSchema = function() {
     let schemaDir = Extension.dir.get_child('schemas').get_path();
     let schemaSource = Gio.SettingsSchemaSource.new_from_directory(schemaDir, Gio.SettingsSchemaSource.get_default(), false);
     let schema = schemaSource.lookup(SCHEMA_NAME, false);
@@ -44,7 +44,7 @@ function init() {
 const App = new Lang.Class({
     Name: 'ClipboardIndicator.App',
     _init: function() {
-      this.main = new Gtk.Grid({
+        this.main = new Gtk.Grid({
             margin: 10,
             row_spacing: 12,
             column_spacing: 18,
@@ -91,28 +91,28 @@ const App = new Lang.Class({
 
         let rendererText = new Gtk.CellRendererText();
         this.field_display_mode.pack_start (rendererText, false);
-        this.field_display_mode.add_attribute (rendererText, "text", 0);
+        this.field_display_mode.add_attribute (rendererText, 'text', 0);
 
         this.field_cache_disable = new Gtk.Switch();
         this.field_notification_toggle = new Gtk.Switch();
         this.field_keybinding = createKeybindingWidget(SettingsSchema);
-        addKeybinding(this.field_keybinding.model, SettingsSchema, "toggle-menu",
-                      _("Toggle the menu"));
-        addKeybinding(this.field_keybinding.model, SettingsSchema, "clear-history",
-                      _("Clear history"));
-        addKeybinding(this.field_keybinding.model, SettingsSchema, "prev-entry",
-                      _("Previous entry"));
-        addKeybinding(this.field_keybinding.model, SettingsSchema, "next-entry",
-                      _("Next entry"));
+        addKeybinding(this.field_keybinding.model, SettingsSchema, 'toggle-menu',
+            _("Toggle the menu"));
+        addKeybinding(this.field_keybinding.model, SettingsSchema, 'clear-history',
+            _("Clear history"));
+        addKeybinding(this.field_keybinding.model, SettingsSchema, 'prev-entry',
+            _("Previous entry"));
+        addKeybinding(this.field_keybinding.model, SettingsSchema, 'next-entry',
+            _("Next entry"));
 
-        var that = this;
+        const that = this;
         this.field_keybinding_activation = new Gtk.Switch();
-        this.field_keybinding_activation.connect("notify::active", function(widget){
+        this.field_keybinding_activation.connect('notify::active', function(widget) {
             that.field_keybinding.set_sensitive(widget.active);
         });
 
         //this.field_deletion = new Gtk.Switch({
-            //active: true
+        //active: true
         //});
 
         let sizeLabel     = new Gtk.Label({
@@ -201,12 +201,12 @@ const App = new Lang.Class({
 
         this.main.show_all();
     },
-    _create_display_mode_options : function(){
-        let options = [{ name: "Icon" },
-        { name: "Clipboard Content",},
-        { name: "Both"}];
+    _create_display_mode_options : function() {
+        let options = [{ name: 'Icon' },
+            { name: 'Clipboard Content',},
+            { name: 'Both'}];
         let liststore = new Gtk.ListStore();
-        liststore.set_column_types([GObject.TYPE_STRING])
+        liststore.set_column_types([GObject.TYPE_STRING]);
         for (let i = 0; i < options.length; i++ ) {
             let option = options[i];
             let iter = liststore.append();
@@ -216,7 +216,7 @@ const App = new Lang.Class({
     }
 });
 
-function buildPrefsWidget(){
+function buildPrefsWidget() {
     let widget = new App();
     return widget.main;
 }
@@ -242,18 +242,18 @@ function addKeybinding(model, settings, id, description) {
     // Add a row for the keybinding.
     let row = model.insert(100); // Erm...
     model.set(row,
-            [COLUMN_ID, COLUMN_DESCRIPTION, COLUMN_KEY, COLUMN_MODS],
-            [id,        description,        key,        mods]);
+        [COLUMN_ID, COLUMN_DESCRIPTION, COLUMN_KEY, COLUMN_MODS],
+        [id,        description,        key,        mods]);
 }
 
 function createKeybindingWidget(SettingsSchema) {
     let model = new Gtk.ListStore();
 
     model.set_column_types(
-            [GObject.TYPE_STRING, // COLUMN_ID
-             GObject.TYPE_STRING, // COLUMN_DESCRIPTION
-             GObject.TYPE_INT,    // COLUMN_KEY
-             GObject.TYPE_INT]);  // COLUMN_MODS
+        [GObject.TYPE_STRING, // COLUMN_ID
+            GObject.TYPE_STRING, // COLUMN_DESCRIPTION
+            GObject.TYPE_INT,    // COLUMN_KEY
+            GObject.TYPE_INT]);  // COLUMN_MODS
 
     let treeView = new Gtk.TreeView();
     treeView.model = model;
@@ -267,7 +267,7 @@ function createKeybindingWidget(SettingsSchema) {
     column = new Gtk.TreeViewColumn();
     column.expand = true;
     column.pack_start(renderer, true);
-    column.add_attribute(renderer, "text", COLUMN_DESCRIPTION);
+    column.add_attribute(renderer, 'text', COLUMN_DESCRIPTION);
 
     treeView.append_column(column);
 
@@ -276,39 +276,39 @@ function createKeybindingWidget(SettingsSchema) {
     renderer.accel_mode = Gtk.CellRendererAccelMode.GTK;
     renderer.editable = true;
 
-    renderer.connect("accel-edited",
-            function (renderer, path, key, mods, hwCode) {
-                let [ok, iter] = model.get_iter_from_string(path);
-                if(!ok)
-                    return;
+    renderer.connect('accel-edited',
+        function(renderer, path, key, mods, hwCode) {
+            let [ok, iter] = model.get_iter_from_string(path);
+            if (!ok)
+                return;
 
-                // Update the UI.
-                model.set(iter, [COLUMN_KEY, COLUMN_MODS], [key, mods]);
+            // Update the UI.
+            model.set(iter, [COLUMN_KEY, COLUMN_MODS], [key, mods]);
 
-                // Update the stored setting.
-                let id = model.get_value(iter, COLUMN_ID);
-                let accelString = Gtk.accelerator_name(key, mods);
-                SettingsSchema.set_strv(id, [accelString]);
-            });
+            // Update the stored setting.
+            let id = model.get_value(iter, COLUMN_ID);
+            let accelString = Gtk.accelerator_name(key, mods);
+            SettingsSchema.set_strv(id, [accelString]);
+        });
 
-    renderer.connect("accel-cleared",
-            function (renderer, path) {
-                let [ok, iter] = model.get_iter_from_string(path);
-                if(!ok)
-                    return;
+    renderer.connect('accel-cleared',
+        function(renderer, path) {
+            let [ok, iter] = model.get_iter_from_string(path);
+            if (!ok)
+                return;
 
-                // Update the UI.
-                model.set(iter, [COLUMN_KEY, COLUMN_MODS], [0, 0]);
+            // Update the UI.
+            model.set(iter, [COLUMN_KEY, COLUMN_MODS], [0, 0]);
 
-                // Update the stored setting.
-                let id = model.get_value(iter, COLUMN_ID);
-                SettingsSchema.set_strv(id, []);
-            });
+            // Update the stored setting.
+            let id = model.get_value(iter, COLUMN_ID);
+            SettingsSchema.set_strv(id, []);
+        });
 
     column = new Gtk.TreeViewColumn();
     column.pack_end(renderer, false);
-    column.add_attribute(renderer, "accel-key", COLUMN_KEY);
-    column.add_attribute(renderer, "accel-mods", COLUMN_MODS);
+    column.add_attribute(renderer, 'accel-key', COLUMN_KEY);
+    column.add_attribute(renderer, 'accel-mods', COLUMN_MODS);
 
     treeView.append_column(column);
 

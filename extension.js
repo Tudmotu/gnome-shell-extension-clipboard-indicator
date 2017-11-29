@@ -20,10 +20,10 @@ const _ = Gettext.domain('clipboard-indicator').gettext;
 const Clipboard = St.Clipboard.get_default();
 const CLIPBOARD_TYPE = St.ClipboardType.CLIPBOARD;
 
-const SETTING_KEY_CLEAR_HISTORY = "clear-history";
-const SETTING_KEY_PREV_ENTRY = "prev-entry";
-const SETTING_KEY_NEXT_ENTRY = "next-entry";
-const SETTING_KEY_TOGGLE_MENU = "toggle-menu";
+const SETTING_KEY_CLEAR_HISTORY = 'clear-history';
+const SETTING_KEY_PREV_ENTRY = 'prev-entry';
+const SETTING_KEY_NEXT_ENTRY = 'next-entry';
+const SETTING_KEY_TOGGLE_MENU = 'toggle-menu';
 const INDICATOR_ICON = 'edit-paste-symbolic';
 
 const ExtensionUtils = imports.misc.extensionUtils;
@@ -41,8 +41,9 @@ let DELETE_ENABLED       = true;
 let ENABLE_KEYBINDING    = true;
 let PRIVATEMODE          = false;
 let NOTIFY_ON_COPY       = true;
-let MAX_TOPBAR_LENGTH     = 15;
-let TOPBAR_DISPLAY_MODE = 1; //0 - only icon, 1 - only clipbord content, 2 - both
+let MAX_TOPBAR_LENGTH    = 15;
+let TOPBAR_DISPLAY_MODE  = 1; //0 - only icon, 1 - only clipbord content, 2 - both
+let CACHE_FILE_DISABLE   = false;
 
 const ClipboardIndicator = Lang.Class({
     Name: 'ClipboardIndicator',
@@ -54,7 +55,7 @@ const ClipboardIndicator = Lang.Class({
     _historyLabel: null,
     _buttonText:null,
 
-    destroy: function () {
+    destroy: function() {
         this._disconnectSettings();
         this._unbindShortcuts();
         this._clearClipboardTimeout();
@@ -66,7 +67,7 @@ const ClipboardIndicator = Lang.Class({
     },
 
     _init: function() {
-        this.parent(0.0, "ClipboardIndicator");
+        this.parent(0.0, 'ClipboardIndicator');
         this._shortcutsBindingIds = [];
         this.clipItemsRadioGroup = [];
 
@@ -75,7 +76,7 @@ const ClipboardIndicator = Lang.Class({
             style_class: 'system-status-icon clipboard-indicator-icon' });
         hbox.add_child(this.icon);
         this._buttonText = new St.Label({
-            text: _('Text will be here'),
+            text: _("Text will be here"),
             y_align: Clutter.ActorAlign.CENTER
         });
         hbox.add_child(this._buttonText);
@@ -91,16 +92,16 @@ const ClipboardIndicator = Lang.Class({
         this._setupTimeout();
     },
 
-    _updateButtonText: function(content){
-        if (!content || PRIVATEMODE){
-            this._buttonText.set_text("...")
+    _updateButtonText: function(content) {
+        if (!content || PRIVATEMODE) {
+            this._buttonText.set_text('...');
         }
         this._buttonText.set_text(this._truncate(content, MAX_TOPBAR_LENGTH));
     },
 
-    _buildMenu: function () {
+    _buildMenu: function() {
         let that = this;
-        this._getCache(function (clipHistory) {
+        this._getCache(function(clipHistory) {
             let lastIdx = clipHistory.length - 1;
             let clipItemsArr = that.clipItemsRadioGroup;
 
@@ -116,7 +117,7 @@ const ClipboardIndicator = Lang.Class({
                 name: 'searchEntry',
                 style_class: 'search-entry',
                 can_focus: true,
-                hint_text: _('Type here to search...'),
+                hint_text: _("Type here to search..."),
                 track_hover: true
             });
 
@@ -129,7 +130,7 @@ const ClipboardIndicator = Lang.Class({
 
             that.menu.addMenuItem(that._entryItem);
 
-            that.menu.connect('open-state-changed', Lang.bind(this, function(self, open){
+            that.menu.connect('open-state-changed', Lang.bind(this, function(self, open) {
                 let a = Mainloop.timeout_add(50, Lang.bind(this, function() {
                     if (open) {
                         that.searchEntry.set_text('');
@@ -154,7 +155,7 @@ const ClipboardIndicator = Lang.Class({
             that.menu.addMenuItem(that.scrollViewMenuSection);
 
             // Add cached items
-            clipHistory.forEach(function (buffer) {
+            clipHistory.forEach(function(buffer) {
                 that._addEntry(buffer);
             });
 
@@ -170,12 +171,12 @@ const ClipboardIndicator = Lang.Class({
             that._onPrivateModeSwitch();
 
             // Add 'Clear' button which removes all items from cache
-            let clearMenuItem = new PopupMenu.PopupMenuItem(_('Clear history'));
+            let clearMenuItem = new PopupMenu.PopupMenuItem(_("Clear history"));
             that.menu.addMenuItem(clearMenuItem);
             clearMenuItem.connect('activate', Lang.bind(that, that._removeAll));
 
             // Add 'Settings' menu item to open settings
-            let settingsMenuItem = new PopupMenu.PopupMenuItem(_('Settings'));
+            let settingsMenuItem = new PopupMenu.PopupMenuItem(_("Settings"));
             that.menu.addMenuItem(settingsMenuItem);
             settingsMenuItem.connect('activate', Lang.bind(that, that._openSettings));
 
@@ -193,16 +194,15 @@ const ClipboardIndicator = Lang.Class({
     _onSearchTextChanged: function() {
         let searchedText = this.searchEntry.get_text().toLowerCase();
 
-        if(searchedText === '') {
-            this.historySection._getMenuItems().forEach(function(mItem){
+        if (searchedText === '') {
+            this.historySection._getMenuItems().forEach(function(mItem) {
                 mItem.actor.visible = true;
             });
-        }
-        else {
-            this.historySection._getMenuItems().forEach(function(mItem){
+        } else {
+            this.historySection._getMenuItems().forEach(function(mItem) {
                 let text = mItem.clipContents.toLowerCase();
                 let isMatching = text.indexOf(searchedText) >= 0;
-                mItem.actor.visible = isMatching
+                mItem.actor.visible = isMatching;
             });
         }
     },
@@ -216,12 +216,12 @@ const ClipboardIndicator = Lang.Class({
         return shortened;
     },
 
-    _setEntryLabel: function (menuItem) {
+    _setEntryLabel: function(menuItem) {
         let buffer = menuItem.clipContents;
         menuItem.label.set_text(this._truncate(buffer, MAX_ENTRY_LENGTH));
     },
 
-    _addEntry: function (buffer, autoSelect, autoSetClip) {
+    _addEntry: function(buffer, autoSelect, autoSetClip) {
         let menuItem = new PopupMenu.PopupMenuItem('');
 
         menuItem.menu = this.menu;
@@ -252,7 +252,7 @@ const ClipboardIndicator = Lang.Class({
         menuItem.actor.add_child(icoBtn);
         menuItem.icoBtn = icoBtn;
         menuItem.deletePressId = icoBtn.connect('button-press-event',
-            Lang.bind(this, function () {
+            Lang.bind(this, function() {
                 this._removeEntry(menuItem, 'delete');
             })
         );
@@ -269,12 +269,12 @@ const ClipboardIndicator = Lang.Class({
         this._updateCache();
     },
 
-    _removeAll: function () {
+    _removeAll: function() {
         let that = this;
         // We can't actually remove all items, because the clipboard still
         // has data that will be re-captured on next refresh, so we remove
         // all except the currently selected item
-        that.historySection._getMenuItems().forEach(function (mItem) {
+        that.historySection._getMenuItems().forEach(function(mItem) {
             if (!mItem.currentlySelected) {
                 let idx = that.clipItemsRadioGroup.indexOf(mItem);
                 mItem.destroy();
@@ -285,11 +285,11 @@ const ClipboardIndicator = Lang.Class({
         that._showNotification(_("Clipboard history cleared"));
     },
 
-    _removeEntry: function (menuItem, event) {
+    _removeEntry: function(menuItem, event) {
         let itemIdx = this.clipItemsRadioGroup.indexOf(menuItem);
 
-        if(event === 'delete' && menuItem.currentlySelected) {
-            Clipboard.set_text(CLIPBOARD_TYPE, "");
+        if (event === 'delete' && menuItem.currentlySelected) {
+            Clipboard.set_text(CLIPBOARD_TYPE, '');
         }
 
         menuItem.destroy();
@@ -298,7 +298,7 @@ const ClipboardIndicator = Lang.Class({
         this._updateCache();
     },
 
-    _removeOldestEntries: function () {
+    _removeOldestEntries: function() {
         let that = this;
         while (that.clipItemsRadioGroup.length > MAX_REGISTRY_LENGTH) {
             let oldest = that.clipItemsRadioGroup.shift();
@@ -309,9 +309,9 @@ const ClipboardIndicator = Lang.Class({
         that._updateCache();
     },
 
-    _onMenuItemSelected: function (autoSet) {
-        var that = this;
-        that.radioGroup.forEach(function (menuItem) {
+    _onMenuItemSelected: function(autoSet) {
+        const that = this;
+        that.radioGroup.forEach(function(menuItem) {
             let clipContents = that.clipContents;
 
             if (menuItem === that && clipContents) {
@@ -319,8 +319,7 @@ const ClipboardIndicator = Lang.Class({
                 that.currentlySelected = true;
                 if (autoSet !== false)
                     Clipboard.set_text(CLIPBOARD_TYPE, clipContents);
-            }
-            else {
+            } else {
                 menuItem.setOrnament(PopupMenu.Ornament.NONE);
                 menuItem.currentlySelected = false;
             }
@@ -329,41 +328,40 @@ const ClipboardIndicator = Lang.Class({
         that.menu.close();
     },
 
-    _selectMenuItem: function (menuItem, autoSet) {
+    _selectMenuItem: function(menuItem, autoSet) {
         let fn = Lang.bind(menuItem, this._onMenuItemSelected);
         fn(autoSet);
     },
 
-    _getCache: function (cb) {
+    _getCache: function(cb) {
         return readRegistry(cb);
     },
 
-    _updateCache: function () {
+    _updateCache: function() {
         if (CACHE_FILE_DISABLE) return; // disable file cache
 
-        writeRegistry(this.clipItemsRadioGroup.map(function (menuItem) {
+        writeRegistry(this.clipItemsRadioGroup.map(function(menuItem) {
             return menuItem.clipContents;
         }));
     },
 
-    _refreshIndicator: function () {
+    _refreshIndicator: function() {
         if (PRIVATEMODE) return; // Private mode, do not.
 
         let that = this;
 
-        Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
-            if (text !== "") {
-                let registry = that.clipItemsRadioGroup.map(function (menuItem) {
+        Clipboard.get_text(CLIPBOARD_TYPE, function(clipBoard, text) {
+            if (text !== '') {
+                let registry = that.clipItemsRadioGroup.map(function(menuItem) {
                     return menuItem.clipContents;
                 });
 
                 if (text && registry.indexOf(text) < 0) {
                     that._addEntry(text, true, false);
                     that._removeOldestEntries();
-                    if(NOTIFY_ON_COPY)
+                    if (NOTIFY_ON_COPY)
                         that._showNotification(_("Copied to clipboard"));
-                }
-                else if (text && registry.indexOf(text) >= 0 &&
+                } else if (text && registry.indexOf(text) >= 0 &&
                         registry.indexOf(text) < registry.length - 1) {
                     // If exists, but not already first, move it to be first
                     that._moveItemFirst(text);
@@ -372,22 +370,22 @@ const ClipboardIndicator = Lang.Class({
         });
     },
 
-    _moveItemFirst: function (text) {
+    _moveItemFirst: function(text) {
         let item = this._findItem(text);
         this._removeEntry(item, 'move');
         this._addEntry(text, true, false);
     },
 
-    _findItem: function (text) {
+    _findItem: function(text) {
         return this.clipItemsRadioGroup.filter(
             item => item.clipContents === text)[0];
     },
 
-    _setupTimeout: function (reiterate) {
+    _setupTimeout: function(reiterate) {
         let that = this;
         reiterate = typeof reiterate === 'boolean' ? reiterate : true;
 
-        this._clipboardTimeoutId = Mainloop.timeout_add(TIMEOUT_MS, function () {
+        this._clipboardTimeoutId = Mainloop.timeout_add(TIMEOUT_MS, function() {
             that._refreshIndicator();
 
             // If the timeout handler returns `false`, the source is
@@ -402,17 +400,17 @@ const ClipboardIndicator = Lang.Class({
         });
     },
 
-    _openSettings: function () {
+    _openSettings: function() {
         Util.spawn([
-            "gnome-shell-extension-prefs",
+            'gnome-shell-extension-prefs',
             Me.uuid
         ]);
     },
 
-    _initNotifSource: function () {
+    _initNotifSource: function() {
         if (!this._notifSource) {
             this._notifSource = new MessageTray.Source('ClipboardIndicator',
-                                    INDICATOR_ICON);
+                INDICATOR_ICON);
             this._notifSource.connect('destroy', Lang.bind(this, function() {
                 this._notifSource = null;
             }));
@@ -420,15 +418,14 @@ const ClipboardIndicator = Lang.Class({
         }
     },
 
-    _showNotification: function (message) {
+    _showNotification: function(message) {
         let notification = null;
 
         this._initNotifSource();
 
         if (this._notifSource.count === 0) {
             notification = new MessageTray.Notification(this._notifSource, message);
-        }
-        else {
+        } else {
             notification = this._notifSource.notifications[0];
             notification.update(message, '', { clear: true });
         }
@@ -437,7 +434,7 @@ const ClipboardIndicator = Lang.Class({
         this._notifSource.notify(notification);
     },
 
-    _createHistoryLabel: function () {
+    _createHistoryLabel: function() {
         this._historyLabel = new St.Label({
             style_class: 'ci-notification-label',
             text: ''
@@ -456,14 +453,14 @@ const ClipboardIndicator = Lang.Class({
         // If we get out of private mode then we restore the clipboard to old state
         if (!PRIVATEMODE) {
             let selectList = this.clipItemsRadioGroup.filter((item) => !!item.currentlySelected);
-            Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
-                            that._updateButtonText(text);
-                        });
+            Clipboard.get_text(CLIPBOARD_TYPE, function(clipBoard, text) {
+                that._updateButtonText(text);
+            });
             if (selectList.length) {
                 this._selectMenuItem(selectList[0]);
             } else {
                 // Nothing to return to, let's empty it instead
-                Clipboard.set_text(CLIPBOARD_TYPE, "");
+                Clipboard.set_text(CLIPBOARD_TYPE, '');
             }
 
             this.icon.remove_style_class_name('private-mode');
@@ -473,7 +470,7 @@ const ClipboardIndicator = Lang.Class({
         }
     },
 
-    _loadSettings: function () {
+    _loadSettings: function() {
         this._settings = Prefs.SettingsSchema;
         this._settingsChangedId = this._settings.connect('changed',
             Lang.bind(this, this._onSettingsChange));
@@ -484,7 +481,7 @@ const ClipboardIndicator = Lang.Class({
             this._bindShortcuts();
     },
 
-    _fetchSettings: function () {
+    _fetchSettings: function() {
         TIMEOUT_MS           = this._settings.get_int(Prefs.Fields.INTERVAL);
         MAX_REGISTRY_LENGTH  = this._settings.get_int(Prefs.Fields.HISTORY_SIZE);
         MAX_ENTRY_LENGTH     = this._settings.get_int(Prefs.Fields.PREVIEW_SIZE);
@@ -496,8 +493,8 @@ const ClipboardIndicator = Lang.Class({
         TOPBAR_DISPLAY_MODE  = this._settings.get_int(Prefs.Fields.TOPBAR_DISPLAY_MODE_ID);
     },
 
-    _onSettingsChange: function () {
-        var that = this;
+    _onSettingsChange: function() {
+        let that = this;
 
         // Load the settings into variables
         that._fetchSettings();
@@ -506,14 +503,14 @@ const ClipboardIndicator = Lang.Class({
         that._removeOldestEntries();
 
         // Re-set menu-items lables in case preview size changed
-        that.historySection._getMenuItems().forEach(function (mItem) {
+        that.historySection._getMenuItems().forEach(function(mItem) {
             that._setEntryLabel(mItem);
         });
 
         //update topbar
         this._updateTopbarLayout();
-        if(TOPBAR_DISPLAY_MODE === 1 || TOPBAR_DISPLAY_MODE === 2) {
-            Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
+        if (TOPBAR_DISPLAY_MODE === 1 || TOPBAR_DISPLAY_MODE === 2) {
+            Clipboard.get_text(CLIPBOARD_TYPE, function(clipBoard, text) {
                 that._updateButtonText(text);
             });
         }
@@ -525,7 +522,7 @@ const ClipboardIndicator = Lang.Class({
             that._unbindShortcuts();
     },
 
-    _bindShortcuts: function () {
+    _bindShortcuts: function() {
         this._unbindShortcuts();
         this._bindShortcut(SETTING_KEY_CLEAR_HISTORY, this._removeAll);
         this._bindShortcut(SETTING_KEY_PREV_ENTRY, this._previousEntry);
@@ -533,7 +530,7 @@ const ClipboardIndicator = Lang.Class({
         this._bindShortcut(SETTING_KEY_TOGGLE_MENU, this._toggleMenu);
     },
 
-    _unbindShortcuts: function () {
+    _unbindShortcuts: function() {
         this._shortcutsBindingIds.forEach(
             (id) => Main.wm.removeKeybinding(id)
         );
@@ -542,7 +539,7 @@ const ClipboardIndicator = Lang.Class({
     },
 
     _bindShortcut: function(name, cb) {
-        var ModeType = Shell.hasOwnProperty('ActionMode') ?
+        let ModeType = Shell.hasOwnProperty('ActionMode') ?
             Shell.ActionMode : Shell.KeyBindingMode;
 
         Main.wm.addKeybinding(
@@ -556,22 +553,22 @@ const ClipboardIndicator = Lang.Class({
         this._shortcutsBindingIds.push(name);
     },
 
-    _updateTopbarLayout: function(){
-        if(TOPBAR_DISPLAY_MODE === 0){
+    _updateTopbarLayout: function() {
+        if (TOPBAR_DISPLAY_MODE === 0) {
             this.icon.visible = true;
             this._buttonText.visible = false;
         }
-        if(TOPBAR_DISPLAY_MODE === 1){
+        if (TOPBAR_DISPLAY_MODE === 1) {
             this.icon.visible = false;
             this._buttonText.visible = true;
         }
-        if(TOPBAR_DISPLAY_MODE === 2){
+        if (TOPBAR_DISPLAY_MODE === 2) {
             this.icon.visible = true;
             this._buttonText.visible = true;
         }
     },
 
-    _disconnectSettings: function () {
+    _disconnectSettings: function() {
         if (!this._settingsChangedId)
             return;
 
@@ -579,7 +576,7 @@ const ClipboardIndicator = Lang.Class({
         this._settingsChangedId = null;
     },
 
-    _clearClipboardTimeout: function () {
+    _clearClipboardTimeout: function() {
         if (!this._clipboardTimeoutId)
             return;
 
@@ -587,7 +584,7 @@ const ClipboardIndicator = Lang.Class({
         this._clipboardTimeoutId = null;
     },
 
-    _clearLabelTimeout: function () {
+    _clearLabelTimeout: function() {
         if (!this._historyLabelTimeoutId)
             return;
 
@@ -595,24 +592,24 @@ const ClipboardIndicator = Lang.Class({
         this._historyLabelTimeoutId = null;
     },
 
-    _clearDelayedSelectionTimeout: function () {
+    _clearDelayedSelectionTimeout: function() {
         if (this._delayedSelectionTimeoutId) {
             Mainloop.source_remove(this._delayedSelectionTimeoutId);
         }
     },
 
-    _selectEntryWithDelay: function (entry) {
+    _selectEntryWithDelay: function(entry) {
         let that = this;
 
         that._selectMenuItem(entry, false);
         that._delayedSelectionTimeoutId = Mainloop.timeout_add(
-                TIMEOUT_MS * 0.75, function () {
+            TIMEOUT_MS * 0.75, function() {
 
-            that._selectMenuItem(entry);  //select the item
+                that._selectMenuItem(entry);  //select the item
 
-            that._delayedSelectionTimeoutId = null;
-            return false;
-        });
+                that._delayedSelectionTimeoutId = null;
+                return false;
+            });
     },
 
     _previousEntry: function() {
@@ -620,7 +617,7 @@ const ClipboardIndicator = Lang.Class({
 
         that._clearDelayedSelectionTimeout();
 
-        this.historySection._getMenuItems().some(function (mItem, i, menuItems){
+        this.historySection._getMenuItems().some(function(mItem, i, menuItems) {
             if (mItem.currentlySelected) {
                 i--;                                 //get the previous index
                 if (i < 0) i = menuItems.length - 1; //cycle if out of bound
@@ -638,7 +635,7 @@ const ClipboardIndicator = Lang.Class({
 
         that._clearDelayedSelectionTimeout();
 
-        this.historySection._getMenuItems().some(function (mItem, i, menuItems) {
+        this.historySection._getMenuItems().some(function(mItem, i, menuItems) {
             if (mItem.currentlySelected) {
                 i++;                                 //get the next index
                 if (i === menuItems.length) i = 0;   //cycle if out of bound
@@ -651,23 +648,23 @@ const ClipboardIndicator = Lang.Class({
         });
     },
 
-    _toggleMenu: function(){
+    _toggleMenu: function() {
         this.menu.toggle();
     }
 });
 
 
-function init () {
+function init() {
     let localeDir = Me.dir.get_child('locale');
     Gettext.bindtextdomain('clipboard-indicator', localeDir.get_path());
 }
 
 let clipboardIndicator;
-function enable () {
+function enable() {
     clipboardIndicator = new ClipboardIndicator();
     Main.panel.addToStatusArea('clipboardIndicator', clipboardIndicator, 1);
 }
 
-function disable () {
+function disable() {
     clipboardIndicator.destroy();
 }
