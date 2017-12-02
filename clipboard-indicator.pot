@@ -46,7 +46,7 @@ msgstr ""
 msgid "Clipboard history cleared"
 msgstr ""
 
-#: extension.js:360
+#: extension.js:364
 msgid "Copied to clipboard"
 msgstr ""
 
