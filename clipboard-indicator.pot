@@ -107,5 +107,5 @@ msgid "Clipboard Content"
 msgstr ""
 
 #: prefs.js:207
-msgid "Icon + Clipboard Content"
+msgid "Both"
 msgstr ""
