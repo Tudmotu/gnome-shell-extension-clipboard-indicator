@@ -202,9 +202,9 @@ const App = new Lang.Class({
         this.main.show_all();
     },
     _create_display_mode_options : function(){
-        let options = [{ name: "Icon" },
-        { name: "Clipboard Content",},
-        { name: "Both"}];
+        let options = [{ name: _("Icon") },
+        { name: _("Clipboard Content"),},
+        { name: _("Both")}];
         let liststore = new Gtk.ListStore();
         liststore.set_column_types([GObject.TYPE_STRING])
         for (let i = 0; i < options.length; i++ ) {
