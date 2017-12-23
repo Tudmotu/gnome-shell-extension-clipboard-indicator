@@ -34,16 +34,16 @@ const prettyPrint = Utils.prettyPrint;
 const writeRegistry = Utils.writeRegistry;
 const readRegistry = Utils.readRegistry;
 
-var TIMEOUT_MS           = 1000;
-var MAX_REGISTRY_LENGTH  = 15;
-var MAX_ENTRY_LENGTH     = 50;
-var CACHE_ONLY_FAVORITE  = false;
-var DELETE_ENABLED       = true;
-var ENABLE_KEYBINDING    = true;
-var PRIVATEMODE          = false;
-var NOTIFY_ON_COPY       = true;
-var MAX_TOPBAR_LENGTH    = 15;
-var TOPBAR_DISPLAY_MODE  = 1; //0 - only icon, 1 - only clipbord content, 2 - both
+let TIMEOUT_MS           = 1000;
+let MAX_REGISTRY_LENGTH  = 15;
+let MAX_ENTRY_LENGTH     = 50;
+let CACHE_ONLY_FAVORITE  = false;
+let DELETE_ENABLED       = true;
+let ENABLE_KEYBINDING    = true;
+let PRIVATEMODE          = false;
+let NOTIFY_ON_COPY       = true;
+let MAX_TOPBAR_LENGTH    = 15;
+let TOPBAR_DISPLAY_MODE  = 1; //0 - only icon, 1 - only clipbord content, 2 - both
 
 const ClipboardIndicator = Lang.Class({
     Name: 'ClipboardIndicator',
