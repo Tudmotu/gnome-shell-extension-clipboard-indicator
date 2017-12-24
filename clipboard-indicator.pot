@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-09 02:59-0300\n"
+"POT-Creation-Date: 2017-12-02 08:42+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,6 +19,8 @@ msgstr ""
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SearchPath-0: prefs.js\n"
 "X-Poedit-SearchPath-1: extension.js\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
 
 #: extension.js:78
 msgid "Text will be here"
@@ -94,4 +96,16 @@ msgstr ""
 
 #: prefs.js:159
 msgid "What to show in top bar"
+msgstr ""
+
+#: prefs.js:205
+msgid "Icon"
+msgstr ""
+
+#: prefs.js:206
+msgid "Clipboard Content"
+msgstr ""
+
+#: prefs.js:207
+msgid "Both"
 msgstr ""
