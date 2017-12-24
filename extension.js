@@ -95,8 +95,9 @@ const ClipboardIndicator = Lang.Class({
     _updateButtonText: function(content){
         if (!content || PRIVATEMODE){
             this._buttonText.set_text("...")
+        } else {
+            this._buttonText.set_text(this._truncate(content, MAX_TOPBAR_LENGTH));
         }
-        this._buttonText.set_text(this._truncate(content, MAX_TOPBAR_LENGTH));
     },
 
     _buildMenu: function () {
