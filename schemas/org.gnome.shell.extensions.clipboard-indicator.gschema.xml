@@ -59,13 +59,13 @@
         <range min="512" max="16384"/>
     </key>
 
-    <key name="cache-disable" type="b">
+    <key name="cache-only-favorites" type="b">
       <default>false</default>
-        <summary>Disable the registry cache file and use memory only</summary>
+        <summary>Disable the registry cache file for favorites and use memory only</summary>
         <description>
-            Content is not stored and retrieved from a cache (registry.txt) file.
-            This avoid writing passwords to a plaintext file, but at the cost of persistant history.
-            Your clipboard history is lost after a gnome-shell session ends or the extension is reloaded.
+            Contents which are not favorites are not stored and retrieved from a cache (registry.txt) file.
+            This can avoid writing passwords to a plaintext file, but at the cost of persistant history.
+            Your clipboard history, except favorite items, is lost after a gnome-shell session ends or the extension is reloaded.
         </description>
     </key>
 
