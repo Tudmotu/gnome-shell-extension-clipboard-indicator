@@ -1,0 +1,107 @@
+# Catalan translation for gnome-shell-extension-clipboard-indicator.
+# Copyright (C) 2018 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the gnome-shell-extension-clipboard-indicator package.
+# Adolfo Jayme Barrientos <fitojb@ubuntu.com>, 2018.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-shell-extension-clipboard-indicator\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-12-02 08:42+0100\n"
+"PO-Revision-Date: 2018-03-10 10:10-0600\n"
+"Last-Translator: Adolfo Jayme Barrientos <fitojb@ubuntu.com>\n"
+"Language-Team: \n"
+"Language: ca\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.0.6\n"
+
+#: extension.js:78
+msgid "Text will be here"
+msgstr "El text apareixerà aquí"
+
+#: extension.js:119
+msgid "Type here to search..."
+msgstr "Escriviu aquí per a cercar…"
+
+#: extension.js:166
+msgid "Private mode"
+msgstr "Mode privat"
+
+#: extension.js:173 prefs.js:102
+msgid "Clear history"
+msgstr "Buida l’historial"
+
+#: extension.js:178
+msgid "Settings"
+msgstr "Paràmetres"
+
+#: extension.js:285
+msgid "Clipboard history cleared"
+msgstr "S’ha buidat l’historial del porta-retalls"
+
+#: extension.js:364
+msgid "Copied to clipboard"
+msgstr "S’ha copiat en el porta-retalls"
+
+#: prefs.js:100
+msgid "Toggle the menu"
+msgstr "Commuta el menú"
+
+#: prefs.js:104
+msgid "Previous entry"
+msgstr "Entrada anterior"
+
+#: prefs.js:106
+msgid "Next entry"
+msgstr "Entrada següent"
+
+#: prefs.js:119
+msgid "History Size"
+msgstr "Mida de l’historial"
+
+#: prefs.js:124
+msgid "Refresh Interval (ms)"
+msgstr "Interval d’actualització (ms)"
+
+#: prefs.js:129
+msgid "Preview Size (characters)"
+msgstr "Mida de la previsualització (caràcters)"
+
+#: prefs.js:134
+msgid "Max cache file size (kb)"
+msgstr "Mida màxima de la memòria cau (kB)"
+
+#: prefs.js:139
+msgid "Disable cache file"
+msgstr "Inhabilita el fitxer de memòria cau"
+
+#: prefs.js:144
+msgid "Show notification on copy"
+msgstr "Mostra una notificació en copiar"
+
+#: prefs.js:149
+msgid "Keyboard shortcuts"
+msgstr "Dreceres de teclat"
+
+#: prefs.js:154
+msgid "Number of characters in top bar"
+msgstr "Nombre de caràcters a la barra superior"
+
+#: prefs.js:159
+msgid "What to show in top bar"
+msgstr "Què mostrar a la barra superior"
+
+#: prefs.js:205
+msgid "Icon"
+msgstr "Icona"
+
+#: prefs.js:206
+msgid "Clipboard Content"
+msgstr "Contingut del porta-retalls"
+
+#: prefs.js:207
+msgid "Both"
+msgstr "Ambdós"
