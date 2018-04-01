@@ -14,7 +14,7 @@ const Fields = {
     HISTORY_SIZE       : 'history-size',
     PREVIEW_SIZE       : 'preview-size',
     CACHE_FILE_SIZE    : 'cache-size',
-    CACHE_FILE_DISABLE : 'cache-disable',
+    CACHE_ONLY_FAVORITE : 'cache-only-favorites',
     DELETE             : 'enable-deletion',
     NOTIFY_ON_COPY     : 'notify-on-copy',
     ENABLE_KEYBINDING  : 'enable-keybindings',
@@ -136,7 +136,7 @@ const App = new Lang.Class({
             halign: Gtk.Align.START
         });
         let cacheDisableLabel  = new Gtk.Label({
-            label: _("Disable cache file"),
+            label: _("Cache only favorites"),
             hexpand: true,
             halign: Gtk.Align.START
         });
@@ -192,7 +192,7 @@ const App = new Lang.Class({
         SettingsSchema.bind(Fields.HISTORY_SIZE, this.field_size, 'value', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.PREVIEW_SIZE, this.field_preview_size, 'value', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.CACHE_FILE_SIZE, this.field_cache_size, 'value', Gio.SettingsBindFlags.DEFAULT);
-        SettingsSchema.bind(Fields.CACHE_FILE_DISABLE, this.field_cache_disable, 'active', Gio.SettingsBindFlags.DEFAULT);
+        SettingsSchema.bind(Fields.CACHE_ONLY_FAVORITE, this.field_cache_disable, 'active', Gio.SettingsBindFlags.DEFAULT);
         //SettingsSchema.bind(Fields.DELETE, this.field_deletion, 'active', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.NOTIFY_ON_COPY, this.field_notification_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.TOPBAR_DISPLAY_MODE_ID, this.field_display_mode, 'active', Gio.SettingsBindFlags.DEFAULT);
@@ -202,9 +202,9 @@ const App = new Lang.Class({
         this.main.show_all();
     },
     _create_display_mode_options : function(){
-        let options = [{ name: "Icon" },
-        { name: "Clipboard Content",},
-        { name: "Both"}];
+        let options = [{ name: _("Icon") },
+        { name: _("Clipboard Content"),},
+        { name: _("Both")}];
         let liststore = new Gtk.ListStore();
         liststore.set_column_types([GObject.TYPE_STRING])
         for (let i = 0; i < options.length; i++ ) {

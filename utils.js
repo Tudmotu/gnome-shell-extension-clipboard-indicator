@@ -98,10 +98,16 @@ function readRegistry (callback) {
                         let max_size = SettingsSchema.get_int(Prefs.Fields.HISTORY_SIZE);
                         registry = JSON.parse(contents);
 
-                        // In case there are more entries than the max HISTROY_SIZE,
-                        // we splice the registry to return appropriate amount
-                        if (registry.length > max_size) {
-                            registry.splice(0, registry.length - max_size);
+                        let registryNoFavorite = registry.filter(
+                            item => item['favorite'] === false);
+
+                        while (registryNoFavorite.length > max_size) {
+                            let oldestNoFavorite = registryNoFavorite.shift();
+                            let itemIdx = registry.indexOf(oldestNoFavorite);
+                            registry.splice(itemIdx,1);
+
+                            registryNoFavorite = registry.filter(
+                                item => item["favorite"] === false);
                         }
                     }
                     catch (e) {

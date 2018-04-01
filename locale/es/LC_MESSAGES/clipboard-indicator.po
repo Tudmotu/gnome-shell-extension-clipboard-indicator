@@ -1,113 +1,107 @@
-# SOME DESCRIPTIVE TITLE.
+# Spanish translation for gnome-shell-extension-clipboard-indicator.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# This file is distributed under the same license as the gnome-shell-extension-clipboard-indicator package.
+# Javier Junquera <javier.junquera.sanchez@gmail.com>, 2016.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: gnome-shell-extension-clipboard-indicator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-12-02 08:42+0100\n"
-"PO-Revision-Date: 2017-12-02 09:23+0100\n"
-"Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
+"PO-Revision-Date: 2018-03-10 09:43-0600\n"
+"Last-Translator: Adolfo Jayme Barrientos <fitojb@ubuntu.com>\n"
 "Language-Team: \n"
-"Language: pl_PL\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.4\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #: extension.js:78
 msgid "Text will be here"
-msgstr ""
+msgstr "El texto aparecerá aquí"
 
 #: extension.js:119
 msgid "Type here to search..."
-msgstr "Szukaj..."
+msgstr "Escriba aquí para buscar…"
 
 #: extension.js:166
 msgid "Private mode"
-msgstr "Tryb prywatny"
+msgstr "Modo privado"
 
 #: extension.js:173 prefs.js:102
 msgid "Clear history"
-msgstr "Wyczyść historię"
+msgstr "Vaciar historial"
 
 #: extension.js:178
 msgid "Settings"
-msgstr "Ustawienia"
+msgstr "Configuración"
 
 #: extension.js:285
 msgid "Clipboard history cleared"
-msgstr "Wyczyszczono historię schowka"
+msgstr "Historial del portapapeles vaciado"
 
 #: extension.js:364
 msgid "Copied to clipboard"
-msgstr "Skopiowano do schowka"
+msgstr "Copiado en el portapapeles"
 
 #: prefs.js:100
 msgid "Toggle the menu"
-msgstr "Przełącz menu"
+msgstr "Alternar menú"
 
 #: prefs.js:104
 msgid "Previous entry"
-msgstr "Poprzednia pozycja"
+msgstr "Entrada anterior"
 
 #: prefs.js:106
 msgid "Next entry"
-msgstr "Następna pozycja"
+msgstr "Entrada siguiente"
 
 #: prefs.js:119
 msgid "History Size"
-msgstr "Rozmiar historii (liczba elementów)"
+msgstr "Tamaño del historial"
 
 #: prefs.js:124
 msgid "Refresh Interval (ms)"
-msgstr "Interwał odświeżania (ms)"
+msgstr "Intervalo de actualización (ms)"
 
 #: prefs.js:129
 msgid "Preview Size (characters)"
-msgstr "Rozmiar podglądu (znaki)"
+msgstr "Tamaño de previsualización (caracteres)"
 
 #: prefs.js:134
 msgid "Max cache file size (kb)"
-msgstr "Maksymalny rozmiar pliku pamięci podręcznej (kB)"
+msgstr "Tamaño máximo de antememoria (kB)"
 
 #: prefs.js:139
 msgid "Disable cache file"
-msgstr "Nie zapisuj do pliku pamięci podręcznej "
+msgstr "Desactivar archivo de antememoria"
 
 #: prefs.js:144
 msgid "Show notification on copy"
-msgstr "Pokaż powiadomienie po skopiowaniu"
+msgstr "Mostrar una notificación al copiar"
 
 #: prefs.js:149
 msgid "Keyboard shortcuts"
-msgstr "Skróty klawiszowe"
+msgstr "Atajos de teclado"
 
 #: prefs.js:154
 msgid "Number of characters in top bar"
-msgstr "Liczba znaków na panelu"
+msgstr "Número de caracteres en la barra superior"
 
 #: prefs.js:159
 msgid "What to show in top bar"
-msgstr "Pokazuj na panelu"
+msgstr "Qué mostrar en la barra superior"
 
 #: prefs.js:205
 msgid "Icon"
-msgstr "Ikona"
+msgstr "Icono"
 
 #: prefs.js:206
 msgid "Clipboard Content"
-msgstr "Zawartość schowka"
+msgstr "Contenido del portapapeles"
 
 #: prefs.js:207
 msgid "Both"
-msgstr "Ikona oraz zawartość schowka"
-
-#, fuzzy
-#~| msgid "Clipboard Content"
-#~ msgid "Icon + Clipboard Content"
-#~ msgstr "Zawartość schowka"
+msgstr "Ambos"
