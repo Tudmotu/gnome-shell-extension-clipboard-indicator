@@ -153,8 +153,8 @@ const ClipboardIndicator = Lang.Class({
             favoritesScrollView.add_actor(that.favoritesSection.actor);
 
             that.scrollViewFavoritesMenuSection.actor.add_actor(favoritesScrollView);
-
             that.menu.addMenuItem(that.scrollViewFavoritesMenuSection);
+            that.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 
             // History
             that.historySection = new PopupMenu.PopupMenuSection();
