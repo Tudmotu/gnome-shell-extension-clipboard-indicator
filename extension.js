@@ -526,6 +526,21 @@ const ClipboardIndicator = Lang.Class({
         }
     },
 
+    _cancelNotification: function() {
+        if (this.clipItemsRadioGroup.length >= 2) {
+            let clipSecond = this.clipItemsRadioGroup.length - 2;
+            let previousClip = this.clipItemsRadioGroup[clipSecond];
+            GClipboard.set_text(previousClip.clipContents, -1);
+            previousClip.setOrnament(PopupMenu.Ornament.DOT);
+            previousClip.icoBtn.visible = false;
+            previousClip.currentlySelected = true;
+        } else {
+            GClipboard.set_text("", -1);
+        }
+        let clipFirst = this.clipItemsRadioGroup.length - 1;
+        this._removeEntry(this.clipItemsRadioGroup[clipFirst]);
+    },
+
     _showNotification: function (message) {
         let notification = null;
 
@@ -533,8 +548,12 @@ const ClipboardIndicator = Lang.Class({
 
         if (this._notifSource.count === 0) {
             notification = new MessageTray.Notification(this._notifSource, message);
+            //if (message == _("Copied to clipboard")) {
+                //notification.addAction(_('Cancel'),
+                    //Lang.bind(this, this._cancelNotification));
+            //}
         }
-        else {
+        else { //if (message != _("Copied to clipboard")) {
             notification = this._notifSource.notifications[0];
             notification.update(message, '', { clear: true });
         }
