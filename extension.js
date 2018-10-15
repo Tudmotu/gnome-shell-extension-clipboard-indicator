@@ -468,7 +468,7 @@ const ClipboardIndicator = Lang.Class({
                         that._selectMenuItem(item);
                     } else {
                         item.currentlySelected = true;
-                        that._moveItemFirst(item);
+                        //that._moveItemFirst(item);
                     }
                 }
             }
