@@ -17,6 +17,7 @@ const Fields = {
     CACHE_ONLY_FAVORITE : 'cache-only-favorites',
     DELETE             : 'enable-deletion',
     NOTIFY_ON_COPY     : 'notify-on-copy',
+    MOVE_ITEM_FIRST    : 'move-item-first',
     ENABLE_KEYBINDING  : 'enable-keybindings',
     TOPBAR_PREVIEW_SIZE: 'topbar-preview-size',
     TOPBAR_DISPLAY_MODE_ID    : 'display-mode'
@@ -95,6 +96,7 @@ const App = new Lang.Class({
 
         this.field_cache_disable = new Gtk.Switch();
         this.field_notification_toggle = new Gtk.Switch();
+        this.field_move_item_first = new Gtk.Switch();
         this.field_keybinding = createKeybindingWidget(SettingsSchema);
         addKeybinding(this.field_keybinding.model, SettingsSchema, "toggle-menu",
                       _("Toggle the menu"));
@@ -145,6 +147,11 @@ const App = new Lang.Class({
             hexpand: true,
             halign: Gtk.Align.START
         });
+        let moveFirstLabel  = new Gtk.Label({
+            label: _("Move item to the top after selection"),
+            hexpand: true,
+            halign: Gtk.Align.START
+        });
         let keybindingLabel  = new Gtk.Label({
             label: _("Keyboard shortcuts"),
             hexpand: true,
@@ -172,9 +179,10 @@ const App = new Lang.Class({
         this.main.attach(cacheDisableLabel  , 2, 5, 2 ,1);
         //this.main.attach(deleteLabel        , 2, 4, 2 ,1);
         this.main.attach(notificationLabel  , 2, 6, 2 ,1);
-        this.main.attach(displayModeLabel   , 2, 7, 2, 1);
-        this.main.attach(topbarPreviewLabel , 2, 8, 2 ,1);
-        this.main.attach(keybindingLabel    , 2, 9, 2 ,1);
+        this.main.attach(moveFirstLabel     , 2, 7, 2 ,1);
+        this.main.attach(displayModeLabel   , 2, 8, 2, 1);
+        this.main.attach(topbarPreviewLabel , 2, 9, 2 ,1);
+        this.main.attach(keybindingLabel    , 2, 10, 2 ,1);
 
         this.main.attach(this.field_size                   , 4, 1, 2, 1);
         this.main.attach(this.field_preview_size           , 4, 2, 2, 1);
@@ -183,10 +191,12 @@ const App = new Lang.Class({
         this.main.attach(this.field_cache_disable          , 4, 5, 2, 1);
         //this.main.attach(this.field_deletion               , 4, 4, 2, 1);
         this.main.attach(this.field_notification_toggle    , 4, 6, 2, 1);
-        this.main.attach(this.field_display_mode           , 4, 7, 2, 1);
-        this.main.attach(this.field_topbar_preview_size    , 4, 8, 2, 1);
-        this.main.attach(this.field_keybinding_activation  , 4, 9, 2, 1);
-        this.main.attach(this.field_keybinding             , 2, 10, 4, 2);
+        this.main.attach(this.field_move_item_first        , 4, 7, 2, 1);
+        this.main.attach(this.field_display_mode           , 4, 8, 2, 1);
+        this.main.attach(this.field_topbar_preview_size    , 4, 9, 2, 1);
+        this.main.attach(this.field_keybinding_activation  , 4, 10, 2, 1);
+        this.main.attach(this.field_keybinding             , 2, 11, 4, 2);
+    
 
         SettingsSchema.bind(Fields.INTERVAL, this.field_interval, 'value', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.HISTORY_SIZE, this.field_size, 'value', Gio.SettingsBindFlags.DEFAULT);
@@ -195,6 +205,7 @@ const App = new Lang.Class({
         SettingsSchema.bind(Fields.CACHE_ONLY_FAVORITE, this.field_cache_disable, 'active', Gio.SettingsBindFlags.DEFAULT);
         //SettingsSchema.bind(Fields.DELETE, this.field_deletion, 'active', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.NOTIFY_ON_COPY, this.field_notification_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
+        SettingsSchema.bind(Fields.MOVE_ITEM_FIRST, this.field_move_item_first, 'active', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.TOPBAR_DISPLAY_MODE_ID, this.field_display_mode, 'active', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.TOPBAR_PREVIEW_SIZE, this.field_topbar_preview_size, 'value', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.ENABLE_KEYBINDING, this.field_keybinding_activation, 'active', Gio.SettingsBindFlags.DEFAULT);

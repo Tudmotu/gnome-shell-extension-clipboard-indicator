@@ -77,6 +77,14 @@
         </description>
     </key>
 
+    <key name="move-item-first" type="b">
+      <default>true</default>
+        <summary>Move items to the top of the list when selected.</summary>
+        <description>
+            If true, move items to the top of the list when it is selected.
+        </description>
+    </key>
+
     <key name="enable-keybindings" type="b">
       <default>true</default>
         <summary>Enable the keyboard shortcuts</summary>
