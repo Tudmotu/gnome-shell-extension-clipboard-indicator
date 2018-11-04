@@ -44,6 +44,7 @@ let PRIVATEMODE          = false;
 let NOTIFY_ON_COPY       = true;
 let MAX_TOPBAR_LENGTH    = 15;
 let TOPBAR_DISPLAY_MODE  = 1; //0 - only icon, 1 - only clipbord content, 2 - both
+let STRIP_TEXT           = false;
 
 const ClipboardIndicator = Lang.Class({
     Name: 'ClipboardIndicator',
@@ -449,6 +450,10 @@ const ClipboardIndicator = Lang.Class({
         let that = this;
 
         Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
+            if (STRIP_TEXT) {
+                text = text.trim();
+            }
+
             if (text !== "") {
                 let registry = that.clipItemsRadioGroup.map(function (menuItem) {
                     return menuItem.clipContents;
@@ -459,6 +464,7 @@ const ClipboardIndicator = Lang.Class({
                     that._removeOldestEntries();
                     if(NOTIFY_ON_COPY)
                         that._showNotification(_("Copied to clipboard"));
+                    Clipboard.set_text(CLIPBOARD_TYPE, text);
                 }
                 else if (text && registry.indexOf(text) >= 0 &&
                         registry.indexOf(text) < registry.length - 1) {
@@ -601,6 +607,7 @@ const ClipboardIndicator = Lang.Class({
         ENABLE_KEYBINDING    = this._settings.get_boolean(Prefs.Fields.ENABLE_KEYBINDING);
         MAX_TOPBAR_LENGTH    = this._settings.get_int(Prefs.Fields.TOPBAR_PREVIEW_SIZE);
         TOPBAR_DISPLAY_MODE  = this._settings.get_int(Prefs.Fields.TOPBAR_DISPLAY_MODE_ID);
+        STRIP_TEXT           = this._settings.get_boolean(Prefs.Fields.STRIP_TEXT);
     },
 
     _onSettingsChange: function () {

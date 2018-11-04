@@ -19,7 +19,8 @@ const Fields = {
     NOTIFY_ON_COPY     : 'notify-on-copy',
     ENABLE_KEYBINDING  : 'enable-keybindings',
     TOPBAR_PREVIEW_SIZE: 'topbar-preview-size',
-    TOPBAR_DISPLAY_MODE_ID    : 'display-mode'
+    TOPBAR_DISPLAY_MODE_ID    : 'display-mode',
+    STRIP_TEXT         : 'strip-text'
 };
 
 const SCHEMA_NAME = 'org.gnome.shell.extensions.clipboard-indicator';
@@ -95,6 +96,9 @@ const App = new Lang.Class({
 
         this.field_cache_disable = new Gtk.Switch();
         this.field_notification_toggle = new Gtk.Switch();
+
+        this.field_strip_text = new Gtk.Switch();
+
         this.field_keybinding = createKeybindingWidget(SettingsSchema);
         addKeybinding(this.field_keybinding.model, SettingsSchema, "toggle-menu",
                       _("Toggle the menu"));
@@ -160,6 +164,11 @@ const App = new Lang.Class({
             hexpand: true,
             halign: Gtk.Align.START
         });
+        let stripTextLabel = new Gtk.Label({
+            label: _("Remove whitespace around text"),
+            hexpand: true,
+            halign: Gtk.Align.START
+        });
         //let deleteLabel   = new Gtk.Label({
             //label: _("Enable Deletion"),
             //hexpand: true,
@@ -174,7 +183,8 @@ const App = new Lang.Class({
         this.main.attach(notificationLabel  , 2, 6, 2 ,1);
         this.main.attach(displayModeLabel   , 2, 7, 2, 1);
         this.main.attach(topbarPreviewLabel , 2, 8, 2 ,1);
-        this.main.attach(keybindingLabel    , 2, 9, 2 ,1);
+        this.main.attach(stripTextLabel     , 2, 9, 2 ,1);
+        this.main.attach(keybindingLabel    , 2, 10, 2 ,1);
 
         this.main.attach(this.field_size                   , 4, 1, 2, 1);
         this.main.attach(this.field_preview_size           , 4, 2, 2, 1);
@@ -185,8 +195,9 @@ const App = new Lang.Class({
         this.main.attach(this.field_notification_toggle    , 4, 6, 2, 1);
         this.main.attach(this.field_display_mode           , 4, 7, 2, 1);
         this.main.attach(this.field_topbar_preview_size    , 4, 8, 2, 1);
-        this.main.attach(this.field_keybinding_activation  , 4, 9, 2, 1);
-        this.main.attach(this.field_keybinding             , 2, 10, 4, 2);
+        this.main.attach(this.field_strip_text             , 4, 9, 2, 1);
+        this.main.attach(this.field_keybinding_activation  , 4, 10, 2, 1);
+        this.main.attach(this.field_keybinding             , 2, 11, 4, 2);
 
         SettingsSchema.bind(Fields.INTERVAL, this.field_interval, 'value', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.HISTORY_SIZE, this.field_size, 'value', Gio.SettingsBindFlags.DEFAULT);
@@ -198,6 +209,7 @@ const App = new Lang.Class({
         SettingsSchema.bind(Fields.TOPBAR_DISPLAY_MODE_ID, this.field_display_mode, 'active', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.TOPBAR_PREVIEW_SIZE, this.field_topbar_preview_size, 'value', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.ENABLE_KEYBINDING, this.field_keybinding_activation, 'active', Gio.SettingsBindFlags.DEFAULT);
+        SettingsSchema.bind(Fields.STRIP_TEXT, this.field_strip_text, 'active', Gio.SettingsBindFlags.DEFAULT);
 
         this.main.show_all();
     },
