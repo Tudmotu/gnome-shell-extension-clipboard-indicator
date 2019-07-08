@@ -39,7 +39,7 @@
         </description>
         <range min="10" max="100"/>
     </key>
-    
+
     <key type="i" name="topbar-preview-size">
         <default>10</default>
         <summary>Amount of visible characters in topbar </summary>
@@ -57,6 +57,14 @@
             High limit might cause slowness of shell startup.
         </description>
         <range min="512" max="16384"/>
+    </key>
+
+    <key name="paste-on-select" type="b">
+      <default>false</default>
+        <summary>Paste on select</summary>
+        <description>
+            When you select an item from history, it will be pasted.
+        </description>
     </key>
 
     <key name="cache-only-favorites" type="b">

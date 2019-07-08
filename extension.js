@@ -1,5 +1,6 @@
 const Clutter    = imports.gi.Clutter;
 const Gio        = imports.gi.Gio;
+const GLib       = imports.gi.GLib;
 const Lang       = imports.lang;
 const Mainloop   = imports.mainloop;
 const Meta       = imports.gi.Meta;
@@ -41,6 +42,7 @@ let CACHE_ONLY_FAVORITE  = false;
 let DELETE_ENABLED       = true;
 let ENABLE_KEYBINDING    = true;
 let PRIVATEMODE          = false;
+let PASTE_ON_SELECT      = false;
 let NOTIFY_ON_COPY       = true;
 let MAX_TOPBAR_LENGTH    = 15;
 let TOPBAR_DISPLAY_MODE  = 1; //0 - only icon, 1 - only clipbord content, 2 - both
@@ -418,6 +420,9 @@ const ClipboardIndicator = Lang.Class({
         });
 
         that.menu.close();
+
+        if (PASTE_ON_SELECT)
+          GLib.spawn_sync(null, ['xdotool', 'type', '--clearmodifiers', this.clipContents], null, GLib.SpawnFlags.SEARCH_PATH, null);
     },
 
     _getCache: function (cb) {
@@ -601,6 +606,7 @@ const ClipboardIndicator = Lang.Class({
         ENABLE_KEYBINDING    = this._settings.get_boolean(Prefs.Fields.ENABLE_KEYBINDING);
         MAX_TOPBAR_LENGTH    = this._settings.get_int(Prefs.Fields.TOPBAR_PREVIEW_SIZE);
         TOPBAR_DISPLAY_MODE  = this._settings.get_int(Prefs.Fields.TOPBAR_DISPLAY_MODE_ID);
+        PASTE_ON_SELECT      = this._settings.get_boolean(Prefs.Fields.PASTE_ON_SELECT);
     },
 
     _onSettingsChange: function () {
