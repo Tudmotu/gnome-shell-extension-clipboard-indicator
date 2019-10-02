@@ -70,7 +70,7 @@
     </key>
 
     <key name="notify-on-copy" type="b">
-      <default>true</default>
+      <default>false</default>
         <summary>Show notification on copy to clipboard</summary>
         <description>
             If true, a notification is shown when content is copied to clipboard.
