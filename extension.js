@@ -457,8 +457,11 @@ const ClipboardIndicator = Lang.Class({
                 if (text && registry.indexOf(text) < 0) {
                     that._addEntry(text, false, true, false);
                     that._removeOldestEntries();
-                    if(NOTIFY_ON_COPY)
-                        that._showNotification(_("Copied to clipboard"));
+                    if (NOTIFY_ON_COPY) {
+                        that._showNotification(_("Copied to clipboard"), notif => {
+                            notif.addAction(_('Cancel'), Lang.bind(that, that._cancelNotification));
+                        });
+                    }
                 }
                 else if (text && registry.indexOf(text) >= 0 &&
                         registry.indexOf(text) < registry.length - 1) {
@@ -541,21 +544,21 @@ const ClipboardIndicator = Lang.Class({
         this._removeEntry(this.clipItemsRadioGroup[clipFirst]);
     },
 
-    _showNotification: function (message) {
+    _showNotification: function (message, transformFn) {
         let notification = null;
 
         this._initNotifSource();
 
         if (this._notifSource.count === 0) {
             notification = new MessageTray.Notification(this._notifSource, message);
-            //if (message == _("Copied to clipboard")) {
-                //notification.addAction(_('Cancel'),
-                    //Lang.bind(this, this._cancelNotification));
-            //}
         }
-        else { //if (message != _("Copied to clipboard")) {
+        else {
             notification = this._notifSource.notifications[0];
             notification.update(message, '', { clear: true });
+        }
+
+        if (typeof transformFn === 'function') {
+            transformFn(notification);
         }
 
         notification.setTransient(true);
