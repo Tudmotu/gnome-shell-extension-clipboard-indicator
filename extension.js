@@ -155,8 +155,8 @@ const ClipboardIndicator = Lang.Class({
             favoritesScrollView.add_actor(that.favoritesSection.actor);
 
             that.scrollViewFavoritesMenuSection.actor.add_actor(favoritesScrollView);
-
             that.menu.addMenuItem(that.scrollViewFavoritesMenuSection);
+            that.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 
             // History
             that.historySection = new PopupMenu.PopupMenuSection();
@@ -463,9 +463,11 @@ const ClipboardIndicator = Lang.Class({
                 if (text && registry.indexOf(text) < 0) {
                     that._addEntry(text, false, true, false);
                     that._removeOldestEntries();
-                    if(NOTIFY_ON_COPY)
-                        that._showNotification(_("Copied to clipboard"));
-                    Clipboard.set_text(CLIPBOARD_TYPE, text);
+                    if (NOTIFY_ON_COPY) {
+                        that._showNotification(_("Copied to clipboard"), notif => {
+                            notif.addAction(_('Cancel'), Lang.bind(that, that._cancelNotification));
+                        });
+                    }
                 }
                 else if (text && registry.indexOf(text) >= 0 &&
                         registry.indexOf(text) < registry.length - 1) {
@@ -534,7 +536,22 @@ const ClipboardIndicator = Lang.Class({
         }
     },
 
-    _showNotification: function (message) {
+    _cancelNotification: function() {
+        if (this.clipItemsRadioGroup.length >= 2) {
+            let clipSecond = this.clipItemsRadioGroup.length - 2;
+            let previousClip = this.clipItemsRadioGroup[clipSecond];
+            GClipboard.set_text(previousClip.clipContents, -1);
+            previousClip.setOrnament(PopupMenu.Ornament.DOT);
+            previousClip.icoBtn.visible = false;
+            previousClip.currentlySelected = true;
+        } else {
+            GClipboard.set_text("", -1);
+        }
+        let clipFirst = this.clipItemsRadioGroup.length - 1;
+        this._removeEntry(this.clipItemsRadioGroup[clipFirst]);
+    },
+
+    _showNotification: function (message, transformFn) {
         let notification = null;
 
         this._initNotifSource();
@@ -545,6 +562,10 @@ const ClipboardIndicator = Lang.Class({
         else {
             notification = this._notifSource.notifications[0];
             notification.update(message, '', { clear: true });
+        }
+
+        if (typeof transformFn === 'function') {
+            transformFn(notification);
         }
 
         notification.setTransient(true);
