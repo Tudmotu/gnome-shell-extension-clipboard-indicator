@@ -8,68 +8,92 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-17 19:20+0200\n"
-"PO-Revision-Date: 2017-11-09 21:10+0100\n"
+"PO-Revision-Date: 2018-05-17 09:27+0200\n"
 "Language-Team: jimmy.scionti@gmail.com\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.4\n"
+"X-Generator: Poedit 2.0.6\n"
 "Last-Translator: Jimmy Scionti <jimmy.scionti@gmail.com>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Language: it\n"
 
-#: extension.js:113
+#: extension.js:78
+msgid "Text will be here"
+msgstr "Il testo sarà qui"
+
+#: extension.js:119
+msgid "Type here to search..."
+msgstr "Digita qui per cercare…"
+
+#: extension.js:166
 msgid "Private mode"
 msgstr "Modalità privata"
 
-#: extension.js:120 prefs.js:86
+#: extension.js:173 prefs.js:102
 msgid "Clear history"
 msgstr "Cancella la cronologia"
 
-#: extension.js:125
+#: extension.js:178
 msgid "Settings"
 msgstr "Impostazioni"
 
-#: extension.js:202
+#: extension.js:285
 msgid "Clipboard history cleared"
 msgstr "Cronologia cancellata"
 
-#: extension.js:275
+#: extension.js:364
 msgid "Copied to clipboard"
 msgstr "Copiato negli appunti"
 
-#: prefs.js:84
+#: prefs.js:100
 msgid "Toggle the menu"
 msgstr "Mostra/nascondi il menu"
 
-#: prefs.js:88
+#: prefs.js:104
 msgid "Previous entry"
 msgstr "Voce precedente"
 
-#: prefs.js:90
+#: prefs.js:106
 msgid "Next entry"
 msgstr "Voce successiva"
 
-#: prefs.js:103
+#: prefs.js:119
 msgid "History Size"
 msgstr "Dimensioni della cronologia"
 
-#: prefs.js:108
+#: prefs.js:124
 msgid "Refresh Interval (ms)"
 msgstr "Intervallo di aggiornamento (ms)"
 
-#: prefs.js:113
+#: prefs.js:129
 msgid "Preview Size (characters)"
 msgstr "Dimensioni dell'anteprima (caratteri)"
 
-#: prefs.js:118
-msgid "Max Cache File Size (kb)"
-msgstr "Dimensioni massime della cache (kb)"
+#: prefs.js:134
+msgid "Max cache file size (kb)"
+msgstr "Dimensioni massime della cache (kB)"
 
-#: prefs.js:123
+#: prefs.js:138
+msgid "Cache only favorites"
+msgstr "Metti in cache solo i preferiti"
+
+#: prefs.js:139
+msgid "Disable cache file"
+msgstr "Disabilità la cache dei file"
+
+#: prefs.js:144
 msgid "Show notification on copy"
 msgstr "Mostra una notifica quando copi"
 
-#: prefs.js:128
+#: prefs.js:149
 msgid "Keyboard shortcuts"
 msgstr "Scorciatoie da tastiera"
+
+#: prefs.js:154
+msgid "Number of characters in top bar"
+msgstr "Numero di caratteri sul pannello"
+
+#: prefs.js:159
+msgid "What to show in top bar"
+msgstr "Cosa mostrare sul pannello"
