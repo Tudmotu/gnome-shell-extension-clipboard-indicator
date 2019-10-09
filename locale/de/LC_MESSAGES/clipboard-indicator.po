@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-17 19:20+0200\n"
-"PO-Revision-Date: 2015-04-26 16:15+0200\n"
-"Last-Translator: Jens Lody <openweather@jenslody.de>\n"
+"PO-Revision-Date: 2019-06-16 20:30+0200\n"
+"Last-Translator: Onno Giesmann <nutzer3105@gmail.com>\n"
 "Language-Team: Deutsch <openweather@jenslody.de>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #: extension.js:113
 msgid "Private mode"
-msgstr ""
+msgstr "Privater Modus"
 
 #: extension.js:120 prefs.js:86
 msgid "Clear history"
@@ -36,7 +36,7 @@ msgstr "Verlauf der Zwischenablage gelöscht"
 
 #: extension.js:275
 msgid "Copied to clipboard"
-msgstr ""
+msgstr "In Zwischenablage kopiert"
 
 #: prefs.js:84
 msgid "Toggle the menu"
@@ -68,7 +68,7 @@ msgstr "Maximale Größe der Pufferdatei"
 
 #: prefs.js:123
 msgid "Show notification on copy"
-msgstr ""
+msgstr "Benachrichtigung beim Kopieren anzeigen"
 
 #: prefs.js:128
 msgid "Keyboard shortcuts"
