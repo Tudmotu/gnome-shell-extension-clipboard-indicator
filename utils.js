@@ -96,6 +96,12 @@ function readRegistry (callback) {
                 if (success) {
                     try {
                         let max_size = SettingsSchema.get_int(Prefs.Fields.HISTORY_SIZE);
+
+                        // are we running gnome 3.30 or higher?
+                        if (contents instanceof Uint8Array) {
+                          contents = imports.byteArray.toString(contents);
+                        }
+
                         registry = JSON.parse(contents);
 
                         let registryNoFavorite = registry.filter(
