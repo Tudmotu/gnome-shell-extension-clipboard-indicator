@@ -39,6 +39,7 @@ let MAX_REGISTRY_LENGTH  = 15;
 let MAX_ENTRY_LENGTH     = 50;
 let CACHE_ONLY_FAVORITE  = false;
 let DELETE_ENABLED       = true;
+let MOVE_ITEM_FIRST      = false;
 let ENABLE_KEYBINDING    = true;
 let PRIVATEMODE          = false;
 let NOTIFY_ON_COPY       = true;
@@ -473,8 +474,9 @@ const ClipboardIndicator = Lang.Class({
                     if (item.clipFavorite) {
                         that._selectMenuItem(item);
                     } else {
-                        item.currentlySelected = true;
-                        that._moveItemFirst(item);
+                        that._selectMenuItem(item);
+                        if(MOVE_ITEM_FIRST)
+                            that._moveItemFirst(item);
                     }
                 }
             }
@@ -603,6 +605,7 @@ const ClipboardIndicator = Lang.Class({
         MAX_ENTRY_LENGTH     = this._settings.get_int(Prefs.Fields.PREVIEW_SIZE);
         CACHE_ONLY_FAVORITE  = this._settings.get_boolean(Prefs.Fields.CACHE_ONLY_FAVORITE);
         DELETE_ENABLED       = this._settings.get_boolean(Prefs.Fields.DELETE);
+        MOVE_ITEM_FIRST      = this._settings.get_boolean(Prefs.Fields.MOVE_ITEM_FIRST);
         NOTIFY_ON_COPY       = this._settings.get_boolean(Prefs.Fields.NOTIFY_ON_COPY);
         ENABLE_KEYBINDING    = this._settings.get_boolean(Prefs.Fields.ENABLE_KEYBINDING);
         MAX_TOPBAR_LENGTH    = this._settings.get_int(Prefs.Fields.TOPBAR_PREVIEW_SIZE);
@@ -740,7 +743,12 @@ const ClipboardIndicator = Lang.Class({
                 if (i < 0) i = menuItems.length - 1; //cycle if out of bound
                 let index = i + 1;                   //index to be displayed
                 that._showNotification(index + ' / ' + menuItems.length + ': ' + menuItems[i].label.text);
-                that._selectEntryWithDelay(menuItems[i]);
+                if (MOVE_ITEM_FIRST) {
+                    that._selectEntryWithDelay(menuItems[i]);
+                }
+                else {
+                    that._selectMenuItem(menuItems[i]);
+                }
                 return true;
             }
             return false;
@@ -758,7 +766,12 @@ const ClipboardIndicator = Lang.Class({
                 if (i === menuItems.length) i = 0;   //cycle if out of bound
                 let index = i + 1;                     //index to be displayed
                 that._showNotification(index + ' / ' + menuItems.length + ': ' + menuItems[i].label.text);
-                that._selectEntryWithDelay(menuItems[i]);
+                if (MOVE_ITEM_FIRST) {
+                    that._selectEntryWithDelay(menuItems[i]);
+                }
+                else {
+                    that._selectMenuItem(menuItems[i]);
+                }
                 return true;
             }
             return false;
