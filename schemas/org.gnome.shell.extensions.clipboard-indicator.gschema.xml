@@ -39,7 +39,7 @@
         </description>
         <range min="10" max="100"/>
     </key>
-    
+
     <key type="i" name="topbar-preview-size">
         <default>10</default>
         <summary>Amount of visible characters in topbar </summary>
@@ -75,6 +75,14 @@
         <description>
             If true, a notification is shown when content is copied to clipboard.
         </description>
+    </key>
+
+    <key name="strip-text" type="b">
+      <default>false</default>
+      <summary>Remove whitespace around text</summary>
+      <description>
+        If true, white spaces around text will be removed.
+      </description>
     </key>
 
     <key name="enable-keybindings" type="b">
