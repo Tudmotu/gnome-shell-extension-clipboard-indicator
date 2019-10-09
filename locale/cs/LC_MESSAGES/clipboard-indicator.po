@@ -13,9 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Last-Translator: Daniel Rusek <mail@asciiwolf.com>\n"
+"Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>\n"
 "Language-Team: \n"
-"X-Generator: Poedit 2.0.3\n"
 
 #: extension.js:78
 msgid "Text will be here"
@@ -23,11 +22,11 @@ msgstr "Zde bude text"
 
 #: extension.js:119
 msgid "Type here to search..."
-msgstr "Vyhledávejte psaním sem..."
+msgstr "Vyhledávejte psaním sem…"
 
 #: extension.js:166
 msgid "Private mode"
-msgstr "Soukromý mód"
+msgstr "Stop (proti úniku citlivých údajů)"
 
 #: extension.js:173 prefs.js:102
 msgid "Clear history"
@@ -47,7 +46,7 @@ msgstr "Zkopírováno do schránky"
 
 #: prefs.js:100
 msgid "Toggle the menu"
-msgstr "Přepnout menu"
+msgstr "Přepnout nabídku"
 
 #: prefs.js:104
 msgid "Previous entry"
@@ -59,11 +58,11 @@ msgstr "Následující položka"
 
 #: prefs.js:119
 msgid "History Size"
-msgstr "Velikost historie"
+msgstr "Hloubka historie"
 
 #: prefs.js:124
 msgid "Refresh Interval (ms)"
-msgstr "Interval obnovení (ms)"
+msgstr "Interval obnovování (ms)"
 
 #: prefs.js:129
 msgid "Preview Size (characters)"
@@ -71,15 +70,15 @@ msgstr "Velikost náhledu (znaky)"
 
 #: prefs.js:134
 msgid "Max cache file size (kb)"
-msgstr "Maximální velikost mezipaměti (kb)"
+msgstr "Omezit velikost mezipaměti na nejvýše (KB)"
 
 #: prefs.js:139
 msgid "Disable cache file"
-msgstr "Zakázat soubor mezipaměti"
+msgstr "Nepoužívat mezipaměť (soubor)"
 
 #: prefs.js:144
 msgid "Show notification on copy"
-msgstr "Zobrazit oznámení při kopírování"
+msgstr "Při zkopírování zobrazit oznámení"
 
 #: prefs.js:149
 msgid "Keyboard shortcuts"
@@ -91,7 +90,7 @@ msgstr "Počet znaků v horní liště"
 
 #: prefs.js:159
 msgid "What to show in top bar"
-msgstr "Co zobrazit v horní liště"
+msgstr "Co zobrazovat v horní liště"
 
 #: prefs.js:205
 msgid "Icon"
