@@ -474,7 +474,7 @@ const ClipboardIndicator = Lang.Class({
                     if (item.clipFavorite) {
                         that._selectMenuItem(item);
                     } else {
-                        item.currentlySelected = true;
+                        that._selectMenuItem(item);
                         if(MOVE_ITEM_FIRST)
                             that._moveItemFirst(item);
                     }
@@ -743,7 +743,12 @@ const ClipboardIndicator = Lang.Class({
                 if (i < 0) i = menuItems.length - 1; //cycle if out of bound
                 let index = i + 1;                   //index to be displayed
                 that._showNotification(index + ' / ' + menuItems.length + ': ' + menuItems[i].label.text);
-                that._selectEntryWithDelay(menuItems[i]);
+                if (MOVE_ITEM_FIRST) {
+                    that._selectEntryWithDelay(menuItems[i]);
+                }
+                else {
+                    that._selectMenuItem(menuItems[i]);
+                }
                 return true;
             }
             return false;
@@ -761,7 +766,12 @@ const ClipboardIndicator = Lang.Class({
                 if (i === menuItems.length) i = 0;   //cycle if out of bound
                 let index = i + 1;                     //index to be displayed
                 that._showNotification(index + ' / ' + menuItems.length + ': ' + menuItems[i].label.text);
-                that._selectEntryWithDelay(menuItems[i]);
+                if (MOVE_ITEM_FIRST) {
+                    that._selectEntryWithDelay(menuItems[i]);
+                }
+                else {
+                    that._selectMenuItem(menuItems[i]);
+                }
                 return true;
             }
             return false;
