@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-shell-extension-clipboard-indicator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-02 08:42+0100\n"
+"POT-Creation-Date: 2019-10-11 13:17+0300\n"
 "PO-Revision-Date: 2018-03-10 10:10-0600\n"
 "Last-Translator: Ahmed Ayman <ahmedayman055g@gmail.com>\n"
 "Language-Team: \n"
@@ -18,90 +18,109 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 2.0.6\n"
 
-#: extension.js:78
+#: extension.js:81
 msgid "Text will be here"
 msgstr "النص سيكون هنا"
 
-#: extension.js:119
+#: extension.js:123
 msgid "Type here to search..."
 msgstr "اكتب هنا للبحث"
 
-#: extension.js:166
+#: extension.js:190
 msgid "Private mode"
 msgstr "الوضع السري"
 
-#: extension.js:173 prefs.js:102
+#: extension.js:197 prefs.js:106
 msgid "Clear history"
 msgstr "محو السجلات"
 
-#: extension.js:178
+#: extension.js:202
 msgid "Settings"
 msgstr "ضبط"
 
-#: extension.js:285
+#: extension.js:349
 msgid "Clipboard history cleared"
 msgstr "تم ازالة سجلات الحافظة"
 
-#: extension.js:364
+#: extension.js:467
 msgid "Copied to clipboard"
 msgstr "تم النسخ في الحافظة"
 
-#: prefs.js:100
+#: extension.js:468
+msgid "Cancel"
+msgstr ""
+
+#: prefs.js:104
 msgid "Toggle the menu"
 msgstr "بدل حالة القائمة"
 
-#: prefs.js:104
+#: prefs.js:108
 msgid "Previous entry"
 msgstr "المدخل السابق"
 
-#: prefs.js:106
+#: prefs.js:110
 msgid "Next entry"
 msgstr "المدخل التالي"
 
-#: prefs.js:119
+#: prefs.js:123
 msgid "History Size"
 msgstr "عدد العناصر في السجل "
 
-#: prefs.js:124
+#: prefs.js:128
 msgid "Refresh Interval (ms)"
 msgstr "فترة الريفريش بالمللي ثانية"
 
-#: prefs.js:129
+#: prefs.js:133
 msgid "Preview Size (characters)"
 msgstr "عدد الاحرف في المراجعه"
 
-#: prefs.js:134
+#: prefs.js:138
 msgid "Max cache file size (kb)"
 msgstr "اقصي حجم للكاش فايل بالكيلوبايت"
 
-#: prefs.js:139
-msgid "Disable cache file"
-msgstr "الغاء الكاش في فايل"
+#: prefs.js:143
+msgid "Cache only favorites"
+msgstr ""
 
-#: prefs.js:144
+#: prefs.js:148
 msgid "Show notification on copy"
 msgstr "اظهار الاشعارات عند النسخ"
 
-#: prefs.js:149
+#: prefs.js:153
+msgid "Move item to the top after selection"
+msgstr ""
+
+#: prefs.js:158
 msgid "Keyboard shortcuts"
 msgstr "اختصارات الكيبورد"
 
-#: prefs.js:154
+#: prefs.js:163
 msgid "Number of characters in top bar"
 msgstr "عدد الاحرف في الشريط العلوي"
 
-#: prefs.js:159
+#: prefs.js:168
 msgid "What to show in top bar"
 msgstr "ما سيظهر في الشريط العلوي"
 
-#: prefs.js:205
+#: prefs.js:173
+msgid "Remove whitespace around text"
+msgstr ""
+
+#: prefs.js:178
+msgid "Enable Deletion"
+msgstr ""
+
+#: prefs.js:225
 msgid "Icon"
 msgstr "أيقونة"
 
-#: prefs.js:206
+#: prefs.js:226
 msgid "Clipboard Content"
 msgstr "محتوي الحافظة"
 
-#: prefs.js:207
+#: prefs.js:227
 msgid "Both"
 msgstr "كلاهما"
+
+#~ msgid "Disable cache file"
+#~ msgstr "الغاء الكاش في فايل"

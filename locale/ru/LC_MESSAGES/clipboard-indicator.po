@@ -7,73 +7,121 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-22 02:37+0300\n"
+"POT-Creation-Date: 2019-10-11 13:17+0300\n"
 "PO-Revision-Date: 2017-10-26 14:48+0700\n"
 "Last-Translator: dmig <dmitriy.geels@gmail.com>\n"
 "Language-Team: \n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ru\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
 "X-Generator: Poedit 2.0.1\n"
 
-#: extension.js:113
+#: extension.js:81
+msgid "Text will be here"
+msgstr ""
+
+#: extension.js:123
+msgid "Type here to search..."
+msgstr ""
+
+#: extension.js:190
 msgid "Private mode"
 msgstr "Приватный режим"
 
-#: extension.js:120 prefs.js:86
+#: extension.js:197 prefs.js:106
 msgid "Clear history"
 msgstr "Очистить историю"
 
-#: extension.js:125
+#: extension.js:202
 msgid "Settings"
 msgstr "Настройки"
 
-#: extension.js:202
+#: extension.js:349
 msgid "Clipboard history cleared"
 msgstr "История буфера очищена"
 
-#: extension.js:275
+#: extension.js:467
 msgid "Copied to clipboard"
 msgstr "Скопировано в буфер"
 
-#: prefs.js:84
+#: extension.js:468
+msgid "Cancel"
+msgstr ""
+
+#: prefs.js:104
 msgid "Toggle the menu"
 msgstr "Показать меню"
 
-#: prefs.js:88
+#: prefs.js:108
 msgid "Previous entry"
 msgstr "Предыдущая запись"
 
-#: prefs.js:90
+#: prefs.js:110
 msgid "Next entry"
 msgstr "Следующая запись"
 
-#: prefs.js:103
+#: prefs.js:123
 msgid "History Size"
 msgstr "Размер истории"
 
-#: prefs.js:108
+#: prefs.js:128
 msgid "Refresh Interval (ms)"
 msgstr "Интервал обновления (мс)"
 
-#: prefs.js:113
+#: prefs.js:133
 msgid "Preview Size (characters)"
 msgstr "Длина строки в меню (символов)"
 
-#: prefs.js:118
-msgid "Max Cache File Size (kb)"
+#: prefs.js:138
+msgid "Max cache file size (kb)"
 msgstr "Максимальный размер кэша (кб)"
 
-#: prefs.js:123
-msgid "Disable cache file"
-msgstr "Отключить кэш"
+#: prefs.js:143
+msgid "Cache only favorites"
+msgstr ""
 
-#: prefs.js:128
+#: prefs.js:148
 msgid "Show notification on copy"
 msgstr "Уведомление при копировании"
 
-#: prefs.js:132
+#: prefs.js:153
+msgid "Move item to the top after selection"
+msgstr ""
+
+#: prefs.js:158
 msgid "Keyboard shortcuts"
 msgstr "Горячие клавиши"
+
+#: prefs.js:163
+msgid "Number of characters in top bar"
+msgstr ""
+
+#: prefs.js:168
+msgid "What to show in top bar"
+msgstr ""
+
+#: prefs.js:173
+msgid "Remove whitespace around text"
+msgstr ""
+
+#: prefs.js:178
+msgid "Enable Deletion"
+msgstr ""
+
+#: prefs.js:225
+msgid "Icon"
+msgstr ""
+
+#: prefs.js:226
+msgid "Clipboard Content"
+msgstr ""
+
+#: prefs.js:227
+msgid "Both"
+msgstr ""
+
+#~ msgid "Disable cache file"
+#~ msgstr "Отключить кэш"

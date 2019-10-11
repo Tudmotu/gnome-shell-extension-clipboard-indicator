@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-30 00:23+0300\n"
+"POT-Creation-Date: 2019-10-11 13:17+0300\n"
 "PO-Revision-Date: 2017-04-30 00:23+0300\n"
 "Last-Translator: neynefes - Hüseyin Karacabey <neynefes@ubuntu-tr.net>\n"
 "Language-Team: Turkish <neynefes@ubuntu-tr.net>\n"
@@ -18,58 +18,106 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Atom 1.16.0\n"
 
-#: extension.js:113
+#: extension.js:81
+msgid "Text will be here"
+msgstr ""
+
+#: extension.js:123
+msgid "Type here to search..."
+msgstr ""
+
+#: extension.js:190
 msgid "Private mode"
 msgstr "Gizli Kip"
 
-#: extension.js:120 prefs.js:86
+#: extension.js:197 prefs.js:106
 msgid "Clear history"
 msgstr "Geçmişi temizle"
 
-#: extension.js:125
+#: extension.js:202
 msgid "Settings"
 msgstr "Ayarlar"
 
-#: extension.js:202
+#: extension.js:349
 msgid "Clipboard history cleared"
 msgstr "Pano geçmişi temizlendi"
 
-#: extension.js:275
+#: extension.js:467
 msgid "Copied to clipboard"
 msgstr "Panoya kopyalandı"
 
-#: prefs.js:84
+#: extension.js:468
+msgid "Cancel"
+msgstr ""
+
+#: prefs.js:104
 msgid "Toggle the menu"
 msgstr "Menüyü değiştir"
 
-#: prefs.js:88
+#: prefs.js:108
 msgid "Previous entry"
 msgstr "Önceki girdi"
 
-#: prefs.js:90
+#: prefs.js:110
 msgid "Next entry"
 msgstr "Sonraki girdi"
 
-#: prefs.js:103
+#: prefs.js:123
 msgid "History Size"
 msgstr "Geçmiş Boyutu"
 
-#: prefs.js:108
+#: prefs.js:128
 msgid "Refresh Interval (ms)"
 msgstr "Yenileme Sıklığı (ms)"
 
-#: prefs.js:113
+#: prefs.js:133
 msgid "Preview Size (characters)"
 msgstr "Önizleme Boyutu (karakter)"
 
-#: prefs.js:118
-msgid "Max Cache File Size (kb)"
+#: prefs.js:138
+msgid "Max cache file size (kb)"
 msgstr "En Yüksek Önbelek Boyutu (kb)"
 
-#: prefs.js:123
+#: prefs.js:143
+msgid "Cache only favorites"
+msgstr ""
+
+#: prefs.js:148
 msgid "Show notification on copy"
 msgstr "Kopyalandığında bildirim göster"
 
-#: prefs.js:128
+#: prefs.js:153
+msgid "Move item to the top after selection"
+msgstr ""
+
+#: prefs.js:158
 msgid "Keyboard shortcuts"
 msgstr "Kılavye kısayolları"
+
+#: prefs.js:163
+msgid "Number of characters in top bar"
+msgstr ""
+
+#: prefs.js:168
+msgid "What to show in top bar"
+msgstr ""
+
+#: prefs.js:173
+msgid "Remove whitespace around text"
+msgstr ""
+
+#: prefs.js:178
+msgid "Enable Deletion"
+msgstr ""
+
+#: prefs.js:225
+msgid "Icon"
+msgstr ""
+
+#: prefs.js:226
+msgid "Clipboard Content"
+msgstr ""
+
+#: prefs.js:227
+msgid "Both"
+msgstr ""
