@@ -17,8 +17,8 @@ const CheckBox  = imports.ui.checkBox.CheckBox;
 const Gettext = imports.gettext;
 const _ = Gettext.domain('clipboard-indicator').gettext;
 
-const GtkClipboard = imports.gi.Gtk.Clipboard;
-const GClipboard = GtkClipboard.get_default(imports.gi.Gdk.Display.get_default());
+const Clipboard = St.Clipboard.get_default();
+const CLIPBOARD_TYPE = St.ClipboardType.CLIPBOARD;
 
 const SETTING_KEY_CLEAR_HISTORY = "clear-history";
 const SETTING_KEY_PREV_ENTRY = "prev-entry";
@@ -353,7 +353,7 @@ const ClipboardIndicator = Lang.Class({
         let itemIdx = this.clipItemsRadioGroup.indexOf(menuItem);
 
         if(event === 'delete' && menuItem.currentlySelected) {
-            GClipboard.set_text("", -1);
+            Clipboard.set_text(CLIPBOARD_TYPE, "");
         }
 
         menuItem.destroy();
@@ -388,7 +388,7 @@ const ClipboardIndicator = Lang.Class({
                 that.setOrnament(PopupMenu.Ornament.DOT);
                 that.currentlySelected = true;
                 if (autoSet !== false)
-                    GClipboard.set_text(clipContents, -1);
+                    Clipboard.set_text(CLIPBOARD_TYPE, clipContents);
             }
             else {
                 menuItem.setOrnament(PopupMenu.Ornament.NONE);
@@ -411,7 +411,7 @@ const ClipboardIndicator = Lang.Class({
                 that.setOrnament(PopupMenu.Ornament.DOT);
                 that.currentlySelected = true;
                 if (autoSet !== false)
-                    GClipboard.set_text(clipContents,-1)
+                    Clipboard.set_text(CLIPBOARD_TYPE, clipContents);
             }
             else {
                 menuItem.setOrnament(PopupMenu.Ornament.NONE);
@@ -450,7 +450,7 @@ const ClipboardIndicator = Lang.Class({
 
         let that = this;
 
-        GClipboard.request_text(function(clipBoard, text){
+        Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
             if (STRIP_TEXT) {
                 text = text.trim();
             }
@@ -592,14 +592,14 @@ const ClipboardIndicator = Lang.Class({
         // If we get out of private mode then we restore the clipboard to old state
         if (!PRIVATEMODE) {
             let selectList = this.clipItemsRadioGroup.filter((item) => !!item.currentlySelected);
-            GClipboard.request_text(function(clipBoard, text){
+            Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
                             that._updateButtonText(text);
                         });
             if (selectList.length) {
                 this._selectMenuItem(selectList[0]);
             } else {
                 // Nothing to return to, let's empty it instead
-                GClipboard.set_text("",-1);
+                Clipboard.set_text(CLIPBOARD_TYPE, "");
             }
 
             this.icon.remove_style_class_name('private-mode');
@@ -651,7 +651,7 @@ const ClipboardIndicator = Lang.Class({
         //update topbar
         this._updateTopbarLayout();
         if(TOPBAR_DISPLAY_MODE === 1 || TOPBAR_DISPLAY_MODE === 2) {
-            GClipboard.request_text(function(clipBoard, text){
+            Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
                 that._updateButtonText(text);
             });
         }
