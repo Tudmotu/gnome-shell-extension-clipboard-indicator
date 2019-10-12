@@ -19,6 +19,8 @@ const _ = Gettext.domain('clipboard-indicator').gettext;
 
 const Clipboard = St.Clipboard.get_default();
 const CLIPBOARD_TYPE = St.ClipboardType.CLIPBOARD;
+const GtkClipboard = imports.gi.Gtk.Clipboard;
+const GClipboard = GtkClipboard.get_default(imports.gi.Gdk.Display.get_default());
 
 const SETTING_KEY_CLEAR_HISTORY = "clear-history";
 const SETTING_KEY_PREV_ENTRY = "prev-entry";
@@ -92,8 +94,26 @@ const ClipboardIndicator = Lang.Class({
         this._updateTopbarLayout();
 
         this._setupTimeout();
-    },
 
+
+        const shellglobal = Shell.Global.get();
+        const meta_display = shellglobal.get_display();
+        const selection = meta_display.get_selection();
+        selection.connect('owner-changed', (selection, selectionType) => {
+            const SelectionType = { MOUSE: 0, KEYBOARD: 1 };
+            log('#######################')
+            switch (selectionType) {
+                case SelectionType.MOUSE:
+                    log('Mouse!');
+                    break;
+                case SelectionType.KEYBOARD:
+                    log('Keyboard!');
+                    break;
+            }
+            log(selectionType)
+            log('#######################')
+        });
+    },
     _updateButtonText: function(content){
         if (!content || PRIVATEMODE){
             this._buttonText.set_text("...")
