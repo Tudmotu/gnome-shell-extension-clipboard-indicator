@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-11 13:17+0300\n"
-"PO-Revision-Date: 2019-06-16 20:30+0200\n"
+"PO-Revision-Date: 2019-10-11 13:43+0200\n"
 "Last-Translator: Onno Giesmann <nutzer3105@gmail.com>\n"
 "Language-Team: Deutsch <openweather@jenslody.de>\n"
 "Language: de\n"
@@ -16,15 +16,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Gtranslator 2.91.6\n"
+"X-Generator: Poedit 2.2.3\n"
 
 #: extension.js:81
 msgid "Text will be here"
-msgstr ""
+msgstr "Hier erscheint der Text"
 
 #: extension.js:123
 msgid "Type here to search..."
-msgstr ""
+msgstr "Text eingeben, um zu suchen…"
 
 #: extension.js:190
 msgid "Private mode"
@@ -48,11 +48,11 @@ msgstr "In Zwischenablage kopiert"
 
 #: extension.js:468
 msgid "Cancel"
-msgstr ""
+msgstr "Abbrechen"
 
 #: prefs.js:104
 msgid "Toggle the menu"
-msgstr "Das Menü öffnen"
+msgstr "Das Menü öffnen/schließen"
 
 #: prefs.js:108
 msgid "Previous entry"
@@ -76,11 +76,11 @@ msgstr "Vorschaugröße (Zeichen)"
 
 #: prefs.js:138
 msgid "Max cache file size (kb)"
-msgstr "Maximale Größe der Pufferdatei"
+msgstr "Maximale Größe der Pufferdatei (kb)"
 
 #: prefs.js:143
 msgid "Cache only favorites"
-msgstr ""
+msgstr "Nur Favoriten zwischenspeichern"
 
 #: prefs.js:148
 msgid "Show notification on copy"
@@ -88,7 +88,7 @@ msgstr "Benachrichtigung beim Kopieren anzeigen"
 
 #: prefs.js:153
 msgid "Move item to the top after selection"
-msgstr ""
+msgstr "Eintrag nach Auswahl nach oben verschieben"
 
 #: prefs.js:158
 msgid "Keyboard shortcuts"
@@ -96,28 +96,28 @@ msgstr "Tastaturkürzel"
 
 #: prefs.js:163
 msgid "Number of characters in top bar"
-msgstr ""
+msgstr "Anzahl der Zeichen in oberer Leiste"
 
 #: prefs.js:168
 msgid "What to show in top bar"
-msgstr ""
+msgstr "Folgendes in oberer Leiste anzeigen:"
 
 #: prefs.js:173
 msgid "Remove whitespace around text"
-msgstr ""
+msgstr "Leerzeichen vor und nach dem Text entfernen"
 
 #: prefs.js:178
 msgid "Enable Deletion"
-msgstr ""
+msgstr "Löschen ermöglichen"
 
 #: prefs.js:225
 msgid "Icon"
-msgstr ""
+msgstr "Symbol"
 
 #: prefs.js:226
 msgid "Clipboard Content"
-msgstr ""
+msgstr "Inhalt der Zwischenablage"
 
 #: prefs.js:227
 msgid "Both"
-msgstr ""
+msgstr "Beides"
