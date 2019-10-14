@@ -19,8 +19,6 @@ const _ = Gettext.domain('clipboard-indicator').gettext;
 
 const Clipboard = St.Clipboard.get_default();
 const CLIPBOARD_TYPE = St.ClipboardType.CLIPBOARD;
-const GtkClipboard = imports.gi.Gtk.Clipboard;
-const GClipboard = GtkClipboard.get_default(imports.gi.Gdk.Display.get_default());
 
 const SETTING_KEY_CLEAR_HISTORY = "clear-history";
 const SETTING_KEY_PREV_ENTRY = "prev-entry";
@@ -576,12 +574,12 @@ const ClipboardIndicator = Lang.Class({
         if (this.clipItemsRadioGroup.length >= 2) {
             let clipSecond = this.clipItemsRadioGroup.length - 2;
             let previousClip = this.clipItemsRadioGroup[clipSecond];
-            GClipboard.set_text(previousClip.clipContents, -1);
+            Clipboard.set_text(CLIPBOARD_TYPE, previousClip.clipContents);
             previousClip.setOrnament(PopupMenu.Ornament.DOT);
             previousClip.icoBtn.visible = false;
             previousClip.currentlySelected = true;
         } else {
-            GClipboard.set_text("", -1);
+            Clipboard.set_text(CLIPBOARD_TYPE, "");
         }
         let clipFirst = this.clipItemsRadioGroup.length - 1;
         this._removeEntry(this.clipItemsRadioGroup[clipFirst]);
