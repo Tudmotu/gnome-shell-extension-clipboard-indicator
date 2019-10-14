@@ -53,6 +53,7 @@ const ClipboardIndicator = Lang.Class({
 
     _settingsChangedId: null,
     _clipboardTimeoutId: null,
+    _selectionOwnerChangedId: null,
     _historyLabelTimeoutId: null,
     _historyLabel: null,
     _buttonText:null,
@@ -61,6 +62,7 @@ const ClipboardIndicator = Lang.Class({
         this._disconnectSettings();
         this._unbindShortcuts();
         this._clearClipboardTimeout();
+        this._disconnectSelectionListener();
         this._clearLabelTimeout();
         this._clearDelayedSelectionTimeout();
 
@@ -91,9 +93,8 @@ const ClipboardIndicator = Lang.Class({
 
         this._updateTopbarLayout();
 
-        this._setupTimeout();
+        this._setupListener();
     },
-
     _updateButtonText: function(content){
         if (!content || PRIVATEMODE){
             this._buttonText.set_text("...")
@@ -445,44 +446,54 @@ const ClipboardIndicator = Lang.Class({
         }));
     },
 
+    _onSelectionChange (selection, selectionType, selectionSource) {
+        if (selectionType === Meta.SelectionType.SELECTION_CLIPBOARD) {
+            this._refreshIndicator();
+        }
+    },
+
     _refreshIndicator: function () {
         if (PRIVATEMODE) return; // Private mode, do not.
 
         let that = this;
 
         Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
-            if (STRIP_TEXT) {
-                text = text.trim();
-            }
-
-            if (text !== "") {
-                let registry = that.clipItemsRadioGroup.map(function (menuItem) {
-                    return menuItem.clipContents;
-                });
-
-                if (text && registry.indexOf(text) < 0) {
-                    that._addEntry(text, false, true, false);
-                    that._removeOldestEntries();
-                    if (NOTIFY_ON_COPY) {
-                        that._showNotification(_("Copied to clipboard"), notif => {
-                            notif.addAction(_('Cancel'), Lang.bind(that, that._cancelNotification));
-                        });
-                    }
-                }
-                else if (text && registry.indexOf(text) >= 0 &&
-                        registry.indexOf(text) < registry.length - 1) {
-                    // If exists
-                    let item = that._findItem(text);
-                    if (item.clipFavorite) {
-                        that._selectMenuItem(item);
-                    } else {
-                        that._selectMenuItem(item);
-                        if(MOVE_ITEM_FIRST)
-                            that._moveItemFirst(item);
-                    }
-                }
-            }
+            that._processClipboardContent(text);
         });
+    },
+
+    _processClipboardContent (text) {
+        const that = this;
+
+        if (STRIP_TEXT) {
+            text = text.trim();
+        }
+
+        if (text !== "" && text) {
+            let registry = that.clipItemsRadioGroup.map(function (menuItem) {
+                return menuItem.clipContents;
+            });
+
+            const itemIndex = registry.indexOf(text);
+
+            if (itemIndex < 0) {
+                that._addEntry(text, false, true, false);
+                that._removeOldestEntries();
+                if (NOTIFY_ON_COPY) {
+                    that._showNotification(_("Copied to clipboard"), notif => {
+                        notif.addAction(_('Cancel'), Lang.bind(that, that._cancelNotification));
+                    });
+                }
+            }
+            else if (itemIndex >= 0 && itemIndex < registry.length - 1) {
+                const item = that._findItem(text);
+                that._selectMenuItem(item, false);
+
+                if (!item.clipFavorite && MOVE_ITEM_FIRST) {
+                    that._moveItemFirst(item);
+                }
+            }
+        }
     },
 
     _moveItemFirst: function (item) {
@@ -495,8 +506,31 @@ const ClipboardIndicator = Lang.Class({
             item => item.clipContents === text)[0];
     },
 
+    _getCurrentlySelectedItem () {
+        return this.clipItemsRadioGroup.find(item => item.currentlySelected);
+    },
+
     _getAllIMenuItems: function (text) {
         return this.historySection._getMenuItems().concat(this.favoritesSection._getMenuItems());
+    },
+
+    _setupListener () {
+        const metaDisplay = Shell.Global.get().get_display();
+
+        if (typeof metaDisplay.get_selection === 'function') {
+            const selection = metaDisplay.get_selection();
+            this._setupSelectionTracking(selection);
+        }
+        else {
+            this._setupTimeout();
+        }
+    },
+
+    _setupSelectionTracking (selection) {
+        this.selection = selection;
+        this._selectionOwnerChangedId = selection.connect('owner-changed', (selection, selectionType, selectionSource) => {
+            this._onSelectionChange(selection, selectionType, selectionSource);
+        });
     },
 
     _setupTimeout: function (reiterate) {
@@ -540,12 +574,12 @@ const ClipboardIndicator = Lang.Class({
         if (this.clipItemsRadioGroup.length >= 2) {
             let clipSecond = this.clipItemsRadioGroup.length - 2;
             let previousClip = this.clipItemsRadioGroup[clipSecond];
-            GClipboard.set_text(previousClip.clipContents, -1);
+            Clipboard.set_text(CLIPBOARD_TYPE, previousClip.clipContents);
             previousClip.setOrnament(PopupMenu.Ornament.DOT);
             previousClip.icoBtn.visible = false;
             previousClip.currentlySelected = true;
         } else {
-            GClipboard.set_text("", -1);
+            Clipboard.set_text(CLIPBOARD_TYPE, "");
         }
         let clipFirst = this.clipItemsRadioGroup.length - 1;
         this._removeEntry(this.clipItemsRadioGroup[clipFirst]);
@@ -723,6 +757,13 @@ const ClipboardIndicator = Lang.Class({
 
         Mainloop.source_remove(this._clipboardTimeoutId);
         this._clipboardTimeoutId = null;
+    },
+
+    _disconnectSelectionListener () {
+        if (!this._selectionOwnerChangedId)
+            return;
+
+        this.selection.disconnect(this._selectionOwnerChangedId);
     },
 
     _clearLabelTimeout: function () {
