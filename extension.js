@@ -347,7 +347,7 @@ const ClipboardIndicator = Lang.Class({
             }
         });
         that._updateCache();
-        that._showNotification(_("Clipboard history cleared"));
+        that._showNotification(_("Clipboard history cleared",''));
     },
 
     _removeEntry: function (menuItem, event) {
@@ -480,7 +480,7 @@ const ClipboardIndicator = Lang.Class({
                 that._addEntry(text, false, true, false);
                 that._removeOldestEntries();
                 if (NOTIFY_ON_COPY) {
-                    that._showNotification(_("Copied to clipboard"), notif => {
+                    that._showNotification('Copied to clipboard',_(text), notif => {
                         notif.addAction(_('Cancel'), Lang.bind(that, that._cancelNotification));
                     });
                 }
@@ -585,17 +585,17 @@ const ClipboardIndicator = Lang.Class({
         this._removeEntry(this.clipItemsRadioGroup[clipFirst]);
     },
 
-    _showNotification: function (message, transformFn) {
+    _showNotification: function (title, message, transformFn) {
         let notification = null;
 
         this._initNotifSource();
 
         if (this._notifSource.count === 0) {
-            notification = new MessageTray.Notification(this._notifSource, message);
+            notification = new MessageTray.Notification(this._notifSource, title, message);
         }
         else {
             notification = this._notifSource.notifications[0];
-            notification.update(message, '', { clear: true });
+            notification.update(title, message, { clear: true });
         }
 
         if (typeof transformFn === 'function') {
@@ -804,7 +804,7 @@ const ClipboardIndicator = Lang.Class({
                 i--;                                 //get the previous index
                 if (i < 0) i = menuItems.length - 1; //cycle if out of bound
                 let index = i + 1;                   //index to be displayed
-                that._showNotification(index + ' / ' + menuItems.length + ': ' + menuItems[i].label.text);
+                that._showNotification(index + ' / ' + menuItems.length , menuItems[i].label.text);
                 if (MOVE_ITEM_FIRST) {
                     that._selectEntryWithDelay(menuItems[i]);
                 }
@@ -827,7 +827,7 @@ const ClipboardIndicator = Lang.Class({
                 i++;                                 //get the next index
                 if (i === menuItems.length) i = 0;   //cycle if out of bound
                 let index = i + 1;                     //index to be displayed
-                that._showNotification(index + ' / ' + menuItems.length + ': ' + menuItems[i].label.text);
+                that._showNotification(index + ' / ' + menuItems.length , menuItems[i].label.text);
                 if (MOVE_ITEM_FIRST) {
                     that._selectEntryWithDelay(menuItems[i]);
                 }
