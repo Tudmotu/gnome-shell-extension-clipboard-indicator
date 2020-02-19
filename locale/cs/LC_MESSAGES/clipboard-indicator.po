@@ -46,7 +46,7 @@ msgstr "Zkopírováno do schránky"
 
 #: extension.js:468
 msgid "Cancel"
-msgstr ""
+msgstr "Storno"
 
 #: prefs.js:104
 msgid "Toggle the menu"
@@ -78,7 +78,7 @@ msgstr "Omezit velikost mezipaměti na nejvýše (KB)"
 
 #: prefs.js:143
 msgid "Cache only favorites"
-msgstr ""
+msgstr "Ukládat do mezipaměti pouze oblíbené"
 
 #: prefs.js:148
 msgid "Show notification on copy"
@@ -86,7 +86,7 @@ msgstr "Při zkopírování zobrazit oznámení"
 
 #: prefs.js:153
 msgid "Move item to the top after selection"
-msgstr ""
+msgstr "Poté, co byla vybrána, posunout položku na začátek seznamu"
 
 #: prefs.js:158
 msgid "Keyboard shortcuts"
@@ -102,11 +102,11 @@ msgstr "Co zobrazovat v horní liště"
 
 #: prefs.js:173
 msgid "Remove whitespace around text"
-msgstr ""
+msgstr "Odebrat prázdné místo kolem textu"
 
 #: prefs.js:178
 msgid "Enable Deletion"
-msgstr ""
+msgstr "Zapnout mazání"
 
 #: prefs.js:225
 msgid "Icon"
