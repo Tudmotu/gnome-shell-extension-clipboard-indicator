@@ -553,10 +553,14 @@ const ClipboardIndicator = Lang.Class({
     },
 
     _openSettings: function () {
-        Util.spawn([
-            "gnome-shell-extension-prefs",
-            Me.uuid
-        ]);
+        if (typeof ExtensionUtils.openPrefs === 'function') {
+            ExtensionUtils.openPrefs();
+        } else {
+            Util.spawn([
+                "gnome-shell-extension-prefs",
+                Me.uuid
+            ]);
+        }
     },
 
     _initNotifSource: function () {
