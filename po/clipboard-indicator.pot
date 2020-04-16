@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-11 13:17+0300\n"
+"POT-Creation-Date: 2020-04-16 15:26+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,35 +17,35 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: extension.js:81
+#: extension.js:83
 msgid "Text will be here"
 msgstr ""
 
-#: extension.js:123
+#: extension.js:124
 msgid "Type here to search..."
 msgstr ""
 
-#: extension.js:190
+#: extension.js:191
 msgid "Private mode"
 msgstr ""
 
-#: extension.js:197 prefs.js:106
+#: extension.js:198 prefs.js:106
 msgid "Clear history"
 msgstr ""
 
-#: extension.js:202
+#: extension.js:203
 msgid "Settings"
 msgstr ""
 
-#: extension.js:349
+#: extension.js:350
 msgid "Clipboard history cleared"
 msgstr ""
 
-#: extension.js:467
+#: extension.js:483
 msgid "Copied to clipboard"
 msgstr ""
 
-#: extension.js:468
+#: extension.js:484
 msgid "Cancel"
 msgstr ""
 
@@ -61,62 +61,58 @@ msgstr ""
 msgid "Next entry"
 msgstr ""
 
-#: prefs.js:123
+#: prefs.js:119
 msgid "History Size"
 msgstr ""
 
-#: prefs.js:128
+#: prefs.js:124
 msgid "Refresh Interval (ms)"
 msgstr ""
 
-#: prefs.js:133
+#: prefs.js:129
 msgid "Preview Size (characters)"
 msgstr ""
 
-#: prefs.js:138
+#: prefs.js:134
 msgid "Max cache file size (kb)"
 msgstr ""
 
-#: prefs.js:143
+#: prefs.js:139
 msgid "Cache only favorites"
 msgstr ""
 
-#: prefs.js:148
+#: prefs.js:144
 msgid "Show notification on copy"
 msgstr ""
 
-#: prefs.js:153
+#: prefs.js:149
 msgid "Move item to the top after selection"
 msgstr ""
 
-#: prefs.js:158
+#: prefs.js:154
 msgid "Keyboard shortcuts"
 msgstr ""
 
-#: prefs.js:163
+#: prefs.js:159
 msgid "Number of characters in top bar"
 msgstr ""
 
-#: prefs.js:168
+#: prefs.js:164
 msgid "What to show in top bar"
 msgstr ""
 
-#: prefs.js:173
+#: prefs.js:169
 msgid "Remove whitespace around text"
 msgstr ""
 
-#: prefs.js:178
-msgid "Enable Deletion"
-msgstr ""
-
-#: prefs.js:225
+#: prefs.js:224
 msgid "Icon"
 msgstr ""
 
-#: prefs.js:226
+#: prefs.js:225
 msgid "Clipboard Content"
 msgstr ""
 
-#: prefs.js:227
+#: prefs.js:226
 msgid "Both"
 msgstr ""
