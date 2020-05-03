@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-11 13:17+0300\n"
-"PO-Revision-Date: 2019-09-23 11:20+0200\n"
+"PO-Revision-Date: 2019-10-16 23:03+0200\n"
 "Last-Translator: Jose Riha <jose1711@gmail.com>\n"
 "Language-Team: \n"
 "Language: sk_SK\n"
@@ -51,7 +51,7 @@ msgstr "Skopírované do schránky"
 
 #: extension.js:468
 msgid "Cancel"
-msgstr ""
+msgstr "Zrušiť"
 
 #: prefs.js:104
 msgid "Toggle the menu"
@@ -83,7 +83,7 @@ msgstr "Maximálna veľkosť súboru vyrovnávacej pamäte (kb)"
 
 #: prefs.js:143
 msgid "Cache only favorites"
-msgstr ""
+msgstr "Do vyrovnávacej pamäte ukladať len obľúbené"
 
 #: prefs.js:148
 msgid "Show notification on copy"
@@ -91,7 +91,7 @@ msgstr "Zobraziť upozornenie pri kopírovaní"
 
 #: prefs.js:153
 msgid "Move item to the top after selection"
-msgstr ""
+msgstr "Po výbere presunúť položku na začiatok zoznamu"
 
 #: prefs.js:158
 msgid "Keyboard shortcuts"
@@ -107,11 +107,11 @@ msgstr "Čo zobraziť v hornom riadku"
 
 #: prefs.js:173
 msgid "Remove whitespace around text"
-msgstr ""
+msgstr "Odstraňovať medzery pred a za textom"
 
 #: prefs.js:178
 msgid "Enable Deletion"
-msgstr ""
+msgstr "Povoliť mazanie"
 
 #: prefs.js:225
 msgid "Icon"
