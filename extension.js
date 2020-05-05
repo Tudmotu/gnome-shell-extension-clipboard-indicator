@@ -551,8 +551,7 @@ const ClipboardIndicator = Lang.Class({
             ExtensionUtils.openPrefs();
         } else {
             Util.spawn([
-                "gnome-extensions",
-                "prefs",
+                "gnome-shell-extension-prefs",
                 Me.uuid
             ]);
         }

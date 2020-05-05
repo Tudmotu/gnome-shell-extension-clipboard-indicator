@@ -9,7 +9,7 @@ const Me = ExtensionUtils.getCurrentExtension();
 const ConfirmDialog = Me.imports.confirmDialog;
 const Utils = Me.imports.utils;
 
-const Gettext = imports.gettext.domain("gnome-trash");
+const Gettext = imports.gettext.domain("clipboard-indicator");
 const _ = Gettext.gettext;
 
 var ActionBar = GObject.registerClass(
