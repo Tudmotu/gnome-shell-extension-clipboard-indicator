@@ -21,7 +21,8 @@ var Fields = {
     ENABLE_KEYBINDING  : 'enable-keybindings',
     TOPBAR_PREVIEW_SIZE: 'topbar-preview-size',
     TOPBAR_DISPLAY_MODE_ID    : 'display-mode',
-    STRIP_TEXT         : 'strip-text'
+    STRIP_TEXT         : 'strip-text',
+    CLIPBOARD_LISTENER : 'clipboard-listener',
 };
 
 const SCHEMA_NAME = 'org.gnome.shell.extensions.clipboard-indicator';
@@ -91,9 +92,16 @@ const App = new Lang.Class({
         this.field_display_mode = new Gtk.ComboBox({
             model: this._create_display_mode_options()});
 
-        let rendererText = new Gtk.CellRendererText();
-        this.field_display_mode.pack_start (rendererText, false);
-        this.field_display_mode.add_attribute (rendererText, "text", 0);
+        let rendererDsiplayModeText = new Gtk.CellRendererText();
+        this.field_display_mode.pack_start (rendererDsiplayModeText, false);
+        this.field_display_mode.add_attribute (rendererDsiplayModeText, "text", 0);
+
+        this.field_listener = new Gtk.ComboBox({
+            model: this._create_listener_options()});
+
+        let rendererListenerText = new Gtk.CellRendererText();
+        this.field_listener.pack_start (rendererListenerText, false);
+        this.field_listener.add_attribute (rendererListenerText, "text", 0);
 
         this.field_cache_disable = new Gtk.Switch();
         this.field_notification_toggle = new Gtk.Switch();
@@ -115,7 +123,7 @@ const App = new Lang.Class({
             that.field_keybinding.set_sensitive(widget.active);
         });
 
-        let sizeLabel     = new Gtk.Label({
+        let sizeLabel = new Gtk.Label({
             label: _("History Size"),
             hexpand: true,
             halign: Gtk.Align.START
@@ -170,6 +178,11 @@ const App = new Lang.Class({
             hexpand: true,
             halign: Gtk.Align.START
         });
+        let listenerLabel = new Gtk.Label({
+            label: _("Clipboard listener"),
+            hexpand: true,
+            halign: Gtk.Align.START
+        });
 
         const addRow = ((main) => {
             let row = 0;
@@ -195,13 +208,14 @@ const App = new Lang.Class({
 
         addRow(sizeLabel,           this.field_size);
         addRow(previewLabel,        this.field_preview_size);
+        addRow(displayModeLabel,    this.field_display_mode);
+        addRow(topbarPreviewLabel,  this.field_topbar_preview_size);
+        addRow(listenerLabel,       this.field_listener);
         addRow(intervalLabel,       this.field_interval);
         addRow(cacheSizeLabel,      this.field_cache_size);
         addRow(cacheDisableLabel,   this.field_cache_disable);
-        addRow(notificationLabel,   this.field_notification_toggle);
-        addRow(displayModeLabel,    this.field_display_mode);
-        addRow(topbarPreviewLabel,  this.field_topbar_preview_size);
         addRow(stripTextLabel,      this.field_strip_text);
+        addRow(notificationLabel,   this.field_notification_toggle);
         addRow(moveFirstLabel,      this.field_move_item_first);
         addRow(keybindingLabel,     this.field_keybinding_activation);
         addRow(null,                this.field_keybinding);
@@ -217,6 +231,7 @@ const App = new Lang.Class({
         SettingsSchema.bind(Fields.TOPBAR_PREVIEW_SIZE, this.field_topbar_preview_size, 'value', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.STRIP_TEXT, this.field_strip_text, 'active', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.ENABLE_KEYBINDING, this.field_keybinding_activation, 'active', Gio.SettingsBindFlags.DEFAULT);
+        SettingsSchema.bind(Fields.CLIPBOARD_LISTENER, this.field_listener, 'active', Gio.SettingsBindFlags.DEFAULT);
 
         this.main.show_all();
     },
@@ -224,6 +239,20 @@ const App = new Lang.Class({
         let options = [{ name: _("Icon") },
         { name: _("Clipboard Content"),},
         { name: _("Both")}];
+        let liststore = new Gtk.ListStore();
+        liststore.set_column_types([GObject.TYPE_STRING])
+        for (let i = 0; i < options.length; i++ ) {
+            let option = options[i];
+            let iter = liststore.append();
+            liststore.set (iter, [0], [option.name]);
+        }
+        return liststore;
+    },
+    _create_listener_options : function(){
+        let options = [
+            { name: _("Auto-detect") },
+            { name: _("Timer"),}
+        ];
         let liststore = new Gtk.ListStore();
         liststore.set_column_types([GObject.TYPE_STRING])
         for (let i = 0; i < options.length; i++ ) {
@@ -241,8 +270,7 @@ function buildPrefsWidget(){
 }
 
 
-//binding widgets
-//////////////////////////////////
+// binding widgets
 const COLUMN_ID          = 0;
 const COLUMN_DESCRIPTION = 1;
 const COLUMN_KEY         = 2;

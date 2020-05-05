@@ -46,6 +46,7 @@ let NOTIFY_ON_COPY       = true;
 let MAX_TOPBAR_LENGTH    = 15;
 let TOPBAR_DISPLAY_MODE  = 1; //0 - only icon, 1 - only clipbord content, 2 - both
 let STRIP_TEXT           = false;
+let CLIPBOARD_LISTENER   = 0; // 0 - Auto-detect, 1 - Timer
 
 const ClipboardIndicator = Lang.Class({
     Name: 'ClipboardIndicator',
@@ -517,7 +518,8 @@ const ClipboardIndicator = Lang.Class({
     _setupListener () {
         const metaDisplay = Shell.Global.get().get_display();
 
-        if (typeof metaDisplay.get_selection === 'function') {
+        if (CLIPBOARD_LISTENER === 0 &&
+            typeof metaDisplay.get_selection === 'function') {
             const selection = metaDisplay.get_selection();
             this._setupSelectionTracking(selection);
         }
@@ -557,7 +559,8 @@ const ClipboardIndicator = Lang.Class({
             ExtensionUtils.openPrefs();
         } else {
             Util.spawn([
-                "gnome-shell-extension-prefs",
+                "gnome-extensions",
+                "prefs",
                 Me.uuid
             ]);
         }
@@ -670,6 +673,7 @@ const ClipboardIndicator = Lang.Class({
         MAX_TOPBAR_LENGTH    = this._settings.get_int(Prefs.Fields.TOPBAR_PREVIEW_SIZE);
         TOPBAR_DISPLAY_MODE  = this._settings.get_int(Prefs.Fields.TOPBAR_DISPLAY_MODE_ID);
         STRIP_TEXT           = this._settings.get_boolean(Prefs.Fields.STRIP_TEXT);
+        CLIPBOARD_LISTENER   = this._settings.get_int(Prefs.Fields.CLIPBOARD_LISTENER);
     },
 
     _onSettingsChange: function () {
