@@ -3,8 +3,6 @@ const Gtk = imports.gi.Gtk;
 const Gio = imports.gi.Gio;
 const Lang = imports.lang;
 const Extension = imports.misc.extensionUtils.getCurrentExtension();
-const Utils = Extension.imports.utils;
-const prettyPrint = Utils.prettyPrint;
 
 const Gettext = imports.gettext;
 const _ = Gettext.domain('clipboard-indicator').gettext;
