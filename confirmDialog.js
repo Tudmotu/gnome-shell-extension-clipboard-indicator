@@ -4,8 +4,6 @@ const ModalDialog = imports.ui.modalDialog;
 const CheckBox = imports.ui.checkBox;
 const Clutter = imports.gi.Clutter;
 
-const Gettext = imports.gettext.domain("clipboard-indicator");
-const _ = Gettext.gettext;
 
 
 
