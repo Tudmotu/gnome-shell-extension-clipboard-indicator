@@ -67,7 +67,7 @@ var ActionBar = GObject.registerClass(
       });
 
       this.settingsIcon = new St.Icon({
-        icon_name: "applications-system",
+        icon_name: "applications-system-symbolic",
         style_class: 'popup-menu-icon',
         hover: true,
 
