@@ -35,9 +35,12 @@ var ActionBar = GObject.registerClass(
         _("Private mode"), false, {
         reactive: true, hover: true,
       });
-      this.privateModeBtn.set_x_expand(true);
-      this.privateModeBtn.set_y_expand(true);
       this.actionsBox.add(this.privateModeBtn);
+      // Add a spacer
+      this.spacer = new PopupMenu.PopupBaseMenuItem();
+      this.spacer.set_x_expand(true);
+      this.spacer.set_y_expand(true);
+      this.actionsBox.add(this.spacer);      
 
       // Add 'Clear' button which removes all items from cache
       this.clearBtn = new PopupMenu.PopupBaseMenuItem({
