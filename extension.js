@@ -338,7 +338,7 @@ const ClipboardIndicator = Lang.Class({
         const message = _("Are you sure you want to delete all clipboard items?");
         const sub_message = _("This operation cannot be undone.");
 
-        ConfirmDialog.openConfirmDialog(title, message, sub_message, _("Clear"), () => {;
+        ConfirmDialog.openConfirmDialog(title, message, sub_message, _("Clear"), _("Cancel"), () => {;
             let that = this;
             // We can't actually remove all items, because the clipboard still
             // has data that will be re-captured on next refresh, so we remove

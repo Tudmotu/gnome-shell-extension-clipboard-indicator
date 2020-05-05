@@ -4,19 +4,19 @@ const ModalDialog = imports.ui.modalDialog;
 const CheckBox = imports.ui.checkBox;
 const Clutter = imports.gi.Clutter;
 
-const Gettext = imports.gettext.domain("gnome-trash");
+const Gettext = imports.gettext.domain("clipboard-indicator");
 const _ = Gettext.gettext;
 
 
 
-function openConfirmDialog(title, message, sub_message, ok_label, callback) {
-    new ConfirmDialog(title, message + "\n" + sub_message, ok_label, callback).open();
+function openConfirmDialog(title, message, sub_message, ok_label, cancel_label, callback) {
+    new ConfirmDialog(title, message + "\n" + sub_message, ok_label, cancel_label, callback).open();
 }
 
 const ConfirmDialog = GObject.registerClass(
   class ConfirmDialog extends ModalDialog.ModalDialog {
 
-    _init(title, desc, ok_label, callback) {
+    _init(title, desc, ok_label, cancel_label, callback) {
       super._init();
 
       let main_box = new St.BoxLayout({
@@ -46,7 +46,7 @@ const ConfirmDialog = GObject.registerClass(
 
       this.setButtons([
         {
-          label: _("Cancel"),
+          label: cancel_label,
           action: () => {
             this.close();
           },
