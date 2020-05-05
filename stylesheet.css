@@ -19,3 +19,22 @@
 .ci-history-menu-section {
     max-height:450px;
 }
+
+.ci-action-bar-box {
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+.ci-action-bar-box-layout {
+}
+
+.ci-action-bar-btn {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-right: 6px;
+    padding-left: 6px;
+}
+
+.ci-action-bar-btn StIcon{
+    icon-size:32px;
+}
