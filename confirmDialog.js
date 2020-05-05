@@ -38,7 +38,7 @@ const ConfirmDialog = GObject.registerClass(
       message_box.add(subject_label, { y_fill: true, y_align: St.Align.START });
 
       let desc_label = new St.Label({
-        style: 'padding-top: 10px; padding-bottom: 20px;',
+        style: 'padding-top: 12px; ',
         text: desc
       });
 
