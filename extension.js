@@ -29,6 +29,7 @@ const INDICATOR_ICON = 'edit-paste-symbolic';
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const Utils = Me.imports.utils;
+const ConfirmDialog = Me.imports.confirmDialog;
 const Prefs = Me.imports.prefs;
 const prettyPrint = Utils.prettyPrint;
 const writeRegistry = Utils.writeRegistry;
@@ -332,22 +333,27 @@ const ClipboardIndicator = Lang.Class({
 
         this._updateCache();
     },
-
     _removeAll: function () {
-        let that = this;
-        // We can't actually remove all items, because the clipboard still
-        // has data that will be re-captured on next refresh, so we remove
-        // all except the currently selected item
-        // Don't remove favorites here
-        that.historySection._getMenuItems().forEach(function (mItem) {
-            if (!mItem.currentlySelected) {
-                let idx = that.clipItemsRadioGroup.indexOf(mItem);
-                mItem.destroy();
-                that.clipItemsRadioGroup.splice(idx,1);
-            }
+        const title = _("Clear all?");
+        const message = _("Are you sure you want to delete all clipboard items?");
+        const sub_message = _("This operation cannot be undone.");
+
+        ConfirmDialog.openConfirmDialog(title, message, sub_message, _("Clear"), () => {;
+            let that = this;
+            // We can't actually remove all items, because the clipboard still
+            // has data that will be re-captured on next refresh, so we remove
+            // all except the currently selected item
+            // Don't remove favorites here
+            that.historySection._getMenuItems().forEach(function (mItem) {
+                if (!mItem.currentlySelected) {
+                    let idx = that.clipItemsRadioGroup.indexOf(mItem);
+                    mItem.destroy();
+                    that.clipItemsRadioGroup.splice(idx,1);
+                }
+            });
+            that._updateCache();
+            that._showNotification(_("Clipboard history cleared"));
         });
-        that._updateCache();
-        that._showNotification(_("Clipboard history cleared"));
     },
 
     _removeEntry: function (menuItem, event) {
