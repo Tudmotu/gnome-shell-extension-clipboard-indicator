@@ -90,9 +90,9 @@ const App = new Lang.Class({
         this.field_display_mode = new Gtk.ComboBox({
             model: this._create_display_mode_options()});
 
-        let rendererDsiplayModeText = new Gtk.CellRendererText();
-        this.field_display_mode.pack_start (rendererDsiplayModeText, false);
-        this.field_display_mode.add_attribute (rendererDsiplayModeText, "text", 0);
+        let rendererDisplayModeText = new Gtk.CellRendererText();
+        this.field_display_mode.pack_start (rendererDisplayModeText, false);
+        this.field_display_mode.add_attribute (rendererDisplayModeText, "text", 0);
 
         this.field_listener = new Gtk.ComboBox({
             model: this._create_listener_options()});
