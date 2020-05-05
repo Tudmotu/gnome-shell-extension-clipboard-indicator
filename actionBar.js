@@ -49,7 +49,7 @@ var ActionBar = GObject.registerClass(
 
 
       this.clearIcon = new St.Icon({
-        icon_name: "edit-delete-all",
+        icon_name: "edit-delete-all-symbolic",
         style_class: 'popup-menu-icon',
         hover: true,
 
