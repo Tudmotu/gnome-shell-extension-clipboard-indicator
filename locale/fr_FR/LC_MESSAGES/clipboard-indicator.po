@@ -8,23 +8,23 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-11 13:17+0300\n"
-"PO-Revision-Date: 2016-09-17 19:24+0200\n"
+"PO-Revision-Date: 2020-05-11 23:05+0200\n"
 "Last-Translator: Raphael Rochet <raphael@rri.fr>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.9\n"
+"X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: extension.js:81
 msgid "Text will be here"
-msgstr ""
+msgstr "Le texte sera là"
 
 #: extension.js:123
 msgid "Type here to search..."
-msgstr ""
+msgstr "Taper ici pour rechercher…"
 
 #: extension.js:190
 msgid "Private mode"
@@ -48,7 +48,7 @@ msgstr "Copié dans le presse-papier"
 
 #: extension.js:468
 msgid "Cancel"
-msgstr ""
+msgstr "Annuler"
 
 #: prefs.js:104
 msgid "Toggle the menu"
@@ -80,7 +80,7 @@ msgstr "Taille max du cache (Kio)"
 
 #: prefs.js:143
 msgid "Cache only favorites"
-msgstr ""
+msgstr "Ne mettre en cache que les favoris"
 
 #: prefs.js:148
 msgid "Show notification on copy"
@@ -88,7 +88,7 @@ msgstr "Afficher une notification à chaque copie"
 
 #: prefs.js:153
 msgid "Move item to the top after selection"
-msgstr ""
+msgstr "Déplacer l’élément vers le haut après la sélection"
 
 #: prefs.js:158
 msgid "Keyboard shortcuts"
@@ -96,28 +96,28 @@ msgstr "Raccourcis clavier"
 
 #: prefs.js:163
 msgid "Number of characters in top bar"
-msgstr ""
+msgstr "Nombre de caractères dans la barre supérieure"
 
 #: prefs.js:168
 msgid "What to show in top bar"
-msgstr ""
+msgstr "Ce qu’il faut montrer dans la barre supérieure"
 
 #: prefs.js:173
 msgid "Remove whitespace around text"
-msgstr ""
+msgstr "Supprimer les espaces autour du texte"
 
 #: prefs.js:178
 msgid "Enable Deletion"
-msgstr ""
+msgstr "Activer la suppression"
 
 #: prefs.js:225
 msgid "Icon"
-msgstr ""
+msgstr "Icône"
 
 #: prefs.js:226
 msgid "Clipboard Content"
-msgstr ""
+msgstr "Contenu du presse papier"
 
 #: prefs.js:227
 msgid "Both"
-msgstr ""
+msgstr "Les deux"
