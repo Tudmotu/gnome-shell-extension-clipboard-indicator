@@ -121,6 +121,7 @@ const ClipboardIndicator = Lang.Class({
                 name: 'searchEntry',
                 style_class: 'search-entry',
                 can_focus: true,
+                x_expand: true,
                 hint_text: _('Type here to search...'),
                 track_hover: true
             });
@@ -130,7 +131,7 @@ const ClipboardIndicator = Lang.Class({
                 Lang.bind(that, that._onSearchTextChanged)
             );
 
-            that._entryItem.actor.add(that.searchEntry, { expand: true });
+            that._entryItem.actor.add_child(that.searchEntry);
 
             that.menu.addMenuItem(that._entryItem);
 
@@ -268,7 +269,6 @@ const ClipboardIndicator = Lang.Class({
 
         let icofavBtn = new St.Button({
             style_class: 'ci-action-btn',
-            x_fill: true,
             can_focus: true,
             child: iconfav
         });
@@ -293,7 +293,6 @@ const ClipboardIndicator = Lang.Class({
 
         let icoBtn = new St.Button({
             style_class: 'ci-action-btn',
-            x_fill: true,
             can_focus: true,
             child: icon
         });
