@@ -93,7 +93,7 @@ const ClipboardIndicator = Lang.Class({
         this._createHistoryLabel();
         this._loadSettings();
         this._buildMenu();
-        
+
         this._updateTopbarLayout();
 
         this._setupListener();
