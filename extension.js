@@ -45,6 +45,7 @@ let PRIVATEMODE          = false;
 let NOTIFY_ON_COPY       = true;
 let MAX_TOPBAR_LENGTH    = 15;
 let TOPBAR_DISPLAY_MODE  = 1; //0 - only icon, 1 - only clipbord content, 2 - both
+let DISABLE_DOWN_ARROW   = false;
 let STRIP_TEXT           = false;
 
 const ClipboardIndicator = Lang.Class({
@@ -56,7 +57,8 @@ const ClipboardIndicator = Lang.Class({
     _selectionOwnerChangedId: null,
     _historyLabelTimeoutId: null,
     _historyLabel: null,
-    _buttonText:null,
+    _buttonText: null,
+    _disableDownArrow: null,
 
     destroy: function () {
         this._disconnectSettings();
@@ -84,13 +86,14 @@ const ClipboardIndicator = Lang.Class({
             y_align: Clutter.ActorAlign.CENTER
         });
         hbox.add_child(this._buttonText);
-        hbox.add(PopupMenu.arrowIcon(St.Side.BOTTOM));
+        this._downArrow = PopupMenu.arrowIcon(St.Side.BOTTOM);
+        hbox.add(this._downArrow);
         this.actor.add_child(hbox);
 
         this._createHistoryLabel();
         this._loadSettings();
         this._buildMenu();
-
+        
         this._updateTopbarLayout();
 
         this._setupListener();
@@ -669,6 +672,7 @@ const ClipboardIndicator = Lang.Class({
         ENABLE_KEYBINDING    = this._settings.get_boolean(Prefs.Fields.ENABLE_KEYBINDING);
         MAX_TOPBAR_LENGTH    = this._settings.get_int(Prefs.Fields.TOPBAR_PREVIEW_SIZE);
         TOPBAR_DISPLAY_MODE  = this._settings.get_int(Prefs.Fields.TOPBAR_DISPLAY_MODE_ID);
+        DISABLE_DOWN_ARROW   = this._settings.get_boolean(Prefs.Fields.DISABLE_DOWN_ARROW);
         STRIP_TEXT           = this._settings.get_boolean(Prefs.Fields.STRIP_TEXT);
     },
 
@@ -744,6 +748,11 @@ const ClipboardIndicator = Lang.Class({
         if(TOPBAR_DISPLAY_MODE === 2){
             this.icon.visible = true;
             this._buttonText.visible = true;
+        }
+        if(!DISABLE_DOWN_ARROW) {
+            this._downArrow.visible = true;
+        } else {
+            this._downArrow.visible = false;
         }
     },
 
