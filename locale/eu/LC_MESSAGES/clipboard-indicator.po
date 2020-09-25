@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-shell-extension-clipboard-indicator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-23 00:44+0100\n"
+"POT-Creation-Date: 2020-09-25 21:52+0300\n"
 "PO-Revision-Date: 2020-03-23 00:44+0100\n"
 "Last-Translator: Ibai Oihanguren Sala <ibai@oihanguren.com>\n"
 "Language-Team: \n"
@@ -15,107 +15,126 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: extension.js:81
+#: extension.js:86
 msgid "Text will be here"
 msgstr "Testua hemen azalduko da"
 
-#: extension.js:123
+#: extension.js:128
 msgid "Type here to search..."
 msgstr "Idatzi hemen bilatzeko..."
 
-#: extension.js:190
+#: extension.js:197
 msgid "Private mode"
 msgstr "Modu pribatua"
 
-#: extension.js:197 prefs.js:106
+#: extension.js:204 prefs.js:107
 msgid "Clear history"
 msgstr "Garbitu historia"
 
-#: extension.js:202
+#: extension.js:209
 msgid "Settings"
 msgstr "Ezarpenak"
 
-#: extension.js:349
-msgid "Clipboard history cleared"
-msgstr "Arbelaren historia garbituta"
+#: extension.js:338
+msgid "Clear all?"
+msgstr ""
 
-#: extension.js:467
-msgid "Copied to clipboard"
-msgstr "Arbelera kopiatuta"
+#: extension.js:339
+msgid "Are you sure you want to delete all clipboard items?"
+msgstr ""
 
-#: extension.js:468
+#: extension.js:340
+msgid "This operation cannot be undone."
+msgstr ""
+
+#: extension.js:342
+msgid "Clear"
+msgstr ""
+
+#: extension.js:342 extension.js:491
 msgid "Cancel"
 msgstr "Utzi"
 
-#: prefs.js:104
+#: extension.js:356
+msgid "Clipboard history cleared"
+msgstr "Arbelaren historia garbituta"
+
+#: extension.js:490
+msgid "Copied to clipboard"
+msgstr "Arbelera kopiatuta"
+
+#: prefs.js:105
 msgid "Toggle the menu"
 msgstr "Erakutsi/ezkutatu menua"
 
-#: prefs.js:108
+#: prefs.js:109
 msgid "Previous entry"
 msgstr "Aurreko sarrera"
 
-#: prefs.js:110
+#: prefs.js:111
 msgid "Next entry"
 msgstr "Hurrengo sarrera"
 
-#: prefs.js:123
+#: prefs.js:120
 msgid "History Size"
 msgstr "Historiaren tamaina"
 
-#: prefs.js:128
+#: prefs.js:125
 msgid "Refresh Interval (ms)"
 msgstr "Berritze-maiztasuna (ms)"
 
-#: prefs.js:133
+#: prefs.js:130
 msgid "Preview Size (characters)"
 msgstr "Aurrebistaren tamaina (caracteres)"
 
-#: prefs.js:138
+#: prefs.js:135
 msgid "Max cache file size (kb)"
 msgstr "Cache fitxategiaren gehienezko tamaina (kb)"
 
-#: prefs.js:143
+#: prefs.js:140
 msgid "Cache only favorites"
 msgstr "Cacheratu gogokoak soilik"
 
-#: prefs.js:148
+#: prefs.js:145
 msgid "Show notification on copy"
 msgstr "Erakutsi jakinarazpena kopiatzean"
 
-#: prefs.js:153
+#: prefs.js:150
 msgid "Move item to the top after selection"
 msgstr "Eraman elementua goraino hautatu ostean"
 
-#: prefs.js:158
+#: prefs.js:155
 msgid "Keyboard shortcuts"
 msgstr "Laster-teklak"
 
-#: prefs.js:163
+#: prefs.js:160
 msgid "Number of characters in top bar"
 msgstr "Goiko barrako karaktere kopurua"
 
-#: prefs.js:168
+#: prefs.js:165
 msgid "What to show in top bar"
 msgstr "Zer erakutsi goiko barran"
 
-#: prefs.js:173
+#: prefs.js:170
+#, fuzzy
+msgid "Remove down arrow in top bar"
+msgstr "Goiko barrako karaktere kopurua"
+
+#: prefs.js:175
 msgid "Remove whitespace around text"
 msgstr "Kendu testuaren inguruko hutsuneak"
 
-#: prefs.js:178
-msgid "Enable Deletion"
-msgstr "Gaitu ezabaketa"
-
-#: prefs.js:225
+#: prefs.js:232
 msgid "Icon"
 msgstr "Ikonoa"
 
-#: prefs.js:226
+#: prefs.js:233
 msgid "Clipboard Content"
 msgstr "Arbelaren edukia"
 
-#: prefs.js:227
+#: prefs.js:234
 msgid "Both"
 msgstr "Biak"
 
+#~ msgid "Enable Deletion"
+#~ msgstr "Gaitu ezabaketa"
