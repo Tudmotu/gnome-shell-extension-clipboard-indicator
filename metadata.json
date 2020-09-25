@@ -1,12 +1,7 @@
 {
     "shell-version": [
-        "3.24",
-        "3.26",
-        "3.28",
-        "3.30",
-        "3.32",
-        "3.34",
-        "3.36"
+        "3.36",
+        "3.38"
     ],
     "uuid": "clipboard-indicator@tudmotu.com",
     "name": "Clipboard Indicator",
