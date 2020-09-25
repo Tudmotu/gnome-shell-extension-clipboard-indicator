@@ -30,6 +30,11 @@
         <range min="0" max="2"/>
     </key>
 
+    <key name="disable-down-arrow" type="b">
+      <default>false</default>
+        <summary>Remove down arrow in top bar</summary>
+    </key>
+
     <key type="i" name="preview-size">
         <default>30</default>
         <summary>Amount of visible characters for clipboard items </summary>
