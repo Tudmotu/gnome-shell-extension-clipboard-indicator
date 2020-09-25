@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-11 13:17+0300\n"
 "PO-Revision-Date: 2018-05-17 09:27+0200\n"
-"Last-Translator: Jimmy Scionti <jimmy.scionti@gmail.com>\n"
+"Last-Translator: Robin <bisio.97@gmail.com>\n"
 "Language-Team: jimmy.scionti@gmail.com\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -48,7 +48,7 @@ msgstr "Copiato negli appunti"
 
 #: extension.js:468
 msgid "Cancel"
-msgstr ""
+msgstr "Annulla"
 
 #: prefs.js:104
 msgid "Toggle the menu"
@@ -88,7 +88,7 @@ msgstr "Mostra una notifica quando copi"
 
 #: prefs.js:153
 msgid "Move item to the top after selection"
-msgstr ""
+msgstr "Porta l'elemento in cima dopo la selezione"
 
 #: prefs.js:158
 msgid "Keyboard shortcuts"
@@ -104,23 +104,23 @@ msgstr "Cosa mostrare sul pannello"
 
 #: prefs.js:173
 msgid "Remove whitespace around text"
-msgstr ""
+msgstr "Rimuovi lo spazio bianco intorno al testo"
 
 #: prefs.js:178
 msgid "Enable Deletion"
-msgstr ""
+msgstr "Abilita cancellazione"
 
 #: prefs.js:225
 msgid "Icon"
-msgstr ""
+msgstr "Icona"
 
 #: prefs.js:226
 msgid "Clipboard Content"
-msgstr ""
+msgstr "Contenuto Clipboard"
 
 #: prefs.js:227
 msgid "Both"
-msgstr ""
+msgstr "Entrambi"
 
 #~ msgid "Disable cache file"
 #~ msgstr "Disabilità la cache dei file"
