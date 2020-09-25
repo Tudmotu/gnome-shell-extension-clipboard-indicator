@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 zip -r bundle.zip \
     extension.js \
+    confirmDialog.js \
     locale/ \
     metadata.json \
     stylesheet.css \
