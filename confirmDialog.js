@@ -18,29 +18,28 @@ const ConfirmDialog = GObject.registerClass(
       super._init();
 
       let main_box = new St.BoxLayout({
-        vertical: false,
-        style_class: 'gt-modal-dialog',
+        vertical: false
       });
-      this.contentLayout.add(main_box, { x_fill: true, y_fill: true });
+      this.contentLayout.add_child(main_box);
 
       let message_box = new St.BoxLayout({
         vertical: true
       });
-      main_box.add(message_box, { y_align: St.Align.START });
+      main_box.add_child(message_box);
 
       let subject_label = new St.Label({
-        style: `font-weight: 700`,
+        style: 'font-weight: bold',
+        x_align: Clutter.ActorAlign.CENTER,
         text: title
       });
-
-      message_box.add(subject_label, { y_fill: true, y_align: St.Align.START });
+      message_box.add_child(subject_label);
 
       let desc_label = new St.Label({
-        style: 'padding-top: 12px; ',
+        style: 'padding-top: 12px',
+        x_align: Clutter.ActorAlign.CENTER,
         text: desc
       });
-
-      message_box.add(desc_label, { y_fill: true, y_align: St.Align.START });
+      message_box.add_child(desc_label);
 
       this.setButtons([
         {
