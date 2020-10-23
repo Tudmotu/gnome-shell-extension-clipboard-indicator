@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-25 21:52+0300\n"
-"PO-Revision-Date: 2019-10-11 13:43+0200\n"
+"PO-Revision-Date: 2020-09-27 13:21+0200\n"
 "Last-Translator: Onno Giesmann <nutzer3105@gmail.com>\n"
 "Language-Team: Deutsch <openweather@jenslody.de>\n"
 "Language: de\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.2.3\n"
+"X-Generator: Poedit 2.4.1\n"
 
 #: extension.js:86
 msgid "Text will be here"
@@ -40,19 +40,19 @@ msgstr "Einstellungen"
 
 #: extension.js:338
 msgid "Clear all?"
-msgstr ""
+msgstr "Alles löschen?"
 
 #: extension.js:339
 msgid "Are you sure you want to delete all clipboard items?"
-msgstr ""
+msgstr "Soll die Zwischenablage wirklich geleert werden?"
 
 #: extension.js:340
 msgid "This operation cannot be undone."
-msgstr ""
+msgstr "Diese Aktion kann nicht rückgängig gemacht werden."
 
 #: extension.js:342
 msgid "Clear"
-msgstr ""
+msgstr "Löschen"
 
 #: extension.js:342 extension.js:491
 msgid "Cancel"
@@ -119,9 +119,8 @@ msgid "What to show in top bar"
 msgstr "Folgendes in oberer Leiste anzeigen:"
 
 #: prefs.js:170
-#, fuzzy
 msgid "Remove down arrow in top bar"
-msgstr "Anzahl der Zeichen in oberer Leiste"
+msgstr "Pfeil in der oberen Leiste nicht anzeigen"
 
 #: prefs.js:175
 msgid "Remove whitespace around text"
