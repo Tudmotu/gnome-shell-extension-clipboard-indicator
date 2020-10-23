@@ -1,4 +1,5 @@
 const Clutter    = imports.gi.Clutter;
+const Config     = imports.misc.config;
 const Gio        = imports.gi.Gio;
 const Lang       = imports.lang;
 const Mainloop   = imports.mainloop;
@@ -614,7 +615,10 @@ const ClipboardIndicator = Lang.Class({
         }
 
         notification.setTransient(true);
-        this._notifSource.notify(notification);
+        if (Config.PACKAGE_VERSION < '3.38')
+            this._notifSource.notify(notification);
+        else
+            this._notifSource.showNotification(notification);
     },
 
     _createHistoryLabel: function () {
