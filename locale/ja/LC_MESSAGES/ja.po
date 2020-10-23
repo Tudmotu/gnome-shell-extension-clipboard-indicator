@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-25 21:52+0300\n"
+"POT-Creation-Date: 2020-10-23 20:10+0300\n"
 "PO-Revision-Date: 2018-05-14 15:47+0900\n"
 "Last-Translator: AKIRA <hase.a1995@gmail.com>\n"
 "Language-Team: \n"
@@ -21,51 +21,51 @@ msgstr ""
 "X-Poedit-SearchPath-0: prefs.js\n"
 "X-Poedit-SearchPath-1: extension.js\n"
 
-#: extension.js:86
+#: extension.js:87
 msgid "Text will be here"
 msgstr "ここにテキストを入力"
 
-#: extension.js:128
+#: extension.js:129
 msgid "Type here to search..."
 msgstr "検索ワードを入力..."
 
-#: extension.js:197
+#: extension.js:198
 msgid "Private mode"
 msgstr "プライベートモード"
 
-#: extension.js:204 prefs.js:107
+#: extension.js:205 prefs.js:107
 msgid "Clear history"
 msgstr "履歴を消去"
 
-#: extension.js:209
+#: extension.js:210
 msgid "Settings"
 msgstr "設定"
 
-#: extension.js:338
+#: extension.js:339
 msgid "Clear all?"
 msgstr ""
 
-#: extension.js:339
+#: extension.js:340
 msgid "Are you sure you want to delete all clipboard items?"
 msgstr ""
 
-#: extension.js:340
+#: extension.js:341
 msgid "This operation cannot be undone."
 msgstr ""
 
-#: extension.js:342
+#: extension.js:343
 msgid "Clear"
 msgstr ""
 
-#: extension.js:342 extension.js:491
+#: extension.js:343 extension.js:492
 msgid "Cancel"
 msgstr ""
 
-#: extension.js:356
+#: extension.js:357
 msgid "Clipboard history cleared"
 msgstr "消去しました"
 
-#: extension.js:490
+#: extension.js:491
 msgid "Copied to clipboard"
 msgstr "コピーしました"
 

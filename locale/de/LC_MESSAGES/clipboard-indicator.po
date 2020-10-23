@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-25 21:52+0300\n"
+"POT-Creation-Date: 2020-10-23 20:10+0300\n"
 "PO-Revision-Date: 2020-09-27 13:21+0200\n"
 "Last-Translator: Onno Giesmann <nutzer3105@gmail.com>\n"
 "Language-Team: Deutsch <openweather@jenslody.de>\n"
@@ -18,51 +18,51 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 2.4.1\n"
 
-#: extension.js:86
+#: extension.js:87
 msgid "Text will be here"
 msgstr "Hier erscheint der Text"
 
-#: extension.js:128
+#: extension.js:129
 msgid "Type here to search..."
 msgstr "Text eingeben, um zu suchen…"
 
-#: extension.js:197
+#: extension.js:198
 msgid "Private mode"
 msgstr "Privater Modus"
 
-#: extension.js:204 prefs.js:107
+#: extension.js:205 prefs.js:107
 msgid "Clear history"
 msgstr "Verlauf löschen"
 
-#: extension.js:209
+#: extension.js:210
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: extension.js:338
+#: extension.js:339
 msgid "Clear all?"
 msgstr "Alles löschen?"
 
-#: extension.js:339
+#: extension.js:340
 msgid "Are you sure you want to delete all clipboard items?"
 msgstr "Soll die Zwischenablage wirklich geleert werden?"
 
-#: extension.js:340
+#: extension.js:341
 msgid "This operation cannot be undone."
 msgstr "Diese Aktion kann nicht rückgängig gemacht werden."
 
-#: extension.js:342
+#: extension.js:343
 msgid "Clear"
 msgstr "Löschen"
 
-#: extension.js:342 extension.js:491
+#: extension.js:343 extension.js:492
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: extension.js:356
+#: extension.js:357
 msgid "Clipboard history cleared"
 msgstr "Verlauf der Zwischenablage gelöscht"
 
-#: extension.js:490
+#: extension.js:491
 msgid "Copied to clipboard"
 msgstr "In Zwischenablage kopiert"
 

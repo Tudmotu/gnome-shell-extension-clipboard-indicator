@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-25 21:52+0300\n"
+"POT-Creation-Date: 2020-10-23 20:10+0300\n"
 "PO-Revision-Date: 2017-11-09 03:01-0300\n"
 "Last-Translator: Diego R Lima <contact@diegoribeiro.net>\n"
 "Language-Team: \n"
@@ -21,51 +21,51 @@ msgstr ""
 "X-Poedit-SearchPath-0: prefs.js\n"
 "X-Poedit-SearchPath-1: extension.js\n"
 
-#: extension.js:86
+#: extension.js:87
 msgid "Text will be here"
 msgstr "O texto estará aqui"
 
-#: extension.js:128
+#: extension.js:129
 msgid "Type here to search..."
 msgstr "Digite aqui para pesquisar..."
 
-#: extension.js:197
+#: extension.js:198
 msgid "Private mode"
 msgstr "Modo privado"
 
-#: extension.js:204 prefs.js:107
+#: extension.js:205 prefs.js:107
 msgid "Clear history"
 msgstr "Apagar histórico"
 
-#: extension.js:209
+#: extension.js:210
 msgid "Settings"
 msgstr "Configurações"
 
-#: extension.js:338
+#: extension.js:339
 msgid "Clear all?"
 msgstr ""
 
-#: extension.js:339
+#: extension.js:340
 msgid "Are you sure you want to delete all clipboard items?"
 msgstr ""
 
-#: extension.js:340
+#: extension.js:341
 msgid "This operation cannot be undone."
 msgstr ""
 
-#: extension.js:342
+#: extension.js:343
 msgid "Clear"
 msgstr ""
 
-#: extension.js:342 extension.js:491
+#: extension.js:343 extension.js:492
 msgid "Cancel"
 msgstr ""
 
-#: extension.js:356
+#: extension.js:357
 msgid "Clipboard history cleared"
 msgstr "Histórico da área de transferência apagado"
 
-#: extension.js:490
+#: extension.js:491
 msgid "Copied to clipboard"
 msgstr "Copiado para a área de transferência"
 

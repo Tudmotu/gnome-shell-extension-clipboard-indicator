@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-25 21:52+0300\n"
+"POT-Creation-Date: 2020-10-23 20:10+0300\n"
 "PO-Revision-Date: 2017-09-06 09:53+0300\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
 "Language-Team: suomi <lokalisointi-lista@googlegroups.com>\n"
@@ -19,51 +19,51 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Gtranslator 2.91.7\n"
 
-#: extension.js:86
+#: extension.js:87
 msgid "Text will be here"
 msgstr ""
 
-#: extension.js:128
+#: extension.js:129
 msgid "Type here to search..."
 msgstr ""
 
-#: extension.js:197
+#: extension.js:198
 msgid "Private mode"
 msgstr "Yksityistila"
 
-#: extension.js:204 prefs.js:107
+#: extension.js:205 prefs.js:107
 msgid "Clear history"
 msgstr "Tyhjennä historia"
 
-#: extension.js:209
+#: extension.js:210
 msgid "Settings"
 msgstr "Asetukset"
 
-#: extension.js:338
+#: extension.js:339
 msgid "Clear all?"
 msgstr ""
 
-#: extension.js:339
+#: extension.js:340
 msgid "Are you sure you want to delete all clipboard items?"
 msgstr ""
 
-#: extension.js:340
+#: extension.js:341
 msgid "This operation cannot be undone."
 msgstr ""
 
-#: extension.js:342
+#: extension.js:343
 msgid "Clear"
 msgstr ""
 
-#: extension.js:342 extension.js:491
+#: extension.js:343 extension.js:492
 msgid "Cancel"
 msgstr ""
 
-#: extension.js:356
+#: extension.js:357
 msgid "Clipboard history cleared"
 msgstr "Leikepöydän sisältö tyhjennetty"
 
-#: extension.js:490
+#: extension.js:491
 msgid "Copied to clipboard"
 msgstr "Kopioitu leikepöydälle"
 
