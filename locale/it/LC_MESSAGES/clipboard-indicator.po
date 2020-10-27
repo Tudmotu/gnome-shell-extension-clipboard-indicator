@@ -40,19 +40,19 @@ msgstr "Impostazioni"
 
 #: extension.js:338
 msgid "Clear all?"
-msgstr ""
+msgstr "Cancellare tutto?"
 
 #: extension.js:339
 msgid "Are you sure you want to delete all clipboard items?"
-msgstr ""
+msgstr "Si è certi di voler eliminare tutti gli appunti nella cronologia?"
 
 #: extension.js:340
 msgid "This operation cannot be undone."
-msgstr ""
+msgstr "Questa operazione non può essere annullata."
 
 #: extension.js:342
 msgid "Clear"
-msgstr ""
+msgstr "Elimina"
 
 #: extension.js:342 extension.js:491
 msgid "Cancel"
