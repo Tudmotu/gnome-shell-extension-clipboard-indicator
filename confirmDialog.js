@@ -4,11 +4,11 @@ const ModalDialog = imports.ui.modalDialog;
 const CheckBox = imports.ui.checkBox;
 const Clutter = imports.gi.Clutter;
 
-
-
+let _openDialog;
 
 function openConfirmDialog(title, message, sub_message, ok_label, cancel_label, callback) {
-    new ConfirmDialog(title, message + "\n" + sub_message, ok_label, cancel_label, callback).open();
+  if (!_openDialog)
+    _openDialog = new ConfirmDialog(title, message + "\n" + sub_message, ok_label, cancel_label, callback).open();
 }
 
 const ConfirmDialog = GObject.registerClass(
@@ -46,6 +46,7 @@ const ConfirmDialog = GObject.registerClass(
           label: cancel_label,
           action: () => {
             this.close();
+            _openDialog = null;
           },
           key: Clutter.Escape
         },
@@ -54,6 +55,7 @@ const ConfirmDialog = GObject.registerClass(
           action: () => {
             this.close();
             callback();
+            _openDialog = null;
           }
         }
       ]);
