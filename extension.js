@@ -45,6 +45,7 @@ let MOVE_ITEM_FIRST      = false;
 let ENABLE_KEYBINDING    = true;
 let PRIVATEMODE          = false;
 let NOTIFY_ON_COPY       = true;
+let CONFIRM_ON_CLEAR     = true;
 let MAX_TOPBAR_LENGTH    = 15;
 let TOPBAR_DISPLAY_MODE  = 1; //0 - only icon, 1 - only clipbord content, 2 - both
 let DISABLE_DOWN_ARROW   = false;
@@ -335,27 +336,43 @@ const ClipboardIndicator = Lang.Class({
 
         this._updateCache();
     },
-    _removeAll: function () {
+  
+    _confirmRemoveAll: function () {
         const title = _("Clear all?");
         const message = _("Are you sure you want to delete all clipboard items?");
         const sub_message = _("This operation cannot be undone.");
 
-        ConfirmDialog.openConfirmDialog(title, message, sub_message, _("Clear"), _("Cancel"), () => {;
+        ConfirmDialog.openConfirmDialog(title, message, sub_message, _("Clear"), _("Cancel"), () => {
             let that = this;
-            // We can't actually remove all items, because the clipboard still
-            // has data that will be re-captured on next refresh, so we remove
-            // all except the currently selected item
-            // Don't remove favorites here
-            that.historySection._getMenuItems().forEach(function (mItem) {
-                if (!mItem.currentlySelected) {
-                    let idx = that.clipItemsRadioGroup.indexOf(mItem);
-                    mItem.destroy();
-                    that.clipItemsRadioGroup.splice(idx,1);
-                }
-            });
-            that._updateCache();
-            that._showNotification(_("Clipboard history cleared"));
+            that._clearHistory();
+        }
+      );
+    },
+
+    _clearHistory: function () {
+        let that = this;
+        // We can't actually remove all items, because the clipboard still
+        // has data that will be re-captured on next refresh, so we remove
+        // all except the currently selected item
+        // Don't remove favorites here
+        that.historySection._getMenuItems().forEach(function (mItem) {
+            if (!mItem.currentlySelected) {
+                let idx = that.clipItemsRadioGroup.indexOf(mItem);
+                mItem.destroy();
+                that.clipItemsRadioGroup.splice(idx, 1);
+            }
         });
+        that._updateCache();
+        that._showNotification(_("Clipboard history cleared"));    },
+
+    _removeAll: function () {
+        var that = this;
+
+        if (CONFIRM_ON_CLEAR) {
+            that._confirmRemoveAll();
+        } else {
+            that._clearHistory();
+        }
     },
 
     _removeEntry: function (menuItem, event) {
@@ -677,6 +694,7 @@ const ClipboardIndicator = Lang.Class({
         DELETE_ENABLED       = this._settings.get_boolean(Prefs.Fields.DELETE);
         MOVE_ITEM_FIRST      = this._settings.get_boolean(Prefs.Fields.MOVE_ITEM_FIRST);
         NOTIFY_ON_COPY       = this._settings.get_boolean(Prefs.Fields.NOTIFY_ON_COPY);
+        CONFIRM_ON_CLEAR     = this._settings.get_boolean(Prefs.Fields.CONFIRM_ON_CLEAR);
         ENABLE_KEYBINDING    = this._settings.get_boolean(Prefs.Fields.ENABLE_KEYBINDING);
         MAX_TOPBAR_LENGTH    = this._settings.get_int(Prefs.Fields.TOPBAR_PREVIEW_SIZE);
         TOPBAR_DISPLAY_MODE  = this._settings.get_int(Prefs.Fields.TOPBAR_DISPLAY_MODE_ID);

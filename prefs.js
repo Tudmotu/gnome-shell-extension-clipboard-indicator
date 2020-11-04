@@ -17,6 +17,7 @@ var Fields = {
     CACHE_ONLY_FAVORITE    : 'cache-only-favorites',
     DELETE                 : 'enable-deletion',
     NOTIFY_ON_COPY         : 'notify-on-copy',
+    CONFIRM_ON_CLEAR       : 'confirm-clear',
     MOVE_ITEM_FIRST        : 'move-item-first',
     ENABLE_KEYBINDING      : 'enable-keybindings',
     TOPBAR_PREVIEW_SIZE    : 'topbar-preview-size',
@@ -98,6 +99,7 @@ const App = new Lang.Class({
         this.field_disable_down_arrow = new Gtk.Switch();
         this.field_cache_disable = new Gtk.Switch();
         this.field_notification_toggle = new Gtk.Switch();
+        this.field_confirm_clear_toggle = new Gtk.Switch();
         this.field_strip_text = new Gtk.Switch();
         this.field_move_item_first = new Gtk.Switch();
         this.field_keybinding = createKeybindingWidget(SettingsSchema);
@@ -143,6 +145,11 @@ const App = new Lang.Class({
         });
         let notificationLabel  = new Gtk.Label({
             label: _("Show notification on copy"),
+            hexpand: true,
+            halign: Gtk.Align.START
+        });
+        let confirmClearLabel = new Gtk.Label({
+            label: _("Show confirmation on Clear History"),
             hexpand: true,
             halign: Gtk.Align.START
         });
@@ -205,6 +212,7 @@ const App = new Lang.Class({
         addRow(cacheSizeLabel,        this.field_cache_size);
         addRow(cacheDisableLabel,     this.field_cache_disable);
         addRow(notificationLabel,     this.field_notification_toggle);
+        addRow(confirmClearLabel,     this.field_confirm_clear_toggle);
         addRow(displayModeLabel,      this.field_display_mode);
         addRow(disableDownArrowLabel, this.field_disable_down_arrow);
         addRow(topbarPreviewLabel,    this.field_topbar_preview_size);
@@ -219,6 +227,7 @@ const App = new Lang.Class({
         SettingsSchema.bind(Fields.CACHE_FILE_SIZE, this.field_cache_size, 'value', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.CACHE_ONLY_FAVORITE, this.field_cache_disable, 'active', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.NOTIFY_ON_COPY, this.field_notification_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
+        SettingsSchema.bind(Fields.CONFIRM_ON_CLEAR, this.field_confirm_clear_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.MOVE_ITEM_FIRST, this.field_move_item_first, 'active', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.TOPBAR_DISPLAY_MODE_ID, this.field_display_mode, 'active', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.DISABLE_DOWN_ARROW, this.field_disable_down_arrow, 'active', Gio.SettingsBindFlags.DEFAULT);

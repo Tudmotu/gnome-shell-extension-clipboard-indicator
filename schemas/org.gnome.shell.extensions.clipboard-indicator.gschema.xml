@@ -81,6 +81,15 @@
             If true, a notification is shown when content is copied to clipboard.
         </description>
     </key>
+
+    <key name="confirm-clear" type="b">
+      <default>true</default>
+        <summary>Show confirmation dialog on Clear History</summary>
+        <description>
+            If true, a confirmation dialog is shown when attempting to Clear History.
+        </description>
+    </key>
+    
     <key name="strip-text" type="b">
       <default>false</default>
       <summary>Remove whitespace around text</summary>
