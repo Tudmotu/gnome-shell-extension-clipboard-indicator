@@ -409,6 +409,9 @@ const ClipboardIndicator = Lang.Class({
     _selectMenuItem: function (menuItem, autoSet) {
         let fn = Lang.bind(menuItem, this._onMenuItemSelected);
         fn(autoSet);
+        if(TOPBAR_DISPLAY_MODE === 1 || TOPBAR_DISPLAY_MODE === 2) {
+            this._updateButtonText(menuItem.label.text);
+        }
     },
 
     _onMenuItemSelectedAndMenuClose: function (autoSet) {
