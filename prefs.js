@@ -187,7 +187,7 @@ const App = new Lang.Class({
 
                 if (input instanceof Gtk.Switch) {
                     inputWidget = new Gtk.Box();
-                    inputWidget.append(input, false, false, 0);
+                    inputWidget.append(input);
                 }
 
                 if (label) {
