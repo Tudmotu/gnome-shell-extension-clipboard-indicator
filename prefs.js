@@ -265,7 +265,7 @@ function addKeybinding(model, settings, id, description) {
     if (accelerator == null)
         [key, mods] = [0, 0];
     else
-        [key, mods] = Gtk.accelerator_parse(settings.get_strv(id)[0]);
+        [,key, mods] = Gtk.accelerator_parse(settings.get_strv(id)[0]);
 
     // Add a row for the keybinding.
     let row = model.insert(100); // Erm...
