@@ -90,7 +90,7 @@ const ClipboardIndicator = Lang.Class({
         hbox.add_child(this._buttonText);
         this._downArrow = PopupMenu.arrowIcon(St.Side.BOTTOM);
         hbox.add(this._downArrow);
-        this.actor.add_child(hbox);
+        this.add_child(hbox);
 
         this._createHistoryLabel();
         this._loadSettings();
