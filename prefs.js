@@ -9,6 +9,9 @@ const prettyPrint = Utils.prettyPrint;
 const Gettext = imports.gettext;
 const _ = Gettext.domain('clipboard-indicator').gettext;
 
+const [major] = Config.PACKAGE_VERSION.split('.');
+const shellVersion = Number.parseInt(major);
+
 var Fields = {
     INTERVAL               : 'refresh-interval',
     HISTORY_SIZE           : 'history-size',
@@ -187,7 +190,11 @@ const App = new Lang.Class({
 
                 if (input instanceof Gtk.Switch) {
                     inputWidget = new Gtk.Box();
-                    inputWidget.append(input);
+                    if (shellVersion < 40) {
+                        inputWidget.pack_end(input, false, false, 0);
+                    } else {
+                        inputWidget.append(input);
+                    }
                 }
 
                 if (label) {
