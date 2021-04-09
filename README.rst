@@ -6,7 +6,7 @@ Clipboard Manager extension for Gnome-Shell - Adds a clipboard indicator to the 
 
 Extension page on e.g.o:  Not yet!
 
-Support only FOR Gnome Shell >= 40; 
+Support only FOR Gnome Shell 40+; 
 
 For Gnome Shell 3.38 or lower check Release Tag version 37 or most old. (No support for images.)
 
@@ -15,13 +15,13 @@ Installation
 
 Installation via terminal::
 
-    $ mkdir ~/.local/share/gnome-shell/extensions/clipboard-indicator@tudmotu.com
+    $ mkdir ~/.local/share/gnome-shell/extensions/clipboard-indicator@ruiguilherme.com
 
-    $ git clone https://github.com/RuiGuilherme/gnome-shell-extension-clipboard-indicator.git ~/.local/share/gnome-shell/extensions/clipboard-indicator@tudmotu.com
+    $ git clone https://github.com/RuiGuilherme/gnome-shell-extension-clipboard-indicator.git ~/.local/share/gnome-shell/extensions/clipboard-indicator@ruiguilherme.com
 
 reload gnome-shell pressing Alt + F2 and entering r::
 
-    $ gnome-extensions enable clipboard-indicator@tudmotu.com
+    $ gnome-extensions enable clipboard-indicator@ruiguilherme.com
     
 Known issue
 ----------------

@@ -2,8 +2,8 @@
     "shell-version": [
         "40"
     ],
-    "uuid": "clipboard-indicator@tudmotu.com",
-    "name": "Clipboard Indicator",
+    "uuid": "clipboard-indicator@ruiguilherme.com",
+    "name": "Clipboard Indicator - Forked",
     "description": "Clipboard Manager extension for Gnome-Shell - Adds a clipboard indicator to the top panel, and caches clipboard history.",
-    "url": "https://github.com/Tudmotu/gnome-shell-extension-clipboard-indicator"
+    "url": "https://github.com/ruiguilherme/gnome-shell-extension-clipboard-indicator"
 }
