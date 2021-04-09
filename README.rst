@@ -6,7 +6,9 @@ Clipboard Manager extension for Gnome-Shell - Adds a clipboard indicator to the 
 
 Extension page on e.g.o:  Not yet!
 
-Support only Gnome Shell >= 40; Not work with 3.38 or lower.
+Support only FOR Gnome Shell >= 40; 
+
+For Gnome Shell 3.38 or lower check Release Tag version 37 or most old. (No support for images.)
 
 Installation
 ----------------
@@ -23,7 +25,7 @@ reload gnome-shell pressing Alt + F2 and entering r::
     
 Known issue
 ----------------
-Enable png images may not work without this patch: https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1812 you need to wait mutter merge ir or apply, compile and install by yourself.
+Enable png images may not work without this patch: https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1812 you need to wait mutter merge ir or apply, compile and install by yourself. - YOU CAN ENABLE OR DISABLE PNG IMAGES ON SETTINGS MENU.
 
 Contributing
 ----------------
