@@ -6,9 +6,20 @@ Clipboard Manager extension for Gnome-Shell - Adds a clipboard indicator to the 
 
 Extension page on e.g.o:  Not yet!
 
-Support only FOR Gnome Shell 40+; 
+
+Features
+----------------
+1º) Support for images. (enable by default.)
+
+2º) Max history is 2000 (Not recommended more than 200 for low-end PC)
+
+3º) Support only Gnome Shell 40+
 
 For Gnome Shell 3.38 or lower check Release Tag version 37 or most old. (No support for images.)
+
+Future Plans
+----------------
+1º) Preview image on the menu
 
 Installation
 ----------------
