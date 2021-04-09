@@ -31,7 +31,7 @@
     </key>
 
     <key name="disable-down-arrow" type="b">
-      <default>false</default>
+      <default>true</default>
         <summary>Remove down arrow in top bar</summary>
     </key>
 

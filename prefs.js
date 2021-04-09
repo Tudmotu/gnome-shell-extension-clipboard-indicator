@@ -48,7 +48,10 @@ const App = new Lang.Class({
     Name: 'ClipboardIndicator.App',
     _init: function() {
         this.main = new Gtk.Grid({
-            margin: 10,
+            margin_top: 10,
+            margin_bottom: 10,
+            margin_start: 10,
+            margin_end: 10,
             row_spacing: 12,
             column_spacing: 18,
             column_homogeneous: false,
@@ -183,8 +186,8 @@ const App = new Lang.Class({
                 let inputWidget = input;
 
                 if (input instanceof Gtk.Switch) {
-                    inputWidget = new Gtk.HBox();
-                    inputWidget.pack_end(input, false, false, 0);
+                    inputWidget = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL,});
+                    inputWidget.append(input);
                 }
 
                 if (label) {
@@ -225,8 +228,6 @@ const App = new Lang.Class({
         SettingsSchema.bind(Fields.TOPBAR_PREVIEW_SIZE, this.field_topbar_preview_size, 'value', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.STRIP_TEXT, this.field_strip_text, 'active', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.ENABLE_KEYBINDING, this.field_keybinding_activation, 'active', Gio.SettingsBindFlags.DEFAULT);
-
-        this.main.show_all();
     },
     _create_display_mode_options : function(){
         let options = [{ name: _("Icon") },
@@ -264,7 +265,7 @@ function addKeybinding(model, settings, id, description) {
     if (accelerator == null)
         [key, mods] = [0, 0];
     else
-        [key, mods] = Gtk.accelerator_parse(settings.get_strv(id)[0]);
+        [,key, mods] = Gtk.accelerator_parse(settings.get_strv(id)[0]);
 
     // Add a row for the keybinding.
     let row = model.insert(100); // Erm...
