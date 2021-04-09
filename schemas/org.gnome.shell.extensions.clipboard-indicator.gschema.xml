@@ -21,7 +21,7 @@
         <default>15</default>
         <summary>The number of items to save in history</summary>
         <description></description>
-        <range min="1" max="200"/>
+        <range min="2" max="2000"/>
     </key>
 
     <key type="i" name="display-mode">
@@ -87,6 +87,14 @@
       <description>
         If true, white spaces around text will be removed.
       </description>
+    </key>
+    <key name="save-image" type="b">
+      <default>true</default>
+      <summary>Save image to clipboard</summary>
+    </key>
+      <key name="support-png" type="b">
+      <default>false</default>
+      <summary>Enable support for png images</summary>
     </key>
     <key name="move-item-first" type="b">
       <default>false</default>

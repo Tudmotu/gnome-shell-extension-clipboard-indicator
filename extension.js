@@ -53,6 +53,8 @@ let MAX_TOPBAR_LENGTH    = 15;
 let TOPBAR_DISPLAY_MODE  = 1; //0 - only icon, 1 - only clipbord content, 2 - both
 let DISABLE_DOWN_ARROW   = false;
 let STRIP_TEXT           = false;
+let SAVE_IMAGE           = false;
+let SUPPORT_PNG          = false;
 
 const ClipboardIndicator = Lang.Class({
     Name: 'ClipboardIndicator',
@@ -99,11 +101,10 @@ const ClipboardIndicator = Lang.Class({
         this._createHistoryLabel();
         this._loadSettings();
         this._buildMenu();
-
         this._updateTopbarLayout();
-
         this._setupListener();
     },
+
     _updateButtonText: function(content){
         if (!content || PRIVATEMODE){
             this._buttonText.set_text("...")
@@ -242,8 +243,9 @@ const ClipboardIndicator = Lang.Class({
     _truncate: function(string, length) {
         let shortened = string.replace(/\s+/g, ' ');
 
-        if (shortened.length > length)
+        if (shortened.length > length) {
             shortened = shortened.substring(0,length-1) + '...';
+        }
 
         return shortened;
     },
@@ -268,7 +270,8 @@ const ClipboardIndicator = Lang.Class({
         menuItem.type = type;
         menuItem.radioGroup = this.clipItemsRadioGroup;
         menuItem.buttonPressId = menuItem.connect('activate',
-            Lang.bind(menuItem, this._onMenuItemSelectedAndMenuClose));
+        
+        Lang.bind(menuItem, this._onMenuItemSelectedAndMenuClose));
 
         this._setEntryLabel(menuItem);
         this.clipItemsRadioGroup.push(menuItem);
@@ -322,12 +325,14 @@ const ClipboardIndicator = Lang.Class({
 
         if (favorite) {
             this.favoritesSection.addMenuItem(menuItem, 0);
-        } else {
+        } 
+        else {
             this.historySection.addMenuItem(menuItem, 0);
         }
 
-        if (autoSelect === true)
+        if (autoSelect === true) {
             this._selectMenuItem(menuItem, autoSetClip);
+        }
 
         if (TOPBAR_DISPLAY_MODE === 1 || TOPBAR_DISPLAY_MODE === 2) {
             this._updateButtonText(buffer);
@@ -339,9 +344,9 @@ const ClipboardIndicator = Lang.Class({
     _favoriteToggle: function (menuItem) {  
         menuItem.clipFavorite = menuItem.clipFavorite ? false : true;
         this._moveItemFirst(menuItem);
-
         this._updateCache();
     },
+
     _removeAll: function () {
         const title = _("Clear all?");
         const message = _("Are you sure you want to delete all clipboard items?");
@@ -408,9 +413,8 @@ const ClipboardIndicator = Lang.Class({
                         Clipboard.set_text(CLIPBOARD_TYPE, clipContents);
                     }
                     else {
-                        Clipboard.set_content(CLIPBOARD_TYPE, "image/jpeg", base64ToBytes(clipContents));
+                        Clipboard.set_content(CLIPBOARD_TYPE, SUPPORT_PNG ? "image/png" : "image/jpeg", base64ToBytes(clipContents));
                     }
-                    
                 }
             }
             else {
@@ -438,7 +442,7 @@ const ClipboardIndicator = Lang.Class({
                         Clipboard.set_text(CLIPBOARD_TYPE, clipContents);    
                     }
                     else {
-                        Clipboard.set_content(CLIPBOARD_TYPE, "image/jpeg", base64ToBytes(clipContents));
+                        Clipboard.set_content(CLIPBOARD_TYPE, SUPPORT_PNG ? "image/png" : "image/jpeg", base64ToBytes(clipContents));
                     }
                 }
             }
@@ -487,8 +491,8 @@ const ClipboardIndicator = Lang.Class({
         let that = this;
 
         Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
-            if (text === null) {
-                Clipboard.get_content(CLIPBOARD_TYPE, 'image/jpeg', function (clipboard, content) {
+            if (text === null && SAVE_IMAGE) {
+                Clipboard.get_content(CLIPBOARD_TYPE, SUPPORT_PNG ? 'image/png' : 'image/jpeg', function (clipboard, content) {
                     that._processClipboardContent(bytesToBase64(content.get_data()), 'image');
                 })
             }
@@ -710,6 +714,8 @@ const ClipboardIndicator = Lang.Class({
         TOPBAR_DISPLAY_MODE  = this._settings.get_int(Prefs.Fields.TOPBAR_DISPLAY_MODE_ID);
         DISABLE_DOWN_ARROW   = this._settings.get_boolean(Prefs.Fields.DISABLE_DOWN_ARROW);
         STRIP_TEXT           = this._settings.get_boolean(Prefs.Fields.STRIP_TEXT);
+        SAVE_IMAGE           = this._settings.get_boolean(Prefs.Fields.SAVE_IMAGE);
+        SUPPORT_PNG           = this._settings.get_boolean(Prefs.Fields.SUPPORT_PNG);
     },
 
     _onSettingsChange: function () {
