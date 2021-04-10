@@ -4,22 +4,13 @@ Clipboard Indicator - Forked
 
 Clipboard Manager extension for Gnome-Shell - Adds a clipboard indicator to the top panel, and caches clipboard history.
 
-Extension page on e.g.o:  Not yet!
-
+I will keep this mod-extension while Mutter PR 1812 is not merge(https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1812), after that I will make a Pull Request to master. 
 
 Features
 ----------------
 1º) Support for images. (enable by default.)
 
 2º) Max history is 2000 (Not recommended more than 200 for low-end PC)
-
-3º) Support only Gnome Shell 40+
-
-For Gnome Shell 3.38 or lower check Release Tag version 37 or most old. (No support for images.)
-
-Future Plans
-----------------
-1º) Preview image on the menu
 
 Installation
 ----------------
@@ -37,7 +28,3 @@ reload gnome-shell pressing Alt + F2 and entering r::
 Known issue
 ----------------
 Enable png images may not work without this patch: https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1812 you need to wait mutter merge ir or apply, compile and install by yourself. - YOU CAN ENABLE OR DISABLE PNG IMAGES ON SETTINGS MENU.
-
-Contributing
-----------------
-Contributions, issues and feature requests are welcome!
