@@ -1,7 +1,9 @@
 MODULES = extension.js confirmDialog.js locale/ metadata.json stylesheet.css LICENSE.rst README.rst prefs.js schemas/ utils.js
 INSTALLPATH=~/.local/share/gnome-shell/extensions/clipboard-indicator@tudmotu.com/
 
-all: compile-locales
+all: compile-locales compile-settings
+
+compile-settings:
 	glib-compile-schemas --strict --targetdir=schemas/ schemas
 
 compile-locales:
