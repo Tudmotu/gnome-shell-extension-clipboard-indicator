@@ -8,27 +8,27 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-23 20:10+0300\n"
-"PO-Revision-Date: 2017-04-30 00:23+0300\n"
-"Last-Translator: neynefes - Hüseyin Karacabey <neynefes@ubuntu-tr.net>\n"
+"PO-Revision-Date: 2020-10-24 20:50+0300\n"
+"Last-Translator: Muha Aliss <muhaaliss@gmail.com>\n"
 "Language-Team: Turkish <neynefes@ubuntu-tr.net>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Atom 1.16.0\n"
+"X-Generator: Poedit 2.4.1\n"
 
 #: extension.js:87
 msgid "Text will be here"
-msgstr ""
+msgstr "Metin burada olacak"
 
 #: extension.js:129
 msgid "Type here to search..."
-msgstr ""
+msgstr "Aramak için buraya yazınız..."
 
 #: extension.js:198
 msgid "Private mode"
-msgstr "Gizli Kip"
+msgstr "Gizli kip"
 
 #: extension.js:205 prefs.js:107
 msgid "Clear history"
@@ -40,23 +40,23 @@ msgstr "Ayarlar"
 
 #: extension.js:339
 msgid "Clear all?"
-msgstr ""
+msgstr "Hepsi temizlensin mi?"
 
 #: extension.js:340
 msgid "Are you sure you want to delete all clipboard items?"
-msgstr ""
+msgstr "Tüm pano öğelerini silmek istediğinizden emin misiniz?"
 
 #: extension.js:341
 msgid "This operation cannot be undone."
-msgstr ""
+msgstr "Bu işlem geri alınamaz."
 
 #: extension.js:343
 msgid "Clear"
-msgstr ""
+msgstr "Temizle"
 
 #: extension.js:343 extension.js:492
 msgid "Cancel"
-msgstr ""
+msgstr "İptal"
 
 #: extension.js:357
 msgid "Clipboard history cleared"
@@ -80,23 +80,23 @@ msgstr "Sonraki girdi"
 
 #: prefs.js:120
 msgid "History Size"
-msgstr "Geçmiş Boyutu"
+msgstr "Geçmiş boyutu"
 
 #: prefs.js:125
 msgid "Refresh Interval (ms)"
-msgstr "Yenileme Sıklığı (ms)"
+msgstr "Yenileme sıklığı (ms)"
 
 #: prefs.js:130
 msgid "Preview Size (characters)"
-msgstr "Önizleme Boyutu (karakter)"
+msgstr "Önizleme boyutu (karakter)"
 
 #: prefs.js:135
 msgid "Max cache file size (kb)"
-msgstr "En Yüksek Önbelek Boyutu (kb)"
+msgstr "En yüksek önbelek boyutu (kb)"
 
 #: prefs.js:140
 msgid "Cache only favorites"
-msgstr ""
+msgstr "Yalnızca favorileri önbelleğe al"
 
 #: prefs.js:145
 msgid "Show notification on copy"
@@ -104,7 +104,7 @@ msgstr "Kopyalandığında bildirim göster"
 
 #: prefs.js:150
 msgid "Move item to the top after selection"
-msgstr ""
+msgstr "Seçtiğim öğeyi en üste taşı"
 
 #: prefs.js:155
 msgid "Keyboard shortcuts"
@@ -112,28 +112,28 @@ msgstr "Kılavye kısayolları"
 
 #: prefs.js:160
 msgid "Number of characters in top bar"
-msgstr ""
+msgstr "Üst çubukta görüntülenecek karakter sayısı"
 
 #: prefs.js:165
 msgid "What to show in top bar"
-msgstr ""
+msgstr "Üst çubukta görüntülenecek"
 
 #: prefs.js:170
 msgid "Remove down arrow in top bar"
-msgstr ""
+msgstr "Üst çubuktaki oku kaldır"
 
 #: prefs.js:175
 msgid "Remove whitespace around text"
-msgstr ""
+msgstr "\t"
 
 #: prefs.js:232
 msgid "Icon"
-msgstr ""
+msgstr "İkon"
 
 #: prefs.js:233
 msgid "Clipboard Content"
-msgstr ""
+msgstr "Pano İçeriği"
 
 #: prefs.js:234
 msgid "Both"
-msgstr ""
+msgstr "Her ikisi de"
