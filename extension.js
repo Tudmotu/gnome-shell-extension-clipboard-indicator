@@ -233,6 +233,11 @@ const ClipboardIndicator = Lang.Class({
         }
         else {
             this._getAllIMenuItems().forEach(function(mItem){
+                // prevent broken menu on search
+                if (mItem.type === 'image') {
+                    mItem.actor.visible = false;
+                    return;
+                }
                 let text = mItem.clipContents.toLowerCase();
                 let isMatching = text.indexOf(searchedText) >= 0;
                 mItem.actor.visible = isMatching
@@ -745,7 +750,7 @@ const ClipboardIndicator = Lang.Class({
 
         // Re-set menu-items lables in case preview size changed
         this._getAllIMenuItems().forEach(function (mItem) {
-            that._setEntryLabel(mItem);
+            if (mItem.type === "text") that._setEntryLabel(mItem);
         });
 
         //update topbar
