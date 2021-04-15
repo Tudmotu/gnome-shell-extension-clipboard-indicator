@@ -252,28 +252,45 @@ const ClipboardIndicator = Lang.Class({
 
     _setEntryLabel: function (menuItem) {
         const buffer = menuItem.clipContents;
-        const type = menuItem.type;
-        if (type === 'text') {
-            menuItem.label.set_text(this._truncate(buffer, MAX_ENTRY_LENGTH));
-        }
-        else {
-            menuItem.label.set_text('🖼');
-        }
+        menuItem.label.set_text(this._truncate(buffer, MAX_ENTRY_LENGTH));
     },
 
     _addEntry: function (buffer, favorite, autoSelect, autoSetClip, type = "text") {
         let menuItem = new PopupMenu.PopupMenuItem('');
+        if(type !== 'text') {
+            const bufferIcon = base64ToBytes(buffer)
+
+            const icon = new St.Icon({
+                icon_size: 72,
+                style_class: 'imagem-icon'
+            });
+
+            icon.set_gicon(Gio.BytesIcon.new(bufferIcon));
+    
+            const icofavBtn = new St.Button({
+                style_class: 'ci-action-btn',
+                can_focus: true,
+                child: icon,
+                x_align: Clutter.ActorAlign.START,
+                x_expand: true,
+                y_expand: true
+            });
+    
+            menuItem.actor.add_child(icofavBtn);
+            menuItem.icofavBtn = icofavBtn;
+            // menuItem = new PopupMenu.PopupImageMenuItem('', gicon);	
+        }
 
         menuItem.menu = this.menu;
         menuItem.clipContents = buffer;
         menuItem.clipFavorite = favorite;
         menuItem.type = type;
         menuItem.radioGroup = this.clipItemsRadioGroup;
-        menuItem.buttonPressId = menuItem.connect('activate',
+        menuItem.buttonPressId = menuItem.connect('activate', Lang.bind(menuItem, this._onMenuItemSelectedAndMenuClose));
         
-        Lang.bind(menuItem, this._onMenuItemSelectedAndMenuClose));
-
-        this._setEntryLabel(menuItem);
+        if (type === "text") {
+            this._setEntryLabel(menuItem);
+        }
         this.clipItemsRadioGroup.push(menuItem);
 
 	// Favorite button
@@ -433,7 +450,7 @@ const ClipboardIndicator = Lang.Class({
         var that = this;
         that.radioGroup.forEach(function (menuItem) {
             let clipContents = that.clipContents;
-            let type = that.type;
+            const type = that.type;
             if (menuItem === that && clipContents) {
                 that.setOrnament(PopupMenu.Ornament.DOT);
                 that.currentlySelected = true;
@@ -515,7 +532,6 @@ const ClipboardIndicator = Lang.Class({
             });
 
             const itemIndex = registry.indexOf(content);
-
             if (itemIndex < 0) {
                 that._addEntry(content, false, true, false, type);
                 that._removeOldestEntries();
