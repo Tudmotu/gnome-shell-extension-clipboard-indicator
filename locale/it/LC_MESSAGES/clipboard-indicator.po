@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-23 20:10+0300\n"
+"POT-Creation-Date: 2021-04-15 13:20+0300\n"
 "PO-Revision-Date: 2018-05-17 09:27+0200\n"
 "Last-Translator: Robin <bisio.97@gmail.com>\n"
 "Language-Team: jimmy.scionti@gmail.com\n"
@@ -30,7 +30,7 @@ msgstr "Digita qui per cercare…"
 msgid "Private mode"
 msgstr "Modalità privata"
 
-#: extension.js:205 prefs.js:107
+#: extension.js:205 prefs.js:110
 msgid "Clear history"
 msgstr "Cancella la cronologia"
 
@@ -54,7 +54,7 @@ msgstr "Questa operazione non può essere annullata."
 msgid "Clear"
 msgstr "Elimina"
 
-#: extension.js:343 extension.js:492
+#: extension.js:343 extension.js:495
 msgid "Cancel"
 msgstr "Annulla"
 
@@ -62,80 +62,80 @@ msgstr "Annulla"
 msgid "Clipboard history cleared"
 msgstr "Cronologia cancellata"
 
-#: extension.js:491
+#: extension.js:494
 msgid "Copied to clipboard"
 msgstr "Copiato negli appunti"
 
-#: prefs.js:105
+#: prefs.js:108
 msgid "Toggle the menu"
 msgstr "Mostra/nascondi il menu"
 
-#: prefs.js:109
+#: prefs.js:112
 msgid "Previous entry"
 msgstr "Voce precedente"
 
-#: prefs.js:111
+#: prefs.js:114
 msgid "Next entry"
 msgstr "Voce successiva"
 
-#: prefs.js:120
+#: prefs.js:123
 msgid "History Size"
 msgstr "Dimensioni della cronologia"
 
-#: prefs.js:125
+#: prefs.js:128
 msgid "Refresh Interval (ms)"
 msgstr "Intervallo di aggiornamento (ms)"
 
-#: prefs.js:130
+#: prefs.js:133
 msgid "Preview Size (characters)"
 msgstr "Dimensioni dell'anteprima (caratteri)"
 
-#: prefs.js:135
+#: prefs.js:138
 msgid "Max cache file size (kb)"
 msgstr "Dimensioni massime della cache (kB)"
 
-#: prefs.js:140
+#: prefs.js:143
 msgid "Cache only favorites"
 msgstr "Metti in cache solo i preferiti"
 
-#: prefs.js:145
+#: prefs.js:148
 msgid "Show notification on copy"
 msgstr "Mostra una notifica quando copi"
 
-#: prefs.js:150
+#: prefs.js:153
 msgid "Move item to the top after selection"
 msgstr "Porta l'elemento in cima dopo la selezione"
 
-#: prefs.js:155
+#: prefs.js:158
 msgid "Keyboard shortcuts"
 msgstr "Scorciatoie da tastiera"
 
-#: prefs.js:160
+#: prefs.js:163
 msgid "Number of characters in top bar"
 msgstr "Numero di caratteri sul pannello"
 
-#: prefs.js:165
+#: prefs.js:168
 msgid "What to show in top bar"
 msgstr "Cosa mostrare sul pannello"
 
-#: prefs.js:170
+#: prefs.js:173
 #, fuzzy
 msgid "Remove down arrow in top bar"
 msgstr "Numero di caratteri sul pannello"
 
-#: prefs.js:175
+#: prefs.js:178
 msgid "Remove whitespace around text"
 msgstr "Rimuovi lo spazio bianco intorno al testo"
 
-#: prefs.js:232
+#: prefs.js:233
 msgid "Icon"
 msgstr "Icona"
 
-#: prefs.js:233
+#: prefs.js:234
 msgid "Clipboard Content"
 msgstr "Contenuto Clipboard"
 
-#: prefs.js:234
+#: prefs.js:235
 msgid "Both"
 msgstr "Entrambi"
 

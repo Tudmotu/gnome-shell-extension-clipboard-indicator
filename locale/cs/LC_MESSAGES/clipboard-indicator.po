@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-23 20:10+0300\n"
+"POT-Creation-Date: 2021-04-15 13:20+0300\n"
 "PO-Revision-Date: 2017-11-03 21:22+0100\n"
 "Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>\n"
 "Language-Team: \n"
@@ -28,7 +28,7 @@ msgstr "Vyhledávejte psaním sem…"
 msgid "Private mode"
 msgstr "Stop (proti úniku citlivých údajů)"
 
-#: extension.js:205 prefs.js:107
+#: extension.js:205 prefs.js:110
 msgid "Clear history"
 msgstr "Vyčistit historii"
 
@@ -52,7 +52,7 @@ msgstr ""
 msgid "Clear"
 msgstr ""
 
-#: extension.js:343 extension.js:492
+#: extension.js:343 extension.js:495
 msgid "Cancel"
 msgstr "Storno"
 
@@ -60,80 +60,80 @@ msgstr "Storno"
 msgid "Clipboard history cleared"
 msgstr "Historie schránky vyčištěna"
 
-#: extension.js:491
+#: extension.js:494
 msgid "Copied to clipboard"
 msgstr "Zkopírováno do schránky"
 
-#: prefs.js:105
+#: prefs.js:108
 msgid "Toggle the menu"
 msgstr "Přepnout nabídku"
 
-#: prefs.js:109
+#: prefs.js:112
 msgid "Previous entry"
 msgstr "Předchozí položka"
 
-#: prefs.js:111
+#: prefs.js:114
 msgid "Next entry"
 msgstr "Následující položka"
 
-#: prefs.js:120
+#: prefs.js:123
 msgid "History Size"
 msgstr "Hloubka historie"
 
-#: prefs.js:125
+#: prefs.js:128
 msgid "Refresh Interval (ms)"
 msgstr "Interval obnovování (ms)"
 
-#: prefs.js:130
+#: prefs.js:133
 msgid "Preview Size (characters)"
 msgstr "Velikost náhledu (znaky)"
 
-#: prefs.js:135
+#: prefs.js:138
 msgid "Max cache file size (kb)"
 msgstr "Omezit velikost mezipaměti na nejvýše (KB)"
 
-#: prefs.js:140
+#: prefs.js:143
 msgid "Cache only favorites"
 msgstr "Ukládat do mezipaměti pouze oblíbené"
 
-#: prefs.js:145
+#: prefs.js:148
 msgid "Show notification on copy"
 msgstr "Při zkopírování zobrazit oznámení"
 
-#: prefs.js:150
+#: prefs.js:153
 msgid "Move item to the top after selection"
 msgstr "Poté, co byla vybrána, posunout položku na začátek seznamu"
 
-#: prefs.js:155
+#: prefs.js:158
 msgid "Keyboard shortcuts"
 msgstr "Klávesové zkratky"
 
-#: prefs.js:160
+#: prefs.js:163
 msgid "Number of characters in top bar"
 msgstr "Počet znaků v horní liště"
 
-#: prefs.js:165
+#: prefs.js:168
 msgid "What to show in top bar"
 msgstr "Co zobrazovat v horní liště"
 
-#: prefs.js:170
+#: prefs.js:173
 #, fuzzy
 msgid "Remove down arrow in top bar"
 msgstr "Počet znaků v horní liště"
 
-#: prefs.js:175
+#: prefs.js:178
 msgid "Remove whitespace around text"
 msgstr "Odebrat prázdné místo kolem textu"
 
-#: prefs.js:232
+#: prefs.js:233
 msgid "Icon"
 msgstr "Ikonu"
 
-#: prefs.js:233
+#: prefs.js:234
 msgid "Clipboard Content"
 msgstr "Obsah schránky"
 
-#: prefs.js:234
+#: prefs.js:235
 msgid "Both"
 msgstr "Obojí"
 
