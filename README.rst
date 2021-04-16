@@ -1,30 +1,22 @@
 ============================
-Clipboard Indicator - Forked
+Clipboard Indicator
 ============================
 
 Clipboard Manager extension for Gnome-Shell - Adds a clipboard indicator to the top panel, and caches clipboard history.
 
-I will keep this mod-extension while Mutter PR 1812 is not merge(https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1812), after that I will make a Pull Request to master. 
-
-Features
-----------------
-1º) Support for images. (enable by default.)
-
-2º) Max history is 2000 (Not recommended more than 200 for low-end PC)
+Extension page on e.g.o:
+https://extensions.gnome.org/extension/779/clipboard-indicator/
 
 Installation
 ----------------
 
-Installation via terminal::
+Installation via git is performed by cloning the repo into your local gnome-shell extensions directory (usually ~/.local/share/gnome-shell/extensions/)::
 
-    $ mkdir ~/.local/share/gnome-shell/extensions/clipboard-indicator@ruiguilherme.com
+    $ git clone https://github.com/Tudmotu/gnome-shell-extension-clipboard-indicator.git <extensions-dir>/clipboard-indicator@tudmotu.com
 
-    $ git clone https://github.com/RuiGuilherme/gnome-shell-extension-clipboard-indicator.git ~/.local/share/gnome-shell/extensions/clipboard-indicator@ruiguilherme.com
+After cloning the repo, the extension is practically installed yet disabled. In
+order to enable it, you need to use gnome-tweak-tool - find the extension,
+titled 'Clipboard Indicator', in the 'Extensions' screen and turn it 'On'.
+You may need to restart the shell (Alt+F2 and insert 'r' in the prompt) for the
+extension to be listed there.
 
-reload gnome-shell pressing Alt + F2 and entering r::
-
-    $ gnome-extensions enable clipboard-indicator@ruiguilherme.com
-    
-Known issue
-----------------
-Enable png images may not work without this patch: https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1812 you need to wait mutter merge ir or apply, compile and install by yourself. - YOU CAN ENABLE OR DISABLE PNG IMAGES ON SETTINGS MENU.
