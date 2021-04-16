@@ -188,7 +188,7 @@ const ClipboardIndicator = Lang.Class({
             // Add cached items
             clipHistory.forEach(function (buffer) {
                 const { contents, favorite, type } = buffer;
-                that._addEntry(contents, favorite, true, false, type);
+                that._addEntry(type === 'text' ? contents : base64ToBytes(contents), favorite, true, false, type);
             });
 
             // Add separator
@@ -233,6 +233,11 @@ const ClipboardIndicator = Lang.Class({
         }
         else {
             this._getAllIMenuItems().forEach(function(mItem){
+                // prevent broken menu on search
+                if (mItem.type === 'image') {
+                    mItem.actor.visible = false;
+                    return;
+                }
                 let text = mItem.clipContents.toLowerCase();
                 let isMatching = text.indexOf(searchedText) >= 0;
                 mItem.actor.visible = isMatching
@@ -252,28 +257,42 @@ const ClipboardIndicator = Lang.Class({
 
     _setEntryLabel: function (menuItem) {
         const buffer = menuItem.clipContents;
-        const type = menuItem.type;
-        if (type === 'text') {
-            menuItem.label.set_text(this._truncate(buffer, MAX_ENTRY_LENGTH));
-        }
-        else {
-            menuItem.label.set_text('🖼');
-        }
+        menuItem.label.set_text(this._truncate(buffer, MAX_ENTRY_LENGTH));
     },
 
     _addEntry: function (buffer, favorite, autoSelect, autoSetClip, type = "text") {
         let menuItem = new PopupMenu.PopupMenuItem('');
+        if(type !== 'text') {
+            const icon = new St.Icon({
+                icon_size: 72,
+                style_class: 'imagem-icon'
+            });
+
+            icon.set_gicon(Gio.BytesIcon.new(buffer));
+    
+            const icofavBtn = new St.Button({
+                style_class: 'ci-action-btn',
+                can_focus: true,
+                child: icon,
+                x_align: Clutter.ActorAlign.START,
+                x_expand: true,
+                y_expand: true
+            });
+    
+            menuItem.actor.add_child(icofavBtn);
+            menuItem.icofavBtn = icofavBtn;
+        }
 
         menuItem.menu = this.menu;
         menuItem.clipContents = buffer;
         menuItem.clipFavorite = favorite;
         menuItem.type = type;
         menuItem.radioGroup = this.clipItemsRadioGroup;
-        menuItem.buttonPressId = menuItem.connect('activate',
+        menuItem.buttonPressId = menuItem.connect('activate', Lang.bind(menuItem, this._onMenuItemSelectedAndMenuClose));
         
-        Lang.bind(menuItem, this._onMenuItemSelectedAndMenuClose));
-
-        this._setEntryLabel(menuItem);
+        if (type === "text") {
+            this._setEntryLabel(menuItem);
+        }
         this.clipItemsRadioGroup.push(menuItem);
 
 	// Favorite button
@@ -405,7 +424,7 @@ const ClipboardIndicator = Lang.Class({
         that.radioGroup.forEach(function (menuItem) {
             let clipContents = that.clipContents;
             const type = menuItem.type;
-            if (menuItem === that && clipContents) {
+            if (menuItem === that && (type === "text" ? clipContents : bytesToBase64(clipContents))) {
                 that.setOrnament(PopupMenu.Ornament.DOT);
                 that.currentlySelected = true;
                 if (autoSet !== false) {
@@ -413,7 +432,7 @@ const ClipboardIndicator = Lang.Class({
                         Clipboard.set_text(CLIPBOARD_TYPE, clipContents);
                     }
                     else {
-                        Clipboard.set_content(CLIPBOARD_TYPE, SUPPORT_PNG ? "image/png" : "image/jpeg", base64ToBytes(clipContents));
+                        Clipboard.set_content(CLIPBOARD_TYPE, SUPPORT_PNG ? "image/png" : "image/jpeg", clipContents);
                     }
                 }
             }
@@ -433,8 +452,8 @@ const ClipboardIndicator = Lang.Class({
         var that = this;
         that.radioGroup.forEach(function (menuItem) {
             let clipContents = that.clipContents;
-            let type = that.type;
-            if (menuItem === that && clipContents) {
+            const type = that.type;
+            if (menuItem === that && (type === "text" ? clipContents : bytesToBase64(clipContents))) {
                 that.setOrnament(PopupMenu.Ornament.DOT);
                 that.currentlySelected = true;
                 if (autoSet !== false) {
@@ -442,7 +461,7 @@ const ClipboardIndicator = Lang.Class({
                         Clipboard.set_text(CLIPBOARD_TYPE, clipContents);    
                     }
                     else {
-                        Clipboard.set_content(CLIPBOARD_TYPE, SUPPORT_PNG ? "image/png" : "image/jpeg", base64ToBytes(clipContents));
+                        Clipboard.set_content(CLIPBOARD_TYPE, SUPPORT_PNG ? "image/png" : "image/jpeg", clipContents);
                     }
                 }
             }
@@ -461,14 +480,18 @@ const ClipboardIndicator = Lang.Class({
 
     _updateCache: function () {
         let registry = this.clipItemsRadioGroup.map(function (menuItem) {
+            const {type} = menuItem
             return {
-                "contents" : menuItem.clipContents,
+                "contents" : type === "text" ? menuItem.clipContents : bytesToBase64(menuItem.clipContents),
                 "favorite" : menuItem.clipFavorite,
-                "type" : menuItem.type
+                "type" : type
             };
         });
 
         writeRegistry(registry.filter(function (menuItem) {
+            // that if block images from cached
+            // if (menuItem.type === "image") return;
+
             if (CACHE_ONLY_FAVORITE) {
                 if (menuItem["favorite"]) {
                     return menuItem;
@@ -493,7 +516,7 @@ const ClipboardIndicator = Lang.Class({
         Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
             if (text === null && SAVE_IMAGE) {
                 Clipboard.get_content(CLIPBOARD_TYPE, SUPPORT_PNG ? 'image/png' : 'image/jpeg', function (clipboard, content) {
-                    that._processClipboardContent(bytesToBase64(content.get_data()), 'image');
+                    that._processClipboardContent(content.get_data(), 'image');
                 })
             }
             else {
@@ -511,11 +534,13 @@ const ClipboardIndicator = Lang.Class({
 
         if (content !== "" && content) {
             let registry = that.clipItemsRadioGroup.map(function (menuItem) {
-                return menuItem.clipContents;
+                const clipb = menuItem.clipContents
+                return type === "text" ? clipb : bytesToBase64(clipb);
             });
 
-            const itemIndex = registry.indexOf(content);
+            const indexContent = type === "text" ? content : bytesToBase64(content);
 
+            const itemIndex = registry.indexOf(indexContent);
             if (itemIndex < 0) {
                 that._addEntry(content, false, true, false, type);
                 that._removeOldestEntries();
@@ -526,7 +551,7 @@ const ClipboardIndicator = Lang.Class({
                 }
             }
             else if (itemIndex >= 0 && itemIndex < registry.length - 1) {
-                const item = that._findItem(content);
+                const item = that._findItem(indexContent, type);
                 that._selectMenuItem(item, false);
 
                 if (!item.clipFavorite && MOVE_ITEM_FIRST) {
@@ -541,9 +566,16 @@ const ClipboardIndicator = Lang.Class({
         this._addEntry(item.clipContents, item.clipFavorite, item.currentlySelected, false, type ?? item.type);
     },
 
-    _findItem: function (text) {
-        return this.clipItemsRadioGroup.filter(
-            item => item.clipContents === text)[0];
+    _findItem: function (content, type) {
+        // that the best way? if i can do it best, plz make a PR.
+        if (type === "text") {
+            return this.clipItemsRadioGroup.filter(
+                item => item.clipContents === content)[0];
+        }
+        else {
+            return this.clipItemsRadioGroup.filter(
+                item => bytesToBase64(item.clipContents) === content)[0];
+        }
     },
 
     _getCurrentlySelectedItem () {
@@ -729,7 +761,7 @@ const ClipboardIndicator = Lang.Class({
 
         // Re-set menu-items lables in case preview size changed
         this._getAllIMenuItems().forEach(function (mItem) {
-            that._setEntryLabel(mItem);
+            if (mItem.type === "text") that._setEntryLabel(mItem);
         });
 
         //update topbar
