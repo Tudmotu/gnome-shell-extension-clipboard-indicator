@@ -363,7 +363,7 @@ const ClipboardIndicator = Lang.Class({
             }
         });
         that._updateCache();
-        that._showNotification(_("Clipboard history cleared"));    },
+    },
 
     _removeAll: function () {
         var that = this;
