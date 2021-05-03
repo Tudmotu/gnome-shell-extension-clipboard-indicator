@@ -379,6 +379,7 @@ const ClipboardIndicator = Lang.Class({
             // Don't remove favorites here
             that.historySection._getMenuItems().forEach(function (mItem) {
                 if (!mItem.currentlySelected) {
+                    if (mItem.type === "image") deleteImage(mItem.clipContents);
                     let idx = that.clipItemsRadioGroup.indexOf(mItem);
                     mItem.destroy();
                     that.clipItemsRadioGroup.splice(idx,1);
@@ -396,7 +397,7 @@ const ClipboardIndicator = Lang.Class({
             Clipboard.set_text(CLIPBOARD_TYPE, "");
         }
 
-        if (event === 'delete') deleteImage(menuItem.clipContents);
+        if (event === 'delete' && menuItem.type === "image") deleteImage(menuItem.clipContents);
 
         menuItem.destroy();
         this.clipItemsRadioGroup.splice(itemIdx,1);
