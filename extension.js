@@ -1,6 +1,7 @@
 const Clutter    = imports.gi.Clutter;
 const Config     = imports.misc.config;
 const Gio        = imports.gi.Gio;
+const GLib       = imports.gi.GLib;
 const Lang       = imports.lang;
 const Mainloop   = imports.mainloop;
 const Meta       = imports.gi.Meta;
@@ -371,7 +372,7 @@ const ClipboardIndicator = Lang.Class({
         const message = _("Are you sure you want to delete all clipboard items?");
         const sub_message = _("This operation cannot be undone.");
 
-        ConfirmDialog.openConfirmDialog(title, message, sub_message, _("Clear"), _("Cancel"), () => {;
+        ConfirmDialog.openConfirmDialog(title, message, sub_message, _("Clear"), _("Cancel"), () => {
             let that = this;
             // We can't actually remove all items, because the clipboard still
             // has data that will be re-captured on next refresh, so we remove
@@ -519,7 +520,42 @@ const ClipboardIndicator = Lang.Class({
                 })
             }
             else {
-                that._processClipboardContent(text, "text");
+                const itens = text.split('\n');
+                let blockText = false;
+                let hasText = false;
+
+                itens.map((values) => {
+                    // Dolphin debugger
+                    if (!values.length) return;
+
+                    // ebp === webp
+                    // vif === avif
+                    // peg === jpeg
+                    const support_image_type = ['png', 'jpg', 'peg', 'gif', 'ico', 'ebp', 'svg', 'vif'];
+                    const type = values.substring(values.length - 3);
+
+                    if (support_image_type.indexOf(type) !== -1) {
+                        // Dolphin return file:// + $PATH.
+                        const path = values.substring(0, 7) === 'file://' ? values.substring(7) : values;
+                        
+                        const file = Gio.file_new_for_path(path);
+                        if (!file.query_exists(null)) {
+                            hasText = true;
+                        }
+                        else {
+                            const bytes = file.load_bytes(null)[0]
+                            that._processClipboardContent(bytes, 'image', bytes.hash());
+                        }
+                    }
+                    else {
+                        hasText = true;
+                    }
+
+                    if (hasText && !blockText) {                            
+                        blockText = true
+                        that._processClipboardContent(text, "text");
+                    }
+                })
             }
         });
     },
