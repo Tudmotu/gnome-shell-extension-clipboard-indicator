@@ -24,6 +24,7 @@ const SETTING_KEY_CLEAR_HISTORY = "clear-history";
 const SETTING_KEY_PREV_ENTRY = "prev-entry";
 const SETTING_KEY_NEXT_ENTRY = "next-entry";
 const SETTING_KEY_TOGGLE_MENU = "toggle-menu";
+const SETTING_KEY_PRIVATEMODE = "toggle-private-mode";
 const INDICATOR_ICON = 'edit-paste-symbolic';
 
 const ExtensionUtils = imports.misc.extensionUtils;
@@ -707,6 +708,7 @@ const ClipboardIndicator = Lang.Class({
         this._bindShortcut(SETTING_KEY_PREV_ENTRY, this._previousEntry);
         this._bindShortcut(SETTING_KEY_NEXT_ENTRY, this._nextEntry);
         this._bindShortcut(SETTING_KEY_TOGGLE_MENU, this._toggleMenu);
+        this._bindShortcut(SETTING_KEY_PRIVATEMODE, this._togglePrivatemode);
     },
 
     _unbindShortcuts: function () {
@@ -846,6 +848,11 @@ const ClipboardIndicator = Lang.Class({
 
     _toggleMenu: function(){
         this.menu.toggle();
+    },
+
+    _togglePrivatemode: function() {
+        this.privateModeMenuItem.toggle();
+        this._onPrivateModeSwitch();
     }
 });
 

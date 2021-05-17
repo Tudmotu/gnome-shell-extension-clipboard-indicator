@@ -108,6 +108,8 @@ const App = new Lang.Class({
                       _("Previous entry"));
         addKeybinding(this.field_keybinding.model, SettingsSchema, "next-entry",
                       _("Next entry"));
+        addKeybinding(this.field_keybinding.model, SettingsSchema, "toggle-private-mode",
+                      _("Toggle private mode"));
 
         var that = this;
         this.field_keybinding_activation = new Gtk.Switch();

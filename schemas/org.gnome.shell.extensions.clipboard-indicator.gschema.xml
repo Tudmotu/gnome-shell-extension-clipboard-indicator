@@ -124,5 +124,12 @@
         Key to toggle the clipboard menu
       </description>
     </key>
+    <key name="toggle-private-mode" type="as">
+      <default><![CDATA[['<Ctrl>F8']]]></default>
+      <summary>Toggle private mode</summary>
+      <description>
+        Key to toggle private mode
+      </description>
+    </key>
   </schema>
 </schemalist>
