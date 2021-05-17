@@ -21,7 +21,8 @@ var Fields = {
     ENABLE_KEYBINDING  : 'enable-keybindings',
     TOPBAR_PREVIEW_SIZE: 'topbar-preview-size',
     TOPBAR_DISPLAY_MODE_ID    : 'display-mode',
-    STRIP_TEXT         : 'strip-text'
+    STRIP_TEXT         : 'strip-text',
+    PRIVATEMODE        : 'private-mode'
 };
 
 const SCHEMA_NAME = 'org.gnome.shell.extensions.clipboard-indicator';

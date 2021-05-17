@@ -10,6 +10,14 @@
         </description>
     </key>
 
+    <key name="private-mode" type="b">
+        <default>false</default>
+        <summary>Enable private mode</summary>
+        <description>
+            If true, the clipboard content does not get saved
+        </description>
+    </key>
+
     <key type="i" name="refresh-interval">
         <default>1000</default>
         <summary>The interval between updates in miliseconds</summary>

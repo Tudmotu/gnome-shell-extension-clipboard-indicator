@@ -625,6 +625,7 @@ const ClipboardIndicator = Lang.Class({
     _onPrivateModeSwitch: function() {
         let that = this;
         PRIVATEMODE = this.privateModeMenuItem.state;
+        this._settings.set_boolean(Prefs.Fields.PRIVATEMODE, PRIVATEMODE);
         // We hide the history in private ModeTypee because it will be out of sync (selected item will not reflect clipboard)
         this.scrollViewMenuSection.actor.visible = !PRIVATEMODE;
         this.scrollViewFavoritesMenuSection.actor.visible = !PRIVATEMODE;
@@ -671,6 +672,7 @@ const ClipboardIndicator = Lang.Class({
         MAX_TOPBAR_LENGTH    = this._settings.get_int(Prefs.Fields.TOPBAR_PREVIEW_SIZE);
         TOPBAR_DISPLAY_MODE  = this._settings.get_int(Prefs.Fields.TOPBAR_DISPLAY_MODE_ID);
         STRIP_TEXT           = this._settings.get_boolean(Prefs.Fields.STRIP_TEXT);
+        PRIVATEMODE          = this._settings.get_boolean(Prefs.Fields.PRIVATEMODE);
     },
 
     _onSettingsChange: function () {
@@ -678,6 +680,11 @@ const ClipboardIndicator = Lang.Class({
 
         // Load the settings into variables
         that._fetchSettings();
+
+        // check if private mode was toggled via gsettings
+        if (PRIVATEMODE != this.privateModeMenuItem.state) {
+            this._togglePrivatemode();
+        }
 
         // Remove old entries in case the registry size changed
         that._removeOldestEntries();
@@ -852,6 +859,7 @@ const ClipboardIndicator = Lang.Class({
 
     _togglePrivatemode: function() {
         this.privateModeMenuItem.toggle();
+        this._settings.set_boolean(Prefs.Fields.PRIVATEMODE, this.privateModeMenuItem.state);
         this._onPrivateModeSwitch();
     }
 });
