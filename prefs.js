@@ -23,7 +23,8 @@ var Fields = {
     TOPBAR_PREVIEW_SIZE    : 'topbar-preview-size',
     TOPBAR_DISPLAY_MODE_ID : 'display-mode',
     DISABLE_DOWN_ARROW     : 'disable-down-arrow',
-    STRIP_TEXT             : 'strip-text'
+    STRIP_TEXT             : 'strip-text',
+    SYNC_CLIPBOARDS        : 'sync-clipboards'
 };
 
 const SCHEMA_NAME = 'org.gnome.shell.extensions.clipboard-indicator';
@@ -104,6 +105,7 @@ const App = new Lang.Class({
         this.field_notification_toggle = new Gtk.Switch();
         this.field_confirm_clear_toggle = new Gtk.Switch();
         this.field_strip_text = new Gtk.Switch();
+        this.field_sync_clipboards = new Gtk.Switch();
         this.field_move_item_first = new Gtk.Switch();
         this.field_keybinding = createKeybindingWidget(SettingsSchema);
         addKeybinding(this.field_keybinding.model, SettingsSchema, "toggle-menu",
@@ -186,6 +188,11 @@ const App = new Lang.Class({
             hexpand: true,
             halign: Gtk.Align.START
         });
+        let syncClipboardsLabel = new Gtk.Label({
+            label: _("Synchronize selection and clipboard"),
+            hexpand: true,
+            halign: Gtk.Align.START
+        });
 
         const addRow = ((main) => {
             let row = 0;
@@ -220,6 +227,7 @@ const App = new Lang.Class({
         addRow(disableDownArrowLabel, this.field_disable_down_arrow);
         addRow(topbarPreviewLabel,    this.field_topbar_preview_size);
         addRow(stripTextLabel,        this.field_strip_text);
+        addRow(syncClipboardsLabel,   this.field_sync_clipboards);
         addRow(moveFirstLabel,        this.field_move_item_first);
         addRow(keybindingLabel,       this.field_keybinding_activation);
         addRow(null,                  this.field_keybinding);
@@ -236,6 +244,7 @@ const App = new Lang.Class({
         SettingsSchema.bind(Fields.DISABLE_DOWN_ARROW, this.field_disable_down_arrow, 'active', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.TOPBAR_PREVIEW_SIZE, this.field_topbar_preview_size, 'value', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.STRIP_TEXT, this.field_strip_text, 'active', Gio.SettingsBindFlags.DEFAULT);
+        SettingsSchema.bind(Fields.SYNC_CLIPBOARDS, this.field_sync_clipboards, 'active', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.ENABLE_KEYBINDING, this.field_keybinding_activation, 'active', Gio.SettingsBindFlags.DEFAULT);
     },
     _create_display_mode_options : function(){
