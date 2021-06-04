@@ -19,7 +19,8 @@ const Gettext = imports.gettext;
 const _ = Gettext.domain('clipboard-indicator').gettext;
 
 const Clipboard = St.Clipboard.get_default();
-const CLIPBOARD_TYPE = St.ClipboardType.CLIPBOARD;
+const CLIPBOARD_TYPE_PRIMARY = St.ClipboardType.PRIMARY;
+const CLIPBOARD_TYPE_CLIPBOARD = St.ClipboardType.CLIPBOARD;
 
 const SETTING_KEY_CLEAR_HISTORY = "clear-history";
 const SETTING_KEY_PREV_ENTRY = "prev-entry";
@@ -50,6 +51,7 @@ let MAX_TOPBAR_LENGTH    = 15;
 let TOPBAR_DISPLAY_MODE  = 1; //0 - only icon, 1 - only clipbord content, 2 - both
 let DISABLE_DOWN_ARROW   = false;
 let STRIP_TEXT           = false;
+let SYNC_CLIPBOARDS      = false;
 
 const ClipboardIndicator = Lang.Class({
     Name: 'ClipboardIndicator',
@@ -379,7 +381,7 @@ const ClipboardIndicator = Lang.Class({
         let itemIdx = this.clipItemsRadioGroup.indexOf(menuItem);
 
         if(event === 'delete' && menuItem.currentlySelected) {
-            Clipboard.set_text(CLIPBOARD_TYPE, "");
+            _setClipboardText("");
         }
 
         menuItem.destroy();
@@ -414,7 +416,7 @@ const ClipboardIndicator = Lang.Class({
                 that.setOrnament(PopupMenu.Ornament.DOT);
                 that.currentlySelected = true;
                 if (autoSet !== false)
-                    Clipboard.set_text(CLIPBOARD_TYPE, clipContents);
+                    _setClipboardText(clipContents);
             }
             else {
                 menuItem.setOrnament(PopupMenu.Ornament.NONE);
@@ -439,8 +441,9 @@ const ClipboardIndicator = Lang.Class({
             if (menuItem === that && clipContents) {
                 that.setOrnament(PopupMenu.Ornament.DOT);
                 that.currentlySelected = true;
-                if (autoSet !== false)
-                    Clipboard.set_text(CLIPBOARD_TYPE, clipContents);
+                if (autoSet !== false) {
+                    _setClipboardText(clipContents);
+                }
             }
             else {
                 menuItem.setOrnament(PopupMenu.Ornament.NONE);
@@ -476,17 +479,42 @@ const ClipboardIndicator = Lang.Class({
 
     _onSelectionChange (selection, selectionType, selectionSource) {
         if (selectionType === Meta.SelectionType.SELECTION_CLIPBOARD) {
-            this._refreshIndicator();
+            this._refreshIndicator(CLIPBOARD_TYPE_CLIPBOARD);
+        } else if ((selectionType === Meta.SelectionType.SELECTION_PRIMARY) && SYNC_CLIPBOARDS) {
+            this._refreshIndicator(CLIPBOARD_TYPE_PRIMARY);
         }
     },
 
-    _refreshIndicator: function () {
+    _refreshIndicator: function (clipBoardType) {
         if (PRIVATEMODE) return; // Private mode, do not.
 
         let that = this;
 
-        Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
+        Clipboard.get_text(clipBoardType, function (clipBoard, text) {
             that._processClipboardContent(text);
+
+            // Synchronize clipboard contents
+            if (SYNC_CLIPBOARDS) {
+                if (clipBoardType === CLIPBOARD_TYPE_CLIPBOARD) {
+                    Clipboard.get_text(CLIPBOARD_TYPE_PRIMARY, function (clipBoard2, text2) {
+                        if (STRIP_TEXT) {
+                            text = text.trim();
+                        }
+                        if (text.trim() !== text2.trim()) {
+                            Clipboard.set_text(CLIPBOARD_TYPE_PRIMARY, text);
+                        }
+                    });
+                } else if (clipBoardType === CLIPBOARD_TYPE_PRIMARY) {
+                    Clipboard.get_text(CLIPBOARD_TYPE_CLIPBOARD, function (clipBoard2, text2) {
+                        if (STRIP_TEXT) {
+                            text = text.trim();
+                        }
+                        if (text.trim() !== text2.trim()) {
+                            Clipboard.set_text(CLIPBOARD_TYPE_CLIPBOARD, text);
+                        }
+                    });
+                }
+            }
         });
     },
 
@@ -606,12 +634,12 @@ const ClipboardIndicator = Lang.Class({
         if (this.clipItemsRadioGroup.length >= 2) {
             let clipSecond = this.clipItemsRadioGroup.length - 2;
             let previousClip = this.clipItemsRadioGroup[clipSecond];
-            Clipboard.set_text(CLIPBOARD_TYPE, previousClip.clipContents);
+            _setClipboardText(previousClip.clipContents);
             previousClip.setOrnament(PopupMenu.Ornament.DOT);
             previousClip.icoBtn.visible = false;
             previousClip.currentlySelected = true;
         } else {
-            Clipboard.set_text(CLIPBOARD_TYPE, "");
+            _setClipboardText("");
         }
         let clipFirst = this.clipItemsRadioGroup.length - 1;
         this._removeEntry(this.clipItemsRadioGroup[clipFirst]);
@@ -661,14 +689,14 @@ const ClipboardIndicator = Lang.Class({
         // If we get out of private mode then we restore the clipboard to old state
         if (!PRIVATEMODE) {
             let selectList = this.clipItemsRadioGroup.filter((item) => !!item.currentlySelected);
-            Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
+            Clipboard.get_text(CLIPBOARD_TYPE_CLIPBOARD, function (clipBoard, text) {
                             that._updateButtonText(text);
                         });
             if (selectList.length) {
                 this._selectMenuItem(selectList[0]);
             } else {
                 // Nothing to return to, let's empty it instead
-                Clipboard.set_text(CLIPBOARD_TYPE, "");
+                _setClipboardText("");
             }
 
             this.icon.remove_style_class_name('private-mode');
@@ -703,6 +731,7 @@ const ClipboardIndicator = Lang.Class({
         TOPBAR_DISPLAY_MODE  = this._settings.get_int(Prefs.Fields.TOPBAR_DISPLAY_MODE_ID);
         DISABLE_DOWN_ARROW   = this._settings.get_boolean(Prefs.Fields.DISABLE_DOWN_ARROW);
         STRIP_TEXT           = this._settings.get_boolean(Prefs.Fields.STRIP_TEXT);
+        SYNC_CLIPBOARDS      = this._settings.get_boolean(Prefs.Fields.SYNC_CLIPBOARDS);
     },
 
     _onSettingsChange: function () {
@@ -722,7 +751,7 @@ const ClipboardIndicator = Lang.Class({
         //update topbar
         this._updateTopbarLayout();
         if(TOPBAR_DISPLAY_MODE === 1 || TOPBAR_DISPLAY_MODE === 2) {
-            Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
+            Clipboard.get_text(CLIPBOARD_TYPE_CLIPBOARD, function (clipBoard, text) {
                 that._updateButtonText(text);
             });
         }
@@ -887,6 +916,12 @@ const ClipboardIndicator = Lang.Class({
     }
 });
 
+function _setClipboardText (text) {
+    Clipboard.set_text(CLIPBOARD_TYPE_CLIPBOARD, text);
+    if (SYNC_CLIPBOARDS) {
+        Clipboard.set_text(CLIPBOARD_TYPE_PRIMARY, text);
+    }
+}
 
 function init () {
     let localeDir = Me.dir.get_child('locale');
