@@ -1,0 +1,139 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-04-15 13:20+0300\n"
+"PO-Revision-Date: 2021-07-07 17:43+0200\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2.1\n"
+"Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: nl\n"
+
+#: extension.js:87
+msgid "Text will be here"
+msgstr "Gekopieerde tekst wordt hier getoond"
+
+#: extension.js:129
+msgid "Type here to search..."
+msgstr "Typ om te zoeken…"
+
+#: extension.js:198
+msgid "Private mode"
+msgstr "Privémodus"
+
+#: extension.js:205 prefs.js:110
+msgid "Clear history"
+msgstr "Geschiedenis wissen"
+
+#: extension.js:210
+msgid "Settings"
+msgstr "Instellingen"
+
+#: extension.js:339
+msgid "Clear all?"
+msgstr "Alles wissen?"
+
+#: extension.js:340
+msgid "Are you sure you want to delete all clipboard items?"
+msgstr "Weet u zeker dat u alle klemborditems wilt wissen?"
+
+#: extension.js:341
+msgid "This operation cannot be undone."
+msgstr "Dit kan niet ongedaan worden gemaakt."
+
+#: extension.js:343
+msgid "Clear"
+msgstr "Wissen"
+
+#: extension.js:343 extension.js:495
+msgid "Cancel"
+msgstr "Annuleren"
+
+#: extension.js:357
+msgid "Clipboard history cleared"
+msgstr "De klembordgeschiedenis is gewist"
+
+#: extension.js:494
+msgid "Copied to clipboard"
+msgstr "Gekopieerd naar het klembord"
+
+#: prefs.js:108
+msgid "Toggle the menu"
+msgstr "Menu tonen/verbergen"
+
+#: prefs.js:112
+msgid "Previous entry"
+msgstr "Vorig item"
+
+#: prefs.js:114
+msgid "Next entry"
+msgstr "Volgend item"
+
+#: prefs.js:123
+msgid "History Size"
+msgstr "Geschiedenisomvang"
+
+#: prefs.js:128
+msgid "Refresh Interval (ms)"
+msgstr "Ververstussenpoos (in ms)"
+
+#: prefs.js:133
+msgid "Preview Size (characters)"
+msgstr "Voorvertoningsomvang (aantal tekens)"
+
+#: prefs.js:138
+msgid "Max cache file size (kb)"
+msgstr "Max. grootte van cachebestand (in kb)"
+
+#: prefs.js:143
+msgid "Cache only favorites"
+msgstr "Alleen favorieten bewaren in cache"
+
+#: prefs.js:148
+msgid "Show notification on copy"
+msgstr "Melding tonen na kopiëren"
+
+#: prefs.js:153
+msgid "Move item to the top after selection"
+msgstr "Item bovenaan de lijst zetten na aanklikken"
+
+#: prefs.js:158
+msgid "Keyboard shortcuts"
+msgstr "Sneltoetsen"
+
+#: prefs.js:163
+msgid "Number of characters in top bar"
+msgstr "Aantal tekens op bovenbalk"
+
+#: prefs.js:168
+msgid "What to show in top bar"
+msgstr "Tonen op bovenbalk:"
+
+#: prefs.js:173
+msgid "Remove down arrow in top bar"
+msgstr "Geen uitklappijl tonen op bovenbalk"
+
+#: prefs.js:178
+msgid "Remove whitespace around text"
+msgstr "Witruimte rondom tekst wissen"
+
+#: prefs.js:233
+msgid "Icon"
+msgstr "Pictogram"
+
+#: prefs.js:234
+msgid "Clipboard Content"
+msgstr "Klembordinhoud"
+
+#: prefs.js:235
+msgid "Both"
+msgstr "Beide"
