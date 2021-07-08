@@ -104,6 +104,13 @@
             If true, move items to the top of the list when it is selected.
         </description>
     </key>
+    <key name="sync-clipboards" type="b">
+      <default>false</default>
+      <summary>Synchronize contents of selection clipboard and normal clipboard</summary>
+      <description>
+        If true contents of the selection clipboard (PRIMARY) and normal clipboard will be synchronized.
+      </description>
+    </key>
 
     <key name="enable-keybindings" type="b">
       <default>true</default>
