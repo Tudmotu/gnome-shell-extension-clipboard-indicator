@@ -40,19 +40,19 @@ msgstr "Paramètres"
 
 #: extension.js:339
 msgid "Clear all?"
-msgstr ""
+msgstr "Tout effacer ?"
 
 #: extension.js:340
 msgid "Are you sure you want to delete all clipboard items?"
-msgstr ""
+msgstr "Etes-vous sûr de vouloir effacer tout effacer ?"
 
 #: extension.js:341
 msgid "This operation cannot be undone."
-msgstr ""
+msgstr "Cette action ne peut ëtre annulée."
 
 #: extension.js:343
 msgid "Clear"
-msgstr ""
+msgstr "Effacer"
 
 #: extension.js:343 extension.js:495
 msgid "Cancel"
