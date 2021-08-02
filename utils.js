@@ -14,7 +14,7 @@ const REGISTRY_FILE = 'registry.txt';
 const REGISTRY_PATH = REGISTRY_DIR + '/' + REGISTRY_FILE;
 const BACKUP_REGISTRY_PATH = REGISTRY_PATH + '~';
 
-function writerImage(buffer, name) {
+function writeImage(buffer, name) {
     const path = REGISTRY_DIR + '/' + name
 
     // Make sure dir exists
