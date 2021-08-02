@@ -37,7 +37,7 @@ const Prefs = Me.imports.prefs;
 const prettyPrint = Utils.prettyPrint;
 const writeRegistry = Utils.writeRegistry;
 const readRegistry = Utils.readRegistry;
-const writerImage = Utils.writerImage;
+const writeImage = Utils.writeImage;
 const getImage = Utils.getImage;
 const deleteImage = Utils.deleteImage;
 
@@ -513,18 +513,23 @@ const ClipboardIndicator = Lang.Class({
 
         let that = this;
 
-        Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
-            if (text === null && SAVE_IMAGE) {
-                Clipboard.get_content(CLIPBOARD_TYPE, SUPPORT_PNG ? 'image/png' : 'image/jpeg', function (clipboard, content) {
-                    that._processClipboardContent(content.get_data(), 'image', content.hash());
-                })
+        Clipboard.get_text(CLIPBOARD_TYPE, function (clipboard, text) {
+            if (text === null) {
+                if (SAVE_IMAGE) {
+                    Clipboard.get_content(CLIPBOARD_TYPE, SUPPORT_PNG ? 'image/png' : 'image/jpeg', function (clipboard, content) {
+                        that._processClipboardContent(content.get_data(), 'image', content.hash());
+                    });
+                }
+                else {
+                    // do nothing
+                }
             }
             else {
-                const itens = text.split('\n');
+                const items = text.split('\n');
                 let blockText = false;
                 let hasText = false;
 
-                itens.map((values) => {
+                items.map((values) => {
                     // Dolphin debugger
                     if (!values.length) return;
 
@@ -564,16 +569,21 @@ const ClipboardIndicator = Lang.Class({
     _processClipboardContent (byteContent, type, name) {
         const that = this;
         let content;
-        if (STRIP_TEXT && type === "text") {
-            content = byteContent.trim();
+        if (type === "text") {
+            if (!STRIP_TEXT) {
+                content = byteContent;
+            }
+            else {
+                content = byteContent.trim();
+            }
         }
         else {
-            content = writerImage(byteContent, name);
+            content = writeImage(byteContent, name);
         }
 
         if (content !== "" && content) {
             let registry = that.clipItemsRadioGroup.map(function (menuItem) {
-                return menuItem.clipContents
+                return menuItem.clipContents;
             });
 
             const itemIndex = registry.indexOf(content);
@@ -603,8 +613,8 @@ const ClipboardIndicator = Lang.Class({
     },
 
     _findItem: function (content, type) {
-            return this.clipItemsRadioGroup.filter(
-                item => item.clipContents === content)[0];
+        return this.clipItemsRadioGroup.filter(
+            item => item.clipContents === content)[0];
     },
 
     _getCurrentlySelectedItem () {
@@ -776,7 +786,7 @@ const ClipboardIndicator = Lang.Class({
         DISABLE_DOWN_ARROW   = this._settings.get_boolean(Prefs.Fields.DISABLE_DOWN_ARROW);
         STRIP_TEXT           = this._settings.get_boolean(Prefs.Fields.STRIP_TEXT);
         SAVE_IMAGE           = this._settings.get_boolean(Prefs.Fields.SAVE_IMAGE);
-        SUPPORT_PNG           = this._settings.get_boolean(Prefs.Fields.SUPPORT_PNG);
+        SUPPORT_PNG          = this._settings.get_boolean(Prefs.Fields.SUPPORT_PNG);
     },
 
     _onSettingsChange: function () {
