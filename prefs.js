@@ -142,7 +142,7 @@ const App = new Lang.Class({
             halign: Gtk.Align.START
         });
         let cacheDisableLabel  = new Gtk.Label({
-            label: _("Cache only favorites"),
+            label: _("Only save favorites"),
             hexpand: true,
             halign: Gtk.Align.START
         });
