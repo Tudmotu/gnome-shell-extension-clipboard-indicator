@@ -20,3 +20,7 @@ titled 'Clipboard Indicator', in the 'Extensions' screen and turn it 'On'.
 You may need to restart the shell (Alt+F2 and insert 'r' in the prompt) for the
 extension to be listed there.
 
+Alternatively, you can use `gnome-extensions` CLI to enable the extension::
+
+    $ gnome-extensions list | grep -i 'clipboard-indicator' | xargs gnome-extensions enable
+
