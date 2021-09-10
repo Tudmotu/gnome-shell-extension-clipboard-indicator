@@ -23,11 +23,11 @@ msgstr ""
 
 #: extension.js:87
 msgid "Text will be here"
-msgstr "文本将在此处"
+msgstr "文本将在此处显示"
 
 #: extension.js:129
 msgid "Type here to search..."
-msgstr "点击搜索…"
+msgstr "在此输入以搜索…"
 
 #: extension.js:198
 msgid "Private mode"
@@ -47,7 +47,7 @@ msgstr "清除所有记录吗？"
 
 #: extension.js:340
 msgid "Are you sure you want to delete all clipboard items?"
-msgstr "确定要删除所有剪贴板项目吗？"
+msgstr "确定要删除所有剪贴板条目吗？"
 
 #: extension.js:341
 msgid "This operation cannot be undone."
@@ -91,7 +91,7 @@ msgstr "刷新间隔（毫秒）"
 
 #: prefs.js:133
 msgid "Preview Size (characters)"
-msgstr "预览大小（字符数）"
+msgstr "预览长度"
 
 #: prefs.js:138
 msgid "Max cache file size (kb)"
@@ -142,4 +142,4 @@ msgid "Both"
 msgstr "全部"
 
 #~ msgid "Disable cache file"
-#~ msgstr "关闭文件缓存"
+#~ msgstr "禁用缓存文件"
