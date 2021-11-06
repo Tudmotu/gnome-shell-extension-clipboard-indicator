@@ -45,7 +45,7 @@ msgstr "Очистити все?"
 
 #: extension.js:340
 msgid "Are you sure you want to delete all clipboard items?"
-msgstr "Ви впевнені що хочете видалити всі елементи буферу обміну?"
+msgstr "Видалити всі елементи з буферу обміну?"
 
 #: extension.js:341
 msgid "This operation cannot be undone."
