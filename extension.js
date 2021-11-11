@@ -142,7 +142,7 @@ const ClipboardIndicator = Lang.Class({
 
             that.menu.addMenuItem(that._entryItem);
 
-            that.menu.connect('open-state-changed', Lang.bind(this, function(self, open){
+            that.menu.connect('open-state-changed', Lang.bind(this, function(_self, open){
                 let a = Mainloop.timeout_add(50, Lang.bind(this, function() {
                     if (open) {
                         that.searchEntry.set_text('');
@@ -474,7 +474,7 @@ const ClipboardIndicator = Lang.Class({
         }));
     },
 
-    _onSelectionChange (selection, selectionType, selectionSource) {
+    _onSelectionChange (_selection, selectionType, _selectionSource) {
         if (selectionType === Meta.SelectionType.SELECTION_CLIPBOARD) {
             this._refreshIndicator();
         }
@@ -485,7 +485,7 @@ const ClipboardIndicator = Lang.Class({
 
         let that = this;
 
-        Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
+        Clipboard.get_text(CLIPBOARD_TYPE, function (_clipBoard, text) {
             that._processClipboardContent(text);
         });
     },
@@ -538,7 +538,7 @@ const ClipboardIndicator = Lang.Class({
         return this.clipItemsRadioGroup.find(item => item.currentlySelected);
     },
 
-    _getAllIMenuItems: function (text) {
+    _getAllIMenuItems: function (_text) {
         return this.historySection._getMenuItems().concat(this.favoritesSection._getMenuItems());
     },
 
@@ -661,7 +661,7 @@ const ClipboardIndicator = Lang.Class({
         // If we get out of private mode then we restore the clipboard to old state
         if (!PRIVATEMODE) {
             let selectList = this.clipItemsRadioGroup.filter((item) => !!item.currentlySelected);
-            Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
+            Clipboard.get_text(CLIPBOARD_TYPE, function (_clipBoard, text) {
                             that._updateButtonText(text);
                         });
             if (selectList.length) {
@@ -722,7 +722,7 @@ const ClipboardIndicator = Lang.Class({
         //update topbar
         this._updateTopbarLayout();
         if(TOPBAR_DISPLAY_MODE === 1 || TOPBAR_DISPLAY_MODE === 2) {
-            Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
+            Clipboard.get_text(CLIPBOARD_TYPE, function (_clipBoard, text) {
                 that._updateButtonText(text);
             });
         }

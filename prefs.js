@@ -314,7 +314,7 @@ function createKeybindingWidget(SettingsSchema) {
     renderer.editable = true;
 
     renderer.connect("accel-edited",
-            function (renderer, path, key, mods, hwCode) {
+            function (_renderer, path, key, mods, _hwCode) {
                 let [ok, iter] = model.get_iter_from_string(path);
                 if(!ok)
                     return;
@@ -329,7 +329,7 @@ function createKeybindingWidget(SettingsSchema) {
             });
 
     renderer.connect("accel-cleared",
-            function (renderer, path) {
+            function (_renderer, path) {
                 let [ok, iter] = model.get_iter_from_string(path);
                 if(!ok)
                     return;
