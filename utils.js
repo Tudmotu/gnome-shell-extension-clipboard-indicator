@@ -14,6 +14,40 @@ const REGISTRY_FILE = 'registry.txt';
 const REGISTRY_PATH = REGISTRY_DIR + '/' + REGISTRY_FILE;
 const BACKUP_REGISTRY_PATH = REGISTRY_PATH + '~';
 
+function writeImage(buffer, name) {
+    const path = REGISTRY_DIR + '/' + name
+
+    // Make sure dir exists
+    GLib.mkdir_with_parents(REGISTRY_DIR, parseInt('0775', 8));
+
+    // Write imagem to file asynchronously
+    const file = Gio.file_new_for_path(path);
+
+    if (!file.query_exists(null)) {
+        file.create_async(Gio.FileCreateFlags.NONE, GLib.PRIORITY_DEFAULT, null, function (obj, res) {
+
+            const stream = obj.replace_finish(res);
+
+            stream.write_bytes_async(buffer, GLib.PRIORITY_DEFAULT, null, function (w_obj, w_res) {
+                w_obj.write_bytes_finish(w_res);
+                stream.close(null);
+            });
+        });
+    }
+
+    return path;
+}
+
+function getImage(path) {
+    const file = Gio.file_new_for_path(path);
+    return file.load_bytes(null)[0];
+}
+
+function deleteImage(path) {
+    const file = Gio.file_new_for_path(path);
+    return file.delete(null);
+}
+
 // Print objects... why no dev tools
 function prettyPrint (name, obj, recurse, _indent) {
     let prefix = '';

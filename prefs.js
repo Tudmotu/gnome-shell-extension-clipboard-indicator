@@ -23,7 +23,9 @@ var Fields = {
     TOPBAR_PREVIEW_SIZE    : 'topbar-preview-size',
     TOPBAR_DISPLAY_MODE_ID : 'display-mode',
     DISABLE_DOWN_ARROW     : 'disable-down-arrow',
-    STRIP_TEXT             : 'strip-text'
+    STRIP_TEXT             : 'strip-text',
+    SAVE_IMAGE             : 'save-image',
+    SUPPORT_PNG            : 'support-png'
 };
 
 const SCHEMA_NAME = 'org.gnome.shell.extensions.clipboard-indicator';
@@ -67,8 +69,8 @@ const App = new Lang.Class({
         });
         this.field_size = new Gtk.SpinButton({
             adjustment: new Gtk.Adjustment({
-                lower: 1,
-                upper: 200,
+                lower: 2,
+                upper: 2000,
                 step_increment: 1
             })
         });
@@ -105,6 +107,8 @@ const App = new Lang.Class({
         this.field_confirm_clear_toggle = new Gtk.Switch();
         this.field_strip_text = new Gtk.Switch();
         this.field_move_item_first = new Gtk.Switch();
+        this.field_support_image = new Gtk.Switch();
+        this.field_support_png_image = new Gtk.Switch();
         this.field_keybinding = createKeybindingWidget(SettingsSchema);
         addKeybinding(this.field_keybinding.model, SettingsSchema, "toggle-menu",
                       _("Toggle the menu"));
@@ -121,7 +125,7 @@ const App = new Lang.Class({
             that.field_keybinding.set_sensitive(widget.active);
         });
 
-        let sizeLabel     = new Gtk.Label({
+        let sizeLabel = new Gtk.Label({
             label: _("History Size"),
             hexpand: true,
             halign: Gtk.Align.START
@@ -186,6 +190,17 @@ const App = new Lang.Class({
             hexpand: true,
             halign: Gtk.Align.START
         });
+        let saveImageLabel = new Gtk.Label({
+            label: _("Save images on history"),
+            hexpand: true,
+            halign: Gtk.Align.START
+        });
+        // need while this MR is pending: https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1812
+        let pngImageLabel = new Gtk.Label({
+            label: _("Enable support for png images"),
+            hexpand: true,
+            halign: Gtk.Align.START
+        });
 
         const addRow = ((main) => {
             let row = 0;
@@ -220,6 +235,8 @@ const App = new Lang.Class({
         addRow(disableDownArrowLabel, this.field_disable_down_arrow);
         addRow(topbarPreviewLabel,    this.field_topbar_preview_size);
         addRow(stripTextLabel,        this.field_strip_text);
+        addRow(saveImageLabel,        this.field_support_image);
+        addRow(pngImageLabel,         this.field_support_png_image);
         addRow(moveFirstLabel,        this.field_move_item_first);
         addRow(keybindingLabel,       this.field_keybinding_activation);
         addRow(null,                  this.field_keybinding);
@@ -236,6 +253,8 @@ const App = new Lang.Class({
         SettingsSchema.bind(Fields.DISABLE_DOWN_ARROW, this.field_disable_down_arrow, 'active', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.TOPBAR_PREVIEW_SIZE, this.field_topbar_preview_size, 'value', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.STRIP_TEXT, this.field_strip_text, 'active', Gio.SettingsBindFlags.DEFAULT);
+        SettingsSchema.bind(Fields.SAVE_IMAGE, this.field_support_image, 'active', Gio.SettingsBindFlags.DEFAULT);
+        SettingsSchema.bind(Fields.SUPPORT_PNG, this.field_support_png_image, 'active', Gio.SettingsBindFlags.DEFAULT);
         SettingsSchema.bind(Fields.ENABLE_KEYBINDING, this.field_keybinding_activation, 'active', Gio.SettingsBindFlags.DEFAULT);
     },
     _create_display_mode_options : function(){

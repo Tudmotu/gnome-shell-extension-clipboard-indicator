@@ -1,6 +1,7 @@
 const Clutter    = imports.gi.Clutter;
 const Config     = imports.misc.config;
 const Gio        = imports.gi.Gio;
+const GLib       = imports.gi.GLib;
 const Lang       = imports.lang;
 const Mainloop   = imports.mainloop;
 const Meta       = imports.gi.Meta;
@@ -32,9 +33,13 @@ const Me = ExtensionUtils.getCurrentExtension();
 const Utils = Me.imports.utils;
 const ConfirmDialog = Me.imports.confirmDialog;
 const Prefs = Me.imports.prefs;
+
 const prettyPrint = Utils.prettyPrint;
 const writeRegistry = Utils.writeRegistry;
 const readRegistry = Utils.readRegistry;
+const writeImage = Utils.writeImage;
+const getImage = Utils.getImage;
+const deleteImage = Utils.deleteImage;
 
 let TIMEOUT_MS           = 1000;
 let MAX_REGISTRY_LENGTH  = 15;
@@ -50,6 +55,8 @@ let MAX_TOPBAR_LENGTH    = 15;
 let TOPBAR_DISPLAY_MODE  = 1; //0 - only icon, 1 - only clipbord content, 2 - both
 let DISABLE_DOWN_ARROW   = false;
 let STRIP_TEXT           = false;
+let SAVE_IMAGE           = false;
+let SUPPORT_PNG          = false;
 
 const ClipboardIndicator = Lang.Class({
     Name: 'ClipboardIndicator',
@@ -96,11 +103,10 @@ const ClipboardIndicator = Lang.Class({
         this._createHistoryLabel();
         this._loadSettings();
         this._buildMenu();
-
         this._updateTopbarLayout();
-
         this._setupListener();
     },
+
     _updateButtonText: function(content){
         if (!content || PRIVATEMODE){
             this._buttonText.set_text("...")
@@ -183,12 +189,8 @@ const ClipboardIndicator = Lang.Class({
 
             // Add cached items
             clipHistory.forEach(function (buffer) {
-                if (typeof buffer === 'string') {
-                    // Old cache format
-                    that._addEntry(buffer);
-                } else {
-                    that._addEntry(buffer["contents"], buffer["favorite"]);
-                }
+                const { contents, favorite, type } = buffer;
+                that._addEntry(contents, favorite, true, false, type);
             });
 
             // Add separator
@@ -233,6 +235,11 @@ const ClipboardIndicator = Lang.Class({
         }
         else {
             this._getAllIMenuItems().forEach(function(mItem){
+                // prevent broken menu on search
+                if (mItem.type === 'image') {
+                    mItem.actor.visible = false;
+                    return;
+                }
                 let text = mItem.clipContents.toLowerCase();
                 let isMatching = text.indexOf(searchedText) >= 0;
                 mItem.actor.visible = isMatching
@@ -243,28 +250,51 @@ const ClipboardIndicator = Lang.Class({
     _truncate: function(string, length) {
         let shortened = string.replace(/\s+/g, ' ');
 
-        if (shortened.length > length)
+        if (shortened.length > length) {
             shortened = shortened.substring(0,length-1) + '...';
+        }
 
         return shortened;
     },
 
     _setEntryLabel: function (menuItem) {
-        let buffer = menuItem.clipContents;
+        const buffer = menuItem.clipContents;
         menuItem.label.set_text(this._truncate(buffer, MAX_ENTRY_LENGTH));
     },
 
-    _addEntry: function (buffer, favorite, autoSelect, autoSetClip) {
+    _addEntry: function (buffer, favorite, autoSelect, autoSetClip, type, bufferBytes = false) {
         let menuItem = new PopupMenu.PopupMenuItem('');
+        if(type !== 'text') {
+            const icon = new St.Icon({
+                icon_size: 72,
+                style_class: 'imagem-icon'
+            });
+
+            icon.set_gicon(Gio.BytesIcon.new(bufferBytes === false ? getImage(buffer) : bufferBytes))
+
+            const icofavBtn = new St.Button({
+                style_class: 'ci-action-btn',
+                can_focus: true,
+                child: icon,
+                x_align: Clutter.ActorAlign.START,
+                x_expand: true,
+                y_expand: true
+            });
+
+            menuItem.actor.add_child(icofavBtn);
+            menuItem.icofavBtn = icofavBtn;
+        }
 
         menuItem.menu = this.menu;
         menuItem.clipContents = buffer;
         menuItem.clipFavorite = favorite;
+        menuItem.type = type;
         menuItem.radioGroup = this.clipItemsRadioGroup;
-        menuItem.buttonPressId = menuItem.connect('activate',
-            Lang.bind(menuItem, this._onMenuItemSelectedAndMenuClose));
+        menuItem.buttonPressId = menuItem.connect('activate', Lang.bind(menuItem, this._onMenuItemSelectedAndMenuClose));
 
-        this._setEntryLabel(menuItem);
+        if (type === "text") {
+            this._setEntryLabel(menuItem);
+        }
         this.clipItemsRadioGroup.push(menuItem);
 
 	// Favorite button
@@ -316,12 +346,14 @@ const ClipboardIndicator = Lang.Class({
 
         if (favorite) {
             this.favoritesSection.addMenuItem(menuItem, 0);
-        } else {
+        }
+        else {
             this.historySection.addMenuItem(menuItem, 0);
         }
 
-        if (autoSelect === true)
+        if (autoSelect === true) {
             this._selectMenuItem(menuItem, autoSetClip);
+        }
 
         if (TOPBAR_DISPLAY_MODE === 1 || TOPBAR_DISPLAY_MODE === 2) {
             this._updateButtonText(buffer);
@@ -333,10 +365,9 @@ const ClipboardIndicator = Lang.Class({
     _favoriteToggle: function (menuItem) {
         menuItem.clipFavorite = menuItem.clipFavorite ? false : true;
         this._moveItemFirst(menuItem);
-
         this._updateCache();
     },
-  
+
     _confirmRemoveAll: function () {
         const title = _("Clear all?");
         const message = _("Are you sure you want to delete all clipboard items?");
@@ -357,13 +388,15 @@ const ClipboardIndicator = Lang.Class({
         // Don't remove favorites here
         that.historySection._getMenuItems().forEach(function (mItem) {
             if (!mItem.currentlySelected) {
+                if (mItem.type === "image") deleteImage(mItem.clipContents);
                 let idx = that.clipItemsRadioGroup.indexOf(mItem);
                 mItem.destroy();
-                that.clipItemsRadioGroup.splice(idx, 1);
+                that.clipItemsRadioGroup.splice(idx,1);
             }
         });
         that._updateCache();
-        that._showNotification(_("Clipboard history cleared"));    },
+        that._showNotification(_("Clipboard history cleared"));
+    },
 
     _removeAll: function () {
         var that = this;
@@ -381,6 +414,8 @@ const ClipboardIndicator = Lang.Class({
         if(event === 'delete' && menuItem.currentlySelected) {
             Clipboard.set_text(CLIPBOARD_TYPE, "");
         }
+
+        if (event === 'delete' && menuItem.type === "image") deleteImage(menuItem.clipContents);
 
         menuItem.destroy();
         this.clipItemsRadioGroup.splice(itemIdx,1);
@@ -409,12 +444,18 @@ const ClipboardIndicator = Lang.Class({
         var that = this;
         that.radioGroup.forEach(function (menuItem) {
             let clipContents = that.clipContents;
-
+            const type = menuItem.type;
             if (menuItem === that && clipContents) {
                 that.setOrnament(PopupMenu.Ornament.DOT);
                 that.currentlySelected = true;
-                if (autoSet !== false)
-                    Clipboard.set_text(CLIPBOARD_TYPE, clipContents);
+                if (autoSet !== false) {
+                    if (type === "text") {
+                        Clipboard.set_text(CLIPBOARD_TYPE, clipContents);
+                    }
+                    else {
+                        Clipboard.set_content(CLIPBOARD_TYPE, SUPPORT_PNG ? "image/png" : "image/jpeg", getImage(clipContents));
+                    }
+                }
             }
             else {
                 menuItem.setOrnament(PopupMenu.Ornament.NONE);
@@ -435,12 +476,18 @@ const ClipboardIndicator = Lang.Class({
         var that = this;
         that.radioGroup.forEach(function (menuItem) {
             let clipContents = that.clipContents;
-
+            const type = that.type;
             if (menuItem === that && clipContents) {
                 that.setOrnament(PopupMenu.Ornament.DOT);
                 that.currentlySelected = true;
-                if (autoSet !== false)
-                    Clipboard.set_text(CLIPBOARD_TYPE, clipContents);
+                if (autoSet !== false) {
+                    if (type === "text") {
+                        Clipboard.set_text(CLIPBOARD_TYPE, clipContents);
+                    }
+                    else {
+                        Clipboard.set_content(CLIPBOARD_TYPE, SUPPORT_PNG ? "image/png" : "image/jpeg", getImage(clipContents));
+                    }
+                }
             }
             else {
                 menuItem.setOrnament(PopupMenu.Ornament.NONE);
@@ -458,9 +505,10 @@ const ClipboardIndicator = Lang.Class({
     _updateCache: function () {
         let registry = this.clipItemsRadioGroup.map(function (menuItem) {
             return {
-                      "contents" : menuItem.clipContents,
-                      "favorite" : menuItem.clipFavorite
-                   };
+                "contents" : menuItem.clipContents,
+                "favorite" : menuItem.clipFavorite,
+                "type" : menuItem.type
+            };
         });
 
         writeRegistry(registry.filter(function (menuItem) {
@@ -485,27 +533,82 @@ const ClipboardIndicator = Lang.Class({
 
         let that = this;
 
-        Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
-            that._processClipboardContent(text);
+        Clipboard.get_text(CLIPBOARD_TYPE, function (clipboard, text) {
+            if (text === null) {
+                if (SAVE_IMAGE) {
+                    Clipboard.get_content(CLIPBOARD_TYPE, SUPPORT_PNG ? 'image/png' : 'image/jpeg', function (clipboard, content) {
+                        that._processClipboardContent(content.get_data(), 'image', content.hash());
+                    });
+                }
+                else {
+                    // do nothing
+                }
+            }
+            else {
+                const items = text.split('\n');
+                let blockText = false;
+                let hasText = false;
+
+                items.map((values) => {
+                    // Dolphin debugger
+                    if (!values.length) return;
+
+                    // ebp === webp
+                    // vif === avif
+                    // peg === jpeg
+                    const support_image_type = ['png', 'jpg', 'peg', 'gif', 'ico', 'ebp', 'svg', 'vif'];
+                    const type = values.substring(values.length - 3);
+
+                    if (support_image_type.indexOf(type) !== -1) {
+                        // Dolphin return file:// + $PATH.
+                        const path = values.substring(0, 7) === 'file://' ? values.substring(7) : values;
+
+                        const file = Gio.file_new_for_path(path);
+                        if (!file.query_exists(null)) {
+                            hasText = true;
+                        }
+                        else {
+                            const bytes = file.load_bytes(null)[0]
+                            that._processClipboardContent(bytes, 'image', bytes.hash());
+                        }
+                    }
+                    else {
+                        hasText = true;
+                    }
+
+                    if (hasText && !blockText) {
+                        blockText = true
+                        that._processClipboardContent(text, "text");
+                    }
+                })
+            }
         });
     },
 
-    _processClipboardContent (text) {
+    // type most be image or text
+    _processClipboardContent (byteContent, type, name) {
         const that = this;
-
-        if (STRIP_TEXT) {
-            text = text.trim();
+        let content;
+        if (type === "text") {
+            if (!STRIP_TEXT) {
+                content = byteContent;
+            }
+            else {
+                content = byteContent.trim();
+            }
+        }
+        else {
+            content = writeImage(byteContent, name);
         }
 
-        if (text !== "" && text) {
+        if (content !== "" && content) {
             let registry = that.clipItemsRadioGroup.map(function (menuItem) {
                 return menuItem.clipContents;
             });
 
-            const itemIndex = registry.indexOf(text);
-
+            const itemIndex = registry.indexOf(content);
             if (itemIndex < 0) {
-                that._addEntry(text, false, true, false);
+                that._addEntry(content, false, true, false, type, type === "image" && byteContent);
                 that._removeOldestEntries();
                 if (NOTIFY_ON_COPY) {
                     that._showNotification(_("Copied to clipboard"), notif => {
@@ -514,24 +617,24 @@ const ClipboardIndicator = Lang.Class({
                 }
             }
             else if (itemIndex >= 0 && itemIndex < registry.length - 1) {
-                const item = that._findItem(text);
+                const item = that._findItem(content, type);
                 that._selectMenuItem(item, false);
 
                 if (!item.clipFavorite && MOVE_ITEM_FIRST) {
-                    that._moveItemFirst(item);
+                    that._moveItemFirst(item, type);
                 }
             }
         }
     },
 
-    _moveItemFirst: function (item) {
+    _moveItemFirst: function (item, type = null) {
         this._removeEntry(item);
-        this._addEntry(item.clipContents, item.clipFavorite, item.currentlySelected, false);
+        this._addEntry(item.clipContents, item.clipFavorite, item.currentlySelected, false, type ?? item.type);
     },
 
-    _findItem: function (text) {
+    _findItem: function (content, type) {
         return this.clipItemsRadioGroup.filter(
-            item => item.clipContents === text)[0];
+            item => item.clipContents === content)[0];
     },
 
     _getCurrentlySelectedItem () {
@@ -703,6 +806,8 @@ const ClipboardIndicator = Lang.Class({
         TOPBAR_DISPLAY_MODE  = this._settings.get_int(Prefs.Fields.TOPBAR_DISPLAY_MODE_ID);
         DISABLE_DOWN_ARROW   = this._settings.get_boolean(Prefs.Fields.DISABLE_DOWN_ARROW);
         STRIP_TEXT           = this._settings.get_boolean(Prefs.Fields.STRIP_TEXT);
+        SAVE_IMAGE           = this._settings.get_boolean(Prefs.Fields.SAVE_IMAGE);
+        SUPPORT_PNG          = this._settings.get_boolean(Prefs.Fields.SUPPORT_PNG);
     },
 
     _onSettingsChange: function () {
@@ -716,7 +821,7 @@ const ClipboardIndicator = Lang.Class({
 
         // Re-set menu-items lables in case preview size changed
         this._getAllIMenuItems().forEach(function (mItem) {
-            that._setEntryLabel(mItem);
+            if (mItem.type === "text") that._setEntryLabel(mItem);
         });
 
         //update topbar
