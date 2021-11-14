@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-04-15 13:20+0300\n"
-"PO-Revision-Date: 2018-05-14 15:47+0900\n"
-"Last-Translator: AKIRA <hase.a1995@gmail.com>\n"
+"PO-Revision-Date: 2021-08-27 16:24+0900\n"
+"Last-Translator: nexryai <nexryai@outlook.com>\n"
 "Language-Team: \n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 3.0\n"
 "X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Poedit-SearchPath-0: prefs.js\n"
@@ -43,23 +43,23 @@ msgstr "設定"
 
 #: extension.js:339
 msgid "Clear all?"
-msgstr ""
+msgstr "全消去しますか？"
 
 #: extension.js:340
 msgid "Are you sure you want to delete all clipboard items?"
-msgstr ""
+msgstr "クリップボードの履歴を全て削除してよろしいですか？"
 
 #: extension.js:341
 msgid "This operation cannot be undone."
-msgstr ""
+msgstr "この操作を元に戻すことはできません。"
 
 #: extension.js:343
 msgid "Clear"
-msgstr ""
+msgstr "クリア"
 
 #: extension.js:343 extension.js:495
 msgid "Cancel"
-msgstr ""
+msgstr "キャンセル"
 
 #: extension.js:357
 msgid "Clipboard history cleared"
@@ -99,7 +99,7 @@ msgstr "最大キャッシュサイズ（KB）"
 
 #: prefs.js:143
 msgid "Cache only favorites"
-msgstr ""
+msgstr "お気に入りのみをキャッシュ"
 
 #: prefs.js:148
 msgid "Show notification on copy"
@@ -107,7 +107,7 @@ msgstr "コピー時に通知を表示する"
 
 #: prefs.js:153
 msgid "Move item to the top after selection"
-msgstr ""
+msgstr "選択後にアイテムをトップに移動"
 
 #: prefs.js:158
 msgid "Keyboard shortcuts"
@@ -115,24 +115,19 @@ msgstr "キーボードショートカット"
 
 #: prefs.js:163
 msgid "Number of characters in top bar"
-msgstr ""
-"トップバーの単語数\n"
-"\t"
+msgstr "トップバーの単語数"
 
 #: prefs.js:168
 msgid "What to show in top bar"
 msgstr "表示内容"
 
 #: prefs.js:173
-#, fuzzy
 msgid "Remove down arrow in top bar"
-msgstr ""
-"トップバーの単語数\n"
-"\t"
+msgstr "トップバーの単語数"
 
 #: prefs.js:178
 msgid "Remove whitespace around text"
-msgstr ""
+msgstr "テキスト周りのホワイトスペースを削除する"
 
 #: prefs.js:233
 msgid "Icon"

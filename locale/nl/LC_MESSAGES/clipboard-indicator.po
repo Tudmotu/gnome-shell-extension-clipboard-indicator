@@ -8,136 +8,132 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-04-15 13:20+0300\n"
-"PO-Revision-Date: 2020-05-04 11:15+0200\n"
-"Last-Translator: Raphael Rochet <raphael@rri.fr>\n"
+"PO-Revision-Date: 2021-07-07 17:43+0200\n"
 "Language-Team: \n"
-"Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.3\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.2.1\n"
+"Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: nl\n"
 
 #: extension.js:87
 msgid "Text will be here"
-msgstr "(Vide)"
+msgstr "Gekopieerde tekst wordt hier getoond"
 
 #: extension.js:129
 msgid "Type here to search..."
-msgstr "Tapez ici pour chercher ..."
+msgstr "Typ om te zoeken…"
 
 #: extension.js:198
 msgid "Private mode"
-msgstr "Mode privé"
+msgstr "Privémodus"
 
 #: extension.js:205 prefs.js:110
 msgid "Clear history"
-msgstr "Vider l'historique"
+msgstr "Geschiedenis wissen"
 
 #: extension.js:210
 msgid "Settings"
-msgstr "Paramètres"
+msgstr "Instellingen"
 
 #: extension.js:339
 msgid "Clear all?"
-msgstr "Tout effacer ?"
+msgstr "Alles wissen?"
 
 #: extension.js:340
 msgid "Are you sure you want to delete all clipboard items?"
-msgstr "Etes-vous sûr de vouloir effacer tout effacer ?"
+msgstr "Weet u zeker dat u alle klemborditems wilt wissen?"
 
 #: extension.js:341
 msgid "This operation cannot be undone."
-msgstr "Cette action ne peut ëtre annulée."
+msgstr "Dit kan niet ongedaan worden gemaakt."
 
 #: extension.js:343
 msgid "Clear"
-msgstr "Effacer"
+msgstr "Wissen"
 
 #: extension.js:343 extension.js:495
 msgid "Cancel"
-msgstr "Annuler"
+msgstr "Annuleren"
 
 #: extension.js:357
 msgid "Clipboard history cleared"
-msgstr "Historique vidé"
+msgstr "De klembordgeschiedenis is gewist"
 
 #: extension.js:494
 msgid "Copied to clipboard"
-msgstr "Copié dans le presse-papier"
+msgstr "Gekopieerd naar het klembord"
 
 #: prefs.js:108
 msgid "Toggle the menu"
-msgstr "Afficher/cacher le menu"
+msgstr "Menu tonen/verbergen"
 
 #: prefs.js:112
 msgid "Previous entry"
-msgstr "Entrée précédente"
+msgstr "Vorig item"
 
 #: prefs.js:114
 msgid "Next entry"
-msgstr "Entrée suivante"
+msgstr "Volgend item"
 
 #: prefs.js:123
 msgid "History Size"
-msgstr "Taille de l'historique"
+msgstr "Geschiedenisomvang"
 
 #: prefs.js:128
 msgid "Refresh Interval (ms)"
-msgstr "Intervalle d'actualisation (ms)"
+msgstr "Ververstussenpoos (in ms)"
 
 #: prefs.js:133
 msgid "Preview Size (characters)"
-msgstr "Longueur de l'aperçu (caractères)"
+msgstr "Voorvertoningsomvang (aantal tekens)"
 
 #: prefs.js:138
 msgid "Max cache file size (kb)"
-msgstr "Taille max du cache (Kio)"
+msgstr "Max. grootte van cachebestand (in kb)"
 
 #: prefs.js:143
 msgid "Cache only favorites"
-msgstr "Ne mémoriser que les favoris"
+msgstr "Alleen favorieten bewaren in cache"
 
 #: prefs.js:148
 msgid "Show notification on copy"
-msgstr "Afficher une notification à chaque copie"
+msgstr "Melding tonen na kopiëren"
 
 #: prefs.js:153
 msgid "Move item to the top after selection"
-msgstr "Déplacer l'élément sélectionné en haut"
+msgstr "Item bovenaan de lijst zetten na aanklikken"
 
 #: prefs.js:158
 msgid "Keyboard shortcuts"
-msgstr "Raccourcis clavier"
+msgstr "Sneltoetsen"
 
 #: prefs.js:163
 msgid "Number of characters in top bar"
-msgstr "Nombre de caractères dans le panneau"
+msgstr "Aantal tekens op bovenbalk"
 
 #: prefs.js:168
 msgid "What to show in top bar"
-msgstr "Afficher dans le panneau"
+msgstr "Tonen op bovenbalk:"
 
 #: prefs.js:173
-#, fuzzy
 msgid "Remove down arrow in top bar"
-msgstr "Nombre de caractères dans le panneau"
+msgstr "Geen uitklappijl tonen op bovenbalk"
 
 #: prefs.js:178
 msgid "Remove whitespace around text"
-msgstr "Supprimer les espaces autour du texte"
+msgstr "Witruimte rondom tekst wissen"
 
 #: prefs.js:233
 msgid "Icon"
-msgstr "Icône"
+msgstr "Pictogram"
 
 #: prefs.js:234
 msgid "Clipboard Content"
-msgstr "Contenu"
+msgstr "Klembordinhoud"
 
 #: prefs.js:235
 msgid "Both"
-msgstr "Les deux"
-
-#~ msgid "Enable Deletion"
-#~ msgstr "Activer la suppression"
+msgstr "Beide"
