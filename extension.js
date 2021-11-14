@@ -236,7 +236,7 @@ const ClipboardIndicator = Lang.Class({
         else {
             this._getAllIMenuItems().forEach(function(mItem){
                 // prevent broken menu on search
-                if (mItem.type === 'image') {
+                if (getMenuItemType(mItem) === 'IMAGE') {
                     mItem.actor.visible = false;
                     return;
                 }
@@ -264,7 +264,7 @@ const ClipboardIndicator = Lang.Class({
 
     _addEntry: function (buffer, favorite, autoSelect, autoSetClip, type, bufferBytes = false) {
         let menuItem = new PopupMenu.PopupMenuItem('');
-        if(type !== 'text') {
+        if(type === 'image') {
             const icon = new St.Icon({
                 icon_size: 72,
                 style_class: 'imagem-icon'
@@ -292,7 +292,7 @@ const ClipboardIndicator = Lang.Class({
         menuItem.radioGroup = this.clipItemsRadioGroup;
         menuItem.buttonPressId = menuItem.connect('activate', Lang.bind(menuItem, this._onMenuItemSelectedAndMenuClose));
 
-        if (type === "text") {
+        if (type === undefined || type === "text") {
             this._setEntryLabel(menuItem);
         }
         this.clipItemsRadioGroup.push(menuItem);
@@ -388,7 +388,7 @@ const ClipboardIndicator = Lang.Class({
         // Don't remove favorites here
         that.historySection._getMenuItems().forEach(function (mItem) {
             if (!mItem.currentlySelected) {
-                if (mItem.type === "image") deleteImage(mItem.clipContents);
+                if (getMenuItemType(mItem) === "IMAGE") deleteImage(mItem.clipContents);
                 let idx = that.clipItemsRadioGroup.indexOf(mItem);
                 mItem.destroy();
                 that.clipItemsRadioGroup.splice(idx,1);
@@ -415,7 +415,7 @@ const ClipboardIndicator = Lang.Class({
             Clipboard.set_text(CLIPBOARD_TYPE, "");
         }
 
-        if (event === 'delete' && menuItem.type === "image") deleteImage(menuItem.clipContents);
+        if (event === 'delete' && getMenuItemType(menuItem) === "IMAGE") deleteImage(menuItem.clipContents);
 
         menuItem.destroy();
         this.clipItemsRadioGroup.splice(itemIdx,1);
@@ -449,10 +449,10 @@ const ClipboardIndicator = Lang.Class({
                 that.setOrnament(PopupMenu.Ornament.DOT);
                 that.currentlySelected = true;
                 if (autoSet !== false) {
-                    if (type === "text") {
+                    if (getMenuItemType(menuItem) === 'TEXT') {
                         Clipboard.set_text(CLIPBOARD_TYPE, clipContents);
                     }
-                    else {
+                    else if (getMenuItemType(menuItem) === 'IMAGE') {
                         Clipboard.set_content(CLIPBOARD_TYPE, SUPPORT_PNG ? "image/png" : "image/jpeg", getImage(clipContents));
                     }
                 }
@@ -476,12 +476,11 @@ const ClipboardIndicator = Lang.Class({
         var that = this;
         that.radioGroup.forEach(function (menuItem) {
             let clipContents = that.clipContents;
-            const type = that.type;
             if (menuItem === that && clipContents) {
                 that.setOrnament(PopupMenu.Ornament.DOT);
                 that.currentlySelected = true;
                 if (autoSet !== false) {
-                    if (type === "text") {
+                    if (getMenuItemType(that) === "TEXT") {
                         Clipboard.set_text(CLIPBOARD_TYPE, clipContents);
                     }
                     else {
@@ -821,7 +820,7 @@ const ClipboardIndicator = Lang.Class({
 
         // Re-set menu-items lables in case preview size changed
         this._getAllIMenuItems().forEach(function (mItem) {
-            if (mItem.type === "text") that._setEntryLabel(mItem);
+            if (getMenuItemType(mItem) === "TEXT") that._setEntryLabel(mItem);
         });
 
         //update topbar
@@ -992,6 +991,19 @@ const ClipboardIndicator = Lang.Class({
     }
 });
 
+function getMenuItemType (menuItem) {
+    const { type } = menuItem;
+
+    if (type === undefined || type === 'text') {
+        return 'TEXT';
+    }
+
+    if (type === 'image') {
+        return 'IMAGE';
+    }
+
+    return null;
+}
 
 function init () {
     let localeDir = Me.dir.get_child('locale');
