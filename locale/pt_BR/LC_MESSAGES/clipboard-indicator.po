@@ -43,23 +43,23 @@ msgstr "Configurações"
 
 #: extension.js:339
 msgid "Clear all?"
-msgstr ""
+msgstr "Deseja limpar tudo?"
 
 #: extension.js:340
 msgid "Are you sure you want to delete all clipboard items?"
-msgstr ""
+msgstr "Tem certeza de que deseja excluir todos os itens da área de transferência?"
 
 #: extension.js:341
 msgid "This operation cannot be undone."
-msgstr ""
+msgstr "Esta operação não pode ser desfeita"
 
 #: extension.js:343
 msgid "Clear"
-msgstr ""
+msgstr "Limpar"
 
 #: extension.js:343 extension.js:495
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #: extension.js:357
 msgid "Clipboard history cleared"
@@ -99,7 +99,7 @@ msgstr "Tamanho máximo do arquivo de cache (kb)"
 
 #: prefs.js:143
 msgid "Cache only favorites"
-msgstr ""
+msgstr "Manter cache apenas de favoritos"
 
 #: prefs.js:148
 msgid "Show notification on copy"
@@ -107,7 +107,7 @@ msgstr "Mostrar notificação sobre cópia"
 
 #: prefs.js:153
 msgid "Move item to the top after selection"
-msgstr ""
+msgstr "Mover o item para o topo após a seleção"
 
 #: prefs.js:158
 msgid "Keyboard shortcuts"
@@ -128,19 +128,19 @@ msgstr "Número de caracteres na barra superior"
 
 #: prefs.js:178
 msgid "Remove whitespace around text"
-msgstr ""
+msgstr "Remover os espaços em branco ao redor do texto"
 
 #: prefs.js:233
 msgid "Icon"
-msgstr ""
+msgstr "Ícone"
 
 #: prefs.js:234
 msgid "Clipboard Content"
-msgstr ""
+msgstr "Conteúdo da área de transferência"
 
 #: prefs.js:235
 msgid "Both"
-msgstr ""
+msgstr "Ambos"
 
 #~ msgid "Disable cache file"
 #~ msgstr "Desabilitar arquivo de cache"
