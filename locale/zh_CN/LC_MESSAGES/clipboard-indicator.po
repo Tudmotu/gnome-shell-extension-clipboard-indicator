@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-04-15 13:20+0300\n"
-"PO-Revision-Date: 2018-09-06 15:42+0800\n"
-"Last-Translator: Zhang WenChao <zhangwenchao001@gmail.com>\n"
+"PO-Revision-Date: 2021-04-18 14:22+0800\n"
+"Last-Translator: WhiredPlanck\n"
 "Language-Team: \n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.4\n"
+"X-Generator: Poedit 2.4.1\n"
 "X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Poedit-SearchPath-0: prefs.js\n"
@@ -23,11 +23,11 @@ msgstr ""
 
 #: extension.js:87
 msgid "Text will be here"
-msgstr "文本将在此处"
+msgstr "文本将在此处显示"
 
 #: extension.js:129
 msgid "Type here to search..."
-msgstr "点击搜索…"
+msgstr "在此输入以搜索…"
 
 #: extension.js:198
 msgid "Private mode"
@@ -43,23 +43,23 @@ msgstr "设置"
 
 #: extension.js:339
 msgid "Clear all?"
-msgstr ""
+msgstr "清除所有记录吗？"
 
 #: extension.js:340
 msgid "Are you sure you want to delete all clipboard items?"
-msgstr ""
+msgstr "确定要删除所有剪贴板条目吗？"
 
 #: extension.js:341
 msgid "This operation cannot be undone."
-msgstr ""
+msgstr "此操作不可撤销。"
 
 #: extension.js:343
 msgid "Clear"
-msgstr ""
+msgstr "清除"
 
 #: extension.js:343 extension.js:495
 msgid "Cancel"
-msgstr ""
+msgstr "取消"
 
 #: extension.js:357
 msgid "Clipboard history cleared"
@@ -91,7 +91,7 @@ msgstr "刷新间隔（毫秒）"
 
 #: prefs.js:133
 msgid "Preview Size (characters)"
-msgstr "预览大小（字符）"
+msgstr "预览长度"
 
 #: prefs.js:138
 msgid "Max cache file size (kb)"
@@ -99,7 +99,7 @@ msgstr "最大缓存文件大小（kb）"
 
 #: prefs.js:143
 msgid "Cache only favorites"
-msgstr ""
+msgstr "仅缓存收藏条目"
 
 #: prefs.js:148
 msgid "Show notification on copy"
@@ -107,7 +107,7 @@ msgstr "复制时显示通知"
 
 #: prefs.js:153
 msgid "Move item to the top after selection"
-msgstr ""
+msgstr "选择后将项目移到顶部"
 
 #: prefs.js:158
 msgid "Keyboard shortcuts"
@@ -119,16 +119,15 @@ msgstr "顶栏显示的字符数量"
 
 #: prefs.js:168
 msgid "What to show in top bar"
-msgstr "如何在顶栏显示"
+msgstr "在顶栏中的显示方式"
 
 #: prefs.js:173
-#, fuzzy
 msgid "Remove down arrow in top bar"
-msgstr "顶栏显示的字符数量"
+msgstr "移除顶栏中的下拉箭头"
 
 #: prefs.js:178
 msgid "Remove whitespace around text"
-msgstr ""
+msgstr "移除文字周围的空白字符"
 
 #: prefs.js:233
 msgid "Icon"
@@ -143,4 +142,4 @@ msgid "Both"
 msgstr "全部"
 
 #~ msgid "Disable cache file"
-#~ msgstr "关闭文件缓存"
+#~ msgstr "禁用缓存文件"
