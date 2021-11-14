@@ -14,7 +14,7 @@ Installation via git is performed by cloning the repo into your local gnome-shel
 
     $ git clone https://github.com/Tudmotu/gnome-shell-extension-clipboard-indicator.git <extensions-dir>/clipboard-indicator@tudmotu.com
 
-After cloning the repo, the extension is practically installed yet disabled. In order to enable it, run the following command:
+After cloning the repo, the extension is practically installed yet disabled. In order to enable it, run the following command::
 
     $ gnome-extensions enable clipboard-indicator@tudmotu.com
 
