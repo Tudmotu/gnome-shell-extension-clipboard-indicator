@@ -1,19 +1,16 @@
 const Clutter = imports.gi.Clutter;
 const Config = imports.misc.config;
-const Gio = imports.gi.Gio;
 const Lang = imports.lang;
 const Mainloop = imports.mainloop;
 const Meta = imports.gi.Meta;
 const Shell = imports.gi.Shell;
 const St = imports.gi.St;
-const PolicyType = imports.gi.Gtk.PolicyType;
 const Util = imports.misc.util;
 const MessageTray = imports.ui.messageTray;
 
 const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
-const CheckBox = imports.ui.checkBox.CheckBox;
 
 const Gettext = imports.gettext;
 const _ = Gettext.domain('clipboard-indicator').gettext;
@@ -32,7 +29,6 @@ const Me = ExtensionUtils.getCurrentExtension();
 const Utils = Me.imports.utils;
 const ConfirmDialog = Me.imports.confirmDialog;
 const Prefs = Me.imports.prefs;
-const prettyPrint = Utils.prettyPrint;
 const writeRegistry = Utils.writeRegistry;
 const readRegistry = Utils.readRegistry;
 
@@ -279,6 +275,7 @@ const ClipboardIndicator = Lang.Class({
       'activate',
       Lang.bind(menuItem, this._onMenuItemSelectedAndMenuClose),
     );
+    menuItem._onMenuItemSelected = this._onMenuItemSelected;
 
     this._setEntryLabel(menuItem);
     this.clipItemsRadioGroup.push(menuItem);
@@ -350,7 +347,7 @@ const ClipboardIndicator = Lang.Class({
   },
 
   _favoriteToggle: function (menuItem) {
-    menuItem.clipFavorite = menuItem.clipFavorite ? false : true;
+    menuItem.clipFavorite = !menuItem.clipFavorite;
     this._moveItemFirst(menuItem);
 
     this._updateCache();
@@ -460,23 +457,8 @@ const ClipboardIndicator = Lang.Class({
   },
 
   _onMenuItemSelectedAndMenuClose: function (autoSet) {
-    var that = this;
-    that.radioGroup.forEach(function (menuItem) {
-      let clipContents = that.clipContents;
-
-      if (menuItem === that && clipContents) {
-        that.setOrnament(PopupMenu.Ornament.DOT);
-        that.currentlySelected = true;
-        if (autoSet !== false) {
-          Clipboard.set_text(CLIPBOARD_TYPE, clipContents);
-        }
-      } else {
-        menuItem.setOrnament(PopupMenu.Ornament.NONE);
-        menuItem.currentlySelected = false;
-      }
-    });
-
-    that.menu.close();
+    this._onMenuItemSelected(autoSet);
+    this.menu.close();
   },
 
   _getCache: function (cb) {
@@ -570,10 +552,6 @@ const ClipboardIndicator = Lang.Class({
     return this.clipItemsRadioGroup.filter(
       (item) => item.clipContents === text,
     )[0];
-  },
-
-  _getCurrentlySelectedItem() {
-    return this.clipItemsRadioGroup.find((item) => item.currentlySelected);
   },
 
   _getAllIMenuItems: function (text) {
@@ -840,11 +818,7 @@ const ClipboardIndicator = Lang.Class({
       this.icon.visible = true;
       this._buttonText.visible = true;
     }
-    if (!DISABLE_DOWN_ARROW) {
-      this._downArrow.visible = true;
-    } else {
-      this._downArrow.visible = false;
-    }
+    this._downArrow.visible = !DISABLE_DOWN_ARROW;
   },
 
   _disconnectSettings: function () {
@@ -961,7 +935,7 @@ const ClipboardIndicator = Lang.Class({
 });
 
 function init() {
-  let localeDir = Me.dir.get_child('locale');
+  const localeDir = Me.dir.get_child('locale');
   Gettext.bindtextdomain('clipboard-indicator', localeDir.get_path());
 }
 
