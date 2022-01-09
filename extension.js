@@ -76,7 +76,7 @@ const ClipboardIndicator = Lang.Class({
     this._shortcutsBindingIds = [];
     this.clipItemsRadioGroup = [];
 
-    let hbox = new St.BoxLayout({
+    const hbox = new St.BoxLayout({
       style_class: 'panel-status-menu-box clipboard-indicator-hbox',
     });
     this.icon = new St.Icon({
@@ -110,10 +110,10 @@ const ClipboardIndicator = Lang.Class({
   },
 
   _buildMenu: function () {
-    let that = this;
+    const that = this;
     this._getCache(function (clipHistory) {
-      let lastIdx = clipHistory.length - 1;
-      let clipItemsArr = that.clipItemsRadioGroup;
+      const lastIdx = clipHistory.length - 1;
+      const clipItemsArr = that.clipItemsRadioGroup;
 
       /* This create the search entry, which is add to a menuItem.
             The searchEntry is connected to the function for research.
@@ -144,7 +144,7 @@ const ClipboardIndicator = Lang.Class({
       that.menu.connect(
         'open-state-changed',
         Lang.bind(this, function (self, open) {
-          let a = Mainloop.timeout_add(
+          const a = Mainloop.timeout_add(
             50,
             Lang.bind(this, function () {
               if (open) {
@@ -162,7 +162,7 @@ const ClipboardIndicator = Lang.Class({
       that.favoritesSection = new PopupMenu.PopupMenuSection();
 
       that.scrollViewFavoritesMenuSection = new PopupMenu.PopupMenuSection();
-      let favoritesScrollView = new St.ScrollView({
+      const favoritesScrollView = new St.ScrollView({
         style_class: 'ci-history-menu-section',
         overlay_scrollbars: true,
       });
@@ -176,7 +176,7 @@ const ClipboardIndicator = Lang.Class({
       that.historySection = new PopupMenu.PopupMenuSection();
 
       that.scrollViewMenuSection = new PopupMenu.PopupMenuSection();
-      let historyScrollView = new St.ScrollView({
+      const historyScrollView = new St.ScrollView({
         style_class: 'ci-history-menu-section',
         overlay_scrollbars: true,
       });
@@ -213,12 +213,12 @@ const ClipboardIndicator = Lang.Class({
       that._onPrivateModeSwitch();
 
       // Add 'Clear' button which removes all items from cache
-      let clearMenuItem = new PopupMenu.PopupMenuItem(_('Clear history'));
+      const clearMenuItem = new PopupMenu.PopupMenuItem(_('Clear history'));
       that.menu.addMenuItem(clearMenuItem);
       clearMenuItem.connect('activate', Lang.bind(that, that._removeAll));
 
       // Add 'Settings' menu item to open settings
-      let settingsMenuItem = new PopupMenu.PopupMenuItem(_('Settings'));
+      const settingsMenuItem = new PopupMenu.PopupMenuItem(_('Settings'));
       that.menu.addMenuItem(settingsMenuItem);
       settingsMenuItem.connect('activate', Lang.bind(that, that._openSettings));
 
@@ -234,7 +234,7 @@ const ClipboardIndicator = Lang.Class({
     items. It the entry is empty, the section is restored with all items
     set as visible. */
   _onSearchTextChanged: function () {
-    let searchedText = this.searchEntry.get_text().toLowerCase();
+    const searchedText = this.searchEntry.get_text().toLowerCase();
 
     if (searchedText === '') {
       this._getAllIMenuItems().forEach(function (mItem) {
@@ -242,8 +242,8 @@ const ClipboardIndicator = Lang.Class({
       });
     } else {
       this._getAllIMenuItems().forEach(function (mItem) {
-        let text = mItem.clipContents.toLowerCase();
-        let isMatching = text.indexOf(searchedText) >= 0;
+        const text = mItem.clipContents.toLowerCase();
+        const isMatching = text.indexOf(searchedText) >= 0;
         mItem.actor.visible = isMatching;
       });
     }
@@ -260,12 +260,12 @@ const ClipboardIndicator = Lang.Class({
   },
 
   _setEntryLabel: function (menuItem) {
-    let buffer = menuItem.clipContents;
+    const buffer = menuItem.clipContents;
     menuItem.label.set_text(this._truncate(buffer, MAX_ENTRY_LENGTH));
   },
 
   _addEntry: function (buffer, favorite, autoSelect, autoSetClip) {
-    let menuItem = new PopupMenu.PopupMenuItem('');
+    const menuItem = new PopupMenu.PopupMenuItem('');
 
     menuItem.menu = this.menu;
     menuItem.clipContents = buffer;
@@ -281,13 +281,13 @@ const ClipboardIndicator = Lang.Class({
     this.clipItemsRadioGroup.push(menuItem);
 
     // Favorite button
-    let icon_name = favorite ? 'starred-symbolic' : 'non-starred-symbolic';
-    let iconfav = new St.Icon({
+    const icon_name = favorite ? 'starred-symbolic' : 'non-starred-symbolic';
+    const iconfav = new St.Icon({
       icon_name: icon_name,
       style_class: 'system-status-icon',
     });
 
-    let icofavBtn = new St.Button({
+    const icofavBtn = new St.Button({
       style_class: 'ci-action-btn',
       can_focus: true,
       child: iconfav,
@@ -306,12 +306,12 @@ const ClipboardIndicator = Lang.Class({
     );
 
     // Delete button
-    let icon = new St.Icon({
+    const icon = new St.Icon({
       icon_name: 'edit-delete-symbolic', //'mail-attachment-symbolic',
       style_class: 'system-status-icon',
     });
 
-    let icoBtn = new St.Button({
+    const icoBtn = new St.Button({
       style_class: 'ci-action-btn',
       can_focus: true,
       child: icon,
@@ -365,21 +365,20 @@ const ClipboardIndicator = Lang.Class({
       _('Clear'),
       _('Cancel'),
       () => {
-        let that = this;
-        that._clearHistory();
+        this._clearHistory();
       },
     );
   },
 
   _clearHistory: function () {
-    let that = this;
+    const that = this;
     // We can't actually remove all items, because the clipboard still
     // has data that will be re-captured on next refresh, so we remove
     // all except the currently selected item
     // Don't remove favorites here
     that.historySection._getMenuItems().forEach(function (mItem) {
       if (!mItem.currentlySelected) {
-        let idx = that.clipItemsRadioGroup.indexOf(mItem);
+        const idx = that.clipItemsRadioGroup.indexOf(mItem);
         mItem.destroy();
         that.clipItemsRadioGroup.splice(idx, 1);
       }
@@ -389,17 +388,15 @@ const ClipboardIndicator = Lang.Class({
   },
 
   _removeAll: function () {
-    var that = this;
-
     if (CONFIRM_ON_CLEAR) {
-      that._confirmRemoveAll();
+      this._confirmRemoveAll();
     } else {
-      that._clearHistory();
+      this._clearHistory();
     }
   },
 
   _removeEntry: function (menuItem, event) {
-    let itemIdx = this.clipItemsRadioGroup.indexOf(menuItem);
+    const itemIdx = this.clipItemsRadioGroup.indexOf(menuItem);
 
     if (event === 'delete' && menuItem.currentlySelected) {
       Clipboard.set_text(CLIPBOARD_TYPE, '');
@@ -412,28 +409,26 @@ const ClipboardIndicator = Lang.Class({
   },
 
   _removeOldestEntries: function () {
-    let that = this;
-
-    let clipItemsRadioGroupNoFavorite = that.clipItemsRadioGroup.filter(
+    let clipItemsRadioGroupNoFavorite = this.clipItemsRadioGroup.filter(
       (item) => item.clipFavorite === false,
     );
 
     while (clipItemsRadioGroupNoFavorite.length > MAX_REGISTRY_LENGTH) {
-      let oldestNoFavorite = clipItemsRadioGroupNoFavorite.shift();
-      that._removeEntry(oldestNoFavorite);
+      const oldestNoFavorite = clipItemsRadioGroupNoFavorite.shift();
+      this._removeEntry(oldestNoFavorite);
 
-      clipItemsRadioGroupNoFavorite = that.clipItemsRadioGroup.filter(
+      clipItemsRadioGroupNoFavorite = this.clipItemsRadioGroup.filter(
         (item) => item.clipFavorite === false,
       );
     }
 
-    that._updateCache();
+    this._updateCache();
   },
 
   _onMenuItemSelected: function (autoSet) {
-    var that = this;
+    const that = this;
     that.radioGroup.forEach(function (menuItem) {
-      let clipContents = that.clipContents;
+      const clipContents = that.clipContents;
 
       if (menuItem === that && clipContents) {
         that.setOrnament(PopupMenu.Ornament.DOT);
@@ -449,7 +444,7 @@ const ClipboardIndicator = Lang.Class({
   },
 
   _selectMenuItem: function (menuItem, autoSet) {
-    let fn = Lang.bind(menuItem, this._onMenuItemSelected);
+    const fn = Lang.bind(menuItem, this._onMenuItemSelected);
     fn(autoSet);
     if (TOPBAR_DISPLAY_MODE === 1 || TOPBAR_DISPLAY_MODE === 2) {
       this._updateButtonText(menuItem.label.text);
@@ -466,7 +461,7 @@ const ClipboardIndicator = Lang.Class({
   },
 
   _updateCache: function () {
-    let registry = this.clipItemsRadioGroup.map(function (menuItem) {
+    const registry = this.clipItemsRadioGroup.map(function (menuItem) {
       return {
         contents: menuItem.clipContents,
         favorite: menuItem.clipFavorite,
@@ -495,7 +490,7 @@ const ClipboardIndicator = Lang.Class({
   _refreshIndicator: function () {
     if (PRIVATEMODE) return; // Private mode, do not.
 
-    let that = this;
+    const that = this;
 
     Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
       that._processClipboardContent(text);
@@ -510,7 +505,7 @@ const ClipboardIndicator = Lang.Class({
     }
 
     if (text !== '' && text) {
-      let registry = that.clipItemsRadioGroup.map(function (menuItem) {
+      const registry = that.clipItemsRadioGroup.map(function (menuItem) {
         return menuItem.clipContents;
       });
 
@@ -582,7 +577,7 @@ const ClipboardIndicator = Lang.Class({
   },
 
   _setupTimeout: function (reiterate) {
-    let that = this;
+    const that = this;
     reiterate = typeof reiterate === 'boolean' ? reiterate : true;
 
     this._clipboardTimeoutId = Mainloop.timeout_add(TIMEOUT_MS, function () {
@@ -627,8 +622,8 @@ const ClipboardIndicator = Lang.Class({
 
   _cancelNotification: function () {
     if (this.clipItemsRadioGroup.length >= 2) {
-      let clipSecond = this.clipItemsRadioGroup.length - 2;
-      let previousClip = this.clipItemsRadioGroup[clipSecond];
+      const clipSecond = this.clipItemsRadioGroup.length - 2;
+      const previousClip = this.clipItemsRadioGroup[clipSecond];
       Clipboard.set_text(CLIPBOARD_TYPE, previousClip.clipContents);
       previousClip.setOrnament(PopupMenu.Ornament.DOT);
       previousClip.icoBtn.visible = false;
@@ -636,7 +631,7 @@ const ClipboardIndicator = Lang.Class({
     } else {
       Clipboard.set_text(CLIPBOARD_TYPE, '');
     }
-    let clipFirst = this.clipItemsRadioGroup.length - 1;
+    const clipFirst = this.clipItemsRadioGroup.length - 1;
     this._removeEntry(this.clipItemsRadioGroup[clipFirst]);
   },
 
@@ -676,14 +671,14 @@ const ClipboardIndicator = Lang.Class({
   },
 
   _onPrivateModeSwitch: function () {
-    let that = this;
+    const that = this;
     PRIVATEMODE = this.privateModeMenuItem.state;
     // We hide the history in private ModeTypee because it will be out of sync (selected item will not reflect clipboard)
     this.scrollViewMenuSection.actor.visible = !PRIVATEMODE;
     this.scrollViewFavoritesMenuSection.actor.visible = !PRIVATEMODE;
     // If we get out of private mode then we restore the clipboard to old state
     if (!PRIVATEMODE) {
-      let selectList = this.clipItemsRadioGroup.filter(
+      const selectList = this.clipItemsRadioGroup.filter(
         (item) => !!item.currentlySelected,
       );
       Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
@@ -746,7 +741,7 @@ const ClipboardIndicator = Lang.Class({
   },
 
   _onSettingsChange: function () {
-    var that = this;
+    const that = this;
 
     // Load the settings into variables
     that._fetchSettings();
@@ -790,7 +785,7 @@ const ClipboardIndicator = Lang.Class({
   },
 
   _bindShortcut: function (name, cb) {
-    var ModeType = Shell.hasOwnProperty('ActionMode')
+    const ModeType = Shell.hasOwnProperty('ActionMode')
       ? Shell.ActionMode
       : Shell.KeyBindingMode;
 
@@ -863,7 +858,7 @@ const ClipboardIndicator = Lang.Class({
   },
 
   _selectEntryWithDelay: function (entry) {
-    let that = this;
+    const that = this;
 
     that._selectMenuItem(entry, false);
     that._delayedSelectionTimeoutId = Mainloop.timeout_add(
@@ -878,7 +873,7 @@ const ClipboardIndicator = Lang.Class({
   },
 
   _previousEntry: function () {
-    let that = this;
+    const that = this;
 
     that._clearDelayedSelectionTimeout();
 
@@ -888,7 +883,7 @@ const ClipboardIndicator = Lang.Class({
         if (i < 0) {
           i = menuItems.length - 1;
         } //cycle if out of bound
-        let index = i + 1; //index to be displayed
+        const index = i + 1; //index to be displayed
         that._showNotification(
           index + ' / ' + menuItems.length + ': ' + menuItems[i].label.text,
         );
@@ -904,7 +899,7 @@ const ClipboardIndicator = Lang.Class({
   },
 
   _nextEntry: function () {
-    let that = this;
+    const that = this;
 
     that._clearDelayedSelectionTimeout();
 
@@ -914,7 +909,7 @@ const ClipboardIndicator = Lang.Class({
         if (i === menuItems.length) {
           i = 0;
         } //cycle if out of bound
-        let index = i + 1; //index to be displayed
+        const index = i + 1; //index to be displayed
         that._showNotification(
           index + ' / ' + menuItems.length + ': ' + menuItems[i].label.text,
         );
