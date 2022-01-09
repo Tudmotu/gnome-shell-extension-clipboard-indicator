@@ -17,6 +17,9 @@ const _ = Gettext.domain('clipboard-indicator').gettext;
 
 const Clipboard = St.Clipboard.get_default();
 const CLIPBOARD_TYPE = St.ClipboardType.CLIPBOARD;
+const VirtualKeyboard = Clutter.get_default_backend()
+  .get_default_seat()
+  .create_virtual_device(Clutter.InputDeviceType.KEYBOARD_DEVICE);
 
 const SETTING_KEY_CLEAR_HISTORY = 'clear-history';
 const SETTING_KEY_PREV_ENTRY = 'prev-entry';
@@ -223,7 +226,7 @@ const ClipboardIndicator = Lang.Class({
       settingsMenuItem.connect('activate', Lang.bind(that, that._openSettings));
 
       if (lastIdx >= 0) {
-        that._selectMenuItem(clipItemsArr[lastIdx]);
+        that._selectMenuItem(clipItemsArr[lastIdx], 'init');
       }
     });
   },
@@ -425,6 +428,14 @@ const ClipboardIndicator = Lang.Class({
     this._updateCache();
   },
 
+  _selectMenuItem: function (menuItem, autoSet) {
+    const fn = Lang.bind(menuItem, this._onMenuItemSelected);
+    fn(autoSet);
+    if (TOPBAR_DISPLAY_MODE === 1 || TOPBAR_DISPLAY_MODE === 2) {
+      this._updateButtonText(menuItem.label.text);
+    }
+  },
+
   _onMenuItemSelected: function (autoSet) {
     const that = this;
     that.radioGroup.forEach(function (menuItem) {
@@ -435,20 +446,43 @@ const ClipboardIndicator = Lang.Class({
         that.currentlySelected = true;
         if (autoSet !== false) {
           Clipboard.set_text(CLIPBOARD_TYPE, clipContents);
+
+          if (autoSet !== 'init') {
+            const callback = Mainloop.timeout_add(
+                1, // Just post to the end of the event loop
+                Lang.bind(this, function () {
+                  const eventTime = Clutter.get_current_event_time() * 1000;
+                  VirtualKeyboard.notify_keyval(
+                      eventTime,
+                      Clutter.KEY_Shift_L,
+                      Clutter.KeyState.PRESSED,
+                  );
+                  VirtualKeyboard.notify_keyval(
+                      eventTime,
+                      Clutter.KEY_Insert,
+                  Clutter.KeyState.PRESSED,
+                );
+                VirtualKeyboard.notify_keyval(
+                  eventTime,
+                  Clutter.KEY_Insert,
+                  Clutter.KeyState.RELEASED,
+                );
+                VirtualKeyboard.notify_keyval(
+                  eventTime,
+                  Clutter.KEY_Shift_L,
+                  Clutter.KeyState.RELEASED,
+                );
+
+                Mainloop.source_remove(callback);
+              }),
+            );
+          }
         }
       } else {
         menuItem.setOrnament(PopupMenu.Ornament.NONE);
         menuItem.currentlySelected = false;
       }
     });
-  },
-
-  _selectMenuItem: function (menuItem, autoSet) {
-    const fn = Lang.bind(menuItem, this._onMenuItemSelected);
-    fn(autoSet);
-    if (TOPBAR_DISPLAY_MODE === 1 || TOPBAR_DISPLAY_MODE === 2) {
-      this._updateButtonText(menuItem.label.text);
-    }
   },
 
   _onMenuItemSelectedAndMenuClose: function (autoSet) {
