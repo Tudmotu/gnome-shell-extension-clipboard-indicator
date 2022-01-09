@@ -545,7 +545,7 @@ const ClipboardIndicator = Lang.Class({
             );
           });
         }
-      } else if (itemIndex >= 0 && itemIndex < registry.length - 1) {
+      } else if (itemIndex >= 0 && itemIndex < registry.length) {
         const item = that._findItem(text);
         that._selectMenuItem(item, false);
 
