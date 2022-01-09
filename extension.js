@@ -375,20 +375,16 @@ const ClipboardIndicator = Lang.Class({
   },
 
   _clearHistory: function () {
-    let that = this;
-    // We can't actually remove all items, because the clipboard still
-    // has data that will be re-captured on next refresh, so we remove
-    // all except the currently selected item
-    // Don't remove favorites here
-    that.historySection._getMenuItems().forEach(function (mItem) {
-      if (!mItem.currentlySelected) {
-        let idx = that.clipItemsRadioGroup.indexOf(mItem);
-        mItem.destroy();
-        that.clipItemsRadioGroup.splice(idx, 1);
+    this.historySection._getMenuItems().forEach(function (mItem) {
+      mItem.destroy();
+      if (mItem.currentlySelected) {
+        Clipboard.set_text(CLIPBOARD_TYPE, '');
       }
     });
-    that._updateCache();
-    that._showNotification(_('Clipboard history cleared'));
+    this.clipItemsRadioGroup = [];
+
+    this._updateCache();
+    this._showNotification(_('Clipboard history cleared'));
   },
 
   _removeAll: function () {
