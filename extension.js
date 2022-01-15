@@ -28,6 +28,9 @@ const SETTING_KEY_NEXT_ENTRY = "next-entry";
 const SETTING_KEY_TOGGLE_MENU = "toggle-menu";
 const INDICATOR_ICON = 'edit-paste-symbolic';
 
+const TEXT_TYPE = 'text';
+const IMAGE_TYPE = 'image';
+
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const Utils = Me.imports.utils;
@@ -189,8 +192,21 @@ const ClipboardIndicator = Lang.Class({
 
             // Add cached items
             clipHistory.forEach(function (buffer) {
-                const { contents, favorite, type } = buffer;
-                that._addEntry(contents, favorite, true, false, type);
+                if (typeof buffer === 'string') {
+                    // Old cache format
+                    that._addEntry(buffer, false, true, false, TEXT_TYPE);
+                } else {
+                    const { contents, favorite } = buffer;
+
+                    let type;
+                    if (buffer.type === undefined) {
+                        type = TEXT_TYPE;
+                    } else {
+                        type = buffer.type;
+                    }
+
+                    that._addEntry(contents, favorite, true, false, type);
+                }
             });
 
             // Add separator
@@ -236,7 +252,7 @@ const ClipboardIndicator = Lang.Class({
         else {
             this._getAllIMenuItems().forEach(function(mItem){
                 // prevent broken menu on search
-                if (getMenuItemType(mItem) === 'IMAGE') {
+                if (mItem.type === IMAGE_TYPE) {
                     mItem.actor.visible = false;
                     return;
                 }
@@ -258,13 +274,23 @@ const ClipboardIndicator = Lang.Class({
     },
 
     _setEntryLabel: function (menuItem) {
+        if (menuItem.type !== TEXT_TYPE) return;
+
         const buffer = menuItem.clipContents;
         menuItem.label.set_text(this._truncate(buffer, MAX_ENTRY_LENGTH));
     },
 
     _addEntry: function (buffer, favorite, autoSelect, autoSetClip, type, bufferBytes = false) {
         let menuItem = new PopupMenu.PopupMenuItem('');
-        if(type === 'image') {
+
+        menuItem.menu = this.menu;
+        menuItem.clipContents = buffer;
+        menuItem.clipFavorite = favorite;
+        menuItem.type = type;
+        menuItem.radioGroup = this.clipItemsRadioGroup;
+        menuItem.buttonPressId = menuItem.connect('activate', Lang.bind(menuItem, this._onMenuItemSelectedAndMenuClose));
+
+        if (type === IMAGE_TYPE) {
             const icon = new St.Icon({
                 icon_size: 72,
                 style_class: 'imagem-icon'
@@ -284,17 +310,8 @@ const ClipboardIndicator = Lang.Class({
             menuItem.actor.add_child(icofavBtn);
             menuItem.icofavBtn = icofavBtn;
         }
+        this._setEntryLabel(menuItem);
 
-        menuItem.menu = this.menu;
-        menuItem.clipContents = buffer;
-        menuItem.clipFavorite = favorite;
-        menuItem.type = type;
-        menuItem.radioGroup = this.clipItemsRadioGroup;
-        menuItem.buttonPressId = menuItem.connect('activate', Lang.bind(menuItem, this._onMenuItemSelectedAndMenuClose));
-
-        if (type === undefined || type === "text") {
-            this._setEntryLabel(menuItem);
-        }
         this.clipItemsRadioGroup.push(menuItem);
 
 	// Favorite button
@@ -388,7 +405,7 @@ const ClipboardIndicator = Lang.Class({
         // Don't remove favorites here
         that.historySection._getMenuItems().forEach(function (mItem) {
             if (!mItem.currentlySelected) {
-                if (getMenuItemType(mItem) === "IMAGE") deleteImage(mItem.clipContents);
+                if (mItem.type === IMAGE_TYPE) deleteImage(mItem.clipContents);
                 let idx = that.clipItemsRadioGroup.indexOf(mItem);
                 mItem.destroy();
                 that.clipItemsRadioGroup.splice(idx,1);
@@ -415,7 +432,7 @@ const ClipboardIndicator = Lang.Class({
             Clipboard.set_text(CLIPBOARD_TYPE, "");
         }
 
-        if (event === 'delete' && getMenuItemType(menuItem) === "IMAGE") deleteImage(menuItem.clipContents);
+        if (event === 'delete' && menuItem.type === IMAGE_TYPE) deleteImage(menuItem.clipContents);
 
         menuItem.destroy();
         this.clipItemsRadioGroup.splice(itemIdx,1);
@@ -444,15 +461,14 @@ const ClipboardIndicator = Lang.Class({
         var that = this;
         that.radioGroup.forEach(function (menuItem) {
             let clipContents = that.clipContents;
-            const type = menuItem.type;
             if (menuItem === that && clipContents) {
                 that.setOrnament(PopupMenu.Ornament.DOT);
                 that.currentlySelected = true;
                 if (autoSet !== false) {
-                    if (getMenuItemType(menuItem) === 'TEXT') {
+                    if (menuItem.type === TEXT_TYPE) {
                         Clipboard.set_text(CLIPBOARD_TYPE, clipContents);
                     }
-                    else if (getMenuItemType(menuItem) === 'IMAGE') {
+                    else if (menuItem.type === IMAGE_TYPE) {
                         Clipboard.set_content(CLIPBOARD_TYPE, SUPPORT_PNG ? "image/png" : "image/jpeg", getImage(clipContents));
                     }
                 }
@@ -480,7 +496,7 @@ const ClipboardIndicator = Lang.Class({
                 that.setOrnament(PopupMenu.Ornament.DOT);
                 that.currentlySelected = true;
                 if (autoSet !== false) {
-                    if (getMenuItemType(that) === "TEXT") {
+                    if (that.type === TEXT_TYPE) {
                         Clipboard.set_text(CLIPBOARD_TYPE, clipContents);
                     }
                     else {
@@ -536,59 +552,62 @@ const ClipboardIndicator = Lang.Class({
             if (text === null) {
                 if (SAVE_IMAGE) {
                     Clipboard.get_content(CLIPBOARD_TYPE, SUPPORT_PNG ? 'image/png' : 'image/jpeg', function (clipboard, content) {
-                        that._processClipboardContent(content.get_data(), 'image', content.hash());
+                        that._processClipboardContent(content.get_data(), IMAGE_TYPE, content.hash());
                     });
-                }
-                else {
-                    // do nothing
                 }
             }
             else {
-                const items = text.split('\n');
-                let blockText = false;
-                let hasText = false;
-
-                items.map((values) => {
-                    // Dolphin debugger
-                    if (!values.length) return;
-
-                    // ebp === webp
-                    // vif === avif
-                    // peg === jpeg
-                    const support_image_type = ['png', 'jpg', 'peg', 'gif', 'ico', 'ebp', 'svg', 'vif'];
-                    const type = values.substring(values.length - 3);
-
-                    if (support_image_type.indexOf(type) !== -1) {
-                        // Dolphin return file:// + $PATH.
-                        const path = values.substring(0, 7) === 'file://' ? values.substring(7) : values;
-
-                        const file = Gio.file_new_for_path(path);
-                        if (!file.query_exists(null)) {
-                            hasText = true;
-                        }
-                        else {
-                            const bytes = file.load_bytes(null)[0]
-                            that._processClipboardContent(bytes, 'image', bytes.hash());
-                        }
-                    }
-                    else {
-                        hasText = true;
-                    }
-
-                    if (hasText && !blockText) {
-                        blockText = true
-                        that._processClipboardContent(text, "text");
-                    }
-                })
+                that._maybeParseFileBrowserCopyMetadata(text);
             }
         });
+    },
+
+    _maybeParseFileBrowserCopyMetadata(text) {
+        const items = text.split('\n');
+        let blockText = false;
+        let hasText = false;
+
+        items.map((values) => {
+            // Dolphin debugger
+            if (!values.length) return;
+
+            // ebp === webp
+            // vif === avif
+            // peg === jpeg
+            // TODO fix broken file type detection. We need to be using the magic bytes at
+            //  the start of the file or get the mime type somehow.
+            const support_image_type = ['png', 'jpg', 'peg', 'gif', 'ico', 'ebp', 'svg', 'vif'];
+            const type = values.substring(values.length - 3);
+
+            if (support_image_type.indexOf(type) !== -1) {
+                // Dolphin return file:// + $PATH.
+                const path = values.substring(0, 7) === 'file://' ? values.substring(7) : values;
+
+                const file = Gio.file_new_for_path(path);
+                if (!file.query_exists(null)) {
+                    hasText = true;
+                }
+                else {
+                    const bytes = file.load_bytes(null)[0]
+                    this._processClipboardContent(bytes, IMAGE_TYPE, bytes.hash());
+                }
+            }
+            else {
+                hasText = true;
+            }
+
+            if (hasText && !blockText) {
+                blockText = true
+                this._processClipboardContent(text, TEXT_TYPE);
+            }
+        })
     },
 
     // type most be image or text
     _processClipboardContent (byteContent, type, name) {
         const that = this;
         let content;
-        if (type === "text") {
+        if (type === TEXT_TYPE) {
             if (!STRIP_TEXT) {
                 content = byteContent;
             }
@@ -607,7 +626,7 @@ const ClipboardIndicator = Lang.Class({
 
             const itemIndex = registry.indexOf(content);
             if (itemIndex < 0) {
-                that._addEntry(content, false, true, false, type, type === "image" && byteContent);
+                that._addEntry(content, false, true, false, type, type === IMAGE_TYPE && byteContent);
                 that._removeOldestEntries();
                 if (NOTIFY_ON_COPY) {
                     that._showNotification(_("Copied to clipboard"), notif => {
@@ -616,22 +635,22 @@ const ClipboardIndicator = Lang.Class({
                 }
             }
             else if (itemIndex >= 0 && itemIndex < registry.length - 1) {
-                const item = that._findItem(content, type);
+                const item = that._findItem(content);
                 that._selectMenuItem(item, false);
 
                 if (!item.clipFavorite && MOVE_ITEM_FIRST) {
-                    that._moveItemFirst(item, type);
+                    that._moveItemFirst(item);
                 }
             }
         }
     },
 
-    _moveItemFirst: function (item, type = null) {
+    _moveItemFirst: function (item) {
         this._removeEntry(item);
-        this._addEntry(item.clipContents, item.clipFavorite, item.currentlySelected, false, type ?? item.type);
+        this._addEntry(item.clipContents, item.clipFavorite, item.currentlySelected, false, item.type);
     },
 
-    _findItem: function (content, type) {
+    _findItem: function (content) {
         return this.clipItemsRadioGroup.filter(
             item => item.clipContents === content)[0];
     },
@@ -820,7 +839,7 @@ const ClipboardIndicator = Lang.Class({
 
         // Re-set menu-items lables in case preview size changed
         this._getAllIMenuItems().forEach(function (mItem) {
-            if (getMenuItemType(mItem) === "TEXT") that._setEntryLabel(mItem);
+            that._setEntryLabel(mItem);
         });
 
         //update topbar
@@ -990,20 +1009,6 @@ const ClipboardIndicator = Lang.Class({
         this.menu.toggle();
     }
 });
-
-function getMenuItemType (menuItem) {
-    const { type } = menuItem;
-
-    if (type === undefined || type === 'text') {
-        return 'TEXT';
-    }
-
-    if (type === 'image') {
-        return 'IMAGE';
-    }
-
-    return null;
-}
 
 function init () {
     let localeDir = Me.dir.get_child('locale');

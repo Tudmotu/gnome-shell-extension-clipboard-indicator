@@ -69,9 +69,9 @@ const App = new Lang.Class({
         });
         this.field_size = new Gtk.SpinButton({
             adjustment: new Gtk.Adjustment({
-                lower: 2,
-                upper: 2000,
-                step_increment: 1
+                lower: 1,
+                upper: 200,
+                step_increment: 1,
             })
         });
         this.field_preview_size = new Gtk.SpinButton({
