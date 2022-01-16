@@ -859,8 +859,6 @@ const ClipboardIndicator = Lang.Class({
 
     _togglePrivatemode: function() {
         this.privateModeMenuItem.toggle();
-        this._settings.set_boolean(Prefs.Fields.PRIVATEMODE, this.privateModeMenuItem.state);
-        this._onPrivateModeSwitch();
     }
 });
 
