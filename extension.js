@@ -27,18 +27,18 @@ const Prefs = Me.imports.prefs;
 const writeRegistry = Utils.writeRegistry;
 const readRegistry = Utils.readRegistry;
 
-let MAX_REGISTRY_LENGTH = 15;
-let MAX_ENTRY_LENGTH = 50;
-let CACHE_ONLY_FAVORITE = false;
-let MOVE_ITEM_FIRST = false;
-let ENABLE_KEYBINDING = true;
-let PRIVATEMODE = false;
-let NOTIFY_ON_COPY = true;
-let CONFIRM_ON_CLEAR = true;
-let MAX_TOPBAR_LENGTH = 15;
-let TOPBAR_DISPLAY_MODE = 1; //0 - only icon, 1 - only clipbord content, 2 - both
-let DISABLE_DOWN_ARROW = false;
-let STRIP_TEXT = false;
+let MAX_REGISTRY_LENGTH;
+let MAX_ENTRY_LENGTH;
+let CACHE_ONLY_FAVORITE;
+let MOVE_ITEM_FIRST;
+let ENABLE_KEYBINDING;
+let PRIVATEMODE;
+let NOTIFY_ON_COPY;
+let CONFIRM_ON_CLEAR;
+let MAX_TOPBAR_LENGTH;
+let TOPBAR_DISPLAY_MODE; //0 - only icon, 1 - only clipbord content, 2 - both
+let DISABLE_DOWN_ARROW;
+let STRIP_TEXT;
 
 class ClipboardIndicator extends PanelMenu.Button {
   _init() {
@@ -241,11 +241,12 @@ class ClipboardIndicator extends PanelMenu.Button {
     menuItem.clipContents = buffer;
     menuItem.clipFavorite = favorite;
     menuItem.radioGroup = this.clipItemsRadioGroup;
-    menuItem.buttonPressId = menuItem.connect(
+    menuItem._onMenuItemSelected = this._onMenuItemSelected;
+
+    menuItem.connect(
       'activate',
       this._onMenuItemSelectedAndMenuClose.bind(menuItem),
     );
-    menuItem._onMenuItemSelected = this._onMenuItemSelected;
 
     this._setEntryLabel(menuItem);
     this.clipItemsRadioGroup.push(menuItem);
@@ -267,8 +268,7 @@ class ClipboardIndicator extends PanelMenu.Button {
     });
 
     menuItem.actor.add_child(icofavBtn);
-    menuItem.icofavBtn = icofavBtn;
-    menuItem.favoritePressId = icofavBtn.connect('button-press-event', () => {
+    icofavBtn.connect('button-press-event', () => {
       this._favoriteToggle(menuItem);
     });
 
@@ -288,8 +288,7 @@ class ClipboardIndicator extends PanelMenu.Button {
     });
 
     menuItem.actor.add_child(icoBtn);
-    menuItem.icoBtn = icoBtn;
-    menuItem.deletePressId = icoBtn.connect('button-press-event', () => {
+    icoBtn.connect('button-press-event', () => {
       this._removeEntry(menuItem, 'delete');
     });
 
@@ -556,7 +555,6 @@ class ClipboardIndicator extends PanelMenu.Button {
       const previousClip = this.clipItemsRadioGroup[clipSecond];
       Clipboard.set_text(CLIPBOARD_TYPE, previousClip.clipContents);
       previousClip.setOrnament(PopupMenu.Ornament.DOT);
-      previousClip.icoBtn.visible = false;
       previousClip.currentlySelected = true;
     } else {
       Clipboard.set_text(CLIPBOARD_TYPE, '');
@@ -595,6 +593,7 @@ class ClipboardIndicator extends PanelMenu.Button {
       const selectList = this.clipItemsRadioGroup.filter(
         (item) => !!item.currentlySelected,
       );
+      const that = this;
       Clipboard.get_text(CLIPBOARD_TYPE, (clipBoard, text) => {
         this._updateButtonText(text);
       });
@@ -613,8 +612,7 @@ class ClipboardIndicator extends PanelMenu.Button {
   }
 
   _loadSettings() {
-    this._settings = Prefs.Settings;
-    this._settingsChangedId = this._settings.connect(
+    this._settingsChangedId = Prefs.Settings.connect(
       'changed',
       this._onSettingsChange.bind(this),
     );
@@ -627,29 +625,29 @@ class ClipboardIndicator extends PanelMenu.Button {
   }
 
   _fetchSettings() {
-    MAX_REGISTRY_LENGTH = this._settings.get_int(Prefs.Fields.HISTORY_SIZE);
-    MAX_ENTRY_LENGTH = this._settings.get_int(Prefs.Fields.PREVIEW_SIZE);
-    CACHE_ONLY_FAVORITE = this._settings.get_boolean(
+    MAX_REGISTRY_LENGTH = Prefs.Settings.get_int(Prefs.Fields.HISTORY_SIZE);
+    MAX_ENTRY_LENGTH = Prefs.Settings.get_int(Prefs.Fields.PREVIEW_SIZE);
+    CACHE_ONLY_FAVORITE = Prefs.Settings.get_boolean(
       Prefs.Fields.CACHE_ONLY_FAVORITE,
     );
-    MOVE_ITEM_FIRST = this._settings.get_boolean(Prefs.Fields.MOVE_ITEM_FIRST);
-    NOTIFY_ON_COPY = this._settings.get_boolean(Prefs.Fields.NOTIFY_ON_COPY);
-    CONFIRM_ON_CLEAR = this._settings.get_boolean(
+    MOVE_ITEM_FIRST = Prefs.Settings.get_boolean(Prefs.Fields.MOVE_ITEM_FIRST);
+    NOTIFY_ON_COPY = Prefs.Settings.get_boolean(Prefs.Fields.NOTIFY_ON_COPY);
+    CONFIRM_ON_CLEAR = Prefs.Settings.get_boolean(
       Prefs.Fields.CONFIRM_ON_CLEAR,
     );
-    ENABLE_KEYBINDING = this._settings.get_boolean(
+    ENABLE_KEYBINDING = Prefs.Settings.get_boolean(
       Prefs.Fields.ENABLE_KEYBINDING,
     );
-    MAX_TOPBAR_LENGTH = this._settings.get_int(
+    MAX_TOPBAR_LENGTH = Prefs.Settings.get_int(
       Prefs.Fields.TOPBAR_PREVIEW_SIZE,
     );
-    TOPBAR_DISPLAY_MODE = this._settings.get_int(
+    TOPBAR_DISPLAY_MODE = Prefs.Settings.get_int(
       Prefs.Fields.TOPBAR_DISPLAY_MODE_ID,
     );
-    DISABLE_DOWN_ARROW = this._settings.get_boolean(
+    DISABLE_DOWN_ARROW = Prefs.Settings.get_boolean(
       Prefs.Fields.DISABLE_DOWN_ARROW,
     );
-    STRIP_TEXT = this._settings.get_boolean(Prefs.Fields.STRIP_TEXT);
+    STRIP_TEXT = Prefs.Settings.get_boolean(Prefs.Fields.STRIP_TEXT);
   }
 
   _onSettingsChange() {
@@ -701,7 +699,7 @@ class ClipboardIndicator extends PanelMenu.Button {
 
     Main.wm.addKeybinding(
       name,
-      this._settings,
+      Prefs.Settings,
       Meta.KeyBindingFlags.NONE,
       ModeType.ALL,
       cb.bind(this),
@@ -731,7 +729,7 @@ class ClipboardIndicator extends PanelMenu.Button {
       return;
     }
 
-    this._settings.disconnect(this._settingsChangedId);
+    Prefs.Settings.disconnect(this._settingsChangedId);
     this._settingsChangedId = null;
   }
 
