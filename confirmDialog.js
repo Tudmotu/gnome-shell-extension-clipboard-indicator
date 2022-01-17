@@ -1,8 +1,5 @@
-const St = imports.gi.St;
-const GObject = imports.gi.GObject;
+const { St, GObject, Clutter } = imports.gi;
 const ModalDialog = imports.ui.modalDialog;
-const CheckBox = imports.ui.checkBox;
-const Clutter = imports.gi.Clutter;
 
 let _openDialog;
 
