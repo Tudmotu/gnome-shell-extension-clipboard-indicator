@@ -1,11 +1,9 @@
 const Clutter = imports.gi.Clutter;
-const Config = imports.misc.config;
 const Lang = imports.lang;
 const Mainloop = imports.mainloop;
 const Meta = imports.gi.Meta;
 const Shell = imports.gi.Shell;
 const St = imports.gi.St;
-const Util = imports.misc.util;
 const MessageTray = imports.ui.messageTray;
 
 const Main = imports.ui.main;
@@ -32,11 +30,9 @@ const Prefs = Me.imports.prefs;
 const writeRegistry = Utils.writeRegistry;
 const readRegistry = Utils.readRegistry;
 
-let TIMEOUT_MS = 1000;
 let MAX_REGISTRY_LENGTH = 15;
 let MAX_ENTRY_LENGTH = 50;
 let CACHE_ONLY_FAVORITE = false;
-let DELETE_ENABLED = true;
 let MOVE_ITEM_FIRST = false;
 let ENABLE_KEYBINDING = true;
 let PRIVATEMODE = false;
@@ -52,19 +48,14 @@ const ClipboardIndicator = Lang.Class({
   Extends: PanelMenu.Button,
 
   _settingsChangedId: null,
-  _clipboardTimeoutId: null,
   _selectionOwnerChangedId: null,
-  _historyLabelTimeoutId: null,
-  _historyLabel: null,
   _buttonText: null,
   _disableDownArrow: null,
 
   destroy: function () {
     this._disconnectSettings();
     this._unbindShortcuts();
-    this._clearClipboardTimeout();
     this._disconnectSelectionListener();
-    this._clearLabelTimeout();
     this._clearDelayedSelectionTimeout();
 
     // Call parent
@@ -93,7 +84,6 @@ const ClipboardIndicator = Lang.Class({
     hbox.add(this._downArrow);
     this.add_child(hbox);
 
-    this._createHistoryLabel();
     this._loadSettings();
     this._buildMenu();
 
@@ -101,6 +91,7 @@ const ClipboardIndicator = Lang.Class({
 
     this._setupListener();
   },
+
   _updateButtonText: function (content) {
     if (!content || PRIVATEMODE) {
       this._buttonText.set_text('...');
@@ -557,13 +548,7 @@ const ClipboardIndicator = Lang.Class({
 
   _setupListener() {
     const metaDisplay = Shell.Global.get().get_display();
-
-    if (typeof metaDisplay.get_selection === 'function') {
-      const selection = metaDisplay.get_selection();
-      this._setupSelectionTracking(selection);
-    } else {
-      this._setupTimeout();
-    }
+    this._setupSelectionTracking(metaDisplay.get_selection());
   },
 
   _setupSelectionTracking(selection) {
@@ -576,32 +561,16 @@ const ClipboardIndicator = Lang.Class({
     );
   },
 
-  _setupTimeout: function (reiterate) {
-    const that = this;
-    reiterate = typeof reiterate === 'boolean' ? reiterate : true;
+  _disconnectSelectionListener() {
+    if (!this._selectionOwnerChangedId) {
+      return;
+    }
 
-    this._clipboardTimeoutId = Mainloop.timeout_add(TIMEOUT_MS, function () {
-      that._refreshIndicator();
-
-      // If the timeout handler returns `false`, the source is
-      // automatically removed, so we reset the timeout-id so it won't
-      // be removed on `.destroy()`
-      if (reiterate === false) {
-        that._clipboardTimeoutId = null;
-      }
-
-      // As long as the timeout handler returns `true`, the handler
-      // will be invoked again and again as an interval
-      return reiterate;
-    });
+    this.selection.disconnect(this._selectionOwnerChangedId);
   },
 
   _openSettings: function () {
-    if (typeof ExtensionUtils.openPrefs === 'function') {
-      ExtensionUtils.openPrefs();
-    } else {
-      Util.spawn(['gnome-shell-extension-prefs', Me.uuid]);
-    }
+    ExtensionUtils.openPrefs();
   },
 
   _initNotifSource: function () {
@@ -652,22 +621,7 @@ const ClipboardIndicator = Lang.Class({
     }
 
     notification.setTransient(true);
-    if (Config.PACKAGE_VERSION < '3.38') {
-      this._notifSource.notify(notification);
-    } else {
-      this._notifSource.showNotification(notification);
-    }
-  },
-
-  _createHistoryLabel: function () {
-    this._historyLabel = new St.Label({
-      style_class: 'ci-notification-label',
-      text: '',
-    });
-
-    global.stage.add_actor(this._historyLabel);
-
-    this._historyLabel.hide();
+    this._notifSource.showNotification(notification);
   },
 
   _onPrivateModeSwitch: function () {
@@ -713,13 +667,11 @@ const ClipboardIndicator = Lang.Class({
   },
 
   _fetchSettings: function () {
-    TIMEOUT_MS = this._settings.get_int(Prefs.Fields.INTERVAL);
     MAX_REGISTRY_LENGTH = this._settings.get_int(Prefs.Fields.HISTORY_SIZE);
     MAX_ENTRY_LENGTH = this._settings.get_int(Prefs.Fields.PREVIEW_SIZE);
     CACHE_ONLY_FAVORITE = this._settings.get_boolean(
       Prefs.Fields.CACHE_ONLY_FAVORITE,
     );
-    DELETE_ENABLED = this._settings.get_boolean(Prefs.Fields.DELETE);
     MOVE_ITEM_FIRST = this._settings.get_boolean(Prefs.Fields.MOVE_ITEM_FIRST);
     NOTIFY_ON_COPY = this._settings.get_boolean(Prefs.Fields.NOTIFY_ON_COPY);
     CONFIRM_ON_CLEAR = this._settings.get_boolean(
@@ -825,32 +777,6 @@ const ClipboardIndicator = Lang.Class({
     this._settingsChangedId = null;
   },
 
-  _clearClipboardTimeout: function () {
-    if (!this._clipboardTimeoutId) {
-      return;
-    }
-
-    Mainloop.source_remove(this._clipboardTimeoutId);
-    this._clipboardTimeoutId = null;
-  },
-
-  _disconnectSelectionListener() {
-    if (!this._selectionOwnerChangedId) {
-      return;
-    }
-
-    this.selection.disconnect(this._selectionOwnerChangedId);
-  },
-
-  _clearLabelTimeout: function () {
-    if (!this._historyLabelTimeoutId) {
-      return;
-    }
-
-    Mainloop.source_remove(this._historyLabelTimeoutId);
-    this._historyLabelTimeoutId = null;
-  },
-
   _clearDelayedSelectionTimeout: function () {
     if (this._delayedSelectionTimeoutId) {
       Mainloop.source_remove(this._delayedSelectionTimeoutId);
@@ -862,7 +788,7 @@ const ClipboardIndicator = Lang.Class({
 
     that._selectMenuItem(entry, false);
     that._delayedSelectionTimeoutId = Mainloop.timeout_add(
-      TIMEOUT_MS * 0.75,
+      1000,
       function () {
         that._selectMenuItem(entry); //select the item
 
@@ -930,8 +856,7 @@ const ClipboardIndicator = Lang.Class({
 });
 
 function init() {
-  const localeDir = Me.dir.get_child('locale');
-  Gettext.bindtextdomain('clipboard-indicator', localeDir.get_path());
+  ExtensionUtils.initTranslations('ClipboardIndicator');
 }
 
 let clipboardIndicator;
@@ -943,4 +868,5 @@ function enable() {
 
 function disable() {
   clipboardIndicator.destroy();
+  clipboardIndicator = undefined;
 }

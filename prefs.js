@@ -4,7 +4,6 @@ const Gio = imports.gi.Gio;
 const Lang = imports.lang;
 const Extension = imports.misc.extensionUtils.getCurrentExtension();
 const Utils = Extension.imports.utils;
-const prettyPrint = Utils.prettyPrint;
 
 const Gettext = imports.gettext;
 const _ = Gettext.domain('clipboard-indicator').gettext;
@@ -15,7 +14,6 @@ var Fields = {
   PREVIEW_SIZE: 'preview-size',
   CACHE_FILE_SIZE: 'cache-size',
   CACHE_ONLY_FAVORITE: 'cache-only-favorites',
-  DELETE: 'enable-deletion',
   NOTIFY_ON_COPY: 'notify-on-copy',
   CONFIRM_ON_CLEAR: 'confirm-clear',
   MOVE_ITEM_FIRST: 'move-item-first',
@@ -60,13 +58,6 @@ const App = new Lang.Class({
       column_spacing: 18,
       column_homogeneous: false,
       row_homogeneous: false,
-    });
-    this.field_interval = new Gtk.SpinButton({
-      adjustment: new Gtk.Adjustment({
-        lower: 500,
-        upper: 5000,
-        step_increment: 100,
-      }),
     });
     this.field_size = new Gtk.SpinButton({
       adjustment: new Gtk.Adjustment({
@@ -235,7 +226,6 @@ const App = new Lang.Class({
 
     addRow(sizeLabel, this.field_size);
     addRow(previewLabel, this.field_preview_size);
-    addRow(intervalLabel, this.field_interval);
     addRow(cacheSizeLabel, this.field_cache_size);
     addRow(cacheDisableLabel, this.field_cache_disable);
     addRow(notificationLabel, this.field_notification_toggle);
@@ -248,12 +238,6 @@ const App = new Lang.Class({
     addRow(keybindingLabel, this.field_keybinding_activation);
     addRow(null, this.field_keybinding);
 
-    SettingsSchema.bind(
-      Fields.INTERVAL,
-      this.field_interval,
-      'value',
-      Gio.SettingsBindFlags.DEFAULT,
-    );
     SettingsSchema.bind(
       Fields.HISTORY_SIZE,
       this.field_size,
