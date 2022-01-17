@@ -1,9 +1,7 @@
-const GObject = imports.gi.GObject;
-const Gtk = imports.gi.Gtk;
-const Gio = imports.gi.Gio;
+const { GObject, Gtk, Gio } = imports.gi;
 const Lang = imports.lang;
-const Extension = imports.misc.extensionUtils.getCurrentExtension();
-const Utils = Extension.imports.utils;
+
+const ExtensionUtils = imports.misc.extensionUtils;
 
 const Gettext = imports.gettext;
 const _ = Gettext.domain('clipboard-indicator').gettext;
@@ -25,25 +23,10 @@ var Fields = {
 };
 
 const SCHEMA_NAME = 'org.gnome.shell.extensions.clipboard-indicator';
-
-const getSchema = function () {
-  let schemaDir = Extension.dir.get_child('schemas').get_path();
-  let schemaSource = Gio.SettingsSchemaSource.new_from_directory(
-    schemaDir,
-    Gio.SettingsSchemaSource.get_default(),
-    false,
-  );
-  let schema = schemaSource.lookup(SCHEMA_NAME, false);
-
-  return new Gio.Settings({ settings_schema: schema });
-};
-
-var SettingsSchema = getSchema();
+var Settings = ExtensionUtils.getSettings(SCHEMA_NAME);
 
 function init() {
-  let localeDir = Extension.dir.get_child('locale');
-  if (localeDir.query_exists(null))
-    Gettext.bindtextdomain('clipboard-indicator', localeDir.get_path());
+  ExtensionUtils.initTranslations('ClipboardIndicator');
 }
 
 const App = new Lang.Class({
@@ -100,28 +83,28 @@ const App = new Lang.Class({
     this.field_confirm_clear_toggle = new Gtk.Switch();
     this.field_strip_text = new Gtk.Switch();
     this.field_move_item_first = new Gtk.Switch();
-    this.field_keybinding = createKeybindingWidget(SettingsSchema);
+    this.field_keybinding = createKeybindingWidget(Settings);
     addKeybinding(
       this.field_keybinding.model,
-      SettingsSchema,
+      Settings,
       'toggle-menu',
       _('Toggle the menu'),
     );
     addKeybinding(
       this.field_keybinding.model,
-      SettingsSchema,
+      Settings,
       'clear-history',
       _('Clear history'),
     );
     addKeybinding(
       this.field_keybinding.model,
-      SettingsSchema,
+      Settings,
       'prev-entry',
       _('Previous entry'),
     );
     addKeybinding(
       this.field_keybinding.model,
-      SettingsSchema,
+      Settings,
       'next-entry',
       _('Next entry'),
     );
@@ -238,73 +221,73 @@ const App = new Lang.Class({
     addRow(keybindingLabel, this.field_keybinding_activation);
     addRow(null, this.field_keybinding);
 
-    SettingsSchema.bind(
+    Settings.bind(
       Fields.HISTORY_SIZE,
       this.field_size,
       'value',
       Gio.SettingsBindFlags.DEFAULT,
     );
-    SettingsSchema.bind(
+    Settings.bind(
       Fields.PREVIEW_SIZE,
       this.field_preview_size,
       'value',
       Gio.SettingsBindFlags.DEFAULT,
     );
-    SettingsSchema.bind(
+    Settings.bind(
       Fields.CACHE_FILE_SIZE,
       this.field_cache_size,
       'value',
       Gio.SettingsBindFlags.DEFAULT,
     );
-    SettingsSchema.bind(
+    Settings.bind(
       Fields.CACHE_ONLY_FAVORITE,
       this.field_cache_disable,
       'active',
       Gio.SettingsBindFlags.DEFAULT,
     );
-    SettingsSchema.bind(
+    Settings.bind(
       Fields.NOTIFY_ON_COPY,
       this.field_notification_toggle,
       'active',
       Gio.SettingsBindFlags.DEFAULT,
     );
-    SettingsSchema.bind(
+    Settings.bind(
       Fields.CONFIRM_ON_CLEAR,
       this.field_confirm_clear_toggle,
       'active',
       Gio.SettingsBindFlags.DEFAULT,
     );
-    SettingsSchema.bind(
+    Settings.bind(
       Fields.MOVE_ITEM_FIRST,
       this.field_move_item_first,
       'active',
       Gio.SettingsBindFlags.DEFAULT,
     );
-    SettingsSchema.bind(
+    Settings.bind(
       Fields.TOPBAR_DISPLAY_MODE_ID,
       this.field_display_mode,
       'active',
       Gio.SettingsBindFlags.DEFAULT,
     );
-    SettingsSchema.bind(
+    Settings.bind(
       Fields.DISABLE_DOWN_ARROW,
       this.field_disable_down_arrow,
       'active',
       Gio.SettingsBindFlags.DEFAULT,
     );
-    SettingsSchema.bind(
+    Settings.bind(
       Fields.TOPBAR_PREVIEW_SIZE,
       this.field_topbar_preview_size,
       'value',
       Gio.SettingsBindFlags.DEFAULT,
     );
-    SettingsSchema.bind(
+    Settings.bind(
       Fields.STRIP_TEXT,
       this.field_strip_text,
       'active',
       Gio.SettingsBindFlags.DEFAULT,
     );
-    SettingsSchema.bind(
+    Settings.bind(
       Fields.ENABLE_KEYBINDING,
       this.field_keybinding_activation,
       'active',
@@ -359,7 +342,7 @@ function addKeybinding(model, settings, id, description) {
   );
 }
 
-function createKeybindingWidget(SettingsSchema) {
+function createKeybindingWidget(Settings) {
   let model = new Gtk.ListStore();
 
   model.set_column_types([
@@ -404,7 +387,7 @@ function createKeybindingWidget(SettingsSchema) {
       // Update the stored setting.
       let id = model.get_value(iter, COLUMN_ID);
       let accelString = Gtk.accelerator_name(key, mods);
-      SettingsSchema.set_strv(id, [accelString]);
+      Settings.set_strv(id, [accelString]);
     },
   );
 
@@ -419,7 +402,7 @@ function createKeybindingWidget(SettingsSchema) {
 
     // Update the stored setting.
     let id = model.get_value(iter, COLUMN_ID);
-    SettingsSchema.set_strv(id, []);
+    Settings.set_strv(id, []);
   });
 
   column = new Gtk.TreeViewColumn();

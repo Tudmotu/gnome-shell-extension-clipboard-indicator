@@ -7,7 +7,6 @@ const FileTest = GLib.FileTest;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const Prefs = Me.imports.prefs;
-const SettingsSchema = Prefs.SettingsSchema;
 
 const REGISTRY_DIR = GLib.get_user_cache_dir() + '/' + Me.uuid;
 const REGISTRY_FILE = 'registry.txt';
@@ -81,7 +80,7 @@ function readRegistry(callback) {
 
   if (GLib.file_test(REGISTRY_PATH, FileTest.EXISTS)) {
     let file = Gio.file_new_for_path(REGISTRY_PATH);
-    let CACHE_FILE_SIZE = SettingsSchema.get_int(Prefs.Fields.CACHE_FILE_SIZE);
+    let CACHE_FILE_SIZE = Prefs.Settings.get_int(Prefs.Fields.CACHE_FILE_SIZE);
 
     file.query_info_async(
       '*',
@@ -107,7 +106,7 @@ function readRegistry(callback) {
 
           if (success) {
             try {
-              let max_size = SettingsSchema.get_int(Prefs.Fields.HISTORY_SIZE);
+              let max_size = Prefs.Settings.get_int(Prefs.Fields.HISTORY_SIZE);
 
               // are we running gnome 3.30 or higher?
               if (contents instanceof Uint8Array) {

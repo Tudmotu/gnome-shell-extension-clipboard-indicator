@@ -613,7 +613,7 @@ class ClipboardIndicator extends PanelMenu.Button {
   }
 
   _loadSettings() {
-    this._settings = Prefs.SettingsSchema;
+    this._settings = Prefs.Settings;
     this._settingsChangedId = this._settings.connect(
       'changed',
       this._onSettingsChange.bind(this),
