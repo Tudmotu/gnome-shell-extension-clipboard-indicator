@@ -1,3 +1,5 @@
+'use strict';
+
 const GLib = imports.gi.GLib;
 const Gio = imports.gi.Gio;
 const FileQueryInfoFlags = imports.gi.Gio.FileQueryInfoFlags;

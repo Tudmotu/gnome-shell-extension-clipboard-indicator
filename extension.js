@@ -1,3 +1,5 @@
+'use strict';
+
 const { Clutter, Meta, Shell, St, GObject } = imports.gi;
 const Mainloop = imports.mainloop;
 const MessageTray = imports.ui.messageTray;
@@ -648,6 +650,7 @@ class ClipboardIndicator extends PanelMenu.Button {
       Prefs.Fields.DISABLE_DOWN_ARROW,
     );
     STRIP_TEXT = Prefs.Settings.get_boolean(Prefs.Fields.STRIP_TEXT);
+    PRIVATEMODE = false; // TODO remove
   }
 
   _onSettingsChange() {

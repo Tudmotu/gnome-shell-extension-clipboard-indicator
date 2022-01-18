@@ -1,3 +1,5 @@
+'use strict';
+
 const { GObject, Gtk, Gio } = imports.gi;
 const Lang = imports.lang;
 

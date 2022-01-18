@@ -1,3 +1,5 @@
+'use strict';
+
 const { St, GObject, Clutter } = imports.gi;
 const ModalDialog = imports.ui.modalDialog;
 
