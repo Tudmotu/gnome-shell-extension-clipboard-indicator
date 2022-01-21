@@ -59,7 +59,7 @@ function buildClipboardStateFromLog(callback) {
   }
   uselessOpCount = 0;
 
-  Gio.file_new_for_path(DATABASE_FILE).read_async(0, null, (src, res) => {
+  Gio.File.new_for_path(DATABASE_FILE).read_async(0, null, (src, res) => {
     try {
       _parseLog(src.read_finish(res), callback);
     } catch (e) {
@@ -155,7 +155,7 @@ function _consumeStream(stream, state, callback) {
 }
 
 function _readAndConsumeOldFormat(callback) {
-  Gio.file_new_for_path(OLD_REGISTRY_FILE).load_contents_async(
+  Gio.File.new_for_path(OLD_REGISTRY_FILE).load_contents_async(
     null,
     (src, res) => {
       let [, contents] = src.load_contents_finish(res);
@@ -207,21 +207,22 @@ function maybePerformLogCompaction(currentStateBuilder) {
 function resetDatabase(currentStateBuilder) {
   uselessOpCount = 0;
 
+  const priority = -10;
   Gio.File.new_for_path(DATABASE_FILE).replace_async(
     /*etag=*/ null,
     /*make_backup=*/ false,
-    /*flags=*/ Gio.FileCreateFlags.PRIVATE,
-    /*io_priority=*/ 0,
-    /*cancellable=*/ null,
+    Gio.FileCreateFlags.PRIVATE,
+    priority,
+    null,
     (src, res) => {
       const state = currentStateBuilder();
       if (state.length === 0) {
-        _writeToStream(src.replace_finish(res), () => true);
+        _writeToStream(src.replace_finish(res), priority, () => true);
         return;
       }
 
       let i = 0;
-      _writeToStream(src.replace_finish(res), (dataStream) => {
+      _writeToStream(src.replace_finish(res), priority, (dataStream) => {
         do {
           const entry = state[i];
 
@@ -245,7 +246,7 @@ function resetDatabase(currentStateBuilder) {
 }
 
 function storeTextEntry(text) {
-  _appendBytesToLog(_storeTextOp(text));
+  _appendBytesToLog(_storeTextOp(text), -5);
 }
 
 function _storeTextOp(text) {
@@ -258,7 +259,7 @@ function _storeTextOp(text) {
 }
 
 function deleteTextEntry(id) {
-  _appendBytesToLog(_deleteTextOp(id));
+  _appendBytesToLog(_deleteTextOp(id), 5);
   uselessOpCount += 2;
 }
 
@@ -316,25 +317,26 @@ function _normalizedText(text) {
   return text.replaceAll('\0', '');
 }
 
-function _appendBytesToLog(callback) {
+function _appendBytesToLog(callback, priority) {
+  priority = priority || 0;
   Gio.File.new_for_path(DATABASE_FILE).append_to_async(
     Gio.FileCreateFlags.PRIVATE,
-    0,
+    priority,
     null,
     (src, res) => {
-      _writeToStream(src.append_to_finish(res), callback);
+      _writeToStream(src.append_to_finish(res), priority, callback);
     },
   );
 }
 
-function _writeToStream(stream, callback) {
+function _writeToStream(stream, priority, callback) {
   const bufStream = Gio.BufferedOutputStream.new(stream);
   bufStream.set_auto_grow(true); // Blocks flushing, needed for hack
   const ioStream = Gio.DataOutputStream.new(bufStream);
   ioStream.set_byte_order(Gio.DataStreamByteOrder.BIG_ENDIAN);
 
-  _writeCallbackBytesAsyncHack(callback, ioStream, () => {
-    ioStream.close_async(0, null, (src, res) => {
+  _writeCallbackBytesAsyncHack(callback, ioStream, priority, () => {
+    ioStream.close_async(priority, null, (src, res) => {
       src.close_finish(res);
     });
   });
@@ -345,13 +347,18 @@ function _writeToStream(stream, callback) {
  * async method variants, so we write to a memory buffer and then flush it asynchronously. We're
  * basically trying to balance memory allocations with disk writes.
  */
-function _writeCallbackBytesAsyncHack(dataCallback, stream, callback) {
+function _writeCallbackBytesAsyncHack(
+  dataCallback,
+  stream,
+  priority,
+  callback,
+) {
   if (dataCallback(stream)) {
     callback();
   } else {
-    stream.flush_async(0, null, (src, res) => {
+    stream.flush_async(priority, null, (src, res) => {
       src.flush_finish(res);
-      _writeCallbackBytesAsyncHack(dataCallback, stream, callback);
+      _writeCallbackBytesAsyncHack(dataCallback, stream, priority, callback);
     });
   }
 }
