@@ -13,7 +13,7 @@ var Fields = {
   HISTORY_SIZE: 'history-size',
   PREVIEW_SIZE: 'preview-size',
   CACHE_FILE_SIZE: 'cache-size',
-  CACHE_ONLY_FAVORITE: 'cache-only-favorites',
+  CACHE_ONLY_FAVORITES: 'cache-only-favorites',
   NOTIFY_ON_COPY: 'notify-on-copy',
   CONFIRM_ON_CLEAR: 'confirm-clear',
   MOVE_ITEM_FIRST: 'move-item-first',
@@ -242,7 +242,7 @@ const App = new Lang.Class({
       Gio.SettingsBindFlags.DEFAULT,
     );
     Settings.bind(
-      Fields.CACHE_ONLY_FAVORITE,
+      Fields.CACHE_ONLY_FAVORITES,
       this.field_cache_disable,
       'active',
       Gio.SettingsBindFlags.DEFAULT,

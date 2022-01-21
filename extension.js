@@ -29,7 +29,7 @@ const Prefs = Me.imports.prefs;
 
 let MAX_REGISTRY_LENGTH;
 let MAX_ENTRY_LENGTH;
-let CACHE_ONLY_FAVORITE;
+let CACHE_ONLY_FAVORITES;
 let MOVE_ITEM_FIRST;
 let ENABLE_KEYBINDING;
 let PRIVATEMODE;
@@ -307,8 +307,20 @@ class ClipboardIndicator extends PanelMenu.Button {
     entry.favorite = !entry.favorite;
     this._addEntry(entry, wasSelected, true, 0);
 
-    Utils.updateFavoriteStatus(entry.id, entry.favorite);
-    Utils.moveEntryToEnd(entry.id);
+    if (CACHE_ONLY_FAVORITES) {
+      if (entry.favorite) {
+        entry.id = this.nextId++;
+
+        Utils.storeTextEntry(entry.text);
+        Utils.updateFavoriteStatus(entry.id, true);
+      } else {
+        Utils.deleteTextEntry(entry.id);
+        delete entry.id;
+      }
+    } else {
+      Utils.updateFavoriteStatus(entry.id, entry.favorite);
+      Utils.moveEntryToEnd(entry.id);
+    }
   }
 
   _removeAll() {
@@ -359,7 +371,9 @@ class ClipboardIndicator extends PanelMenu.Button {
     if (fullyDelete) {
       this._removeEntryFromFastLookupMap(menuItem.entry);
 
-      Utils.deleteTextEntry(menuItem.entry.id);
+      if (menuItem.entry.id) {
+        Utils.deleteTextEntry(menuItem.entry.id);
+      }
     }
 
     if (menuItem === this.currentlySelectedMenuItem) {
@@ -460,26 +474,39 @@ class ClipboardIndicator extends PanelMenu.Button {
         }
         menu.moveMenuItem(entry.menuItem, 0);
 
-        Utils.moveEntryToEnd(entry.id);
+        if (entry.id) {
+          Utils.moveEntryToEnd(entry.id);
+        }
       }
     } else {
-      entry = { id: this.nextId++, type: 'text', text, favorite: false };
+      entry = {
+        id: CACHE_ONLY_FAVORITES ? undefined : this.nextId++,
+        type: 'text',
+        text,
+        favorite: false,
+      };
       this._addEntry(entry, true, false, 0);
 
       this._insertEntryIntoFastLookupMap(entry);
-      Utils.storeTextEntry(text);
+      if (!CACHE_ONLY_FAVORITES) {
+        Utils.storeTextEntry(text);
+      }
       this._pruneOldestEntries();
-    }
 
-    if (NOTIFY_ON_COPY) {
-      this._showNotification(_('Copied to clipboard'), (notif) => {
-        notif.addAction(_('Cancel'), this._cancelNotification.bind(this));
-      });
+      if (NOTIFY_ON_COPY) {
+        this._showNotification(_('Copied to clipboard'), (notif) => {
+          notif.addAction(_('Cancel'), this._cancelNotification.bind(this));
+        });
+      }
     }
   }
 
   _currentStateBuilder() {
-    const state = this._getAllMenuItems().map((item) => item.entry);
+    let state = this._getAllMenuItems();
+    if (CACHE_ONLY_FAVORITES) {
+      state = state.filter((item) => item.entry.favorite);
+    }
+    state = state.map((item) => item.entry);
     state.reverse();
 
     let id = 1;
@@ -603,8 +630,8 @@ class ClipboardIndicator extends PanelMenu.Button {
   _fetchSettings() {
     MAX_REGISTRY_LENGTH = Prefs.Settings.get_int(Prefs.Fields.HISTORY_SIZE);
     MAX_ENTRY_LENGTH = Prefs.Settings.get_int(Prefs.Fields.PREVIEW_SIZE);
-    CACHE_ONLY_FAVORITE = Prefs.Settings.get_boolean(
-      Prefs.Fields.CACHE_ONLY_FAVORITE,
+    CACHE_ONLY_FAVORITES = Prefs.Settings.get_boolean(
+      Prefs.Fields.CACHE_ONLY_FAVORITES,
     );
     MOVE_ITEM_FIRST = Prefs.Settings.get_boolean(Prefs.Fields.MOVE_ITEM_FIRST);
     NOTIFY_ON_COPY = Prefs.Settings.get_boolean(Prefs.Fields.NOTIFY_ON_COPY);
@@ -628,14 +655,36 @@ class ClipboardIndicator extends PanelMenu.Button {
   }
 
   _onSettingsChange() {
+    const prevCacheOnlyFavorites = CACHE_ONLY_FAVORITES;
+
     this._fetchSettings();
+
+    if (CACHE_ONLY_FAVORITES !== prevCacheOnlyFavorites) {
+      if (CACHE_ONLY_FAVORITES) {
+        this._getAllMenuItems().forEach((item) => {
+          if (!item.entry.favorite) {
+            Utils.deleteTextEntry(item.entry.id);
+            delete item.entry.id;
+          }
+        });
+      } else {
+        let items = this._getAllMenuItems();
+        for (let i = items.length - 1; i >= 0; i--) {
+          const entry = items[i].entry;
+          if (!entry.favorite) {
+            entry.id = this.nextId++;
+            Utils.storeTextEntry(entry.text);
+          }
+        }
+      }
+    }
 
     // Remove old entries in case the registry size changed
     this._pruneOldestEntries();
 
     // Re-set menu-items labels in case preview size changed
-    this._getAllMenuItems().forEach((mItem) => {
-      this._setEntryLabel(mItem);
+    this._getAllMenuItems().forEach((item) => {
+      this._setEntryLabel(item);
     });
 
     this._updateTopbarLayout();
