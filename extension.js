@@ -567,7 +567,7 @@ class ClipboardIndicator extends PanelMenu.Button {
   }
 
   _cancelNotification() {
-    this._removeEntry(this.currentlySelectedMenuItem);
+    this._removeEntry(this.currentlySelectedMenuItem, true);
     const nextItem = this.historySection.firstMenuItem;
     if (nextItem) {
       this._selectMenuItem(nextItem, true);
