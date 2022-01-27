@@ -170,7 +170,7 @@ class ClipboardIndicator extends PanelMenu.Button {
       this.menu.addMenuItem(settingsMenuItem);
       settingsMenuItem.connect('activate', this._openSettings.bind(this));
 
-      this._setupListener();
+      this._setupSelectionChangeListener();
     });
   }
 
@@ -440,13 +440,7 @@ class ClipboardIndicator extends PanelMenu.Button {
     }
   }
 
-  _onSelectionChange(selection, selectionType, selectionSource) {
-    if (selectionType === Meta.SelectionType.SELECTION_CLIPBOARD) {
-      this._refreshIndicator();
-    }
-  }
-
-  _refreshIndicator() {
+  _queryClipboard() {
     if (PRIVATEMODE) return; // Private mode, do not.
 
     Clipboard.get_text(CLIPBOARD_TYPE, (clipBoard, text) => {
@@ -523,17 +517,14 @@ class ClipboardIndicator extends PanelMenu.Button {
       .concat(this.favoritesSection._getMenuItems());
   }
 
-  _setupListener() {
-    const metaDisplay = Shell.Global.get().get_display();
-    this._setupSelectionTracking(metaDisplay.get_selection());
-  }
-
-  _setupSelectionTracking(selection) {
-    this.selection = selection;
-    this._selectionOwnerChangedId = selection.connect(
+  _setupSelectionChangeListener() {
+    this.selection = Shell.Global.get().get_display().get_selection();
+    this._selectionOwnerChangedId = this.selection.connect(
       'owner-changed',
-      (selection, selectionType, selectionSource) => {
-        this._onSelectionChange(selection, selectionType, selectionSource);
+      (_, selectionType) => {
+        if (selectionType === Meta.SelectionType.SELECTION_CLIPBOARD) {
+          this._queryClipboard();
+        }
       },
     );
   }
@@ -544,6 +535,7 @@ class ClipboardIndicator extends PanelMenu.Button {
     }
 
     this.selection.disconnect(this._selectionOwnerChangedId);
+    this.selection = undefined;
     this._selectionOwnerChangedId = undefined;
   }
 
