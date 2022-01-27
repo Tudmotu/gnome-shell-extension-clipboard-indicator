@@ -509,9 +509,9 @@ class ClipboardIndicator extends PanelMenu.Button {
     state = state.map((item) => item.entry);
     state.reverse();
 
-    let id = 1;
+    this.nextId = 1;
     for (const entry of state) {
-      entry.id = id++;
+      entry.id = this.nextId++;
     }
 
     return state;
