@@ -227,7 +227,7 @@ class ClipboardIndicator extends PanelMenu.Button {
 
     menuItem.actor.add_child(icoBtn);
     icoBtn.connect('button-press-event', () => {
-      this._removeEntry(menuItem, true);
+      this._deleteItemAndRestoreLatest(menuItem);
     });
 
     if (entry.favorite) {
@@ -489,7 +489,9 @@ class ClipboardIndicator extends PanelMenu.Button {
 
       if (NOTIFY_ON_COPY) {
         this._showNotification(_('Copied to clipboard'), (notif) => {
-          notif.addAction(_('Cancel'), this._cancelNotification.bind(this));
+          notif.addAction(_('Cancel'), () =>
+            this._deleteItemAndRestoreLatest(this.currentlySelectedMenuItem),
+          );
         });
       }
     }
@@ -558,8 +560,8 @@ class ClipboardIndicator extends PanelMenu.Button {
     Main.messageTray.add(this._notifSource);
   }
 
-  _cancelNotification() {
-    this._removeEntry(this.currentlySelectedMenuItem, true);
+  _deleteItemAndRestoreLatest(menuItem) {
+    this._removeEntry(menuItem, true);
     const nextItem = this.historySection.firstMenuItem;
     if (nextItem) {
       this._selectMenuItem(nextItem, true);
