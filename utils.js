@@ -158,7 +158,20 @@ function _readAndConsumeOldFormat(callback) {
   Gio.File.new_for_path(OLD_REGISTRY_FILE).load_contents_async(
     null,
     (src, res) => {
-      let [, contents] = src.load_contents_finish(res);
+      const state = [];
+      let id = 1;
+
+      let contents;
+      try {
+        [, contents] = src.load_contents_finish(res);
+      } catch (e) {
+        if (e.matches(Gio.IOErrorEnum, Gio.IOErrorEnum.NOT_FOUND)) {
+          callback(state, id);
+          return;
+        } else {
+          throw e;
+        }
+      }
 
       let registry = [];
       try {
@@ -167,8 +180,6 @@ function _readAndConsumeOldFormat(callback) {
         logError(e);
       }
 
-      const state = [];
-      let id = 1;
       for (const entry of registry) {
         if (typeof entry === 'string') {
           state.push({ id, type: 'text', text: entry, favorite: false });
