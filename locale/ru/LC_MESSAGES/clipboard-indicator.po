@@ -1,0 +1,140 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Dragonic <dragonicua@gmail.com>, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-04-15 13:20+0300\n"
+"PO-Revision-Date: 2022-02-08 13:08+0300\n"
+"Last-Translator: Aleksandr Melman <Alexmelman88@gmail.com>\n"
+"Language-Team: \n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 3.0\n"
+
+#: extension.js:87
+msgid "Text will be here"
+msgstr "Текст будет здесь"
+
+#: extension.js:129
+msgid "Type here to search..."
+msgstr "Введите здесь для поиска..."
+
+#: extension.js:198
+msgid "Private mode"
+msgstr "Приватный режим"
+
+#: extension.js:205 prefs.js:110
+msgid "Clear history"
+msgstr "Очистить историю"
+
+#: extension.js:210
+msgid "Settings"
+msgstr "Настройки"
+
+#: extension.js:339
+msgid "Clear all?"
+msgstr "Очистить все?"
+
+#: extension.js:340
+msgid "Are you sure you want to delete all clipboard items?"
+msgstr "Вы уверены, что хотите удалить все элементы буфера обмена?"
+
+#: extension.js:341
+msgid "This operation cannot be undone."
+msgstr "Эту операцию нельзя отменить."
+
+#: extension.js:343
+msgid "Clear"
+msgstr "Очистить"
+
+#: extension.js:343 extension.js:495
+msgid "Cancel"
+msgstr "Отменить"
+
+#: extension.js:357
+msgid "Clipboard history cleared"
+msgstr "История буфера обмена очищена"
+
+#: extension.js:494
+msgid "Copied to clipboard"
+msgstr "Скопировано в буфер обмена"
+
+#: prefs.js:108
+msgid "Toggle the menu"
+msgstr "Показать меню"
+
+#: prefs.js:112
+msgid "Previous entry"
+msgstr "Предыдущая запись"
+
+#: prefs.js:114
+msgid "Next entry"
+msgstr "Следующая запись"
+
+#: prefs.js:123
+msgid "History Size"
+msgstr "Размер истории"
+
+#: prefs.js:128
+msgid "Refresh Interval (ms)"
+msgstr "Интервал обновления (мс)"
+
+#: prefs.js:133
+msgid "Preview Size (characters)"
+msgstr "Длина строки в меню (символов)"
+
+#: prefs.js:138
+msgid "Max cache file size (kb)"
+msgstr "Максимальный размер кэша (кб)"
+
+#: prefs.js:143
+msgid "Cache only favorites"
+msgstr "Кэшировать только избранное"
+
+#: prefs.js:148
+msgid "Show notification on copy"
+msgstr "Уведомление при копировании"
+
+#: prefs.js:153
+msgid "Move item to the top after selection"
+msgstr "Переместить запись в начало после выделения"
+
+#: prefs.js:158
+msgid "Keyboard shortcuts"
+msgstr "Горячие клавиши"
+
+#: prefs.js:163
+msgid "Number of characters in top bar"
+msgstr "Количество символов в верхней панели"
+
+#: prefs.js:168
+msgid "What to show in top bar"
+msgstr "Что показывать в верхней панели"
+
+#: prefs.js:173
+msgid "Remove down arrow in top bar"
+msgstr "Убрать стрелку вниз в верхней панели"
+
+#: prefs.js:178
+msgid "Remove whitespace around text"
+msgstr "Удалить пробелы в тексте"
+
+#: prefs.js:233
+msgid "Icon"
+msgstr "Значок"
+
+#: prefs.js:234
+msgid "Clipboard Content"
+msgstr "Содержимое буфера обмена"
+
+#: prefs.js:235
+msgid "Both"
+msgstr "Оба"
