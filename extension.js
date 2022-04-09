@@ -62,8 +62,7 @@ class ClipboardIndicator extends PanelMenu.Button {
         this._clearLabelTimeout();
         this._clearDelayedSelectionTimeout();
 
-        // Call parent
-        this.parent();
+        super.destroy();
     }
 
     _init () {
