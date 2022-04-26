@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-04-15 13:20+0300\n"
-"PO-Revision-Date: 2017-10-26 14:48+0700\n"
-"Last-Translator: dmig <dmitriy.geels@gmail.com>\n"
+"PO-Revision-Date: 2022-02-08 13:08+0300\n"
+"Last-Translator: Aleksandr Melman <Alexmelman88@gmail.com>\n"
 "Language-Team: \n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -17,15 +17,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 2.0.1\n"
+"X-Generator: Poedit 3.0\n"
 
 #: extension.js:87
 msgid "Text will be here"
-msgstr ""
+msgstr "Текст будет здесь"
 
 #: extension.js:129
 msgid "Type here to search..."
-msgstr ""
+msgstr "Введите здесь для поиска..."
 
 #: extension.js:198
 msgid "Private mode"
@@ -41,31 +41,31 @@ msgstr "Настройки"
 
 #: extension.js:339
 msgid "Clear all?"
-msgstr ""
+msgstr "Очистить все?"
 
 #: extension.js:340
 msgid "Are you sure you want to delete all clipboard items?"
-msgstr ""
+msgstr "Вы уверены, что хотите удалить все элементы буфера обмена?"
 
 #: extension.js:341
 msgid "This operation cannot be undone."
-msgstr ""
+msgstr "Эту операцию нельзя отменить."
 
 #: extension.js:343
 msgid "Clear"
-msgstr ""
+msgstr "Очистить"
 
 #: extension.js:343 extension.js:495
 msgid "Cancel"
-msgstr ""
+msgstr "Отменить"
 
 #: extension.js:357
 msgid "Clipboard history cleared"
-msgstr "История буфера очищена"
+msgstr "История буфера обмена очищена"
 
 #: extension.js:494
 msgid "Copied to clipboard"
-msgstr "Скопировано в буфер"
+msgstr "Скопировано в буфер обмена"
 
 #: prefs.js:108
 msgid "Toggle the menu"
@@ -97,7 +97,7 @@ msgstr "Максимальный размер кэша (кб)"
 
 #: prefs.js:143
 msgid "Cache only favorites"
-msgstr ""
+msgstr "Кэшировать только избранное"
 
 #: prefs.js:148
 msgid "Show notification on copy"
@@ -105,7 +105,7 @@ msgstr "Уведомление при копировании"
 
 #: prefs.js:153
 msgid "Move item to the top after selection"
-msgstr ""
+msgstr "Переместить запись в начало после выделения"
 
 #: prefs.js:158
 msgid "Keyboard shortcuts"
@@ -113,31 +113,28 @@ msgstr "Горячие клавиши"
 
 #: prefs.js:163
 msgid "Number of characters in top bar"
-msgstr ""
+msgstr "Количество символов в верхней панели"
 
 #: prefs.js:168
 msgid "What to show in top bar"
-msgstr ""
+msgstr "Что показывать в верхней панели"
 
 #: prefs.js:173
 msgid "Remove down arrow in top bar"
-msgstr ""
+msgstr "Убрать стрелку вниз в верхней панели"
 
 #: prefs.js:178
 msgid "Remove whitespace around text"
-msgstr ""
+msgstr "Удалить пробелы в тексте"
 
 #: prefs.js:233
 msgid "Icon"
-msgstr ""
+msgstr "Значок"
 
 #: prefs.js:234
 msgid "Clipboard Content"
-msgstr ""
+msgstr "Содержимое буфера обмена"
 
 #: prefs.js:235
 msgid "Both"
-msgstr ""
-
-#~ msgid "Disable cache file"
-#~ msgstr "Отключить кэш"
+msgstr "Оба"
