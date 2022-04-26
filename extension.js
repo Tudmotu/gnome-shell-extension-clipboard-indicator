@@ -900,4 +900,5 @@ function enable () {
 
 function disable () {
     clipboardIndicator.destroy();
+    clipboardIndicator = null;
 }
