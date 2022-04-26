@@ -44,11 +44,11 @@ msgstr "Tout effacer ?"
 
 #: extension.js:340
 msgid "Are you sure you want to delete all clipboard items?"
-msgstr "Etes-vous sûr de vouloir effacer tout effacer ?"
+msgstr "Etes-vous sûr de vouloir tout effacer ?"
 
 #: extension.js:341
 msgid "This operation cannot be undone."
-msgstr "Cette action ne peut ëtre annulée."
+msgstr "Cette action ne peut être annulée."
 
 #: extension.js:343
 msgid "Clear"
@@ -121,7 +121,7 @@ msgstr "Afficher dans le panneau"
 #: prefs.js:173
 #, fuzzy
 msgid "Remove down arrow in top bar"
-msgstr "Nombre de caractères dans le panneau"
+msgstr "Supprimer la flèche vers le bas dans le panneau"
 
 #: prefs.js:178
 msgid "Remove whitespace around text"
