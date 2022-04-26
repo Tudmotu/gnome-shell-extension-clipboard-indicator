@@ -21,8 +21,7 @@ After cloning the repo, the extension is practically installed yet disabled. In 
 
 GNOME Version Support
 --------------------------
-With GNOME 40, many internal APIs were replaced which meant the extension had to drop backwards compatibility. Please note that versions v38 and later only support GNOME 40 and
-above.
+With GNOME 40, many internal APIs were replaced which meant the extension had to drop backwards compatibility. Please note that versions v38 and v39 only support GNOME 40 and 41. Version v40 and later only supports GNOME 42 and above.
 
 If you are using a GNOME version earlier than 40 (e.g. 3.38, 3.36, etc), please use v37 of this extension.
 
