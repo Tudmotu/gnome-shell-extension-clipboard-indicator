@@ -124,7 +124,7 @@ msgstr "Quitar la flecha hacia abajo de la barra de arriba"
 
 #: prefs.js:178
 msgid "Remove whitespace around text"
-msgstr "Eliminar espacios en blanco del texto"
+msgstr "Eliminar espacios en blanco alrededor del texto"
 
 #: prefs.js:233
 msgid "Icon"
