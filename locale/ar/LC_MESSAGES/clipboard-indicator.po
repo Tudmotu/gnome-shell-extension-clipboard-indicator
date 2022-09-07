@@ -24,7 +24,7 @@ msgstr "النص سيكون هنا"
 
 #: extension.js:129
 msgid "Type here to search..."
-msgstr "اكتب هنا للبحث"
+msgstr "...اكتب هنا للبحث"
 
 #: extension.js:198
 msgid "Private mode"
@@ -32,35 +32,35 @@ msgstr "الوضع السري"
 
 #: extension.js:205 prefs.js:110
 msgid "Clear history"
-msgstr "محو السجلات"
+msgstr "محو السجل"
 
 #: extension.js:210
 msgid "Settings"
-msgstr "ضبط"
+msgstr "الإعدادات"
 
 #: extension.js:339
 msgid "Clear all?"
-msgstr ""
+msgstr "حذف الكل؟"
 
 #: extension.js:340
 msgid "Are you sure you want to delete all clipboard items?"
-msgstr ""
+msgstr "هل أنت متأكد أنك تريد حذف جميع عناصر الحافطة؟"
 
 #: extension.js:341
 msgid "This operation cannot be undone."
-msgstr ""
+msgstr ".هذه العملية لا يمكن التراجع عنها"
 
 #: extension.js:343
 msgid "Clear"
-msgstr ""
+msgstr "إزالة"
 
 #: extension.js:343 extension.js:495
 msgid "Cancel"
-msgstr ""
+msgstr "إلغاء"
 
 #: extension.js:357
 msgid "Clipboard history cleared"
-msgstr "تم ازالة سجلات الحافظة"
+msgstr "تم إزالة سجل الحافظة"
 
 #: extension.js:494
 msgid "Copied to clipboard"
@@ -68,51 +68,51 @@ msgstr "تم النسخ في الحافظة"
 
 #: prefs.js:108
 msgid "Toggle the menu"
-msgstr "بدل حالة القائمة"
+msgstr "أظهر/أخفي القائمة"
 
 #: prefs.js:112
 msgid "Previous entry"
-msgstr "المدخل السابق"
+msgstr "الإدخال السابق"
 
 #: prefs.js:114
 msgid "Next entry"
-msgstr "المدخل التالي"
+msgstr "الإدخال التالي"
 
 #: prefs.js:123
 msgid "History Size"
-msgstr "عدد العناصر في السجل "
+msgstr "عدد العناصر في السجل"
 
 #: prefs.js:128
 msgid "Refresh Interval (ms)"
-msgstr "فترة الريفريش بالمللي ثانية"
+msgstr "فترة التحديث بالمللي ثانية"
 
 #: prefs.js:133
 msgid "Preview Size (characters)"
-msgstr "عدد الاحرف في المراجعه"
+msgstr "عدد الأحرف في المراجعة"
 
 #: prefs.js:138
 msgid "Max cache file size (kb)"
-msgstr "اقصي حجم للكاش فايل بالكيلوبايت"
+msgstr "أقصى حجم لملف ذاكرة التخزين المؤقت بالكيلوبايت"
 
 #: prefs.js:143
 msgid "Cache only favorites"
-msgstr ""
+msgstr "خزن فقط المفضلة"
 
 #: prefs.js:148
 msgid "Show notification on copy"
-msgstr "اظهار الاشعارات عند النسخ"
+msgstr "أظهر إشعار عند النسخ"
 
 #: prefs.js:153
 msgid "Move item to the top after selection"
-msgstr ""
+msgstr "انقل العنصر إلى الأعلى بعد إختياره"
 
 #: prefs.js:158
 msgid "Keyboard shortcuts"
-msgstr "اختصارات الكيبورد"
+msgstr "إختصارات لوحة المفاتيح"
 
 #: prefs.js:163
 msgid "Number of characters in top bar"
-msgstr "عدد الاحرف في الشريط العلوي"
+msgstr "عدد الأحرف في الشريط العلوي"
 
 #: prefs.js:168
 msgid "What to show in top bar"
@@ -121,11 +121,11 @@ msgstr "ما سيظهر في الشريط العلوي"
 #: prefs.js:173
 #, fuzzy
 msgid "Remove down arrow in top bar"
-msgstr "عدد الاحرف في الشريط العلوي"
+msgstr "إزالة السهم السفلي في الشريط العلوي"
 
 #: prefs.js:178
 msgid "Remove whitespace around text"
-msgstr ""
+msgstr "إزالة المسافات الفارغة حول النص"
 
 #: prefs.js:233
 msgid "Icon"
@@ -133,11 +133,11 @@ msgstr "أيقونة"
 
 #: prefs.js:234
 msgid "Clipboard Content"
-msgstr "محتوي الحافظة"
+msgstr "محتوى الحافظة"
 
 #: prefs.js:235
 msgid "Both"
 msgstr "كلاهما"
 
 #~ msgid "Disable cache file"
-#~ msgstr "الغاء الكاش في فايل"
+#~ msgstr "إلغاء ملف ذاكرة التخزين المؤقت"
