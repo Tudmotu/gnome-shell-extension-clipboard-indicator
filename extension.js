@@ -284,7 +284,7 @@ class ClipboardIndicator extends PanelMenu.Button {
 
         menuItem.actor.add_child(icofavBtn);
         menuItem.icofavBtn = icofavBtn;
-        menuItem.favoritePressId = icofavBtn.connect('button-press-event',
+        menuItem.favoritePressId = icofavBtn.connect('clicked',
             Lang.bind(this, function () {
                 this._favoriteToggle(menuItem);
             })
@@ -307,7 +307,7 @@ class ClipboardIndicator extends PanelMenu.Button {
 
         menuItem.actor.add_child(icoBtn);
         menuItem.icoBtn = icoBtn;
-        menuItem.deletePressId = icoBtn.connect('button-press-event',
+        menuItem.deletePressId = icoBtn.connect('clicked',
             Lang.bind(this, function () {
                 this._removeEntry(menuItem, 'delete');
             })
