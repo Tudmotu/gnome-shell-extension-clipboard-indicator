@@ -61,7 +61,7 @@
             If the cache overflows this limit, the file will be overriden.
             High limit might cause slowness of shell startup.
         </description>
-        <range min="512" max="16384"/>
+        <range min="512" max="102400"/>
     </key>
 
     <key name="cache-only-favorites" type="b">
