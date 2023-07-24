@@ -2,7 +2,6 @@ const Clutter    = imports.gi.Clutter;
 const Config     = imports.misc.config;
 const Gio        = imports.gi.Gio;
 const GObject    = imports.gi.GObject;
-const Lang       = imports.lang;
 const Mainloop   = imports.mainloop;
 const Meta       = imports.gi.Meta;
 const Shell      = imports.gi.Shell;
@@ -52,8 +51,9 @@ let TOPBAR_DISPLAY_MODE  = 1; //0 - only icon, 1 - only clipbord content, 2 - bo
 let DISABLE_DOWN_ARROW   = false;
 let STRIP_TEXT           = false;
 
-const ClipboardIndicator = GObject.registerClass(
-class ClipboardIndicator extends PanelMenu.Button {
+const ClipboardIndicator = GObject.registerClass({
+    GTypeName: 'ClipboardIndicator'
+}, class ClipboardIndicator extends PanelMenu.Button {
     destroy () {
         this._disconnectSettings();
         this._unbindShortcuts();
@@ -110,7 +110,7 @@ class ClipboardIndicator extends PanelMenu.Button {
 
     _buildMenu () {
         let that = this;
-        this._getCache(function (clipHistory) {
+        this._getCache(clipHistory => {
             let lastIdx = clipHistory.length - 1;
             let clipItemsArr = that.clipItemsRadioGroup;
 
@@ -134,22 +134,22 @@ class ClipboardIndicator extends PanelMenu.Button {
 
             that.searchEntry.get_clutter_text().connect(
                 'text-changed',
-                Lang.bind(that, that._onSearchTextChanged)
+                that._onSearchTextChanged.bind(that)
             );
 
             that._entryItem.add(that.searchEntry);
 
             that.menu.addMenuItem(that._entryItem);
 
-            that.menu.connect('open-state-changed', Lang.bind(that, function(self, open){
-                let a = Mainloop.timeout_add(50, Lang.bind(this, function() {
+            that.menu.connect('open-state-changed', (self, open) => {
+                let a = Mainloop.timeout_add(50, () => {
                     if (open) {
                         that.searchEntry.set_text('');
                         global.stage.set_key_focus(that.searchEntry);
                     }
                     Mainloop.source_remove(a);
-                }));
-            }));
+                });
+            });
 
             // Create menu sections for items
             // Favorites
@@ -197,19 +197,19 @@ class ClipboardIndicator extends PanelMenu.Button {
             that.privateModeMenuItem = new PopupMenu.PopupSwitchMenuItem(
                 _("Private mode"), PRIVATEMODE, { reactive: true });
             that.privateModeMenuItem.connect('toggled',
-                Lang.bind(that, that._onPrivateModeSwitch));
+                that._onPrivateModeSwitch.bind(that));
             that.menu.addMenuItem(that.privateModeMenuItem);
             that._onPrivateModeSwitch();
 
             // Add 'Clear' button which removes all items from cache
             let clearMenuItem = new PopupMenu.PopupMenuItem(_('Clear history'));
             that.menu.addMenuItem(clearMenuItem);
-            clearMenuItem.connect('activate', Lang.bind(that, that._removeAll));
+            clearMenuItem.connect('activate', that._removeAll.bind(that));
 
             // Add 'Settings' menu item to open settings
             let settingsMenuItem = new PopupMenu.PopupMenuItem(_('Settings'));
             that.menu.addMenuItem(settingsMenuItem);
-            settingsMenuItem.connect('activate', Lang.bind(that, that._openSettings));
+            settingsMenuItem.connect('activate', that._openSettings.bind(that));
 
             if (lastIdx >= 0) {
                 that._selectMenuItem(clipItemsArr[lastIdx]);
@@ -261,7 +261,7 @@ class ClipboardIndicator extends PanelMenu.Button {
         menuItem.clipFavorite = favorite;
         menuItem.radioGroup = this.clipItemsRadioGroup;
         menuItem.buttonPressId = menuItem.connect('activate',
-            Lang.bind(menuItem, this._onMenuItemSelectedAndMenuClose));
+            this._onMenuItemSelectedAndMenuClose.bind(menuItem));
 
         this._setEntryLabel(menuItem);
         this.clipItemsRadioGroup.push(menuItem);
@@ -285,9 +285,7 @@ class ClipboardIndicator extends PanelMenu.Button {
         menuItem.actor.add_child(icofavBtn);
         menuItem.icofavBtn = icofavBtn;
         menuItem.favoritePressId = icofavBtn.connect('clicked',
-            Lang.bind(this, function () {
-                this._favoriteToggle(menuItem);
-            })
+            () => this._favoriteToggle(menuItem)
         );
 
 	// Delete button
@@ -308,9 +306,7 @@ class ClipboardIndicator extends PanelMenu.Button {
         menuItem.actor.add_child(icoBtn);
         menuItem.icoBtn = icoBtn;
         menuItem.deletePressId = icoBtn.connect('clicked',
-            Lang.bind(this, function () {
-                this._removeEntry(menuItem, 'delete');
-            })
+            () => this._removeEntry(menuItem, 'delete')
         );
 
         if (favorite) {
@@ -424,7 +420,7 @@ class ClipboardIndicator extends PanelMenu.Button {
     }
 
     _selectMenuItem (menuItem, autoSet) {
-        let fn = Lang.bind(menuItem, this._onMenuItemSelected);
+        let fn = this._onMenuItemSelected.bind(menuItem);
         fn(autoSet);
         if(TOPBAR_DISPLAY_MODE === 1 || TOPBAR_DISPLAY_MODE === 2) {
             this._updateButtonText(menuItem.label.text);
@@ -509,7 +505,7 @@ class ClipboardIndicator extends PanelMenu.Button {
                 that._removeOldestEntries();
                 if (NOTIFY_ON_COPY) {
                     that._showNotification(_("Copied to clipboard"), notif => {
-                        notif.addAction(_('Cancel'), Lang.bind(that, that._cancelNotification));
+                        notif.addAction(_('Cancel'), that._cancelNotification.bind(that));
                     });
                 }
             }
@@ -595,9 +591,9 @@ class ClipboardIndicator extends PanelMenu.Button {
         if (!this._notifSource) {
             this._notifSource = new MessageTray.Source('ClipboardIndicator',
                                     INDICATOR_ICON);
-            this._notifSource.connect('destroy', Lang.bind(this, function() {
+            this._notifSource.connect('destroy', () => {
                 this._notifSource = null;
-            }));
+            });
             Main.messageTray.add(this._notifSource);
         }
     }
@@ -681,7 +677,7 @@ class ClipboardIndicator extends PanelMenu.Button {
     _loadSettings () {
         this._settings = Prefs.SettingsSchema;
         this._settingsChangedId = this._settings.connect('changed',
-            Lang.bind(this, this._onSettingsChange));
+            this._onSettingsChange.bind(this));
 
         this._fetchSettings();
 
@@ -759,7 +755,7 @@ class ClipboardIndicator extends PanelMenu.Button {
             this._settings,
             Meta.KeyBindingFlags.NONE,
             ModeType.ALL,
-            Lang.bind(this, cb)
+            cb.bind(this)
         );
 
         this._shortcutsBindingIds.push(name);
