@@ -670,7 +670,7 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     _loadSettings () {
-        this._settingsChangedId = this.extension._settings.connect('changed',
+        this._settingsChangedId = this.extension.settings.connect('changed',
             this._onSettingsChange.bind(this));
 
         this._fetchSettings();
@@ -747,7 +747,7 @@ const ClipboardIndicator = GObject.registerClass({
 
         Main.wm.addKeybinding(
             name,
-            this.extension._settings,
+            this.extension.settings,
             Meta.KeyBindingFlags.NONE,
             ModeType.ALL,
             cb.bind(this)
@@ -780,7 +780,7 @@ const ClipboardIndicator = GObject.registerClass({
         if (!this._settingsChangedId)
             return;
 
-        this.extension._settings.disconnect(this._settingsChangedId);
+        this.extension.settings.disconnect(this._settingsChangedId);
         this._settingsChangedId = null;
     }
 
