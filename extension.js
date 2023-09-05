@@ -58,12 +58,6 @@ export default class ClipboardIndicatorExtension extends Extension {
 const ClipboardIndicator = GObject.registerClass({
     GTypeName: 'ClipboardIndicator'
 }, class ClipboardIndicator extends PanelMenu.Button {
-    constructor (extension) {
-        super();
-        this.extension = extension;
-        this.registry = new Registry(extension);
-    }
-
     destroy () {
         this._disconnectSettings();
         this._unbindShortcuts();
@@ -77,6 +71,8 @@ const ClipboardIndicator = GObject.registerClass({
 
     _init () {
         super._init(0.0, "ClipboardIndicator");
+        this.extension = extension;
+        this.registry = new Registry(extension);
         this._settingsChangedId = null;
         this._clipboardTimeoutId = null;
         this._selectionOwnerChangedId = null;
