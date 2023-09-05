@@ -10,9 +10,9 @@ import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import { Extension, gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import Prefs from './prefs.js';
-import Utils from './utils.js';
+import Registry from './registry.js';
 import { openConfirmDialog } from './confirmDialog.js';
+import { PrefsFields } from './constants.js';
 
 const Clipboard = St.Clipboard.get_default();
 const CLIPBOARD_TYPE = St.ClipboardType.CLIPBOARD;
@@ -42,7 +42,8 @@ export default class ClipboardIndicatorExtension extends Extension {
     enable () {
         this.clipboardIndicator = new ClipboardIndicator({
             settings: this.getSettings(),
-            openSettings: this.openPreferences
+            openSettings: this.openPreferences,
+            uuid: this.uuid
         });
 
         Main.panel.addToStatusArea('clipboardIndicator', clipboardIndicator, 1);
@@ -59,6 +60,7 @@ const ClipboardIndicator = GObject.registerClass({
 }, class ClipboardIndicator extends PanelMenu.Button {
     constructor (extension) {
         this.extension = extension;
+        this.registry = new Registry(extension);
     }
 
     destroy () {
@@ -455,7 +457,7 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     _getCache (cb) {
-        return Utils.readRegistry(cb);
+        return this.registry.read(cb);
     }
 
     _updateCache () {
@@ -466,7 +468,7 @@ const ClipboardIndicator = GObject.registerClass({
                    };
         });
 
-        Utils.writeRegistry(registry.filter(function (menuItem) {
+        this.registry.write(registry.filter(function (menuItem) {
             if (CACHE_ONLY_FAVORITE) {
                 if (menuItem["favorite"]) {
                     return menuItem;
@@ -675,19 +677,19 @@ const ClipboardIndicator = GObject.registerClass({
 
     _fetchSettings () {
         const { settings } = this.extension;
-        TIMEOUT_MS           = settings.get_int(Prefs.Fields.INTERVAL);
-        MAX_REGISTRY_LENGTH  = settings.get_int(Prefs.Fields.HISTORY_SIZE);
-        MAX_ENTRY_LENGTH     = settings.get_int(Prefs.Fields.PREVIEW_SIZE);
-        CACHE_ONLY_FAVORITE  = settings.get_boolean(Prefs.Fields.CACHE_ONLY_FAVORITE);
-        DELETE_ENABLED       = settings.get_boolean(Prefs.Fields.DELETE);
-        MOVE_ITEM_FIRST      = settings.get_boolean(Prefs.Fields.MOVE_ITEM_FIRST);
-        NOTIFY_ON_COPY       = settings.get_boolean(Prefs.Fields.NOTIFY_ON_COPY);
-        CONFIRM_ON_CLEAR     = settings.get_boolean(Prefs.Fields.CONFIRM_ON_CLEAR);
-        ENABLE_KEYBINDING    = settings.get_boolean(Prefs.Fields.ENABLE_KEYBINDING);
-        MAX_TOPBAR_LENGTH    = settings.get_int(Prefs.Fields.TOPBAR_PREVIEW_SIZE);
-        TOPBAR_DISPLAY_MODE  = settings.get_int(Prefs.Fields.TOPBAR_DISPLAY_MODE_ID);
-        DISABLE_DOWN_ARROW   = settings.get_boolean(Prefs.Fields.DISABLE_DOWN_ARROW);
-        STRIP_TEXT           = settings.get_boolean(Prefs.Fields.STRIP_TEXT);
+        TIMEOUT_MS           = settings.get_int(PrefsFields.INTERVAL);
+        MAX_REGISTRY_LENGTH  = settings.get_int(PrefsFields.HISTORY_SIZE);
+        MAX_ENTRY_LENGTH     = settings.get_int(PrefsFields.PREVIEW_SIZE);
+        CACHE_ONLY_FAVORITE  = settings.get_boolean(PrefsFields.CACHE_ONLY_FAVORITE);
+        DELETE_ENABLED       = settings.get_boolean(PrefsFields.DELETE);
+        MOVE_ITEM_FIRST      = settings.get_boolean(PrefsFields.MOVE_ITEM_FIRST);
+        NOTIFY_ON_COPY       = settings.get_boolean(PrefsFields.NOTIFY_ON_COPY);
+        CONFIRM_ON_CLEAR     = settings.get_boolean(PrefsFields.CONFIRM_ON_CLEAR);
+        ENABLE_KEYBINDING    = settings.get_boolean(PrefsFields.ENABLE_KEYBINDING);
+        MAX_TOPBAR_LENGTH    = settings.get_int(PrefsFields.TOPBAR_PREVIEW_SIZE);
+        TOPBAR_DISPLAY_MODE  = settings.get_int(PrefsFields.TOPBAR_DISPLAY_MODE_ID);
+        DISABLE_DOWN_ARROW   = settings.get_boolean(PrefsFields.DISABLE_DOWN_ARROW);
+        STRIP_TEXT           = settings.get_boolean(PrefsFields.STRIP_TEXT);
     }
 
     _onSettingsChange () {
