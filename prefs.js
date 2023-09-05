@@ -7,9 +7,9 @@ import { PrefsFields } from './constants.js';
 
 export default class ClipboardIndicatorPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
-        window.SettingsSchema = this.getSettings();
+        const schema = this.getSettings();
 
-        let widget = new Settings();
+        let widget = new Settings(schema);
 
         const page = new Adw.PreferencesPage();
 
@@ -20,7 +20,9 @@ export default class ClipboardIndicatorPreferences extends ExtensionPreferences 
 }
 
 class Settings {
-    constructor () {
+    constructor (schema) {
+        this.schema = schema;
+
         this.main = new Gtk.Grid({
             margin_top: 10,
             margin_bottom: 10,
@@ -78,14 +80,14 @@ class Settings {
         this.field_confirm_clear_toggle = new Gtk.Switch();
         this.field_strip_text = new Gtk.Switch();
         this.field_move_item_first = new Gtk.Switch();
-        this.field_keybinding = createKeybindingWidget(SettingsSchema);
-        addKeybinding(this.field_keybinding.model, SettingsSchema, "toggle-menu",
+        this.field_keybinding = createKeybindingWidget(this.schema);
+        addKeybinding(this.field_keybinding.model, this.schema, "toggle-menu",
                       _("Toggle the menu"));
-        addKeybinding(this.field_keybinding.model, SettingsSchema, "clear-history",
+        addKeybinding(this.field_keybinding.model, this.schema, "clear-history",
                       _("Clear history"));
-        addKeybinding(this.field_keybinding.model, SettingsSchema, "prev-entry",
+        addKeybinding(this.field_keybinding.model, this.schema, "prev-entry",
                       _("Previous entry"));
-        addKeybinding(this.field_keybinding.model, SettingsSchema, "next-entry",
+        addKeybinding(this.field_keybinding.model, this.schema, "next-entry",
                       _("Next entry"));
 
         var that = this;
@@ -197,19 +199,19 @@ class Settings {
         addRow(keybindingLabel,       this.field_keybinding_activation);
         addRow(null,                  this.field_keybinding);
 
-        SettingsSchema.bind(PrefsFields.INTERVAL, this.field_interval, 'value', Gio.SettingsBindFlags.DEFAULT);
-        SettingsSchema.bind(PrefsFields.HISTORY_SIZE, this.field_size, 'value', Gio.SettingsBindFlags.DEFAULT);
-        SettingsSchema.bind(PrefsFields.PREVIEW_SIZE, this.field_preview_size, 'value', Gio.SettingsBindFlags.DEFAULT);
-        SettingsSchema.bind(PrefsFields.CACHE_FILE_SIZE, this.field_cache_size, 'value', Gio.SettingsBindFlags.DEFAULT);
-        SettingsSchema.bind(PrefsFields.CACHE_ONLY_FAVORITE, this.field_cache_disable, 'active', Gio.SettingsBindFlags.DEFAULT);
-        SettingsSchema.bind(PrefsFields.NOTIFY_ON_COPY, this.field_notification_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
-        SettingsSchema.bind(PrefsFields.CONFIRM_ON_CLEAR, this.field_confirm_clear_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
-        SettingsSchema.bind(PrefsFields.MOVE_ITEM_FIRST, this.field_move_item_first, 'active', Gio.SettingsBindFlags.DEFAULT);
-        SettingsSchema.bind(PrefsFields.TOPBAR_DISPLAY_MODE_ID, this.field_display_mode, 'active', Gio.SettingsBindFlags.DEFAULT);
-        SettingsSchema.bind(PrefsFields.DISABLE_DOWN_ARROW, this.field_disable_down_arrow, 'active', Gio.SettingsBindFlags.DEFAULT);
-        SettingsSchema.bind(PrefsFields.TOPBAR_PREVIEW_SIZE, this.field_topbar_preview_size, 'value', Gio.SettingsBindFlags.DEFAULT);
-        SettingsSchema.bind(PrefsFields.STRIP_TEXT, this.field_strip_text, 'active', Gio.SettingsBindFlags.DEFAULT);
-        SettingsSchema.bind(PrefsFields.ENABLE_KEYBINDING, this.field_keybinding_activation, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.INTERVAL, this.field_interval, 'value', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.HISTORY_SIZE, this.field_size, 'value', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.PREVIEW_SIZE, this.field_preview_size, 'value', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.CACHE_FILE_SIZE, this.field_cache_size, 'value', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.CACHE_ONLY_FAVORITE, this.field_cache_disable, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.NOTIFY_ON_COPY, this.field_notification_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.CONFIRM_ON_CLEAR, this.field_confirm_clear_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.MOVE_ITEM_FIRST, this.field_move_item_first, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.TOPBAR_DISPLAY_MODE_ID, this.field_display_mode, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.DISABLE_DOWN_ARROW, this.field_disable_down_arrow, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.TOPBAR_PREVIEW_SIZE, this.field_topbar_preview_size, 'value', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.STRIP_TEXT, this.field_strip_text, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.ENABLE_KEYBINDING, this.field_keybinding_activation, 'active', Gio.SettingsBindFlags.DEFAULT);
     }
 
     _create_display_mode_options  (){
