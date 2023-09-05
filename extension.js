@@ -38,7 +38,7 @@ let TOPBAR_DISPLAY_MODE  = 1; //0 - only icon, 1 - only clipboard content, 2 - b
 let DISABLE_DOWN_ARROW   = false;
 let STRIP_TEXT           = false;
 
-export default class ClipboardIndicator extends Extension {
+export default class ClipboardIndicatorExtension extends Extension {
     enable () {
         this.clipboardIndicator = new ClipboardIndicator({
             settings: this.getSettings(),
