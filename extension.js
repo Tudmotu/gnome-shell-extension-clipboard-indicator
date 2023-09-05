@@ -46,7 +46,7 @@ export default class ClipboardIndicatorExtension extends Extension {
             uuid: this.uuid
         });
 
-        Main.panel.addToStatusArea('clipboardIndicator', clipboardIndicator, 1);
+        Main.panel.addToStatusArea('clipboardIndicator', this.clipboardIndicator, 1);
     }
 
     disable () {
