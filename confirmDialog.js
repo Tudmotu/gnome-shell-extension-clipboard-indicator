@@ -1,12 +1,11 @@
-const St = imports.gi.St;
-const GObject = imports.gi.GObject;
-const ModalDialog = imports.ui.modalDialog;
-const CheckBox = imports.ui.checkBox;
-const Clutter = imports.gi.Clutter;
+import St from 'gi://St';
+import GObject from 'gi://GObject';
+import Clutter from 'gi://Clutter';
+import * as ModalDialog from 'resource:///org/gnome/shell/ui/modalDialog.js';
 
 let _openDialog;
 
-function openConfirmDialog(title, message, sub_message, ok_label, cancel_label, callback) {
+export function openConfirmDialog(title, message, sub_message, ok_label, cancel_label, callback) {
   if (!_openDialog)
     _openDialog = new ConfirmDialog(title, message + "\n" + sub_message, ok_label, cancel_label, callback).open();
 }

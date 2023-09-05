@@ -1,22 +1,18 @@
-const Clutter    = imports.gi.Clutter;
-const Config     = imports.misc.config;
-const Gio        = imports.gi.Gio;
-const GObject    = imports.gi.GObject;
-const Mainloop   = imports.mainloop;
-const Meta       = imports.gi.Meta;
-const Shell      = imports.gi.Shell;
-const St         = imports.gi.St;
-const PolicyType = imports.gi.Gtk.PolicyType;
-const Util       = imports.misc.util;
-const MessageTray = imports.ui.messageTray;
+import Clutter from 'gi://Clutter';
+import GObject from 'gi://GObject';
+import Meta from 'gi://Meta';
+import Shell from 'gi://Shell';
+import St from 'gi://St';
 
-const Main      = imports.ui.main;
-const PanelMenu = imports.ui.panelMenu;
-const PopupMenu = imports.ui.popupMenu;
-const CheckBox  = imports.ui.checkBox.CheckBox;
+import * as MessageTray from 'resource:///org/gnome/shell/ui/messageTray.js';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
+import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
+import { Extension, gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
-const Gettext = imports.gettext;
-const _ = Gettext.domain('clipboard-indicator').gettext;
+import Prefs from './prefs.js';
+import Utils from './utils.js';
+import { openConfirmDialog } from './confirmDialog.js';
 
 const Clipboard = St.Clipboard.get_default();
 const CLIPBOARD_TYPE = St.ClipboardType.CLIPBOARD;
@@ -26,15 +22,6 @@ const SETTING_KEY_PREV_ENTRY = "prev-entry";
 const SETTING_KEY_NEXT_ENTRY = "next-entry";
 const SETTING_KEY_TOGGLE_MENU = "toggle-menu";
 const INDICATOR_ICON = 'edit-paste-symbolic';
-
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
-const Utils = Me.imports.utils;
-const ConfirmDialog = Me.imports.confirmDialog;
-const Prefs = Me.imports.prefs;
-const prettyPrint = Utils.prettyPrint;
-const writeRegistry = Utils.writeRegistry;
-const readRegistry = Utils.readRegistry;
 
 let TIMEOUT_MS           = 1000;
 let MAX_REGISTRY_LENGTH  = 15;
@@ -47,13 +34,33 @@ let PRIVATEMODE          = false;
 let NOTIFY_ON_COPY       = true;
 let CONFIRM_ON_CLEAR     = true;
 let MAX_TOPBAR_LENGTH    = 15;
-let TOPBAR_DISPLAY_MODE  = 1; //0 - only icon, 1 - only clipbord content, 2 - both
+let TOPBAR_DISPLAY_MODE  = 1; //0 - only icon, 1 - only clipboard content, 2 - both
 let DISABLE_DOWN_ARROW   = false;
 let STRIP_TEXT           = false;
+
+export default class ClipboardIndicator extends Extension {
+    enable () {
+        this.clipboardIndicator = new ClipboardIndicator({
+            settings: this.getSettings(),
+            openSettings: this.openPreferences
+        });
+
+        Main.panel.addToStatusArea('clipboardIndicator', clipboardIndicator, 1);
+    }
+
+    disable () {
+        this.clipboardIndicator.destroy();
+        this.clipboardIndicator = null;
+    }
+}
 
 const ClipboardIndicator = GObject.registerClass({
     GTypeName: 'ClipboardIndicator'
 }, class ClipboardIndicator extends PanelMenu.Button {
+    constructor (extension) {
+        this.extension = extension;
+    }
+
     destroy () {
         this._disconnectSettings();
         this._unbindShortcuts();
@@ -142,13 +149,13 @@ const ClipboardIndicator = GObject.registerClass({
             that.menu.addMenuItem(that._entryItem);
 
             that.menu.connect('open-state-changed', (self, open) => {
-                let a = Mainloop.timeout_add(50, () => {
+                let a = setInterval(() => {
                     if (open) {
                         that.searchEntry.set_text('');
                         global.stage.set_key_focus(that.searchEntry);
                     }
-                    Mainloop.source_remove(a);
-                });
+                    clearInterval(a);
+                }, 50);
             });
 
             // Create menu sections for items
@@ -266,7 +273,7 @@ const ClipboardIndicator = GObject.registerClass({
         this._setEntryLabel(menuItem);
         this.clipItemsRadioGroup.push(menuItem);
 
-	// Favorite button
+        // Favorite button
         let icon_name = favorite ? 'starred-symbolic' : 'non-starred-symbolic';
         let iconfav = new St.Icon({
             icon_name: icon_name,
@@ -288,7 +295,7 @@ const ClipboardIndicator = GObject.registerClass({
             () => this._favoriteToggle(menuItem)
         );
 
-	// Delete button
+        // Delete button
         let icon = new St.Icon({
             icon_name: 'edit-delete-symbolic', //'mail-attachment-symbolic',
             style_class: 'system-status-icon'
@@ -331,13 +338,13 @@ const ClipboardIndicator = GObject.registerClass({
 
         this._updateCache();
     }
-  
+
     _confirmRemoveAll () {
         const title = _("Clear all?");
         const message = _("Are you sure you want to delete all clipboard items?");
         const sub_message = _("This operation cannot be undone.");
 
-        ConfirmDialog.openConfirmDialog(title, message, sub_message, _("Clear"), _("Cancel"), () => {
+        openConfirmDialog(title, message, sub_message, _("Clear"), _("Cancel"), () => {
             let that = this;
             that._clearHistory();
         }
@@ -448,7 +455,7 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     _getCache (cb) {
-        return readRegistry(cb);
+        return Utils.readRegistry(cb);
     }
 
     _updateCache () {
@@ -459,7 +466,7 @@ const ClipboardIndicator = GObject.registerClass({
                    };
         });
 
-        writeRegistry(registry.filter(function (menuItem) {
+        Utils.writeRegistry(registry.filter(function (menuItem) {
             if (CACHE_ONLY_FAVORITE) {
                 if (menuItem["favorite"]) {
                     return menuItem;
@@ -557,34 +564,16 @@ const ClipboardIndicator = GObject.registerClass({
         });
     }
 
-    _setupTimeout (reiterate) {
+    _setupTimeout () {
         let that = this;
-        reiterate = typeof reiterate === 'boolean' ? reiterate : true;
 
-        this._clipboardTimeoutId = Mainloop.timeout_add(TIMEOUT_MS, function () {
+        this._clipboardTimeoutId = setInterval(function () {
             that._refreshIndicator();
-
-            // If the timeout handler returns `false`, the source is
-            // automatically removed, so we reset the timeout-id so it won't
-            // be removed on `.destroy()`
-            if (reiterate === false)
-                that._clipboardTimeoutId = null;
-
-            // As long as the timeout handler returns `true`, the handler
-            // will be invoked again and again as an interval
-            return reiterate;
-        });
+        }, TIMEOUT_MS);
     }
 
     _openSettings () {
-        if (typeof ExtensionUtils.openPrefs === 'function') {
-            ExtensionUtils.openPrefs();
-        } else {
-            Util.spawn([
-                "gnome-shell-extension-prefs",
-                Me.uuid
-            ]);
-        }
+        this.extension.openSettings();
     }
 
     _initNotifSource () {
@@ -675,8 +664,7 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     _loadSettings () {
-        this._settings = Prefs.SettingsSchema;
-        this._settingsChangedId = this._settings.connect('changed',
+        this._settingsChangedId = this.extension._settings.connect('changed',
             this._onSettingsChange.bind(this));
 
         this._fetchSettings();
@@ -686,19 +674,20 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     _fetchSettings () {
-        TIMEOUT_MS           = this._settings.get_int(Prefs.Fields.INTERVAL);
-        MAX_REGISTRY_LENGTH  = this._settings.get_int(Prefs.Fields.HISTORY_SIZE);
-        MAX_ENTRY_LENGTH     = this._settings.get_int(Prefs.Fields.PREVIEW_SIZE);
-        CACHE_ONLY_FAVORITE  = this._settings.get_boolean(Prefs.Fields.CACHE_ONLY_FAVORITE);
-        DELETE_ENABLED       = this._settings.get_boolean(Prefs.Fields.DELETE);
-        MOVE_ITEM_FIRST      = this._settings.get_boolean(Prefs.Fields.MOVE_ITEM_FIRST);
-        NOTIFY_ON_COPY       = this._settings.get_boolean(Prefs.Fields.NOTIFY_ON_COPY);
-        CONFIRM_ON_CLEAR     = this._settings.get_boolean(Prefs.Fields.CONFIRM_ON_CLEAR);
-        ENABLE_KEYBINDING    = this._settings.get_boolean(Prefs.Fields.ENABLE_KEYBINDING);
-        MAX_TOPBAR_LENGTH    = this._settings.get_int(Prefs.Fields.TOPBAR_PREVIEW_SIZE);
-        TOPBAR_DISPLAY_MODE  = this._settings.get_int(Prefs.Fields.TOPBAR_DISPLAY_MODE_ID);
-        DISABLE_DOWN_ARROW   = this._settings.get_boolean(Prefs.Fields.DISABLE_DOWN_ARROW);
-        STRIP_TEXT           = this._settings.get_boolean(Prefs.Fields.STRIP_TEXT);
+        const { settings } = this.extension;
+        TIMEOUT_MS           = settings.get_int(Prefs.Fields.INTERVAL);
+        MAX_REGISTRY_LENGTH  = settings.get_int(Prefs.Fields.HISTORY_SIZE);
+        MAX_ENTRY_LENGTH     = settings.get_int(Prefs.Fields.PREVIEW_SIZE);
+        CACHE_ONLY_FAVORITE  = settings.get_boolean(Prefs.Fields.CACHE_ONLY_FAVORITE);
+        DELETE_ENABLED       = settings.get_boolean(Prefs.Fields.DELETE);
+        MOVE_ITEM_FIRST      = settings.get_boolean(Prefs.Fields.MOVE_ITEM_FIRST);
+        NOTIFY_ON_COPY       = settings.get_boolean(Prefs.Fields.NOTIFY_ON_COPY);
+        CONFIRM_ON_CLEAR     = settings.get_boolean(Prefs.Fields.CONFIRM_ON_CLEAR);
+        ENABLE_KEYBINDING    = settings.get_boolean(Prefs.Fields.ENABLE_KEYBINDING);
+        MAX_TOPBAR_LENGTH    = settings.get_int(Prefs.Fields.TOPBAR_PREVIEW_SIZE);
+        TOPBAR_DISPLAY_MODE  = settings.get_int(Prefs.Fields.TOPBAR_DISPLAY_MODE_ID);
+        DISABLE_DOWN_ARROW   = settings.get_boolean(Prefs.Fields.DISABLE_DOWN_ARROW);
+        STRIP_TEXT           = settings.get_boolean(Prefs.Fields.STRIP_TEXT);
     }
 
     _onSettingsChange () {
@@ -752,7 +741,7 @@ const ClipboardIndicator = GObject.registerClass({
 
         Main.wm.addKeybinding(
             name,
-            this._settings,
+            this.extension._settings,
             Meta.KeyBindingFlags.NONE,
             ModeType.ALL,
             cb.bind(this)
@@ -785,7 +774,7 @@ const ClipboardIndicator = GObject.registerClass({
         if (!this._settingsChangedId)
             return;
 
-        this._settings.disconnect(this._settingsChangedId);
+        this.extension._settings.disconnect(this._settingsChangedId);
         this._settingsChangedId = null;
     }
 
@@ -793,7 +782,7 @@ const ClipboardIndicator = GObject.registerClass({
         if (!this._clipboardTimeoutId)
             return;
 
-        Mainloop.source_remove(this._clipboardTimeoutId);
+        clearInterval(this._clipboardTimeoutId);
         this._clipboardTimeoutId = null;
     }
 
@@ -808,28 +797,25 @@ const ClipboardIndicator = GObject.registerClass({
         if (!this._historyLabelTimeoutId)
             return;
 
-        Mainloop.source_remove(this._historyLabelTimeoutId);
+        clearInterval(this._historyLabelTimeoutId);
         this._historyLabelTimeoutId = null;
     }
 
     _clearDelayedSelectionTimeout () {
         if (this._delayedSelectionTimeoutId) {
-            Mainloop.source_remove(this._delayedSelectionTimeoutId);
+            clearInterval(this._delayedSelectionTimeoutId);
         }
     }
 
     _selectEntryWithDelay (entry) {
         let that = this;
-
         that._selectMenuItem(entry, false);
-        that._delayedSelectionTimeoutId = Mainloop.timeout_add(
-                TIMEOUT_MS * 0.75, function () {
 
+        that._delayedSelectionTimeoutId = setInterval(function () {
             that._selectMenuItem(entry);  //select the item
-
             that._delayedSelectionTimeoutId = null;
             return false;
-        });
+        }, TIMEOUT_MS * 0.75);
     }
 
     _previousEntry () {
@@ -881,20 +867,4 @@ const ClipboardIndicator = GObject.registerClass({
     _toggleMenu () {
         this.menu.toggle();
     }
-})
-
-function init () {
-    let localeDir = Me.dir.get_child('locale');
-    Gettext.bindtextdomain('clipboard-indicator', localeDir.get_path());
-}
-
-let clipboardIndicator;
-function enable () {
-    clipboardIndicator = new ClipboardIndicator();
-    Main.panel.addToStatusArea('clipboardIndicator', clipboardIndicator, 1);
-}
-
-function disable () {
-    clipboardIndicator.destroy();
-    clipboardIndicator = null;
-}
+});
