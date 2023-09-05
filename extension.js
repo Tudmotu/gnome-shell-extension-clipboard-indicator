@@ -59,6 +59,7 @@ const ClipboardIndicator = GObject.registerClass({
     GTypeName: 'ClipboardIndicator'
 }, class ClipboardIndicator extends PanelMenu.Button {
     constructor (extension) {
+        super();
         this.extension = extension;
         this.registry = new Registry(extension);
     }
