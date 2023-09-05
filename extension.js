@@ -58,6 +58,16 @@ export default class ClipboardIndicatorExtension extends Extension {
 const ClipboardIndicator = GObject.registerClass({
     GTypeName: 'ClipboardIndicator'
 }, class ClipboardIndicator extends PanelMenu.Button {
+    constructor (extension) {
+        super();
+        this.extension = extension;
+        this.registry = new Registry(extension);
+        this._loadSettings();
+        this._buildMenu();
+        this._updateTopbarLayout();
+        this._setupListener();
+    }
+
     destroy () {
         this._disconnectSettings();
         this._unbindShortcuts();
@@ -71,8 +81,6 @@ const ClipboardIndicator = GObject.registerClass({
 
     _init () {
         super._init(0.0, "ClipboardIndicator");
-        this.extension = extension;
-        this.registry = new Registry(extension);
         this._settingsChangedId = null;
         this._clipboardTimeoutId = null;
         this._selectionOwnerChangedId = null;
@@ -84,25 +92,29 @@ const ClipboardIndicator = GObject.registerClass({
         this._shortcutsBindingIds = [];
         this.clipItemsRadioGroup = [];
 
-        let hbox = new St.BoxLayout({ style_class: 'panel-status-menu-box clipboard-indicator-hbox' });
-        this.icon = new St.Icon({ icon_name: INDICATOR_ICON,
-            style_class: 'system-status-icon clipboard-indicator-icon' });
-        hbox.add_child(this.icon);
+        let hbox = new St.BoxLayout({
+            style_class: 'panel-status-menu-box clipboard-indicator-hbox'
+        });
+
+        this.icon = new St.Icon({
+            icon_name: INDICATOR_ICON,
+            style_class: 'system-status-icon clipboard-indicator-icon'
+        });
+
         this._buttonText = new St.Label({
             text: _('Text will be here'),
             y_align: Clutter.ActorAlign.CENTER
         });
+
+        hbox.add_child(this.icon);
         hbox.add_child(this._buttonText);
         this._downArrow = PopupMenu.arrowIcon(St.Side.BOTTOM);
         hbox.add(this._downArrow);
         this.add_child(hbox);
-
         this._createHistoryLabel();
         this._loadSettings();
         this._buildMenu();
-
         this._updateTopbarLayout();
-
         this._setupListener();
     }
 
