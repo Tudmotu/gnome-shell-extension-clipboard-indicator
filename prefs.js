@@ -6,15 +6,17 @@ import { ExtensionPreferences, gettext as _ } from 'resource:///org/gnome/Shell/
 import { PrefsFields } from './constants.js';
 
 export default class ClipboardIndicatorPreferences extends ExtensionPreferences {
-    fillPreferencesWindow(window) {
-        const schema = this.getSettings();
+    fillPreferencesWindow (window) {
+        window._settings = this.getSettings();
 
-        let widget = new Settings(schema);
+        const group = new Adw.PreferencesGroup({
+            title: _('Clipboard Indicator'),
+        });
 
+        const widget = new Settings(window._settings);
         const page = new Adw.PreferencesPage();
-
-        page.add(widget.main);
-
+        group.add(widget.main);
+        page.add(group);
         window.add(page);
     }
 }
