@@ -6,5 +6,6 @@
     "name": "Clipboard Indicator",
     "description": "Clipboard Manager extension for Gnome-Shell - Adds a clipboard indicator to the top panel, and caches clipboard history.",
     "url": "https://github.com/Tudmotu/gnome-shell-extension-clipboard-indicator",
-    "gettext-domain": "clipboard-indicator@tudmotu.com"
+    "gettext-domain": "clipboard-indicator@tudmotu.com",
+    "schema-schema": "org.gnome.shell.extensions.clipboard-indicator"
 }
