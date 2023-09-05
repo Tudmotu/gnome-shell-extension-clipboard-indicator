@@ -53,8 +53,8 @@ const ConfirmDialog = GObject.registerClass(
           label: ok_label,
           action: () => {
             this.close();
-            callback();
             _openDialog = null;
+            callback();
           }
         }
       ]);
