@@ -26,12 +26,12 @@ export default class Registry {
         // Write contents to file asynchronously
         let file = Gio.file_new_for_path(this.REGISTRY_PATH);
         file.replace_async(null, false, Gio.FileCreateFlags.NONE,
-                            GLib.PRIORITY_DEFAULT, null, function (obj, res) {
+                            GLib.PRIORITY_DEFAULT, null, (obj, res) => {
 
             let stream = obj.replace_finish(res);
 
             stream.write_bytes_async(contents, GLib.PRIORITY_DEFAULT,
-                                null, function (w_obj, w_res) {
+                                null, (w_obj, w_res) => {
 
                 w_obj.write_bytes_finish(w_res);
                 stream.close(null);
@@ -48,7 +48,7 @@ export default class Registry {
             let CACHE_FILE_SIZE = this.settings.get_int(PrefsFields.CACHE_FILE_SIZE);
 
             file.query_info_async('*', FileQueryInfoFlags.NONE,
-                                  GLib.PRIORITY_DEFAULT, null, function (src, res) {
+                                  GLib.PRIORITY_DEFAULT, null, (src, res) => {
                 // Check if file size is larger than CACHE_FILE_SIZE
                 // If so, make a backup of file, and invoke callback with empty array
                 let file_info = src.query_info_finish(res);
@@ -61,42 +61,30 @@ export default class Registry {
                     return;
                 }
 
-                file.load_contents_async(null, function (obj, res) {
+                file.load_contents_async(null, (obj, res) => {
                     let registry;
                     let [success, contents] = obj.load_contents_finish(res);
 
                     if (success) {
-                        try {
-                            let max_size = this.settings.get_int(PrefsFields.HISTORY_SIZE);
+                        let max_size = this.settings.get_int(PrefsFields.HISTORY_SIZE);
+                        registry = JSON.parse(new TextDecoder().decode(contents));
+                        let registryNoFavorite = registry.filter(
+                            item => item['favorite'] === false);
 
-                            // are we running gnome 3.30 or higher?
-                            if (contents instanceof Uint8Array) {
-                              contents = imports.byteArray.toString(contents);
-                            }
+                        while (registryNoFavorite.length > max_size) {
+                            let oldestNoFavorite = registryNoFavorite.shift();
+                            let itemIdx = registry.indexOf(oldestNoFavorite);
+                            registry.splice(itemIdx,1);
 
-                            registry = JSON.parse(contents);
-
-                            let registryNoFavorite = registry.filter(
-                                item => item['favorite'] === false);
-
-                            while (registryNoFavorite.length > max_size) {
-                                let oldestNoFavorite = registryNoFavorite.shift();
-                                let itemIdx = registry.indexOf(oldestNoFavorite);
-                                registry.splice(itemIdx,1);
-
-                                registryNoFavorite = registry.filter(
-                                    item => item["favorite"] === false);
-                            }
+                            registryNoFavorite = registry.filter(
+                                item => item["favorite"] === false);
                         }
-                        catch (e) {
-                            registry = [];
-                        }
+
+                        callback(registry);
                     }
                     else {
-                        registry = [];
+                        log('Clipboard Indicator: failed to open registry file');
                     }
-
-                    callback(registry);
                 });
             });
         }
