@@ -6,7 +6,7 @@ const FileQueryInfoFlags = Gio.FileQueryInfoFlags;
 const FileCopyFlags = Gio.FileCopyFlags;
 const FileTest = GLib.FileTest;
 
-export default class Registry {
+export class Registry {
     constructor ({ settings, uuid }) {
         this.uuid = uuid;
         this.settings = settings;
@@ -46,6 +46,7 @@ export default class Registry {
         if (GLib.file_test(this.REGISTRY_PATH, FileTest.EXISTS)) {
             let file = Gio.file_new_for_path(this.REGISTRY_PATH);
             let CACHE_FILE_SIZE = this.settings.get_int(PrefsFields.CACHE_FILE_SIZE);
+            const LIMIT_CACHE_FILE_SIZE = false;
 
             file.query_info_async('*', FileQueryInfoFlags.NONE,
                                   GLib.PRIORITY_DEFAULT, null, (src, res) => {
@@ -53,7 +54,7 @@ export default class Registry {
                 // If so, make a backup of file, and invoke callback with empty array
                 let file_info = src.query_info_finish(res);
 
-                if (file_info.get_size() >= CACHE_FILE_SIZE * 1024) {
+                if (LIMIT_CACHE_FILE_SIZE && file_info.get_size() >= CACHE_FILE_SIZE * 1024) {
                     let destination = Gio.file_new_for_path(this.BACKUP_REGISTRY_PATH);
 
                     file.move(destination, FileCopyFlags.OVERWRITE, null, null);
@@ -100,14 +101,24 @@ export default class Registry {
     }
 }
 
-class ClipboardEntry {
+export class ClipboardEntry {
     #mimetype;
     #bytes;
     #favorite;
 
+    static #decode (contents) {
+        return Uint8Array.from(contents.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)));
+    }
+
     static fromJSON (entry) {
         const mimetype = entry.mimetype || 'text/plain';
-        const bytes = new TextEncoder().encode(entry.contents);
+        let bytes;
+        if (mimetype.startsWith('text/')) {
+            bytes = new TextEncoder().encode(entry.contents);
+        }
+        else {
+            bytes = ClipboardEntry.#decode(entry.contents);
+        }
         const favorite = entry.favorite;
         return new ClipboardEntry(mimetype, bytes, favorite);
     }
@@ -118,11 +129,52 @@ class ClipboardEntry {
         this.#favorite = favorite;
     }
 
+    #encode () {
+        if (this.isText()) {
+            return this.toString();
+        }
+
+        return [...this.#bytes]
+            .map(x => x.toString(16).padStart(2, '0'))
+            .join('');
+    }
+
     toString () {
+        if (this.isImage()) {
+            return '[image]';
+        }
         return new TextDecoder().decode(this.#bytes);
+    }
+
+    toJSON () {
+        return {
+            contents: this.#encode(),
+            mimetype: this.#mimetype,
+            favorite: this.#favorite
+        };
+    }
+
+    mimetype () {
+        return this.#mimetype;
     }
 
     isFavorite () {
         return this.#favorite;
+    }
+
+    isText () {
+        return this.#mimetype.startsWith('text/');
+    }
+
+    isImage () {
+        return this.#mimetype.startsWith('image/');
+    }
+
+    asBytes () {
+        return GLib.Bytes.new(this.#bytes);
+    }
+
+    equals (otherEntry) {
+        this.asBytes().equal(otherEntry.asBytes());
     }
 }

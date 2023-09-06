@@ -10,7 +10,7 @@ import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import { Extension, gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import Registry from './registry.js';
+import { Registry, ClipboardEntry } from './registry.js';
 import { openConfirmDialog } from './confirmDialog.js';
 import { PrefsFields } from './constants.js';
 
@@ -268,7 +268,7 @@ const ClipboardIndicator = GObject.registerClass({
         menuItem.clipFavorite = entry.isFavorite();
         menuItem.radioGroup = this.clipItemsRadioGroup;
         menuItem.buttonPressId = menuItem.connect('activate',
-            this._onMenuItemSelectedAndMenuClose.bind(menuItem));
+            autoSet => this._onMenuItemSelectedAndMenuClose(menuItem, autoSet));
 
         this._setEntryLabel(menuItem);
         this.clipItemsRadioGroup.push(menuItem);
@@ -382,7 +382,7 @@ const ClipboardIndicator = GObject.registerClass({
         let itemIdx = this.clipItemsRadioGroup.indexOf(menuItem);
 
         if(event === 'delete' && menuItem.currentlySelected) {
-            Clipboard.set_text(CLIPBOARD_TYPE, "");
+            this.#clearClipboard();
         }
 
         menuItem.destroy();
@@ -417,7 +417,7 @@ const ClipboardIndicator = GObject.registerClass({
                 that.setOrnament(PopupMenu.Ornament.DOT);
                 that.currentlySelected = true;
                 if (autoSet !== false)
-                    Clipboard.set_text(CLIPBOARD_TYPE, clipContents);
+                    this.#updateClipboard(that.entry);
             }
             else {
                 menuItem.setOrnament(PopupMenu.Ornament.NONE);
@@ -434,24 +434,23 @@ const ClipboardIndicator = GObject.registerClass({
         }
     }
 
-    _onMenuItemSelectedAndMenuClose (autoSet) {
-        var that = this;
-        that.radioGroup.forEach(function (menuItem) {
-            let clipContents = that.clipContents;
+    _onMenuItemSelectedAndMenuClose (menuItem, autoSet) {
+        for (let otherMenuItem of menuItem.radioGroup) {
+            let clipContents = menuItem.clipContents;
 
-            if (menuItem === that && clipContents) {
-                that.setOrnament(PopupMenu.Ornament.DOT);
-                that.currentlySelected = true;
+            if (menuItem === otherMenuItem && clipContents) {
+                menuItem.setOrnament(PopupMenu.Ornament.DOT);
+                menuItem.currentlySelected = true;
                 if (autoSet !== false)
-                    Clipboard.set_text(CLIPBOARD_TYPE, clipContents);
+                    this.#updateClipboard(menuItem.entry);
             }
             else {
-                menuItem.setOrnament(PopupMenu.Ornament.NONE);
-                menuItem.currentlySelected = false;
+                otherMenuItem.setOrnament(PopupMenu.Ornament.NONE);
+                otherMenuItem.currentlySelected = false;
             }
-        });
+        }
 
-        that.menu.close();
+        menuItem.menu.close();
     }
 
     _getCache (cb) {
@@ -459,22 +458,11 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     _updateCache () {
-        let registry = this.clipItemsRadioGroup.map(function (menuItem) {
-            return {
-                      "contents" : menuItem.clipContents,
-                      "favorite" : menuItem.clipFavorite
-                   };
-        });
+        let json = this.clipItemsRadioGroup
+            .map(menuItem => menuItem.entry)
+            .filter(entry => CACHE_ONLY_FAVORITE == false || entry.isFavorite());
 
-        this.registry.write(registry.filter(function (menuItem) {
-            if (CACHE_ONLY_FAVORITE) {
-                if (menuItem["favorite"]) {
-                    return menuItem;
-                }
-            } else {
-                return menuItem;
-            }
-        }));
+        this.registry.write(json);
     }
 
     _onSelectionChange (selection, selectionType, selectionSource) {
@@ -488,8 +476,39 @@ const ClipboardIndicator = GObject.registerClass({
 
         let that = this;
 
-        Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
-            that._processClipboardContent(text);
+        Clipboard.get_text(CLIPBOARD_TYPE, (clipBoard, text) => {
+            if (text !== null) {
+                log(`Clipboard Indicator: ${text}`);
+                that._processClipboardContent(text);
+            }
+            else {
+                const mimetypes = [
+                    'image/png', 'image/jpg', 'image/gif', 'image/svg+xml', 'image/webp'
+                ];
+
+                for (let type of mimetypes) {
+                    let result;
+
+                    Clipboard.get_content(CLIPBOARD_TYPE, type, (clipBoard, bytes) => {
+                        if (result || bytes === null) {
+                            return;
+                        }
+
+                        log(`Clipboard Indicator: ${type}`);
+                        log(`Object: ${bytes.constructor.name}`);
+                        log(`Data: ${bytes.get_data().constructor.name}`);
+                        log('Size: ', bytes.get_data().length);
+
+                        result = new ClipboardEntry(type, bytes.get_data(), false);
+
+                        for (let menuItem of this.clipItemsRadioGroup) {
+                            if (menuItem.entry.equals(result)) return;
+                        }
+
+                        this._addEntry(result);
+                    });
+                }
+            }
         });
     }
 
@@ -594,12 +613,12 @@ const ClipboardIndicator = GObject.registerClass({
         if (this.clipItemsRadioGroup.length >= 2) {
             let clipSecond = this.clipItemsRadioGroup.length - 2;
             let previousClip = this.clipItemsRadioGroup[clipSecond];
-            Clipboard.set_text(CLIPBOARD_TYPE, previousClip.clipContents);
+            this.#updateClipboard(previousClip.entry);
             previousClip.setOrnament(PopupMenu.Ornament.DOT);
             previousClip.icoBtn.visible = false;
             previousClip.currentlySelected = true;
         } else {
-            Clipboard.set_text(CLIPBOARD_TYPE, "");
+            this.#clearClipboard();
         }
         let clipFirst = this.clipItemsRadioGroup.length - 1;
         this._removeEntry(this.clipItemsRadioGroup[clipFirst]);
@@ -653,7 +672,7 @@ const ClipboardIndicator = GObject.registerClass({
                 this._selectMenuItem(selectList[0]);
             } else {
                 // Nothing to return to, let's empty it instead
-                Clipboard.set_text(CLIPBOARD_TYPE, "");
+                this.#clearClipboard();
             }
 
             this.icon.remove_style_class_name('private-mode');
@@ -866,5 +885,14 @@ const ClipboardIndicator = GObject.registerClass({
 
     _toggleMenu () {
         this.menu.toggle();
+    }
+
+    #clearClipboard () {
+        Clipboard.set_text(CLIPBOARD_TYPE, "");
+    }
+
+    #updateClipboard (entry) {
+        Clipboard.set_content(CLIPBOARD_TYPE, entry.mimetype(), entry.asBytes());
+        // Clipboard.set_text(CLIPBOARD_TYPE, entry.toString());
     }
 });
