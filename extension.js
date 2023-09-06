@@ -194,14 +194,7 @@ const ClipboardIndicator = GObject.registerClass({
             that.menu.addMenuItem(that.scrollViewMenuSection);
 
             // Add cached items
-            clipHistory.forEach(function (buffer) {
-                if (typeof buffer === 'string') {
-                    // Old cache format
-                    that._addEntry(buffer);
-                } else {
-                    that._addEntry(buffer["contents"], buffer["favorite"]);
-                }
-            });
+            clipHistory.forEach(entry => this._addEntry(entry));
 
             // Add separator
             that.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
@@ -266,12 +259,13 @@ const ClipboardIndicator = GObject.registerClass({
         menuItem.label.set_text(this._truncate(buffer, MAX_ENTRY_LENGTH));
     }
 
-    _addEntry (buffer, favorite, autoSelect, autoSetClip) {
+    _addEntry (entry, autoSelect, autoSetClip) {
         let menuItem = new PopupMenu.PopupMenuItem('');
 
         menuItem.menu = this.menu;
-        menuItem.clipContents = buffer;
-        menuItem.clipFavorite = favorite;
+        menuItem.entry = entry;
+        menuItem.clipContents = entry.toString();
+        menuItem.clipFavorite = entry.isFavorite();
         menuItem.radioGroup = this.clipItemsRadioGroup;
         menuItem.buttonPressId = menuItem.connect('activate',
             this._onMenuItemSelectedAndMenuClose.bind(menuItem));
@@ -280,7 +274,7 @@ const ClipboardIndicator = GObject.registerClass({
         this.clipItemsRadioGroup.push(menuItem);
 
         // Favorite button
-        let icon_name = favorite ? 'starred-symbolic' : 'non-starred-symbolic';
+        let icon_name = entry.isFavorite() ? 'starred-symbolic' : 'non-starred-symbolic';
         let iconfav = new St.Icon({
             icon_name: icon_name,
             style_class: 'system-status-icon'
@@ -322,7 +316,7 @@ const ClipboardIndicator = GObject.registerClass({
             () => this._removeEntry(menuItem, 'delete')
         );
 
-        if (favorite) {
+        if (entry.isFavorite()) {
             this.favoritesSection.addMenuItem(menuItem, 0);
         } else {
             this.historySection.addMenuItem(menuItem, 0);
@@ -332,7 +326,7 @@ const ClipboardIndicator = GObject.registerClass({
             this._selectMenuItem(menuItem, autoSetClip);
 
         if (TOPBAR_DISPLAY_MODE === 1 || TOPBAR_DISPLAY_MODE === 2) {
-            this._updateButtonText(buffer);
+            this._updateButtonText(entry.toString());
         }
 
         this._updateCache();
@@ -514,7 +508,10 @@ const ClipboardIndicator = GObject.registerClass({
             const itemIndex = registry.indexOf(text);
 
             if (itemIndex < 0) {
-                that._addEntry(text, false, true, false);
+                const entry = new ClipboardEntry(
+                    'text/plain', new TextEncoder().encode(text), false
+                );
+                that._addEntry(entry, true, false);
                 that._removeOldestEntries();
                 if (NOTIFY_ON_COPY) {
                     that._showNotification(_("Copied to clipboard"), notif => {
@@ -535,7 +532,7 @@ const ClipboardIndicator = GObject.registerClass({
 
     _moveItemFirst (item) {
         this._removeEntry(item);
-        this._addEntry(item.clipContents, item.clipFavorite, item.currentlySelected, false);
+        this._addEntry(item.entry, item.currentlySelected, false);
     }
 
     _findItem (text) {
@@ -547,7 +544,7 @@ const ClipboardIndicator = GObject.registerClass({
         return this.clipItemsRadioGroup.find(item => item.currentlySelected);
     }
 
-    _getAllIMenuItems (text) {
+    _getAllIMenuItems () {
         return this.historySection._getMenuItems().concat(this.favoritesSection._getMenuItems());
     }
 

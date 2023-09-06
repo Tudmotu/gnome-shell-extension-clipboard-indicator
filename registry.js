@@ -62,25 +62,31 @@ export default class Registry {
                 }
 
                 file.load_contents_async(null, (obj, res) => {
-                    let registry;
                     let [success, contents] = obj.load_contents_finish(res);
 
                     if (success) {
                         let max_size = this.settings.get_int(PrefsFields.HISTORY_SIZE);
-                        registry = JSON.parse(new TextDecoder().decode(contents));
-                        let registryNoFavorite = registry.filter(
-                            item => item['favorite'] === false);
+                        const registry = JSON.parse(new TextDecoder().decode(contents));
+
+                        const clipboardEntries = registry.map(entry => {
+                            return ClipboardEntry.fromJSON(entry);
+                        });
+
+                        let registryNoFavorite = clipboardEntries.filter(
+                            entry => entry.isFavorite()
+                        );
 
                         while (registryNoFavorite.length > max_size) {
                             let oldestNoFavorite = registryNoFavorite.shift();
-                            let itemIdx = registry.indexOf(oldestNoFavorite);
-                            registry.splice(itemIdx,1);
+                            let itemIdx = clipboardEntries.indexOf(oldestNoFavorite);
+                            clipboardEntries.splice(itemIdx,1);
 
-                            registryNoFavorite = registry.filter(
-                                item => item["favorite"] === false);
+                            registryNoFavorite = clipboardEntries.filter(
+                                entry => entry.isFavorite()
+                            );
                         }
 
-                        callback(registry);
+                        callback(clipboardEntries);
                     }
                     else {
                         log('Clipboard Indicator: failed to open registry file');
@@ -91,5 +97,32 @@ export default class Registry {
         else {
             callback([]);
         }
+    }
+}
+
+class ClipboardEntry {
+    #mimetype;
+    #bytes;
+    #favorite;
+
+    static fromJSON (entry) {
+        const mimetype = entry.mimetype || 'text/plain';
+        const bytes = new TextEncoder().encode(entry.contents);
+        const favorite = entry.favorite;
+        return new ClipboardEntry(mimetype, bytes, favorite);
+    }
+
+    constructor (mimetype, bytes, favorite) {
+        this.#mimetype = mimetype;
+        this.#bytes = bytes;
+        this.#favorite = favorite;
+    }
+
+    toString () {
+        return new TextDecoder().decode(this.#bytes);
+    }
+
+    isFavorite () {
+        return this.#favorite;
     }
 }
