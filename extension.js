@@ -113,11 +113,12 @@ const ClipboardIndicator = GObject.registerClass({
         this._createHistoryLabel();
     }
 
-    _updateButtonText(content) {
-        if (!content || PRIVATEMODE){
+    #updateIndicatorContent(entry) {
+        log(`Updating indicator content: ${entry.toString()}`);
+        if (!entry || PRIVATEMODE){
             this._buttonText.set_text("...")
         } else {
-            this._buttonText.set_text(this._truncate(content, MAX_TOPBAR_LENGTH));
+            this._buttonText.set_text(this._truncate(entry.toString(), MAX_TOPBAR_LENGTH));
         }
     }
 
@@ -326,7 +327,7 @@ const ClipboardIndicator = GObject.registerClass({
             this._selectMenuItem(menuItem, autoSetClip);
 
         if (TOPBAR_DISPLAY_MODE === 1 || TOPBAR_DISPLAY_MODE === 2) {
-            this._updateButtonText(entry.toString());
+            this.#updateIndicatorContent(entry);
         }
 
         this._updateCache();
@@ -408,29 +409,27 @@ const ClipboardIndicator = GObject.registerClass({
         that._updateCache();
     }
 
-    _onMenuItemSelected (autoSet) {
-        var that = this;
-        that.radioGroup.forEach(function (menuItem) {
-            let clipContents = that.clipContents;
+    _onMenuItemSelected (menuItem, autoSet) {
+        for (let otherMenuItem of menuItem.radioGroup) {
+            let clipContents = menuItem.clipContents;
 
-            if (menuItem === that && clipContents) {
-                that.setOrnament(PopupMenu.Ornament.DOT);
-                that.currentlySelected = true;
+            if (otherMenuItem === menuItem && clipContents) {
+                menuItem.setOrnament(PopupMenu.Ornament.DOT);
+                menuItem.currentlySelected = true;
                 if (autoSet !== false)
-                    this.#updateClipboard(that.entry);
+                    menuItem.#updateClipboard(menuItem.entry);
             }
             else {
-                menuItem.setOrnament(PopupMenu.Ornament.NONE);
-                menuItem.currentlySelected = false;
+                otherMenuItem.setOrnament(PopupMenu.Ornament.NONE);
+                otherMenuItem.currentlySelected = false;
             }
-        });
+        }
     }
 
     _selectMenuItem (menuItem, autoSet) {
-        let fn = this._onMenuItemSelected.bind(menuItem);
-        fn(autoSet);
+        this._onMenuItemSelected(menuItem, autoSet);
         if(TOPBAR_DISPLAY_MODE === 1 || TOPBAR_DISPLAY_MODE === 2) {
-            this._updateButtonText(menuItem.label.text);
+            this.#updateIndicatorContent(menuItem.entry);
         }
     }
 
@@ -665,9 +664,11 @@ const ClipboardIndicator = GObject.registerClass({
         // If we get out of private mode then we restore the clipboard to old state
         if (!PRIVATEMODE) {
             let selectList = this.clipItemsRadioGroup.filter((item) => !!item.currentlySelected);
-            Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
-                            that._updateButtonText(text);
-                        });
+
+            this.#getClipboardContent().then(entry => {
+                this.#updateIndicatorContent(entry);
+            });
+
             if (selectList.length) {
                 this._selectMenuItem(selectList[0]);
             } else {
@@ -709,7 +710,7 @@ const ClipboardIndicator = GObject.registerClass({
         STRIP_TEXT           = settings.get_boolean(PrefsFields.STRIP_TEXT);
     }
 
-    _onSettingsChange () {
+    async _onSettingsChange () {
         var that = this;
 
         // Load the settings into variables
@@ -726,9 +727,7 @@ const ClipboardIndicator = GObject.registerClass({
         //update topbar
         this._updateTopbarLayout();
         if(TOPBAR_DISPLAY_MODE === 1 || TOPBAR_DISPLAY_MODE === 2) {
-            Clipboard.get_text(CLIPBOARD_TYPE, function (clipBoard, text) {
-                that._updateButtonText(text);
-            });
+            that.#updateIndicatorContent(await this.#getClipboardContent());
         }
 
         // Bind or unbind shortcuts
@@ -893,6 +892,36 @@ const ClipboardIndicator = GObject.registerClass({
 
     #updateClipboard (entry) {
         Clipboard.set_content(CLIPBOARD_TYPE, entry.mimetype(), entry.asBytes());
-        // Clipboard.set_text(CLIPBOARD_TYPE, entry.toString());
+    }
+
+    async #getClipboardContent () {
+        const mimetypes = [
+            'text/plain',
+            'image/png',
+            'image/jpg',
+            'image/gif',
+            'image/svg+xml',
+            'image/webp'
+        ];
+
+        for (let type of mimetypes) {
+            let result = await new Promise(resolve => Clipboard.get_content(CLIPBOARD_TYPE, type, (clipBoard, bytes) => {
+                if (bytes === null) {
+                    resolve(null);
+                    return;
+                }
+
+                log(`Clipboard Indicator: ${type}`);
+                log(`Object: ${bytes.constructor.name}`);
+                log(`Data: ${bytes.get_data().constructor.name}`);
+                log('Size: ', bytes.get_data().length);
+
+                resolve(new ClipboardEntry(type, bytes.get_data(), false));
+            }));
+
+            if (result) return result;
+        }
+
+        return null;
     }
 });
