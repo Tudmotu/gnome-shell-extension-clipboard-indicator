@@ -1,6 +1,7 @@
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
 import Gtk from 'gi://Gtk';
+import St from 'gi://St';
 import { PrefsFields } from './constants.js';
 
 const FileQueryInfoFlags = Gio.FileQueryInfoFlags;
@@ -158,9 +159,9 @@ export class Registry {
             return;
         }
 
-        // const icon = Gio.icon_new_for_string(this.getEntryFilename(entry));
-
-        // return Gtk.Image.new_from_file(this.getEntryFilename(entry));
+        const gicon = Gio.icon_new_for_string(this.getEntryFilename(entry));
+        const stIcon = new St.Icon({ gicon });
+        return stIcon;
     }
 
     getEntryFilename (entry) {

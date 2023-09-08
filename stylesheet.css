@@ -19,3 +19,17 @@
 .ci-history-menu-section {
     max-height:450px;
 }
+
+.clipboard-menu-img-preview {
+    border:solid 1px white;
+    overflow:hidden;
+    width:24px;
+    height:24px;
+    margin:0;
+    padding:0;
+}
+
+.clipboard-indicator-img-preview {
+    width:16px;
+    height:16px;
+}

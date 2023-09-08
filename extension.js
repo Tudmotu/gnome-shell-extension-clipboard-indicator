@@ -108,8 +108,13 @@ const ClipboardIndicator = GObject.registerClass({
             y_align: Clutter.ActorAlign.CENTER
         });
 
+        this._buttonImgPreview = new St.Bin({
+            style_class: 'clipboard-indicator-topbar-preview'
+        });
+
         hbox.add_child(this.icon);
         hbox.add_child(this._buttonText);
+        hbox.add_child(this._buttonImgPreview);
         this._downArrow = PopupMenu.arrowIcon(St.Side.BOTTOM);
         hbox.add(this._downArrow);
         this.add_child(hbox);
@@ -124,7 +129,17 @@ const ClipboardIndicator = GObject.registerClass({
         if (!entry || PRIVATEMODE){
             this._buttonText.set_text("...")
         } else {
-            this._buttonText.set_text(this._truncate(entry.getStringValue(), MAX_TOPBAR_LENGTH));
+            if (entry.isText()) {
+                this._buttonText.set_text(this._truncate(entry.getStringValue(), MAX_TOPBAR_LENGTH));
+                this._buttonImgPreview.destroy_all_children();
+            }
+            else if (entry.isImage()) {
+                this._buttonText.set_text('');
+                this._buttonImgPreview.destroy_all_children();
+                const img = this.registry.getEntryAsImage(entry);
+                img.add_style_class_name('clipboard-indicator-img-preview');
+                this._buttonImgPreview.set_child(img);
+            }
         }
     }
 
@@ -267,9 +282,13 @@ const ClipboardIndicator = GObject.registerClass({
             menuItem.label.set_text(this._truncate(entry.getStringValue(), MAX_ENTRY_LENGTH));
         }
         else if (entry.isImage()) {
-            menuItem.label.set_text(this._truncate(entry.getStringValue(), MAX_ENTRY_LENGTH));
-            // menuItem.actor.add_child(this.registry.getEntryAsImage(entry));
-            this.registry.getEntryAsImage(entry);
+            const img = this.registry.getEntryAsImage(entry);
+            img.add_style_class_name('clipboard-menu-img-preview');
+            if (menuItem.previewImage) {
+                menuItem.remove_child(menuItem.previewImage);
+            }
+            menuItem.previewImage = img;
+            menuItem.insert_child_below(img, menuItem.label);
         }
     }
 
@@ -669,6 +688,7 @@ const ClipboardIndicator = GObject.registerClass({
             let selectList = this.clipItemsRadioGroup.filter((item) => !!item.currentlySelected);
 
             this.#getClipboardContent().then(entry => {
+                if (!entry) return;
                 this.#updateIndicatorContent(entry);
             }).catch(e => console.error(e));
 
@@ -839,7 +859,7 @@ const ClipboardIndicator = GObject.registerClass({
                 i--;                                 //get the previous index
                 if (i < 0) i = menuItems.length - 1; //cycle if out of bound
                 let index = i + 1;                   //index to be displayed
-                that._showNotification(index + ' / ' + menuItems.length + ': ' + menuItems[i].label.text);
+                that._showNotification(index + ' / ' + menuItems.length + ': ' + menuItems[i].entry.getStringValue());
                 if (MOVE_ITEM_FIRST) {
                     that._selectEntryWithDelay(menuItems[i]);
                 }
@@ -862,7 +882,7 @@ const ClipboardIndicator = GObject.registerClass({
                 i++;                                 //get the next index
                 if (i === menuItems.length) i = 0;   //cycle if out of bound
                 let index = i + 1;                     //index to be displayed
-                that._showNotification(index + ' / ' + menuItems.length + ': ' + menuItems[i].label.text);
+                that._showNotification(index + ' / ' + menuItems.length + ': ' + menuItems[i].entry.getStringValue());
                 if (MOVE_ITEM_FIRST) {
                     that._selectEntryWithDelay(menuItems[i]);
                 }
@@ -893,6 +913,7 @@ const ClipboardIndicator = GObject.registerClass({
             'image/gif',
             'image/png',
             'image/jpg',
+            'image/jpeg',
             'image/webp',
             'image/svg+xml',
             'text/html',
@@ -900,7 +921,7 @@ const ClipboardIndicator = GObject.registerClass({
 
         for (let type of mimetypes) {
             let result = await new Promise(resolve => Clipboard.get_content(CLIPBOARD_TYPE, type, (clipBoard, bytes) => {
-                if (bytes === null) {
+                if (bytes === null || bytes.get_size() === 0) {
                     resolve(null);
                     return;
                 }
