@@ -1,5 +1,6 @@
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
+import Gtk from 'gi://Gtk';
 import { PrefsFields } from './constants.js';
 
 const FileQueryInfoFlags = Gio.FileQueryInfoFlags;
@@ -16,7 +17,46 @@ export class Registry {
         this.BACKUP_REGISTRY_PATH = this.REGISTRY_PATH + '~';
     }
 
-    write (registry) {
+    write (entries) {
+        const registryContent = [];
+
+        for (let entry of entries) {
+            const item = {
+                favorite: entry.isFavorite(),
+                mimetype: entry.mimetype()
+            };
+
+            registryContent.push(item);
+
+            if (entry.isText()) {
+                item.contents = entry.getStringValue();
+            }
+            else if (entry.isImage()) {
+                const filename = this.getEntryFilename(entry);
+                item.contents = filename;
+
+                if (this.#entryFileExists(entry) == false) {
+                    let file = Gio.file_new_for_path(filename);
+                    file.replace_async(null, false, Gio.FileCreateFlags.NONE,
+                                       GLib.PRIORITY_DEFAULT, null, (obj, res) => {
+
+                        let stream = obj.replace_finish(res);
+
+                        stream.write_bytes_async(entry.asBytes(), GLib.PRIORITY_DEFAULT,
+                                                 null, (w_obj, w_res) => {
+
+                            w_obj.write_bytes_finish(w_res);
+                            stream.close(null);
+                        });
+                    });
+                }
+            }
+        }
+
+        this.writeToFile(registryContent);
+    }
+
+    writeToFile (registry) {
         let json = JSON.stringify(registry);
         let contents = new GLib.Bytes(json);
 
@@ -68,29 +108,35 @@ export class Registry {
                     if (success) {
                         let max_size = this.settings.get_int(PrefsFields.HISTORY_SIZE);
                         const registry = JSON.parse(new TextDecoder().decode(contents));
-
-                        const clipboardEntries = registry.map(entry => {
-                            return ClipboardEntry.fromJSON(entry);
-                        });
-
-                        let registryNoFavorite = clipboardEntries.filter(
-                            entry => entry.isFavorite()
+                        const entriesPromises = registry.map(
+                            jsonEntry => {
+                                return ClipboardEntry.fromJSON(jsonEntry)
+                            }
                         );
 
-                        while (registryNoFavorite.length > max_size) {
-                            let oldestNoFavorite = registryNoFavorite.shift();
-                            let itemIdx = clipboardEntries.indexOf(oldestNoFavorite);
-                            clipboardEntries.splice(itemIdx,1);
-
-                            registryNoFavorite = clipboardEntries.filter(
+                        Promise.all(entriesPromises).then(clipboardEntries => {
+                            let registryNoFavorite = clipboardEntries.filter(
                                 entry => entry.isFavorite()
                             );
-                        }
 
-                        callback(clipboardEntries);
+                            while (registryNoFavorite.length > max_size) {
+                                let oldestNoFavorite = registryNoFavorite.shift();
+                                let itemIdx = clipboardEntries.indexOf(oldestNoFavorite);
+                                clipboardEntries.splice(itemIdx,1);
+
+                                registryNoFavorite = clipboardEntries.filter(
+                                    entry => entry.isFavorite()
+                                );
+                            }
+
+                            callback(clipboardEntries);
+                        }).catch(e => {
+                            console.error('CLIPBOARD INDICATOR ERROR');
+                            console.error(e);
+                        });
                     }
                     else {
-                        log('Clipboard Indicator: failed to open registry file');
+                        console.error('Clipboard Indicator: failed to open registry file');
                     }
                 });
             });
@@ -98,6 +144,27 @@ export class Registry {
         else {
             callback([]);
         }
+    }
+
+    #entryFileExists (entry) {
+        const filename = this.getEntryFilename(entry);
+        return GLib.file_test(filename, FileTest.EXISTS);
+    }
+
+    getEntryAsImage (entry) {
+        const filename = this.getEntryFilename(entry);
+        if (this.#entryFileExists(entry) == false) {
+            console.error('Clipboard Indicator: image file not found');
+            return;
+        }
+
+        // const icon = Gio.icon_new_for_string(this.getEntryFilename(entry));
+
+        // return Gtk.Image.new_from_file(this.getEntryFilename(entry));
+    }
+
+    getEntryFilename (entry) {
+        return `${this.REGISTRY_DIR}/${entry.asBytes().hash()}`;
     }
 }
 
@@ -110,16 +177,30 @@ export class ClipboardEntry {
         return Uint8Array.from(contents.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)));
     }
 
-    static fromJSON (entry) {
-        const mimetype = entry.mimetype || 'text/plain';
+    static async fromJSON (jsonEntry) {
+        const mimetype = jsonEntry.mimetype || 'text/plain';
+        const favorite = jsonEntry.favorite;
         let bytes;
+
         if (mimetype.startsWith('text/')) {
-            bytes = new TextEncoder().encode(entry.contents);
+            bytes = new TextEncoder().encode(jsonEntry.contents);
         }
         else {
-            bytes = ClipboardEntry.#decode(entry.contents);
+            let file = Gio.file_new_for_path(jsonEntry.contents);
+            bytes = await new Promise((resolve, reject) => file.load_contents_async(null, (obj, res) => {
+                let [success, contents] = obj.load_contents_finish(res);
+
+                if (success) {
+                    resolve(contents);
+                }
+                else {
+                    reject(
+                        new Error('Clipboard Indicator: could not read image file from cache')
+                    );
+                }
+            }));
         }
-        const favorite = entry.favorite;
+
         return new ClipboardEntry(mimetype, bytes, favorite);
     }
 
@@ -131,7 +212,7 @@ export class ClipboardEntry {
 
     #encode () {
         if (this.isText()) {
-            return this.toString();
+            return this.getStringValue();
         }
 
         return [...this.#bytes]
@@ -139,19 +220,11 @@ export class ClipboardEntry {
             .join('');
     }
 
-    toString () {
+    getStringValue () {
         if (this.isImage()) {
-            return '[image]';
+            return `[Image ${this.asBytes().hash()}]`;
         }
         return new TextDecoder().decode(this.#bytes);
-    }
-
-    toJSON () {
-        return {
-            contents: this.#encode(),
-            mimetype: this.#mimetype,
-            favorite: this.#favorite
-        };
     }
 
     mimetype () {
@@ -175,6 +248,7 @@ export class ClipboardEntry {
     }
 
     equals (otherEntry) {
-        this.asBytes().equal(otherEntry.asBytes());
+        return this.getStringValue() === otherEntry.getStringValue();
+        // this.asBytes().equal(otherEntry.asBytes());
     }
 }
