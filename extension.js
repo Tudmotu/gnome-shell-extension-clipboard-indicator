@@ -180,17 +180,16 @@ const ClipboardIndicator = GObject.registerClass({
             that._entryItem.add(that.searchEntry);
 
             that.menu.connect('open-state-changed', (self, open) => {
-                let a = setInterval(() => {
+                setTimeout(() => {
                     if (open) {
                         if (this.clipItemsRadioGroup.length > 0) {
                             that.searchEntry.set_text('');
                             global.stage.set_key_focus(that.searchEntry);
                         }
                         else {
-                            global.stage.set_key_focus(this._onPrivateModeSwitch);
+                            global.stage.set_key_focus(that.privateModeMenuItem);
                         }
                     }
-                    clearInterval(a);
                 }, 50);
             });
 
@@ -297,28 +296,40 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     #hideElements() {
-        this.menu.box.remove_child(this._entryItem);
-        this.menu.box.remove_child(this.favoritesSeparator);
-        this.menu.box.remove_child(this.historySeparator);
-        this.menu.box.remove_child(this.clearMenuItem);
+        if (this.menu.box.contains(this._entryItem)) this.menu.box.remove_child(this._entryItem);
+        if (this.menu.box.contains(this.favoritesSeparator)) this.menu.box.remove_child(this.favoritesSeparator);
+        if (this.menu.box.contains(this.historySeparator)) this.menu.box.remove_child(this.historySeparator);
+        if (this.menu.box.contains(this.clearMenuItem)) this.menu.box.remove_child(this.clearMenuItem);
     }
 
     #showElements() {
         if (this.clipItemsRadioGroup.length > 0) {
-            this.menu.box.insert_child_at_index(this._entryItem, 0);
-            this.menu.box.insert_child_below(this.clearMenuItem, this.settingsMenuItem);
-            this.menu.box.remove_child(this.emptyStateSection);
+            if (this.menu.box.contains(this._entryItem) === false) {
+                this.menu.box.insert_child_at_index(this._entryItem, 0);
+            }
+            if (this.menu.box.contains(this.clearMenuItem) === false) {
+                this.menu.box.insert_child_below(this.clearMenuItem, this.settingsMenuItem);
+            }
+            if (this.menu.box.contains(this.emptyStateSection) === true) {
+                this.menu.box.remove_child(this.emptyStateSection);
+            }
         }
         else {
-            this.menu.box.insert_child_at_index(this.emptyStateSection, 0);
+            if (this.menu.box.contains(this.emptyStateSection) === false) {
+                this.menu.box.insert_child_at_index(this.emptyStateSection, 0);
+            }
         }
 
         if (this.favoritesSection._getMenuItems().length > 0) {
-            this.menu.box.insert_child_above(this.favoritesSeparator, this.scrollViewFavoritesMenuSection.actor);
+            if (this.menu.box.contains(this.favoritesSeparator) === false) {
+                this.menu.box.insert_child_above(this.favoritesSeparator, this.scrollViewFavoritesMenuSection.actor);
+            }
         }
 
         if (this.historySection._getMenuItems().length > 0) {
-            this.menu.box.insert_child_above(this.historySeparator, this.scrollViewMenuSection.actor);
+            if (this.menu.box.contains(this.historySeparator) === false) {
+                this.menu.box.insert_child_above(this.historySeparator, this.scrollViewMenuSection.actor);
+            }
         }
     }
 
@@ -641,44 +652,6 @@ const ClipboardIndicator = GObject.registerClass({
         finally {
             this.#refreshInProgress = false;
         }
-    }
-
-    _processClipboardContent (text) {
-        const that = this;
-
-        if (STRIP_TEXT) {
-            text = text.trim();
-        }
-
-        if (text !== "" && text) {
-            let registry = that.clipItemsRadioGroup.map(function (menuItem) {
-                return menuItem.clipContents;
-            });
-
-            const itemIndex = registry.indexOf(text);
-
-            if (itemIndex < 0) {
-                const entry = new ClipboardEntry(
-                    'text/plain', new TextEncoder().encode(text), false
-                );
-                this.#addToCache(entry);
-                that._addEntry(entry, true, false);
-                that._removeOldestEntries();
-                if (NOTIFY_ON_COPY) {
-                    that._showNotification(_("Copied to clipboard"), notif => {
-                        notif.addAction(_('Cancel'), that._cancelNotification.bind(that));
-                    });
-                }
-            }
-            else if (itemIndex >= 0 && itemIndex < registry.length) {
-                const item = that._findItem(text);
-                that._selectMenuItem(item, false);
-
-                if (!item.entry.isFavorite() && MOVE_ITEM_FIRST) {
-                    that._moveItemFirst(item);
-                }
-            }
-            }
     }
 
     _moveItemFirst (item) {
