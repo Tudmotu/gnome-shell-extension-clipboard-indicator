@@ -123,7 +123,7 @@ const ClipboardIndicator = GObject.registerClass({
             return;
         }
 
-        if (!entry || PRIVATEMODE){
+        if (!entry || PRIVATEMODE) {
             this._buttonImgPreview.destroy_all_children();
             this._buttonText.set_text("...")
         } else {
@@ -137,7 +137,11 @@ const ClipboardIndicator = GObject.registerClass({
                 this.registry.getEntryAsImage(entry).then(img => {
                     img.add_style_class_name('clipboard-indicator-img-preview');
                     img.y_align = Clutter.ActorAlign.CENTER;
-                    this._buttonImgPreview.set_child(img);
+
+                    // icon only renders properly in setTimeout for some arcane reason
+                    setTimeout(() => {
+                        this._buttonImgPreview.set_child(img);
+                    }, 0);
                 });
             }
         }
