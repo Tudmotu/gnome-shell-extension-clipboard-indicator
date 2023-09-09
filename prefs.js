@@ -8,15 +8,13 @@ import { PrefsFields } from './constants.js';
 export default class ClipboardIndicatorPreferences extends ExtensionPreferences {
     fillPreferencesWindow (window) {
         window._settings = this.getSettings();
-
-        const group = new Adw.PreferencesGroup({
-            title: _('Clipboard Indicator'),
-        });
-
-        const widget = new Settings(window._settings);
+        const settingsUI = new Settings(window._settings);
         const page = new Adw.PreferencesPage();
-        group.add(widget.main);
-        page.add(group);
+        page.add(settingsUI.ui);
+        page.add(settingsUI.limits);
+        page.add(settingsUI.topbar);
+        page.add(settingsUI.notifications);
+        page.add(settingsUI.shortcuts);
         window.add(page);
     }
 }
@@ -25,23 +23,17 @@ class Settings {
     constructor (schema) {
         this.schema = schema;
 
-        this.main = new Gtk.Grid({
-            margin_top: 10,
-            margin_bottom: 10,
-            margin_start: 10,
-            margin_end: 10,
+        const makeGrid = () => new Gtk.Grid({
+            margin_top: 0,
+            margin_bottom: 0,
+            margin_start: 0,
+            margin_end: 0,
             row_spacing: 12,
             column_spacing: 18,
             column_homogeneous: false,
             row_homogeneous: false
         });
-        this.field_interval = new Gtk.SpinButton({
-            adjustment: new Gtk.Adjustment({
-                lower: 500,
-                upper: 5000,
-                step_increment: 100
-            })
-        });
+
         this.field_size = new Gtk.SpinButton({
             adjustment: new Gtk.Adjustment({
                 lower: 1,
@@ -139,7 +131,7 @@ class Settings {
             halign: Gtk.Align.START
         });
         let keybindingLabel  = new Gtk.Label({
-            label: _("Keyboard shortcuts"),
+            label: _("Enable shortcuts"),
             hexpand: true,
             halign: Gtk.Align.START
         });
@@ -164,13 +156,16 @@ class Settings {
             halign: Gtk.Align.START
         });
 
-        const addRow = ((main) => {
+        const addRowFactory = (main) => {
             let row = 0;
             return (label, input) => {
                 let inputWidget = input;
 
                 if (input instanceof Gtk.Switch) {
-                    inputWidget = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL,});
+                    inputWidget = new Gtk.Box({
+                        orientation: Gtk.Orientation.HORIZONTAL,
+                        halign: Gtk.Align.END
+                    });
                     inputWidget.append(input);
                 }
 
@@ -184,24 +179,44 @@ class Settings {
 
                 row++;
             };
-        })(this.main);
+        };
 
-        addRow(sizeLabel,             this.field_size);
-        addRow(previewLabel,          this.field_preview_size);
-        addRow(intervalLabel,         this.field_interval);
-        addRow(cacheSizeLabel,        this.field_cache_size);
-        addRow(cacheDisableLabel,     this.field_cache_disable);
-        addRow(notificationLabel,     this.field_notification_toggle);
-        addRow(confirmClearLabel,     this.field_confirm_clear_toggle);
-        addRow(displayModeLabel,      this.field_display_mode);
-        addRow(disableDownArrowLabel, this.field_disable_down_arrow);
-        addRow(topbarPreviewLabel,    this.field_topbar_preview_size);
-        addRow(stripTextLabel,        this.field_strip_text);
-        addRow(moveFirstLabel,        this.field_move_item_first);
-        addRow(keybindingLabel,       this.field_keybinding_activation);
-        addRow(null,                  this.field_keybinding);
+        const attachGrid = group => {
+            const grid = makeGrid();
+            group.add(grid);
+            return grid;
+        };
 
-        this.schema.bind(PrefsFields.INTERVAL, this.field_interval, 'value', Gio.SettingsBindFlags.DEFAULT);
+        this.ui =  new Adw.PreferencesGroup({ title: _('UI') });
+        this.limits =  new Adw.PreferencesGroup({ title: _('Limits') });
+        this.topbar =  new Adw.PreferencesGroup({ title: _('Topbar') });
+        this.notifications =  new Adw.PreferencesGroup({ title: _('Notifications') });
+        this.shortcuts =  new Adw.PreferencesGroup({ title: _('Shortcuts') });
+
+        const addToUI = addRowFactory(attachGrid(this.ui));
+        const addToLimits = addRowFactory(attachGrid(this.limits));
+        const addToTopbar = addRowFactory(attachGrid(this.topbar));
+        const addToNotifications = addRowFactory(attachGrid(this.notifications));
+        const addToShortcuts = addRowFactory(attachGrid(this.shortcuts));
+
+        addToUI(previewLabel, this.field_preview_size);
+        addToUI(moveFirstLabel, this.field_move_item_first);
+        addToUI(stripTextLabel, this.field_strip_text);
+
+        addToLimits(sizeLabel, this.field_size);
+        addToLimits(cacheSizeLabel, this.field_cache_size);
+        addToLimits(cacheDisableLabel, this.field_cache_disable);
+
+        addToTopbar(displayModeLabel, this.field_display_mode);
+        addToTopbar(topbarPreviewLabel, this.field_topbar_preview_size);
+        addToTopbar(disableDownArrowLabel, this.field_disable_down_arrow);
+
+        addToNotifications(notificationLabel, this.field_notification_toggle);
+        addToNotifications(confirmClearLabel, this.field_confirm_clear_toggle);
+
+        addToShortcuts(keybindingLabel, this.field_keybinding_activation);
+        addToShortcuts(null, this.field_keybinding);
+
         this.schema.bind(PrefsFields.HISTORY_SIZE, this.field_size, 'value', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.PREVIEW_SIZE, this.field_preview_size, 'value', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.CACHE_FILE_SIZE, this.field_cache_size, 'value', Gio.SettingsBindFlags.DEFAULT);

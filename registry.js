@@ -1,12 +1,13 @@
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
+import St from 'gi://St';
 import { PrefsFields } from './constants.js';
 
 const FileQueryInfoFlags = Gio.FileQueryInfoFlags;
 const FileCopyFlags = Gio.FileCopyFlags;
 const FileTest = GLib.FileTest;
 
-export default class Registry {
+export class Registry {
     constructor ({ settings, uuid }) {
         this.uuid = uuid;
         this.settings = settings;
@@ -16,7 +17,31 @@ export default class Registry {
         this.BACKUP_REGISTRY_PATH = this.REGISTRY_PATH + '~';
     }
 
-    write (registry) {
+    write (entries) {
+        const registryContent = [];
+
+        for (let entry of entries) {
+            const item = {
+                favorite: entry.isFavorite(),
+                mimetype: entry.mimetype()
+            };
+
+            registryContent.push(item);
+
+            if (entry.isText()) {
+                item.contents = entry.getStringValue();
+            }
+            else if (entry.isImage()) {
+                const filename = this.getEntryFilename(entry);
+                item.contents = filename;
+                this.writeEntryFile(entry);
+            }
+        }
+
+        this.writeToFile(registryContent);
+    }
+
+    writeToFile (registry) {
         let json = JSON.stringify(registry);
         let contents = new GLib.Bytes(json);
 
@@ -62,28 +87,40 @@ export default class Registry {
                 }
 
                 file.load_contents_async(null, (obj, res) => {
-                    let registry;
                     let [success, contents] = obj.load_contents_finish(res);
 
                     if (success) {
                         let max_size = this.settings.get_int(PrefsFields.HISTORY_SIZE);
-                        registry = JSON.parse(new TextDecoder().decode(contents));
-                        let registryNoFavorite = registry.filter(
-                            item => item['favorite'] === false);
+                        const registry = JSON.parse(new TextDecoder().decode(contents));
+                        const entriesPromises = registry.map(
+                            jsonEntry => {
+                                return ClipboardEntry.fromJSON(jsonEntry)
+                            }
+                        );
 
-                        while (registryNoFavorite.length > max_size) {
-                            let oldestNoFavorite = registryNoFavorite.shift();
-                            let itemIdx = registry.indexOf(oldestNoFavorite);
-                            registry.splice(itemIdx,1);
+                        Promise.all(entriesPromises).then(clipboardEntries => {
+                            let registryNoFavorite = clipboardEntries.filter(
+                                entry => entry.isFavorite()
+                            );
 
-                            registryNoFavorite = registry.filter(
-                                item => item["favorite"] === false);
-                        }
+                            while (registryNoFavorite.length > max_size) {
+                                let oldestNoFavorite = registryNoFavorite.shift();
+                                let itemIdx = clipboardEntries.indexOf(oldestNoFavorite);
+                                clipboardEntries.splice(itemIdx,1);
 
-                        callback(registry);
+                                registryNoFavorite = clipboardEntries.filter(
+                                    entry => entry.isFavorite()
+                                );
+                            }
+
+                            callback(clipboardEntries);
+                        }).catch(e => {
+                            console.error('CLIPBOARD INDICATOR ERROR');
+                            console.error(e);
+                        });
                     }
                     else {
-                        log('Clipboard Indicator: failed to open registry file');
+                        console.error('Clipboard Indicator: failed to open registry file');
                     }
                 });
             });
@@ -91,5 +128,150 @@ export default class Registry {
         else {
             callback([]);
         }
+    }
+
+    #entryFileExists (entry) {
+        const filename = this.getEntryFilename(entry);
+        return GLib.file_test(filename, FileTest.EXISTS);
+    }
+
+    async getEntryAsImage (entry) {
+        const filename = this.getEntryFilename(entry);
+
+        if (entry.isImage() === false) return;
+
+        if (this.#entryFileExists(entry) == false) {
+            await this.writeEntryFile(entry);
+        }
+
+        const gicon = Gio.icon_new_for_string(this.getEntryFilename(entry));
+        const stIcon = new St.Icon({ gicon });
+        return stIcon;
+    }
+
+    getEntryFilename (entry) {
+        return `${this.REGISTRY_DIR}/${entry.asBytes().hash()}`;
+    }
+
+    async writeEntryFile (entry) {
+        if (this.#entryFileExists(entry)) return;
+
+        let file = Gio.file_new_for_path(this.getEntryFilename(entry));
+
+        return new Promise(resolve => {
+            file.replace_async(null, false, Gio.FileCreateFlags.NONE,
+                               GLib.PRIORITY_DEFAULT, null, (obj, res) => {
+
+                let stream = obj.replace_finish(res);
+
+                stream.write_bytes_async(entry.asBytes(), GLib.PRIORITY_DEFAULT,
+                                         null, (w_obj, w_res) => {
+
+                    w_obj.write_bytes_finish(w_res);
+                    stream.close(null);
+                    resolve();
+                });
+            });
+        });
+    }
+
+    async deleteEntryFile (entry) {
+        const file = Gio.file_new_for_path(this.getEntryFilename(entry));
+
+        try {
+            await file.delete_async(GLib.PRIORITY_DEFAULT, null);
+        }
+        catch (e) {
+            console.error(e);
+        }
+    }
+}
+
+export class ClipboardEntry {
+    #mimetype;
+    #bytes;
+    #favorite;
+
+    static #decode (contents) {
+        return Uint8Array.from(contents.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)));
+    }
+
+    static async fromJSON (jsonEntry) {
+        const mimetype = jsonEntry.mimetype || 'text/plain';
+        const favorite = jsonEntry.favorite;
+        let bytes;
+
+        if (mimetype.startsWith('text/')) {
+            bytes = new TextEncoder().encode(jsonEntry.contents);
+        }
+        else {
+            let file = Gio.file_new_for_path(jsonEntry.contents);
+            bytes = await new Promise((resolve, reject) => file.load_contents_async(null, (obj, res) => {
+                let [success, contents] = obj.load_contents_finish(res);
+
+                if (success) {
+                    resolve(contents);
+                }
+                else {
+                    reject(
+                        new Error('Clipboard Indicator: could not read image file from cache')
+                    );
+                }
+            }));
+        }
+
+        return new ClipboardEntry(mimetype, bytes, favorite);
+    }
+
+    constructor (mimetype, bytes, favorite) {
+        this.#mimetype = mimetype;
+        this.#bytes = bytes;
+        this.#favorite = favorite;
+    }
+
+    #encode () {
+        if (this.isText()) {
+            return this.getStringValue();
+        }
+
+        return [...this.#bytes]
+            .map(x => x.toString(16).padStart(2, '0'))
+            .join('');
+    }
+
+    getStringValue () {
+        if (this.isImage()) {
+            return `[Image ${this.asBytes().hash()}]`;
+        }
+        return new TextDecoder().decode(this.#bytes);
+    }
+
+    mimetype () {
+        return this.#mimetype;
+    }
+
+    isFavorite () {
+        return this.#favorite;
+    }
+
+    set favorite (val) {
+        this.#favorite = !!val;
+    }
+
+    isText () {
+        return this.#mimetype.startsWith('text/');
+    }
+
+    isImage () {
+        return this.#mimetype.startsWith('image/');
+    }
+
+    asBytes () {
+        return GLib.Bytes.new(this.#bytes);
+    }
+
+    equals (otherEntry) {
+        return this.getStringValue() === otherEntry.getStringValue();
+        // this.asBytes().equal(otherEntry.asBytes());
     }
 }

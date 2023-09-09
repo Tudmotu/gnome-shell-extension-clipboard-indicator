@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-15 13:20+0300\n"
+"POT-Creation-Date: 2023-09-09 22:18+0300\n"
 "PO-Revision-Date: 2017-05-04 17:27+0300\n"
 "Last-Translator: Raphael Rochet <raphael@rri.fr>\n"
 "Language-Team: \n"
@@ -18,122 +18,153 @@ msgstr ""
 "X-Generator: Poedit 2.0.1\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: extension.js:87
+#: extension.js:104
 msgid "Text will be here"
 msgstr ""
 
-#: extension.js:129
+#: extension.js:168
 msgid "Type here to search..."
 msgstr ""
 
-#: extension.js:198
+#: extension.js:231
 msgid "Private mode"
 msgstr "Ιδιωτική λειτουργία"
 
-#: extension.js:205 prefs.js:110
+#: extension.js:245 prefs.js:81
 msgid "Clear history"
 msgstr "Εκκάθαρση ιστορικού"
 
-#: extension.js:210
+#: extension.js:257
 msgid "Settings"
 msgstr "Ρυθμίσεις"
 
-#: extension.js:339
+#: extension.js:280
+#, fuzzy
+msgid "Clipboard is empty"
+msgstr "Κενό ιστορικό"
+
+#: extension.js:460
 msgid "Clear all?"
 msgstr ""
 
-#: extension.js:340
+#: extension.js:461
 msgid "Are you sure you want to delete all clipboard items?"
 msgstr ""
 
-#: extension.js:341
+#: extension.js:462
 msgid "This operation cannot be undone."
 msgstr ""
 
-#: extension.js:343
+#: extension.js:464
 msgid "Clear"
 msgstr ""
 
-#: extension.js:343 extension.js:495
+#: extension.js:464 extension.js:632 extension.js:669
 msgid "Cancel"
 msgstr ""
 
-#: extension.js:357
+#: extension.js:485
 msgid "Clipboard history cleared"
 msgstr "Κενό ιστορικό"
 
-#: extension.js:494
+#: extension.js:631 extension.js:668
 msgid "Copied to clipboard"
 msgstr "Αντεγραμμένο στο πρόχειρο"
 
-#: prefs.js:108
+#: prefs.js:79
 msgid "Toggle the menu"
 msgstr "Εμφάνιση/Απόκρυψη μενού"
 
-#: prefs.js:112
+#: prefs.js:83
 msgid "Previous entry"
 msgstr "Προηγούμενη καταχώρηση"
 
-#: prefs.js:114
+#: prefs.js:85
 msgid "Next entry"
 msgstr "Επόμενη καταχώρηση"
 
-#: prefs.js:123
+#: prefs.js:94
 msgid "History Size"
 msgstr "Μέγεθος ιστορικού"
 
-#: prefs.js:128
+#: prefs.js:99
 msgid "Refresh Interval (ms)"
 msgstr "Διάστημα επαναφόρτωσης (ms)"
 
-#: prefs.js:133
+#: prefs.js:104
 msgid "Preview Size (characters)"
 msgstr "Μέγεθος προεπισκόπησης (χαρακτήρες)"
 
-#: prefs.js:138
+#: prefs.js:109
 msgid "Max cache file size (kb)"
 msgstr "Μέγιστο μέγεθος αρχείων κρυφής μνήμης (kb)"
 
-#: prefs.js:143
+#: prefs.js:114
 msgid "Cache only favorites"
 msgstr ""
 
-#: prefs.js:148
+#: prefs.js:119
 msgid "Show notification on copy"
 msgstr "Εμφάνιση ειδοποίησης με την αντιγραφή"
 
-#: prefs.js:153
+#: prefs.js:124
+#, fuzzy
+msgid "Show confirmation on Clear History"
+msgstr "Εμφάνιση ειδοποίησης με την αντιγραφή"
+
+#: prefs.js:129
 msgid "Move item to the top after selection"
 msgstr ""
 
-#: prefs.js:158
-msgid "Keyboard shortcuts"
+#: prefs.js:134
+#, fuzzy
+msgid "Enable shortcuts"
 msgstr "Συντομεύσεις πληκτρολογίου"
 
-#: prefs.js:163
+#: prefs.js:139
 msgid "Number of characters in top bar"
 msgstr ""
 
-#: prefs.js:168
+#: prefs.js:144
 msgid "What to show in top bar"
 msgstr ""
 
-#: prefs.js:173
+#: prefs.js:149
 msgid "Remove down arrow in top bar"
 msgstr ""
 
-#: prefs.js:178
+#: prefs.js:154
 msgid "Remove whitespace around text"
 msgstr ""
 
-#: prefs.js:233
-msgid "Icon"
+#: prefs.js:190
+msgid "UI"
 msgstr ""
 
-#: prefs.js:234
-msgid "Clipboard Content"
+#: prefs.js:191
+msgid "Limits"
+msgstr ""
+
+#: prefs.js:192
+msgid "Topbar"
+msgstr ""
+
+#: prefs.js:193
+msgid "Notifications"
+msgstr ""
+
+#: prefs.js:194
+msgid "Shortcuts"
 msgstr ""
 
 #: prefs.js:235
+msgid "Icon"
+msgstr ""
+
+#: prefs.js:236
+msgid "Clipboard Content"
+msgstr ""
+
+#: prefs.js:237
 msgid "Both"
 msgstr ""

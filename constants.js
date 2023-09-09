@@ -1,5 +1,4 @@
 export const PrefsFields = {
-    INTERVAL               : 'refresh-interval',
     HISTORY_SIZE           : 'history-size',
     PREVIEW_SIZE           : 'preview-size',
     CACHE_FILE_SIZE        : 'cache-size',
