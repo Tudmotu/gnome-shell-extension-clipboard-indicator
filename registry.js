@@ -167,6 +167,17 @@ export class Registry {
     getEntryFilename (entry) {
         return `${this.REGISTRY_DIR}/${entry.asBytes().hash()}`;
     }
+
+    async deleteEntryFile (entry) {
+        const file = Gio.file_new_for_path(this.getEntryFilename(entry));
+
+        try {
+            await file.delete_async(GLib.PRIORITY_DEFAULT, null);
+        }
+        catch (e) {
+            console.error(e);
+        }
+    }
 }
 
 export class ClipboardEntry {

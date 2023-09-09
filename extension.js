@@ -441,6 +441,9 @@ const ClipboardIndicator = GObject.registerClass({
         menuItem.destroy();
         this.clipItemsRadioGroup.splice(itemIdx,1);
 
+        if (menuItem.entry.isImage()) {
+            this.registry.deleteEntryFile(menuItem.entry);
+        }
         this._updateCache();
     }
 
