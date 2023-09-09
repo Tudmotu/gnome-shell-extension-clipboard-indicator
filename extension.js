@@ -785,17 +785,17 @@ const ClipboardIndicator = GObject.registerClass({
         if (!PRIVATEMODE) {
             let selectList = this.clipItemsRadioGroup.filter((item) => !!item.currentlySelected);
 
-            this.#getClipboardContent().then(entry => {
-                if (!entry) return;
-                this.#updateIndicatorContent(entry);
-            }).catch(e => console.error(e));
-
             if (selectList.length) {
                 this._selectMenuItem(selectList[0]);
             } else {
                 // Nothing to return to, let's empty it instead
                 this.#clearClipboard();
             }
+
+            this.#getClipboardContent().then(entry => {
+                if (!entry) return;
+                this.#updateIndicatorContent(entry);
+            }).catch(e => console.error(e));
 
             this.icon.remove_style_class_name('private-mode');
             if (this.clipItemsRadioGroup.length > 0) {
