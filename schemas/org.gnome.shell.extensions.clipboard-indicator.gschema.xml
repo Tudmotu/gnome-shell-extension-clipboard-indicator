@@ -10,13 +10,6 @@
         </description>
     </key>
 
-    <key type="i" name="refresh-interval">
-        <default>1000</default>
-        <summary>The interval between updates in miliseconds</summary>
-        <description>The interval between updates in miliseconds </description>
-        <range min="500" max="5000"/>
-    </key>
-
     <key type="i" name="history-size">
         <default>15</default>
         <summary>The number of items to save in history</summary>

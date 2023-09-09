@@ -72,7 +72,6 @@ export class Registry {
         if (GLib.file_test(this.REGISTRY_PATH, FileTest.EXISTS)) {
             let file = Gio.file_new_for_path(this.REGISTRY_PATH);
             let CACHE_FILE_SIZE = this.settings.get_int(PrefsFields.CACHE_FILE_SIZE);
-            const LIMIT_CACHE_FILE_SIZE = false;
 
             file.query_info_async('*', FileQueryInfoFlags.NONE,
                                   GLib.PRIORITY_DEFAULT, null, (src, res) => {
@@ -80,7 +79,7 @@ export class Registry {
                 // If so, make a backup of file, and invoke callback with empty array
                 let file_info = src.query_info_finish(res);
 
-                if (LIMIT_CACHE_FILE_SIZE && file_info.get_size() >= CACHE_FILE_SIZE * 1024) {
+                if (file_info.get_size() >= CACHE_FILE_SIZE * 1024) {
                     let destination = Gio.file_new_for_path(this.BACKUP_REGISTRY_PATH);
 
                     file.move(destination, FileCopyFlags.OVERWRITE, null, null);

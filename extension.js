@@ -23,20 +23,20 @@ const SETTING_KEY_NEXT_ENTRY = "next-entry";
 const SETTING_KEY_TOGGLE_MENU = "toggle-menu";
 const INDICATOR_ICON = 'edit-paste-symbolic';
 
-let TIMEOUT_MS           = 1000;
-let MAX_REGISTRY_LENGTH  = 15;
-let MAX_ENTRY_LENGTH     = 50;
-let CACHE_ONLY_FAVORITE  = false;
-let DELETE_ENABLED       = true;
-let MOVE_ITEM_FIRST      = false;
-let ENABLE_KEYBINDING    = true;
-let PRIVATEMODE          = false;
-let NOTIFY_ON_COPY       = true;
-let CONFIRM_ON_CLEAR     = true;
-let MAX_TOPBAR_LENGTH    = 15;
-let TOPBAR_DISPLAY_MODE  = 1; //0 - only icon, 1 - only clipboard content, 2 - both
-let DISABLE_DOWN_ARROW   = false;
-let STRIP_TEXT           = false;
+let DELAYED_SELECTION_TIMEOUT = 750;
+let MAX_REGISTRY_LENGTH       = 15;
+let MAX_ENTRY_LENGTH          = 50;
+let CACHE_ONLY_FAVORITE       = false;
+let DELETE_ENABLED            = true;
+let MOVE_ITEM_FIRST           = false;
+let ENABLE_KEYBINDING         = true;
+let PRIVATEMODE               = false;
+let NOTIFY_ON_COPY            = true;
+let CONFIRM_ON_CLEAR          = true;
+let MAX_TOPBAR_LENGTH         = 15;
+let TOPBAR_DISPLAY_MODE       = 1; //0 - only icon, 1 - only clipboard content, 2 - both
+let DISABLE_DOWN_ARROW        = false;
+let STRIP_TEXT                = false;
 
 export default class ClipboardIndicatorExtension extends Extension {
     enable () {
@@ -506,7 +506,7 @@ const ClipboardIndicator = GObject.registerClass({
                 item => item.entry.isFavorite() === false);
         }
 
-        if (clipItemsRadioGroupNoFavorite.lenght < origSize) {
+        if (clipItemsRadioGroupNoFavorite.length < origSize) {
             that._updateCache();
         }
     }
@@ -794,7 +794,6 @@ const ClipboardIndicator = GObject.registerClass({
 
     _fetchSettings () {
         const { settings } = this.extension;
-        TIMEOUT_MS           = settings.get_int(PrefsFields.INTERVAL);
         MAX_REGISTRY_LENGTH  = settings.get_int(PrefsFields.HISTORY_SIZE);
         MAX_ENTRY_LENGTH     = settings.get_int(PrefsFields.PREVIEW_SIZE);
         CACHE_ONLY_FAVORITE  = settings.get_boolean(PrefsFields.CACHE_ONLY_FAVORITE);
@@ -918,11 +917,10 @@ const ClipboardIndicator = GObject.registerClass({
         let that = this;
         that._selectMenuItem(entry, false);
 
-        that._delayedSelectionTimeoutId = setInterval(function () {
+        that._delayedSelectionTimeoutId = setTimeout(function () {
             that._selectMenuItem(entry);  //select the item
             that._delayedSelectionTimeoutId = null;
-            return false;
-        }, TIMEOUT_MS * 0.75);
+        }, DELAYED_SELECTION_TIMEOUT);
     }
 
     _previousEntry () {
