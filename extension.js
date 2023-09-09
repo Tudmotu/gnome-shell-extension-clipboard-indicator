@@ -1,11 +1,8 @@
-import GLib from 'gi://GLib';
 import Clutter from 'gi://Clutter';
 import GObject from 'gi://GObject';
 import Meta from 'gi://Meta';
 import Shell from 'gi://Shell';
 import St from 'gi://St';
-
-// GLib.log_set_debug_enabled(true);
 
 import * as MessageTray from 'resource:///org/gnome/shell/ui/messageTray.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
@@ -137,10 +134,11 @@ const ClipboardIndicator = GObject.registerClass({
             else if (entry.isImage()) {
                 this._buttonText.set_text('');
                 this._buttonImgPreview.destroy_all_children();
-                const img = this.registry.getEntryAsImage(entry);
-                img.add_style_class_name('clipboard-indicator-img-preview');
-                img.y_align = Clutter.ActorAlign.CENTER;
-                this._buttonImgPreview.set_child(img);
+                this.registry.getEntryAsImage(entry).then(img => {
+                    img.add_style_class_name('clipboard-indicator-img-preview');
+                    img.y_align = Clutter.ActorAlign.CENTER;
+                    this._buttonImgPreview.set_child(img);
+                });
             }
         }
     }
@@ -177,8 +175,6 @@ const ClipboardIndicator = GObject.registerClass({
 
             that._entryItem.add(that.searchEntry);
 
-            that.menu.addMenuItem(that._entryItem);
-
             that.menu.connect('open-state-changed', (self, open) => {
                 let a = setInterval(() => {
                     if (open) {
@@ -202,7 +198,7 @@ const ClipboardIndicator = GObject.registerClass({
 
             that.scrollViewFavoritesMenuSection.actor.add_actor(favoritesScrollView);
             that.menu.addMenuItem(that.scrollViewFavoritesMenuSection);
-            that.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+            this.favoritesSeparator = new PopupMenu.PopupSeparatorMenuItem();
 
             // History
             that.historySection = new PopupMenu.PopupMenuSection();
@@ -218,11 +214,8 @@ const ClipboardIndicator = GObject.registerClass({
 
             that.menu.addMenuItem(that.scrollViewMenuSection);
 
-            // Add cached items
-            clipHistory.forEach(entry => this._addEntry(entry));
-
             // Add separator
-            that.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+            this.historySeparator = new PopupMenu.PopupSeparatorMenuItem();
 
             // Private mode switch
             that.privateModeMenuItem = new PopupMenu.PopupSwitchMenuItem(
@@ -238,11 +231,10 @@ const ClipboardIndicator = GObject.registerClass({
                 0
             );
             that.menu.addMenuItem(that.privateModeMenuItem);
-            that._onPrivateModeSwitch();
 
             // Add 'Clear' button which removes all items from cache
-            let clearMenuItem = new PopupMenu.PopupMenuItem(_('Clear history'));
-            clearMenuItem.insert_child_at_index(
+            this.clearMenuItem = new PopupMenu.PopupMenuItem(_('Clear history'));
+            this.clearMenuItem.insert_child_at_index(
                 new St.Icon({
                     icon_name: 'user-trash-symbolic',
                     style_class: 'clipboard-menu-icon',
@@ -250,12 +242,11 @@ const ClipboardIndicator = GObject.registerClass({
                 }),
                 0
             );
-            that.menu.addMenuItem(clearMenuItem);
-            clearMenuItem.connect('activate', that._removeAll.bind(that));
+            this.clearMenuItem.connect('activate', that._removeAll.bind(that));
 
             // Add 'Settings' menu item to open settings
-            let settingsMenuItem = new PopupMenu.PopupMenuItem(_('Settings'));
-            settingsMenuItem.insert_child_at_index(
+            this.settingsMenuItem = new PopupMenu.PopupMenuItem(_('Settings'));
+            this.settingsMenuItem.insert_child_at_index(
                 new St.Icon({
                     icon_name: 'preferences-system-symbolic',
                     style_class: 'clipboard-menu-icon',
@@ -263,13 +254,48 @@ const ClipboardIndicator = GObject.registerClass({
                 }),
                 0
             );
-            that.menu.addMenuItem(settingsMenuItem);
-            settingsMenuItem.connect('activate', that._openSettings.bind(that));
+            that.menu.addMenuItem(this.settingsMenuItem);
+            this.settingsMenuItem.connect('activate', that._openSettings.bind(that));
+
+            // Add cached items
+            clipHistory.forEach(entry => this._addEntry(entry));
 
             if (lastIdx >= 0) {
                 that._selectMenuItem(clipItemsArr[lastIdx]);
             }
+
+            if (clipHistory.length === 0) {
+                this.#renderEmptyState();
+            }
+
+            this.#showElements();
         });
+    }
+
+    #hideElements() {
+        this.menu.box.remove_child(this._entryItem);
+        this.menu.box.remove_child(this.favoritesSeparator);
+        this.menu.box.remove_child(this.historySeparator);
+        this.menu.box.remove_child(this.clearMenuItem);
+    }
+
+    #showElements() {
+        if (this.clipItemsRadioGroup.length > 0) {
+            this.menu.box.insert_child_at_index(this._entryItem, 0);
+            this.menu.box.insert_child_below(this.clearMenuItem, this.settingsMenuItem);
+        }
+
+        if (this.favoritesSection._getMenuItems().length > 0) {
+            this.menu.box.insert_child_above(this.favoritesSeparator, this.scrollViewFavoritesMenuSection.actor);
+        }
+
+        if (this.historySection._getMenuItems().length > 0) {
+            this.menu.box.insert_child_above(this.historySeparator, this.scrollViewMenuSection.actor);
+        }
+    }
+
+    #renderEmptyState () {
+        this.#hideElements();
     }
 
     /* When text change, this function will check, for each item of the
@@ -309,13 +335,14 @@ const ClipboardIndicator = GObject.registerClass({
             menuItem.label.set_text(this._truncate(entry.getStringValue(), MAX_ENTRY_LENGTH));
         }
         else if (entry.isImage()) {
-            const img = this.registry.getEntryAsImage(entry);
-            img.add_style_class_name('clipboard-menu-img-preview');
-            if (menuItem.previewImage) {
-                menuItem.remove_child(menuItem.previewImage);
-            }
-            menuItem.previewImage = img;
-            menuItem.insert_child_below(img, menuItem.label);
+            this.registry.getEntryAsImage(entry).then(img => {
+                img.add_style_class_name('clipboard-menu-img-preview');
+                if (menuItem.previewImage) {
+                    menuItem.remove_child(menuItem.previewImage);
+                }
+                menuItem.previewImage = img;
+                menuItem.insert_child_below(img, menuItem.label);
+            });
         }
     }
 
@@ -325,7 +352,6 @@ const ClipboardIndicator = GObject.registerClass({
         menuItem.menu = this.menu;
         menuItem.entry = entry;
         menuItem.clipContents = entry.getStringValue();
-        menuItem.clipFavorite = entry.isFavorite();
         menuItem.radioGroup = this.clipItemsRadioGroup;
         menuItem.buttonPressId = menuItem.connect('activate',
             autoSet => this._onMenuItemSelectedAndMenuClose(menuItem, autoSet));
@@ -382,15 +408,23 @@ const ClipboardIndicator = GObject.registerClass({
             this.historySection.addMenuItem(menuItem, 0);
         }
 
-        if (autoSelect === true)
+        if (autoSelect === true) {
             this._selectMenuItem(menuItem, autoSetClip);
+        }
+        else {
+            menuItem.setOrnament(PopupMenu.Ornament.NONE);
+        }
+
+        if (this.clipItemsRadioGroup.length === 1) {
+            this.#showElements();
+        }
     }
 
     _favoriteToggle (menuItem) {
-        menuItem.clipFavorite = menuItem.clipFavorite ? false : true;
+        menuItem.entry.favorite = menuItem.entry.isFavorite() ? false : true;
         this._moveItemFirst(menuItem);
-
         this._updateCache();
+        this.#showElements();
     }
 
     _confirmRemoveAll () {
@@ -446,13 +480,17 @@ const ClipboardIndicator = GObject.registerClass({
             this.registry.deleteEntryFile(menuItem.entry);
         }
         this._updateCache();
+
+        if (this.clipItemsRadioGroup.length === 0) {
+            this.#hideElements();
+        }
     }
 
     _removeOldestEntries () {
         let that = this;
 
         let clipItemsRadioGroupNoFavorite = that.clipItemsRadioGroup.filter(
-            item => item.clipFavorite === false);
+            item => item.entry.isFavorite() === false);
 
         const origSize = clipItemsRadioGroupNoFavorite.length;
 
@@ -461,7 +499,7 @@ const ClipboardIndicator = GObject.registerClass({
             that._removeEntry(oldestNoFavorite);
 
             clipItemsRadioGroupNoFavorite = that.clipItemsRadioGroup.filter(
-                item => item.clipFavorite === false);
+                item => item.entry.isFavorite() === false);
         }
 
         if (clipItemsRadioGroupNoFavorite.lenght < origSize) {
@@ -548,7 +586,7 @@ const ClipboardIndicator = GObject.registerClass({
                     if (menuItem.entry.equals(result)) {
                         this._selectMenuItem(menuItem, false);
 
-                        if (!menuItem.clipFavorite && MOVE_ITEM_FIRST) {
+                        if (!menuItem.entry.isFavorite() && MOVE_ITEM_FIRST) {
                             this._moveItemFirst(menuItem);
                         }
 
@@ -606,7 +644,7 @@ const ClipboardIndicator = GObject.registerClass({
                 const item = that._findItem(text);
                 that._selectMenuItem(item, false);
 
-                if (!item.clipFavorite && MOVE_ITEM_FIRST) {
+                if (!item.entry.isFavorite() && MOVE_ITEM_FIRST) {
                     that._moveItemFirst(item);
                 }
             }
@@ -730,8 +768,12 @@ const ClipboardIndicator = GObject.registerClass({
             }
 
             this.icon.remove_style_class_name('private-mode');
+            if (this.clipItemsRadioGroup.length > 0) {
+                this.#showElements();
+            }
         } else {
             this.#updateIndicatorContent(null);
+            this.#hideElements();
         }
     }
 
@@ -930,6 +972,7 @@ const ClipboardIndicator = GObject.registerClass({
 
     #clearClipboard () {
         Clipboard.set_text(CLIPBOARD_TYPE, "");
+        this.#updateIndicatorContent(null);
     }
 
     #updateClipboard (entry) {
@@ -955,7 +998,9 @@ const ClipboardIndicator = GObject.registerClass({
                     return;
                 }
 
-                resolve(new ClipboardEntry(type, bytes.get_data(), false));
+                const entry = new ClipboardEntry(type, bytes.get_data(), false);
+                this.registry.writeEntryFile(entry);
+                resolve(entry);
             }));
 
             if (result) return result;

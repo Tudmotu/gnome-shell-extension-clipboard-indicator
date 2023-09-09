@@ -26,6 +26,10 @@
     max-height:450px;
 }
 
+.clipboard-hidden {
+    display:none!important;
+}
+
 .clipboard-menu-icon {
     width:1em;
     height:1em;

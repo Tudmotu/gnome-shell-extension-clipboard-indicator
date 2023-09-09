@@ -35,22 +35,7 @@ export class Registry {
             else if (entry.isImage()) {
                 const filename = this.getEntryFilename(entry);
                 item.contents = filename;
-
-                if (this.#entryFileExists(entry) == false) {
-                    let file = Gio.file_new_for_path(filename);
-                    file.replace_async(null, false, Gio.FileCreateFlags.NONE,
-                                       GLib.PRIORITY_DEFAULT, null, (obj, res) => {
-
-                        let stream = obj.replace_finish(res);
-
-                        stream.write_bytes_async(entry.asBytes(), GLib.PRIORITY_DEFAULT,
-                                                 null, (w_obj, w_res) => {
-
-                            w_obj.write_bytes_finish(w_res);
-                            stream.close(null);
-                        });
-                    });
-                }
+                this.writeEntryFile(entry);
             }
         }
 
@@ -152,11 +137,13 @@ export class Registry {
         return GLib.file_test(filename, FileTest.EXISTS);
     }
 
-    getEntryAsImage (entry) {
+    async getEntryAsImage (entry) {
         const filename = this.getEntryFilename(entry);
+
+        if (entry.isImage() === false) return;
+
         if (this.#entryFileExists(entry) == false) {
-            console.error('Clipboard Indicator: image file not found');
-            return;
+            await this.writeEntryFile(entry);
         }
 
         const gicon = Gio.icon_new_for_string(this.getEntryFilename(entry));
@@ -166,6 +153,28 @@ export class Registry {
 
     getEntryFilename (entry) {
         return `${this.REGISTRY_DIR}/${entry.asBytes().hash()}`;
+    }
+
+    async writeEntryFile (entry) {
+        if (this.#entryFileExists(entry)) return;
+
+        let file = Gio.file_new_for_path(this.getEntryFilename(entry));
+
+        return new Promise(resolve => {
+            file.replace_async(null, false, Gio.FileCreateFlags.NONE,
+                               GLib.PRIORITY_DEFAULT, null, (obj, res) => {
+
+                let stream = obj.replace_finish(res);
+
+                stream.write_bytes_async(entry.asBytes(), GLib.PRIORITY_DEFAULT,
+                                         null, (w_obj, w_res) => {
+
+                    w_obj.write_bytes_finish(w_res);
+                    stream.close(null);
+                    resolve();
+                });
+            });
+        });
     }
 
     async deleteEntryFile (entry) {
@@ -245,6 +254,10 @@ export class ClipboardEntry {
 
     isFavorite () {
         return this.#favorite;
+    }
+
+    set favorite (val) {
+        this.#favorite = !!val;
     }
 
     isText () {
