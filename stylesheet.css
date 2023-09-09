@@ -20,6 +20,12 @@
     max-height:450px;
 }
 
+.clipboard-menu-icon {
+    width:1em;
+    height:1em;
+    margin-right:.5em;
+}
+
 .clipboard-menu-img-preview {
     border:solid 1px white;
     overflow:hidden;
@@ -30,6 +36,7 @@
 }
 
 .clipboard-indicator-img-preview {
+    border:solid 1px white;
     width:16px;
     height:16px;
 }

@@ -139,6 +139,7 @@ const ClipboardIndicator = GObject.registerClass({
                 this._buttonImgPreview.destroy_all_children();
                 const img = this.registry.getEntryAsImage(entry);
                 img.add_style_class_name('clipboard-indicator-img-preview');
+                img.y_align = Clutter.ActorAlign.CENTER;
                 this._buttonImgPreview.set_child(img);
             }
         }
@@ -227,16 +228,40 @@ const ClipboardIndicator = GObject.registerClass({
                 _("Private mode"), PRIVATEMODE, { reactive: true });
             that.privateModeMenuItem.connect('toggled',
                 that._onPrivateModeSwitch.bind(that));
+            that.privateModeMenuItem.insert_child_at_index(
+                new St.Icon({
+                    icon_name: 'security-medium-symbolic',
+                    style_class: 'clipboard-menu-icon',
+                    y_align: Clutter.ActorAlign.CENTER
+                }),
+                0
+            );
             that.menu.addMenuItem(that.privateModeMenuItem);
             that._onPrivateModeSwitch();
 
             // Add 'Clear' button which removes all items from cache
             let clearMenuItem = new PopupMenu.PopupMenuItem(_('Clear history'));
+            clearMenuItem.insert_child_at_index(
+                new St.Icon({
+                    icon_name: 'user-trash-symbolic',
+                    style_class: 'clipboard-menu-icon',
+                    y_align: Clutter.ActorAlign.CENTER
+                }),
+                0
+            );
             that.menu.addMenuItem(clearMenuItem);
             clearMenuItem.connect('activate', that._removeAll.bind(that));
 
             // Add 'Settings' menu item to open settings
             let settingsMenuItem = new PopupMenu.PopupMenuItem(_('Settings'));
+            settingsMenuItem.insert_child_at_index(
+                new St.Icon({
+                    icon_name: 'preferences-system-symbolic',
+                    style_class: 'clipboard-menu-icon',
+                    y_align: Clutter.ActorAlign.CENTER
+                }),
+                0
+            );
             that.menu.addMenuItem(settingsMenuItem);
             settingsMenuItem.connect('activate', that._openSettings.bind(that));
 
