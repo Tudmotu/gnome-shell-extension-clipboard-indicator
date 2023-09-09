@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-06 10:46+0300\n"
+"POT-Creation-Date: 2023-09-09 22:18+0300\n"
 "PO-Revision-Date: 2021-11-06 11:09+0100\n"
 "Last-Translator: Stanisław Zadorozhnyi <zadorozhniy123@icloud.com>\n"
 "Language-Team: \n"
@@ -19,123 +19,154 @@ msgstr ""
 "|| n%100>=20) ? 1 : 2);\n"
 "X-Generator: Poedit 2.3\n"
 
-#: extension.js:87
+#: extension.js:104
 msgid "Text will be here"
 msgstr "Текст буде тут"
 
-#: extension.js:129
+#: extension.js:168
 msgid "Type here to search..."
 msgstr "Пишіть тут для пошуку..."
 
-#: extension.js:198
+#: extension.js:231
 msgid "Private mode"
 msgstr "Приватний режим"
 
-#: extension.js:205 prefs.js:110
+#: extension.js:245 prefs.js:81
 msgid "Clear history"
 msgstr "Очистити історію"
 
-#: extension.js:210
+#: extension.js:257
 msgid "Settings"
 msgstr "Параметри"
 
-#: extension.js:339
+#: extension.js:280
+#, fuzzy
+msgid "Clipboard is empty"
+msgstr "Вміст буферу обміну"
+
+#: extension.js:460
 msgid "Clear all?"
 msgstr "Очистити все?"
 
-#: extension.js:340
+#: extension.js:461
 msgid "Are you sure you want to delete all clipboard items?"
 msgstr "Видалити всі елементи з буферу обміну?"
 
-#: extension.js:341
+#: extension.js:462
 msgid "This operation cannot be undone."
 msgstr "Цю операцію неможливо відмінити."
 
-#: extension.js:343
+#: extension.js:464
 msgid "Clear"
 msgstr "Очистити"
 
-#: extension.js:343 extension.js:495
+#: extension.js:464 extension.js:632 extension.js:669
 msgid "Cancel"
 msgstr "Відмінити"
 
-#: extension.js:357
+#: extension.js:485
 msgid "Clipboard history cleared"
 msgstr "Історія буферу обміну очищено"
 
-#: extension.js:494
+#: extension.js:631 extension.js:668
 msgid "Copied to clipboard"
 msgstr "Скопійовано до буферу обміну"
 
-#: prefs.js:108
+#: prefs.js:79
 msgid "Toggle the menu"
 msgstr "Включити меню"
 
-#: prefs.js:112
+#: prefs.js:83
 msgid "Previous entry"
 msgstr "Попередній запис"
 
-#: prefs.js:114
+#: prefs.js:85
 msgid "Next entry"
 msgstr "Наступний запис"
 
-#: prefs.js:123
+#: prefs.js:94
 msgid "History Size"
 msgstr "Розмір історії"
 
-#: prefs.js:128
+#: prefs.js:99
 msgid "Refresh Interval (ms)"
 msgstr "Інтервал оновлення (мс)"
 
-#: prefs.js:133
+#: prefs.js:104
 msgid "Preview Size (characters)"
 msgstr "Розмір попереднього перегляду (символів)"
 
-#: prefs.js:138
+#: prefs.js:109
 msgid "Max cache file size (kb)"
 msgstr "Максимальний розмір кешу (кб)"
 
-#: prefs.js:143
+#: prefs.js:114
 msgid "Cache only favorites"
 msgstr "Кешувати тільки обрані"
 
-#: prefs.js:148
+#: prefs.js:119
 msgid "Show notification on copy"
 msgstr "Показувати сповіщення при копіюванні"
 
-#: prefs.js:153
+#: prefs.js:124
+#, fuzzy
+msgid "Show confirmation on Clear History"
+msgstr "Показувати сповіщення при копіюванні"
+
+#: prefs.js:129
 msgid "Move item to the top after selection"
 msgstr "Перемістити елемент на верх після вибору"
 
-#: prefs.js:158
-msgid "Keyboard shortcuts"
+#: prefs.js:134
+#, fuzzy
+msgid "Enable shortcuts"
 msgstr "Клавіатурні скорочення"
 
-#: prefs.js:163
+#: prefs.js:139
 msgid "Number of characters in top bar"
 msgstr "Кількість символів у верхній секції"
 
-#: prefs.js:168
+#: prefs.js:144
 msgid "What to show in top bar"
 msgstr "Що показувати у верхній секції"
 
-#: prefs.js:173
+#: prefs.js:149
 msgid "Remove down arrow in top bar"
 msgstr "Вилучити стрілку вниз з верхньої секції"
 
-#: prefs.js:178
+#: prefs.js:154
 msgid "Remove whitespace around text"
 msgstr "Вилучити проміжки довкола тексту"
 
-#: prefs.js:233
+#: prefs.js:190
+msgid "UI"
+msgstr ""
+
+#: prefs.js:191
+msgid "Limits"
+msgstr ""
+
+#: prefs.js:192
+msgid "Topbar"
+msgstr ""
+
+#: prefs.js:193
+msgid "Notifications"
+msgstr ""
+
+#: prefs.js:194
+msgid "Shortcuts"
+msgstr ""
+
+#: prefs.js:235
 msgid "Icon"
 msgstr "Піктограма"
 
-#: prefs.js:234
+#: prefs.js:236
 msgid "Clipboard Content"
 msgstr "Вміст буферу обміну"
 
-#: prefs.js:235
+#: prefs.js:237
 msgid "Both"
 msgstr "Обидва"
 
