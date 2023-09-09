@@ -13,7 +13,8 @@
 }
 
 .popup-menu-item .ci-action-btn StIcon {
-    icon-size:16px;
+    icon-size:1.2em;
+    margin-left:.25em;
 }
 
 .ci-history-menu-section {
@@ -29,14 +30,15 @@
 .clipboard-menu-img-preview {
     border:solid 1px white;
     overflow:hidden;
-    width:24px;
-    height:24px;
+    width:1.5em;
+    height:1.5em;
     margin:0;
     padding:0;
 }
 
 .clipboard-indicator-img-preview {
     border:solid 1px white;
-    width:16px;
-    height:16px;
+    width:1em;
+    height:1em;
+    margin-right:.25em;
 }
