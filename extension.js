@@ -127,6 +127,7 @@ const ClipboardIndicator = GObject.registerClass({
         }
 
         if (!entry || PRIVATEMODE){
+            this._buttonImgPreview.destroy_all_children();
             this._buttonText.set_text("...")
         } else {
             if (entry.isText()) {
@@ -701,8 +702,7 @@ const ClipboardIndicator = GObject.registerClass({
 
             this.icon.remove_style_class_name('private-mode');
         } else {
-            this._buttonText.set_text('...');
-            this.icon.add_style_class_name('private-mode');
+            this.#updateIndicatorContent(null);
         }
     }
 
