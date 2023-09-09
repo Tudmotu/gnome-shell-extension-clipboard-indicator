@@ -182,8 +182,13 @@ const ClipboardIndicator = GObject.registerClass({
             that.menu.connect('open-state-changed', (self, open) => {
                 let a = setInterval(() => {
                     if (open) {
-                        that.searchEntry.set_text('');
-                        global.stage.set_key_focus(that.searchEntry);
+                        if (this.clipItemsRadioGroup.length > 0) {
+                            that.searchEntry.set_text('');
+                            global.stage.set_key_focus(that.searchEntry);
+                        }
+                        else {
+                            global.stage.set_key_focus(this._onPrivateModeSwitch);
+                        }
                     }
                     clearInterval(a);
                 }, 50);
@@ -261,6 +266,21 @@ const ClipboardIndicator = GObject.registerClass({
             that.menu.addMenuItem(this.settingsMenuItem);
             this.settingsMenuItem.connect('activate', that._openSettings.bind(that));
 
+            // Empty state section
+            this.emptyStateSection = new St.BoxLayout({
+                style_class: 'clipboard-indicator-empty-state',
+                vertical: true
+            });
+            this.emptyStateSection.add_child(new St.Icon({
+                icon_name: INDICATOR_ICON,
+                style_class: 'system-status-icon clipboard-indicator-icon',
+                x_align: Clutter.ActorAlign.CENTER
+            }));
+            this.emptyStateSection.add_child(new St.Label({
+                text: _('Clipboard is empty'),
+                x_align: Clutter.ActorAlign.CENTER
+            }));
+
             // Add cached items
             clipHistory.forEach(entry => this._addEntry(entry));
 
@@ -287,6 +307,10 @@ const ClipboardIndicator = GObject.registerClass({
         if (this.clipItemsRadioGroup.length > 0) {
             this.menu.box.insert_child_at_index(this._entryItem, 0);
             this.menu.box.insert_child_below(this.clearMenuItem, this.settingsMenuItem);
+            this.menu.box.remove_child(this.emptyStateSection);
+        }
+        else {
+            this.menu.box.insert_child_at_index(this.emptyStateSection, 0);
         }
 
         if (this.favoritesSection._getMenuItems().length > 0) {
@@ -300,6 +324,7 @@ const ClipboardIndicator = GObject.registerClass({
 
     #renderEmptyState () {
         this.#hideElements();
+        this.menu.box.insert_child_at_index(this.emptyStateSection, 0);
     }
 
     /* When text change, this function will check, for each item of the
@@ -486,7 +511,7 @@ const ClipboardIndicator = GObject.registerClass({
         this._updateCache();
 
         if (this.clipItemsRadioGroup.length === 0) {
-            this.#hideElements();
+            this.#renderEmptyState();
         }
     }
 

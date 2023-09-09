@@ -22,6 +22,20 @@
     margin:0 .25em;
 }
 
+.clipboard-indicator-empty-state {
+    width:350px;
+    color:#aaa;
+}
+
+.clipboard-indicator-empty-state StIcon {
+    icon-size:5em;
+    margin-top:3em;
+}
+
+.clipboard-indicator-empty-state StLabel {
+    margin:1em 0 3em 0;
+}
+
 .ci-history-menu-section {
     max-height:450px;
 }
