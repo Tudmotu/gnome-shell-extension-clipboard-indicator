@@ -17,6 +17,11 @@
     margin-left:.25em;
 }
 
+.popup-menu-item StEntry StIcon {
+    icon-size:1em;
+    margin:0 .25em;
+}
+
 .ci-history-menu-section {
     max-height:450px;
 }

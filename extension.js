@@ -166,7 +166,8 @@ const ClipboardIndicator = GObject.registerClass({
                 hint_text: _('Type here to search...'),
                 track_hover: true,
                 x_expand: true,
-                y_expand: true
+                y_expand: true,
+                primary_icon: new St.Icon({ icon_name: 'edit-find-symbolic' })
             });
 
             that.searchEntry.get_clutter_text().connect(
