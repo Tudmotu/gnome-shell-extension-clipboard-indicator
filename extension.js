@@ -287,10 +287,6 @@ const ClipboardIndicator = GObject.registerClass({
                 that._selectMenuItem(clipItemsArr[lastIdx]);
             }
 
-            if (clipHistory.length === 0) {
-                this.#renderEmptyState();
-            }
-
             this.#showElements();
         });
     }
@@ -300,6 +296,7 @@ const ClipboardIndicator = GObject.registerClass({
         if (this.menu.box.contains(this.favoritesSeparator)) this.menu.box.remove_child(this.favoritesSeparator);
         if (this.menu.box.contains(this.historySeparator)) this.menu.box.remove_child(this.historySeparator);
         if (this.menu.box.contains(this.clearMenuItem)) this.menu.box.remove_child(this.clearMenuItem);
+        if (this.menu.box.contains(this.emptyStateSection)) this.menu.box.remove_child(this.emptyStateSection);
     }
 
     #showElements() {
@@ -313,23 +310,27 @@ const ClipboardIndicator = GObject.registerClass({
             if (this.menu.box.contains(this.emptyStateSection) === true) {
                 this.menu.box.remove_child(this.emptyStateSection);
             }
-        }
-        else {
-            if (this.menu.box.contains(this.emptyStateSection) === false) {
-                this.menu.box.insert_child_at_index(this.emptyStateSection, 0);
-            }
-        }
 
-        if (this.favoritesSection._getMenuItems().length > 0) {
-            if (this.menu.box.contains(this.favoritesSeparator) === false) {
-                this.menu.box.insert_child_above(this.favoritesSeparator, this.scrollViewFavoritesMenuSection.actor);
+            if (this.favoritesSection._getMenuItems().length > 0) {
+                if (this.menu.box.contains(this.favoritesSeparator) === false) {
+                    this.menu.box.insert_child_above(this.favoritesSeparator, this.scrollViewFavoritesMenuSection.actor);
+                }
+            }
+            else if (this.menu.box.contains(this.favoritesSeparator) === true) {
+                this.menu.box.remove_child(this.favoritesSeparator);
+            }
+
+            if (this.historySection._getMenuItems().length > 0) {
+                if (this.menu.box.contains(this.historySeparator) === false) {
+                    this.menu.box.insert_child_above(this.historySeparator, this.scrollViewMenuSection.actor);
+                }
+            }
+            else if (this.menu.box.contains(this.historySeparator) === true) {
+                this.menu.box.remove_child(this.historySeparator);
             }
         }
-
-        if (this.historySection._getMenuItems().length > 0) {
-            if (this.menu.box.contains(this.historySeparator) === false) {
-                this.menu.box.insert_child_above(this.historySeparator, this.scrollViewMenuSection.actor);
-            }
+        else if (this.menu.box.contains(this.emptyStateSection) === false) {
+            this.#renderEmptyState();
         }
     }
 
@@ -455,9 +456,7 @@ const ClipboardIndicator = GObject.registerClass({
             menuItem.setOrnament(PopupMenu.Ornament.NONE);
         }
 
-        if (this.clipItemsRadioGroup.length === 1) {
-            this.#showElements();
-        }
+        this.#showElements();
     }
 
     _favoriteToggle (menuItem) {
@@ -519,11 +518,9 @@ const ClipboardIndicator = GObject.registerClass({
         if (menuItem.entry.isImage()) {
             this.registry.deleteEntryFile(menuItem.entry);
         }
-        this._updateCache();
 
-        if (this.clipItemsRadioGroup.length === 0) {
-            this.#renderEmptyState();
-        }
+        this._updateCache();
+        this.#showElements();
     }
 
     _removeOldestEntries () {
@@ -771,9 +768,7 @@ const ClipboardIndicator = GObject.registerClass({
             }).catch(e => console.error(e));
 
             this.icon.remove_style_class_name('private-mode');
-            if (this.clipItemsRadioGroup.length > 0) {
-                this.#showElements();
-            }
+            this.#showElements();
         } else {
             this.#updateIndicatorContent(null);
             this.#hideElements();
