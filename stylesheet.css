@@ -1,4 +1,4 @@
-.clipboard-indicator-icon.private-mode {
+.clipboard-indicator-hbox.private-mode {
     color: rgba(255,255,255,0.3);
 }
 

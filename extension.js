@@ -95,6 +95,9 @@ const ClipboardIndicator = GObject.registerClass({
         let hbox = new St.BoxLayout({
             style_class: 'panel-status-menu-box clipboard-indicator-hbox'
         });
+
+        this.hbox = hbox;
+
         this.icon = new St.Icon({
             icon_name: INDICATOR_ICON,
             style_class: 'system-status-icon clipboard-indicator-icon'
@@ -767,9 +770,10 @@ const ClipboardIndicator = GObject.registerClass({
                 this.#updateIndicatorContent(entry);
             }).catch(e => console.error(e));
 
-            this.icon.remove_style_class_name('private-mode');
+            this.hbox.remove_style_class_name('private-mode');
             this.#showElements();
         } else {
+            this.hbox.add_style_class_name('private-mode');
             this.#updateIndicatorContent(null);
             this.#hideElements();
         }
