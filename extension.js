@@ -17,10 +17,6 @@ import { PrefsFields } from './constants.js';
 const Clipboard = St.Clipboard.get_default();
 const CLIPBOARD_TYPE = St.ClipboardType.CLIPBOARD;
 
-const SETTING_KEY_CLEAR_HISTORY = "clear-history";
-const SETTING_KEY_PREV_ENTRY = "prev-entry";
-const SETTING_KEY_NEXT_ENTRY = "next-entry";
-const SETTING_KEY_TOGGLE_MENU = "toggle-menu";
 const INDICATOR_ICON = 'edit-paste-symbolic';
 
 let DELAYED_SELECTION_TIMEOUT = 750;
@@ -832,10 +828,10 @@ const ClipboardIndicator = GObject.registerClass({
 
     _bindShortcuts () {
         this._unbindShortcuts();
-        this._bindShortcut(SETTING_KEY_CLEAR_HISTORY, this._removeAll);
-        this._bindShortcut(SETTING_KEY_PREV_ENTRY, this._previousEntry);
-        this._bindShortcut(SETTING_KEY_NEXT_ENTRY, this._nextEntry);
-        this._bindShortcut(SETTING_KEY_TOGGLE_MENU, this._toggleMenu);
+        this._bindShortcut(PrefsFields.BINDING_CLEAR_HISTORY, this._removeAll);
+        this._bindShortcut(PrefsFields.BINDING_PREV_ENTRY, this._previousEntry);
+        this._bindShortcut(PrefsFields.BINDING_NEXT_ENTRY, this._nextEntry);
+        this._bindShortcut(PrefsFields.BINDING_TOGGLE_MENU, this._toggleMenu);
     }
 
     _unbindShortcuts () {
