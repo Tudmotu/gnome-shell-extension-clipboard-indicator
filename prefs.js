@@ -27,151 +27,70 @@ class Settings {
     constructor (schema) {
         this.schema = schema;
 
-        const makeGrid = () => new Gtk.Grid({
-            margin_top: 0,
-            margin_bottom: 0,
-            margin_start: 0,
-            margin_end: 0,
-            row_spacing: 12,
-            column_spacing: 18,
-            column_homogeneous: false,
-            row_homogeneous: false
-        });
-
-        this.field_size = new Gtk.SpinButton({
+        this.field_size = new Adw.SpinRow({
+            title: _("History Size"),
             adjustment: new Gtk.Adjustment({
                 lower: 1,
                 upper: 200,
                 step_increment: 1
             })
         });
-        this.field_preview_size = new Gtk.SpinButton({
+
+        this.field_preview_size = new Adw.SpinRow({
+            title: _("Preview Size (characters)"),
             adjustment: new Gtk.Adjustment({
                 lower: 10,
                 upper: 100,
                 step_increment: 1
             })
         });
-        this.field_cache_size = new Gtk.SpinButton({
+
+        this.field_cache_size = new Adw.SpinRow({
+            title: _("Max cache file size (kb)"),
             adjustment: new Gtk.Adjustment({
                 lower: 512,
                 upper: Math.pow(2, 14),
                 step_increment: 1
             })
         });
-        this.field_topbar_preview_size = new Gtk.SpinButton({
+
+        this.field_topbar_preview_size = new Adw.SpinRow({
+            title: _("Number of characters in top bar"),
             adjustment: new Gtk.Adjustment({
                 lower: 1,
                 upper: 100,
                 step_increment: 1
             })
         });
-        this.field_display_mode = new Gtk.ComboBox({
-            model: this._create_display_mode_options()});
 
-        let rendererText = new Gtk.CellRendererText();
-        this.field_display_mode.pack_start (rendererText, false);
-        this.field_display_mode.add_attribute (rendererText, "text", 0);
-        this.field_disable_down_arrow = new Gtk.Switch();
-        this.field_cache_disable = new Gtk.Switch();
-        this.field_notification_toggle = new Gtk.Switch();
-        this.field_confirm_clear_toggle = new Gtk.Switch();
-        this.field_strip_text = new Gtk.Switch();
-        this.field_move_item_first = new Gtk.Switch();
-
-        var that = this;
-
-        let sizeLabel     = new Gtk.Label({
-            label: _("History Size"),
-            hexpand: true,
-            halign: Gtk.Align.START
-        });
-        let intervalLabel = new Gtk.Label({
-            label: _("Refresh Interval (ms)"),
-            hexpand: true,
-            halign: Gtk.Align.START
-        });
-        let previewLabel  = new Gtk.Label({
-            label: _("Preview Size (characters)"),
-            hexpand: true,
-            halign: Gtk.Align.START
-        });
-        let cacheSizeLabel  = new Gtk.Label({
-            label: _("Max cache file size (kb)"),
-            hexpand: true,
-            halign: Gtk.Align.START
-        });
-        let cacheDisableLabel  = new Gtk.Label({
-            label: _("Cache only favorites"),
-            hexpand: true,
-            halign: Gtk.Align.START
-        });
-        let notificationLabel  = new Gtk.Label({
-            label: _("Show notification on copy"),
-            hexpand: true,
-            halign: Gtk.Align.START
-        });
-        let confirmClearLabel = new Gtk.Label({
-            label: _("Show confirmation on Clear History"),
-            hexpand: true,
-            halign: Gtk.Align.START
-        });
-        let moveFirstLabel  = new Gtk.Label({
-            label: _("Move item to the top after selection"),
-            hexpand: true,
-            halign: Gtk.Align.START
-        });
-        let topbarPreviewLabel  = new Gtk.Label({
-            label: _("Number of characters in top bar"),
-            hexpand: true,
-            halign: Gtk.Align.START
-        });
-        let displayModeLabel  = new Gtk.Label({
-            label: _("What to show in top bar"),
-            hexpand: true,
-            halign: Gtk.Align.START
-        });
-        let disableDownArrowLabel = new Gtk.Label({
-            label: _("Remove down arrow in top bar"),
-            hexpand: true,
-            halign: Gtk.Align.START
-        });
-        let stripTextLabel = new Gtk.Label({
-            label: _("Remove whitespace around text"),
-            hexpand: true,
-            halign: Gtk.Align.START
+        this.field_display_mode = new Adw.ComboRow({
+            title: _("What to show in top bar"),
+            model: this.#createDisplayModeOptions()
         });
 
-        const addRowFactory = (main) => {
-            let row = 0;
-            return (label, input) => {
-                let inputWidget = input;
+        this.field_disable_down_arrow = new Adw.SwitchRow({
+            title: _("Remove down arrow in top bar")
+        });
 
-                if (input instanceof Gtk.Switch) {
-                    inputWidget = new Gtk.Box({
-                        orientation: Gtk.Orientation.HORIZONTAL,
-                        halign: Gtk.Align.END
-                    });
-                    inputWidget.append(input);
-                }
+        this.field_cache_disable = new Adw.SwitchRow({
+            title: _("Cache only favorites")
+        });
 
-                if (label) {
-                    main.attach(label, 0, row, 1, 1);
-                    main.attach(inputWidget, 1, row, 1, 1);
-                }
-                else {
-                    main.attach(inputWidget, 0, row, 2, 1);
-                }
+        this.field_notification_toggle = new Adw.SwitchRow({
+            title: _("Show notification on copy")
+        });
 
-                row++;
-            };
-        };
+        this.field_confirm_clear_toggle = new Adw.SwitchRow({
+            title: _("Show confirmation on Clear History")
+        });
 
-        const attachGrid = group => {
-            const grid = makeGrid();
-            group.add(grid);
-            return grid;
-        };
+        this.field_strip_text = new Adw.SwitchRow({
+            title: _("Remove whitespace around text")
+        });
+
+        this.field_move_item_first = new Adw.SwitchRow({
+            title: _("Move item to the top after selection")
+        });
 
         this.ui =  new Adw.PreferencesGroup({ title: _('UI') });
         this.limits =  new Adw.PreferencesGroup({ title: _('Limits') });
@@ -179,26 +98,20 @@ class Settings {
         this.notifications =  new Adw.PreferencesGroup({ title: _('Notifications') });
         this.shortcuts =  new Adw.PreferencesGroup({ title: _('Shortcuts') });
 
-        const addToUI = addRowFactory(attachGrid(this.ui));
-        const addToLimits = addRowFactory(attachGrid(this.limits));
-        const addToTopbar = addRowFactory(attachGrid(this.topbar));
-        const addToNotifications = addRowFactory(attachGrid(this.notifications));
-        const addToShortcuts = addRowFactory(attachGrid(this.shortcuts));
+        this.ui.add(this.field_preview_size);
+        this.ui.add(this.field_move_item_first);
+        this.ui.add(this.field_strip_text);
 
-        addToUI(previewLabel, this.field_preview_size);
-        addToUI(moveFirstLabel, this.field_move_item_first);
-        addToUI(stripTextLabel, this.field_strip_text);
+        this.limits.add(this.field_size);
+        this.limits.add(this.field_cache_size);
+        this.limits.add(this.field_cache_disable);
 
-        addToLimits(sizeLabel, this.field_size);
-        addToLimits(cacheSizeLabel, this.field_cache_size);
-        addToLimits(cacheDisableLabel, this.field_cache_disable);
+        this.topbar.add(this.field_display_mode);
+        this.topbar.add(this.field_topbar_preview_size);
+        this.topbar.add(this.field_disable_down_arrow);
 
-        addToTopbar(displayModeLabel, this.field_display_mode);
-        addToTopbar(topbarPreviewLabel, this.field_topbar_preview_size);
-        addToTopbar(disableDownArrowLabel, this.field_disable_down_arrow);
-
-        addToNotifications(notificationLabel, this.field_notification_toggle);
-        addToNotifications(confirmClearLabel, this.field_confirm_clear_toggle);
+        this.notifications.add(this.field_notification_toggle);
+        this.notifications.add(this.field_confirm_clear_toggle);
 
         this.#buildShorcuts(this.shortcuts);
 
@@ -209,23 +122,22 @@ class Settings {
         this.schema.bind(PrefsFields.NOTIFY_ON_COPY, this.field_notification_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.CONFIRM_ON_CLEAR, this.field_confirm_clear_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.MOVE_ITEM_FIRST, this.field_move_item_first, 'active', Gio.SettingsBindFlags.DEFAULT);
-        this.schema.bind(PrefsFields.TOPBAR_DISPLAY_MODE_ID, this.field_display_mode, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.TOPBAR_DISPLAY_MODE_ID, this.field_display_mode, 'selected', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.DISABLE_DOWN_ARROW, this.field_disable_down_arrow, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.TOPBAR_PREVIEW_SIZE, this.field_topbar_preview_size, 'value', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.STRIP_TEXT, this.field_strip_text, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.ENABLE_KEYBINDING, this.field_keybinding_activation, 'active', Gio.SettingsBindFlags.DEFAULT);
     }
 
-    _create_display_mode_options  (){
-        let options = [{ name: _("Icon") },
-        { name: _("Clipboard Content"),},
-        { name: _("Both")}];
-        let liststore = new Gtk.ListStore();
-        liststore.set_column_types([GObject.TYPE_STRING])
-        for (let i = 0; i < options.length; i++ ) {
-            let option = options[i];
-            let iter = liststore.append();
-            liststore.set (iter, [0], [option.name]);
+    #createDisplayModeOptions () {
+        let options = [
+            _("Icon"),
+            _("Clipboard Content"),
+            _("Both")
+        ];
+        let liststore = new Gtk.StringList();
+        for (let option of options) {
+            liststore.append(option)
         }
         return liststore;
     }
