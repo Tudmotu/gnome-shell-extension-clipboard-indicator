@@ -11,5 +11,9 @@ export const PrefsFields = {
     TOPBAR_PREVIEW_SIZE    : 'topbar-preview-size',
     TOPBAR_DISPLAY_MODE_ID : 'display-mode',
     DISABLE_DOWN_ARROW     : 'disable-down-arrow',
-    STRIP_TEXT             : 'strip-text'
+    STRIP_TEXT             : 'strip-text',
+    BINDING_TOGGLE_MENU    : 'toggle-menu',
+    BINDING_CLEAR_HISTORY  : 'clear-history',
+    BINDING_PREV_ENTRY     : 'prev-entry',
+    BINDING_NEXT_ENTRY     : 'next-entry',
 };

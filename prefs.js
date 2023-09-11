@@ -1,9 +1,13 @@
 import Adw from 'gi://Adw';
 import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
+import Gdk from 'gi://Gdk';
 import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
 import { ExtensionPreferences, gettext as _ } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 import { PrefsFields } from './constants.js';
+
+GLib.log_set_debug_enabled(true);
 
 export default class ClipboardIndicatorPreferences extends ExtensionPreferences {
     fillPreferencesWindow (window) {
@@ -74,21 +78,8 @@ class Settings {
         this.field_confirm_clear_toggle = new Gtk.Switch();
         this.field_strip_text = new Gtk.Switch();
         this.field_move_item_first = new Gtk.Switch();
-        this.field_keybinding = createKeybindingWidget(this.schema);
-        addKeybinding(this.field_keybinding.model, this.schema, "toggle-menu",
-                      _("Toggle the menu"));
-        addKeybinding(this.field_keybinding.model, this.schema, "clear-history",
-                      _("Clear history"));
-        addKeybinding(this.field_keybinding.model, this.schema, "prev-entry",
-                      _("Previous entry"));
-        addKeybinding(this.field_keybinding.model, this.schema, "next-entry",
-                      _("Next entry"));
 
         var that = this;
-        this.field_keybinding_activation = new Gtk.Switch();
-        this.field_keybinding_activation.connect("notify::active", function(widget){
-            that.field_keybinding.set_sensitive(widget.active);
-        });
 
         let sizeLabel     = new Gtk.Label({
             label: _("History Size"),
@@ -127,11 +118,6 @@ class Settings {
         });
         let moveFirstLabel  = new Gtk.Label({
             label: _("Move item to the top after selection"),
-            hexpand: true,
-            halign: Gtk.Align.START
-        });
-        let keybindingLabel  = new Gtk.Label({
-            label: _("Enable shortcuts"),
             hexpand: true,
             halign: Gtk.Align.START
         });
@@ -214,8 +200,7 @@ class Settings {
         addToNotifications(notificationLabel, this.field_notification_toggle);
         addToNotifications(confirmClearLabel, this.field_confirm_clear_toggle);
 
-        addToShortcuts(keybindingLabel, this.field_keybinding_activation);
-        addToShortcuts(null, this.field_keybinding);
+        this.#buildShorcuts(this.shortcuts);
 
         this.schema.bind(PrefsFields.HISTORY_SIZE, this.field_size, 'value', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.PREVIEW_SIZE, this.field_preview_size, 'value', Gio.SettingsBindFlags.DEFAULT);
@@ -244,98 +229,109 @@ class Settings {
         }
         return liststore;
     }
-}
 
+    #shortcuts = {
+        [PrefsFields.BINDING_TOGGLE_MENU]: _("Toggle the menu"),
+        [PrefsFields.BINDING_CLEAR_HISTORY]: _("Clear history"),
+        [PrefsFields.BINDING_PREV_ENTRY]: _("Previous entry"),
+        [PrefsFields.BINDING_NEXT_ENTRY]: _("Next entry")
+    };
 
-//binding widgets
-//////////////////////////////////
-const COLUMN_ID          = 0;
-const COLUMN_DESCRIPTION = 1;
-const COLUMN_KEY         = 2;
-const COLUMN_MODS        = 3;
+    #buildShorcuts (group) {
+        this.field_keybinding_activation = new Adw.SwitchRow({
+            title: _("Enable shortcuts")
+        });
 
+        group.add(this.field_keybinding_activation);
 
-function addKeybinding(model, settings, id, description) {
-    // Get the current accelerator.
-    let accelerator = settings.get_strv(id)[0];
-    let key, mods;
-    if (accelerator == null)
-        [key, mods] = [0, 0];
-    else
-        [,key, mods] = Gtk.accelerator_parse(settings.get_strv(id)[0]);
-
-    // Add a row for the keybinding.
-    let row = model.insert(100); // Erm...
-    model.set(row,
-            [COLUMN_ID, COLUMN_DESCRIPTION, COLUMN_KEY, COLUMN_MODS],
-            [id,        description,        key,        mods]);
-}
-
-function createKeybindingWidget(SettingsSchema) {
-    let model = new Gtk.ListStore();
-
-    model.set_column_types(
-            [GObject.TYPE_STRING, // COLUMN_ID
-             GObject.TYPE_STRING, // COLUMN_DESCRIPTION
-             GObject.TYPE_INT,    // COLUMN_KEY
-             GObject.TYPE_INT]);  // COLUMN_MODS
-
-    let treeView = new Gtk.TreeView();
-    treeView.model = model;
-    treeView.headers_visible = false;
-
-    let column, renderer;
-
-    // Description column.
-    renderer = new Gtk.CellRendererText();
-
-    column = new Gtk.TreeViewColumn();
-    column.expand = true;
-    column.pack_start(renderer, true);
-    column.add_attribute(renderer, "text", COLUMN_DESCRIPTION);
-
-    treeView.append_column(column);
-
-    // Key binding column.
-    renderer = new Gtk.CellRendererAccel();
-    renderer.accel_mode = Gtk.CellRendererAccelMode.GTK;
-    renderer.editable = true;
-
-    renderer.connect("accel-edited",
-            function (renderer, path, key, mods, hwCode) {
-                let [ok, iter] = model.get_iter_from_string(path);
-                if(!ok)
-                    return;
-
-                // Update the UI.
-                model.set(iter, [COLUMN_KEY, COLUMN_MODS], [key, mods]);
-
-                // Update the stored setting.
-                let id = model.get_value(iter, COLUMN_ID);
-                let accelString = Gtk.accelerator_name(key, mods);
-                SettingsSchema.set_strv(id, [accelString]);
+        for (const [pref, title] of Object.entries(this.#shortcuts)) {
+            const row = new Adw.ActionRow({
+                title
             });
 
-    renderer.connect("accel-cleared",
-            function (renderer, path) {
-                let [ok, iter] = model.get_iter_from_string(path);
-                if(!ok)
-                    return;
+            row.add_suffix(this.#createShortcutButton(pref));
 
-                // Update the UI.
-                model.set(iter, [COLUMN_KEY, COLUMN_MODS], [0, 0]);
+            group.add(row);
+        }
+    }
 
-                // Update the stored setting.
-                let id = model.get_value(iter, COLUMN_ID);
-                SettingsSchema.set_strv(id, []);
+    #createShortcutButton (pref) {
+        const button = new Gtk.Button({
+            has_frame: false
+        });
+
+        const originalValue = this.schema.get_strv(pref)[0];
+
+        const startEditing = () => {
+            button.isEditing = button.label;
+            button.set_label(_('Enter shortcut'));
+        };
+
+        const revertEditing = () => {
+            button.set_label(button.isEditing);
+            button.isEditing = null;
+        };
+
+        const stopEditing = () => {
+            button.set_label(this.schema.get_strv(pref)[0]);
+            button.isEditing = null;
+        };
+
+        if (!originalValue) {
+            button.set_label(_('Disabled'));
+        }
+        else {
+            button.set_label(originalValue);
+        }
+
+        button.connect('clicked', () => {
+            if (button.isEditing) {
+                revertEditing();
+                return;
+            }
+
+            startEditing();
+
+            const eventController = new Gtk.EventControllerKey();
+            button.add_controller(eventController);
+
+            let debounceTimeoutId = null;
+            const connectId = eventController.connect('key-pressed', (_ec, keyval, keycode, mask) => {
+                if (debounceTimeoutId) clearTimeout(debounceTimeoutId);
+
+                mask = mask & Gtk.accelerator_get_default_mod_mask();
+
+                if (mask === 0) {
+                    switch (keyval) {
+                        case Gdk.KEY_Escape:
+                            revertEditing();
+                            return Gdk.EVENT_STOP;
+                        case Gdk.KEY_BackSpace:
+                            this.schema.set_strv(pref, []);
+                            button.set_label(_('Disabled'));
+                            return Gdk.EVENT_STOP;
+                    }
+                }
+
+                const selectedShortcut = Gtk.accelerator_name_with_keycode(
+                    null,
+                    keyval,
+                    keycode,
+                    mask
+                );
+
+                debounceTimeoutId = setTimeout(() => {
+                    eventController.disconnect(connectId);
+                    this.schema.set_strv(pref, [selectedShortcut]);
+                    stopEditing();
+                }, 400);
+
+                return Gdk.EVENT_STOP;
             });
 
-    column = new Gtk.TreeViewColumn();
-    column.pack_end(renderer, false);
-    column.add_attribute(renderer, "accel-key", COLUMN_KEY);
-    column.add_attribute(renderer, "accel-mods", COLUMN_MODS);
+            button.show();
+        });
 
-    treeView.append_column(column);
-
-    return treeView;
+        return button;
+    }
 }
