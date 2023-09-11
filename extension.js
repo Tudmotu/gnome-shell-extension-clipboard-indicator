@@ -212,7 +212,7 @@ const ClipboardIndicator = GObject.registerClass({
 
             that.scrollViewMenuSection = new PopupMenu.PopupMenuSection();
             let historyScrollView = new St.ScrollView({
-                style_class: 'ci-history-menu-section',
+                style_class: 'ci-main-menu-section ci-history-menu-section',
                 overlay_scrollbars: true
             });
             historyScrollView.add_actor(that.historySection.actor);
@@ -400,14 +400,13 @@ const ClipboardIndicator = GObject.registerClass({
         this.clipItemsRadioGroup.push(menuItem);
 
         // Favorite button
-        let icon_name = entry.isFavorite() ? 'starred-symbolic' : 'non-starred-symbolic';
         let iconfav = new St.Icon({
-            icon_name: icon_name,
+            icon_name: 'view-pin-symbolic',
             style_class: 'system-status-icon'
         });
 
         let icofavBtn = new St.Button({
-            style_class: 'ci-action-btn',
+            style_class: 'ci-pin-btn ci-action-btn',
             can_focus: true,
             child: iconfav,
             x_align: Clutter.ActorAlign.END,

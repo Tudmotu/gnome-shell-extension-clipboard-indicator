@@ -40,6 +40,10 @@
     max-height:450px;
 }
 
+.ci-main-menu-section StButton.ci-pin-btn {
+    color: rgba(255,255,255,0.3);
+}
+
 .clipboard-hidden {
     display:none!important;
 }
