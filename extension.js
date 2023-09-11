@@ -987,7 +987,9 @@ const ClipboardIndicator = GObject.registerClass({
                 }
 
                 const entry = new ClipboardEntry(type, bytes.get_data(), false);
-                this.registry.writeEntryFile(entry);
+                if (entry.isImage()) {
+                    this.registry.writeEntryFile(entry);
+                }
                 resolve(entry);
             }));
 
