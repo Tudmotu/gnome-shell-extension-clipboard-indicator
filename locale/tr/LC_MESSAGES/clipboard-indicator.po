@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-09 22:18+0300\n"
+"POT-Creation-Date: 2023-09-12 02:22+0300\n"
 "PO-Revision-Date: 2020-10-24 20:50+0300\n"
 "Last-Translator: Muha Aliss <muhaaliss@gmail.com>\n"
 "Language-Team: Turkish <neynefes@ubuntu-tr.net>\n"
@@ -18,153 +18,161 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 2.4.1\n"
 
-#: extension.js:104
+#: extension.js:103
 msgid "Text will be here"
 msgstr "Metin burada olacak"
 
-#: extension.js:168
+#: extension.js:167
 msgid "Type here to search..."
 msgstr "Aramak için buraya yazınız..."
 
-#: extension.js:231
+#: extension.js:229
 msgid "Private mode"
 msgstr "Gizli kip"
 
-#: extension.js:245 prefs.js:81
+#: extension.js:243 prefs.js:147
 msgid "Clear history"
 msgstr "Geçmişi temizle"
 
-#: extension.js:257
+#: extension.js:255
 msgid "Settings"
 msgstr "Ayarlar"
 
-#: extension.js:280
+#: extension.js:278
 #, fuzzy
 msgid "Clipboard is empty"
 msgstr "Pano İçeriği"
 
-#: extension.js:460
+#: extension.js:468
 msgid "Clear all?"
 msgstr "Hepsi temizlensin mi?"
 
-#: extension.js:461
+#: extension.js:469
 msgid "Are you sure you want to delete all clipboard items?"
 msgstr "Tüm pano öğelerini silmek istediğinizden emin misiniz?"
 
-#: extension.js:462
+#: extension.js:470
 msgid "This operation cannot be undone."
 msgstr "Bu işlem geri alınamaz."
 
-#: extension.js:464
+#: extension.js:472
 msgid "Clear"
 msgstr "Temizle"
 
-#: extension.js:464 extension.js:632 extension.js:669
+#: extension.js:472 extension.js:631
 msgid "Cancel"
 msgstr "İptal"
 
-#: extension.js:485
+#: extension.js:486
 msgid "Clipboard history cleared"
 msgstr "Pano geçmişi temizlendi"
 
-#: extension.js:631 extension.js:668
+#: extension.js:630
 msgid "Copied to clipboard"
 msgstr "Panoya kopyalandı"
 
-#: prefs.js:79
-msgid "Toggle the menu"
-msgstr "Menüyü değiştir"
-
-#: prefs.js:83
-msgid "Previous entry"
-msgstr "Önceki girdi"
-
-#: prefs.js:85
-msgid "Next entry"
-msgstr "Sonraki girdi"
-
-#: prefs.js:94
+#: prefs.js:31
 msgid "History Size"
 msgstr "Geçmiş boyutu"
 
-#: prefs.js:99
-msgid "Refresh Interval (ms)"
-msgstr "Yenileme sıklığı (ms)"
-
-#: prefs.js:104
+#: prefs.js:40
 msgid "Preview Size (characters)"
 msgstr "Önizleme boyutu (karakter)"
 
-#: prefs.js:109
+#: prefs.js:49
 msgid "Max cache file size (kb)"
 msgstr "En yüksek önbelek boyutu (kb)"
 
-#: prefs.js:114
+#: prefs.js:58
+msgid "Number of characters in top bar"
+msgstr "Üst çubukta görüntülenecek karakter sayısı"
+
+#: prefs.js:67
+msgid "What to show in top bar"
+msgstr "Üst çubukta görüntülenecek"
+
+#: prefs.js:72
+msgid "Remove down arrow in top bar"
+msgstr "Üst çubuktaki oku kaldır"
+
+#: prefs.js:76
 msgid "Cache only favorites"
 msgstr "Yalnızca favorileri önbelleğe al"
 
-#: prefs.js:119
+#: prefs.js:80
 msgid "Show notification on copy"
 msgstr "Kopyalandığında bildirim göster"
 
-#: prefs.js:124
+#: prefs.js:84
 #, fuzzy
 msgid "Show confirmation on Clear History"
 msgstr "Kopyalandığında bildirim göster"
 
-#: prefs.js:129
+#: prefs.js:88
+msgid "Remove whitespace around text"
+msgstr "\t"
+
+#: prefs.js:92
 msgid "Move item to the top after selection"
 msgstr "Seçtiğim öğeyi en üste taşı"
 
+#: prefs.js:95
+msgid "UI"
+msgstr ""
+
+#: prefs.js:96
+msgid "Limits"
+msgstr ""
+
+#: prefs.js:97
+msgid "Topbar"
+msgstr ""
+
+#: prefs.js:98
+msgid "Notifications"
+msgstr ""
+
+#: prefs.js:99
+msgid "Shortcuts"
+msgstr ""
+
 #: prefs.js:134
+msgid "Icon"
+msgstr "İkon"
+
+#: prefs.js:135
+msgid "Clipboard Content"
+msgstr "Pano İçeriği"
+
+#: prefs.js:136
+msgid "Both"
+msgstr "Her ikisi de"
+
+#: prefs.js:146
+msgid "Toggle the menu"
+msgstr "Menüyü değiştir"
+
+#: prefs.js:148
+msgid "Previous entry"
+msgstr "Önceki girdi"
+
+#: prefs.js:149
+msgid "Next entry"
+msgstr "Sonraki girdi"
+
+#: prefs.js:154
 #, fuzzy
 msgid "Enable shortcuts"
 msgstr "Kılavye kısayolları"
 
-#: prefs.js:139
-msgid "Number of characters in top bar"
-msgstr "Üst çubukta görüntülenecek karakter sayısı"
+#: prefs.js:179
+#, fuzzy
+msgid "Enter shortcut"
+msgstr "Kılavye kısayolları"
 
-#: prefs.js:144
-msgid "What to show in top bar"
-msgstr "Üst çubukta görüntülenecek"
-
-#: prefs.js:149
-msgid "Remove down arrow in top bar"
-msgstr "Üst çubuktaki oku kaldır"
-
-#: prefs.js:154
-msgid "Remove whitespace around text"
-msgstr "\t"
-
-#: prefs.js:190
-msgid "UI"
+#: prefs.js:193 prefs.js:223
+msgid "Disabled"
 msgstr ""
 
-#: prefs.js:191
-msgid "Limits"
-msgstr ""
-
-#: prefs.js:192
-msgid "Topbar"
-msgstr ""
-
-#: prefs.js:193
-msgid "Notifications"
-msgstr ""
-
-#: prefs.js:194
-msgid "Shortcuts"
-msgstr ""
-
-#: prefs.js:235
-msgid "Icon"
-msgstr "İkon"
-
-#: prefs.js:236
-msgid "Clipboard Content"
-msgstr "Pano İçeriği"
-
-#: prefs.js:237
-msgid "Both"
-msgstr "Her ikisi de"
+#~ msgid "Refresh Interval (ms)"
+#~ msgstr "Yenileme sıklığı (ms)"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-09 22:18+0300\n"
+"POT-Creation-Date: 2023-09-12 02:22+0300\n"
 "PO-Revision-Date: 2017-09-06 09:53+0300\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
 "Language-Team: suomi <lokalisointi-lista@googlegroups.com>\n"
@@ -19,153 +19,161 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Gtranslator 2.91.7\n"
 
-#: extension.js:104
+#: extension.js:103
 msgid "Text will be here"
 msgstr ""
 
-#: extension.js:168
+#: extension.js:167
 msgid "Type here to search..."
 msgstr ""
 
-#: extension.js:231
+#: extension.js:229
 msgid "Private mode"
 msgstr "Yksityistila"
 
-#: extension.js:245 prefs.js:81
+#: extension.js:243 prefs.js:147
 msgid "Clear history"
 msgstr "Tyhjennä historia"
 
-#: extension.js:257
+#: extension.js:255
 msgid "Settings"
 msgstr "Asetukset"
 
-#: extension.js:280
+#: extension.js:278
 #, fuzzy
 msgid "Clipboard is empty"
 msgstr "Leikepöydän sisältö tyhjennetty"
 
-#: extension.js:460
+#: extension.js:468
 msgid "Clear all?"
 msgstr ""
 
-#: extension.js:461
+#: extension.js:469
 msgid "Are you sure you want to delete all clipboard items?"
 msgstr ""
 
-#: extension.js:462
+#: extension.js:470
 msgid "This operation cannot be undone."
 msgstr ""
 
-#: extension.js:464
+#: extension.js:472
 msgid "Clear"
 msgstr ""
 
-#: extension.js:464 extension.js:632 extension.js:669
+#: extension.js:472 extension.js:631
 msgid "Cancel"
 msgstr ""
 
-#: extension.js:485
+#: extension.js:486
 msgid "Clipboard history cleared"
 msgstr "Leikepöydän sisältö tyhjennetty"
 
-#: extension.js:631 extension.js:668
+#: extension.js:630
 msgid "Copied to clipboard"
 msgstr "Kopioitu leikepöydälle"
 
-#: prefs.js:79
-msgid "Toggle the menu"
-msgstr "Näytä/piilota valikko"
-
-#: prefs.js:83
-msgid "Previous entry"
-msgstr "Edellinen tietue"
-
-#: prefs.js:85
-msgid "Next entry"
-msgstr "Seuraava tietue"
-
-#: prefs.js:94
+#: prefs.js:31
 msgid "History Size"
 msgstr "Historian koko"
 
-#: prefs.js:99
-msgid "Refresh Interval (ms)"
-msgstr "Päivitysväli (ms)"
-
-#: prefs.js:104
+#: prefs.js:40
 msgid "Preview Size (characters)"
 msgstr "Esikatselun koko (merkkejä)"
 
-#: prefs.js:109
+#: prefs.js:49
 msgid "Max cache file size (kb)"
 msgstr "Välimuistin enimmäiskoko (kt)"
 
-#: prefs.js:114
+#: prefs.js:58
+msgid "Number of characters in top bar"
+msgstr ""
+
+#: prefs.js:67
+msgid "What to show in top bar"
+msgstr ""
+
+#: prefs.js:72
+msgid "Remove down arrow in top bar"
+msgstr ""
+
+#: prefs.js:76
 msgid "Cache only favorites"
 msgstr ""
 
-#: prefs.js:119
+#: prefs.js:80
 msgid "Show notification on copy"
 msgstr "Näytä ilmoitus kopioitaessa"
 
-#: prefs.js:124
+#: prefs.js:84
 #, fuzzy
 msgid "Show confirmation on Clear History"
 msgstr "Näytä ilmoitus kopioitaessa"
 
-#: prefs.js:129
+#: prefs.js:88
+msgid "Remove whitespace around text"
+msgstr ""
+
+#: prefs.js:92
 msgid "Move item to the top after selection"
 msgstr ""
 
+#: prefs.js:95
+msgid "UI"
+msgstr ""
+
+#: prefs.js:96
+msgid "Limits"
+msgstr ""
+
+#: prefs.js:97
+msgid "Topbar"
+msgstr ""
+
+#: prefs.js:98
+msgid "Notifications"
+msgstr ""
+
+#: prefs.js:99
+msgid "Shortcuts"
+msgstr ""
+
 #: prefs.js:134
+msgid "Icon"
+msgstr ""
+
+#: prefs.js:135
+msgid "Clipboard Content"
+msgstr ""
+
+#: prefs.js:136
+msgid "Both"
+msgstr ""
+
+#: prefs.js:146
+msgid "Toggle the menu"
+msgstr "Näytä/piilota valikko"
+
+#: prefs.js:148
+msgid "Previous entry"
+msgstr "Edellinen tietue"
+
+#: prefs.js:149
+msgid "Next entry"
+msgstr "Seuraava tietue"
+
+#: prefs.js:154
 #, fuzzy
 msgid "Enable shortcuts"
 msgstr "Pikanäppäimet"
 
-#: prefs.js:139
-msgid "Number of characters in top bar"
+#: prefs.js:179
+#, fuzzy
+msgid "Enter shortcut"
+msgstr "Pikanäppäimet"
+
+#: prefs.js:193 prefs.js:223
+msgid "Disabled"
 msgstr ""
 
-#: prefs.js:144
-msgid "What to show in top bar"
-msgstr ""
-
-#: prefs.js:149
-msgid "Remove down arrow in top bar"
-msgstr ""
-
-#: prefs.js:154
-msgid "Remove whitespace around text"
-msgstr ""
-
-#: prefs.js:190
-msgid "UI"
-msgstr ""
-
-#: prefs.js:191
-msgid "Limits"
-msgstr ""
-
-#: prefs.js:192
-msgid "Topbar"
-msgstr ""
-
-#: prefs.js:193
-msgid "Notifications"
-msgstr ""
-
-#: prefs.js:194
-msgid "Shortcuts"
-msgstr ""
-
-#: prefs.js:235
-msgid "Icon"
-msgstr ""
-
-#: prefs.js:236
-msgid "Clipboard Content"
-msgstr ""
-
-#: prefs.js:237
-msgid "Both"
-msgstr ""
+#~ msgid "Refresh Interval (ms)"
+#~ msgstr "Päivitysväli (ms)"

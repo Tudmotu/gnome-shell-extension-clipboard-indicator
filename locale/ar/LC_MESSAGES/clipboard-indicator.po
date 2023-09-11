@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-shell-extension-clipboard-indicator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-09 22:18+0300\n"
+"POT-Creation-Date: 2023-09-12 02:22+0300\n"
 "PO-Revision-Date: 2018-03-10 10:10-0600\n"
 "Last-Translator: Ahmed Ayman <ahmedayman055g@gmail.com>\n"
 "Language-Team: \n"
@@ -18,157 +18,165 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 2.0.6\n"
 
-#: extension.js:104
+#: extension.js:103
 msgid "Text will be here"
 msgstr "النص سيكون هنا"
 
-#: extension.js:168
+#: extension.js:167
 msgid "Type here to search..."
 msgstr "...اكتب هنا للبحث"
 
-#: extension.js:231
+#: extension.js:229
 msgid "Private mode"
 msgstr "الوضع السري"
 
-#: extension.js:245 prefs.js:81
+#: extension.js:243 prefs.js:147
 msgid "Clear history"
 msgstr "محو السجل"
 
-#: extension.js:257
+#: extension.js:255
 msgid "Settings"
 msgstr "الإعدادات"
 
-#: extension.js:280
+#: extension.js:278
 #, fuzzy
 msgid "Clipboard is empty"
 msgstr "محتوى الحافظة"
 
-#: extension.js:460
+#: extension.js:468
 msgid "Clear all?"
 msgstr "حذف الكل؟"
 
-#: extension.js:461
+#: extension.js:469
 msgid "Are you sure you want to delete all clipboard items?"
 msgstr "هل أنت متأكد أنك تريد حذف جميع عناصر الحافطة؟"
 
-#: extension.js:462
+#: extension.js:470
 msgid "This operation cannot be undone."
 msgstr ".هذه العملية لا يمكن التراجع عنها"
 
-#: extension.js:464
+#: extension.js:472
 msgid "Clear"
 msgstr "إزالة"
 
-#: extension.js:464 extension.js:632 extension.js:669
+#: extension.js:472 extension.js:631
 msgid "Cancel"
 msgstr "إلغاء"
 
-#: extension.js:485
+#: extension.js:486
 msgid "Clipboard history cleared"
 msgstr "تم إزالة سجل الحافظة"
 
-#: extension.js:631 extension.js:668
+#: extension.js:630
 msgid "Copied to clipboard"
 msgstr "تم النسخ في الحافظة"
 
-#: prefs.js:79
-msgid "Toggle the menu"
-msgstr "أظهر/أخفي القائمة"
-
-#: prefs.js:83
-msgid "Previous entry"
-msgstr "الإدخال السابق"
-
-#: prefs.js:85
-msgid "Next entry"
-msgstr "الإدخال التالي"
-
-#: prefs.js:94
+#: prefs.js:31
 msgid "History Size"
 msgstr "عدد العناصر في السجل"
 
-#: prefs.js:99
-msgid "Refresh Interval (ms)"
-msgstr "فترة التحديث بالمللي ثانية"
-
-#: prefs.js:104
+#: prefs.js:40
 msgid "Preview Size (characters)"
 msgstr "عدد الأحرف في المراجعة"
 
-#: prefs.js:109
+#: prefs.js:49
 msgid "Max cache file size (kb)"
 msgstr "أقصى حجم لملف ذاكرة التخزين المؤقت بالكيلوبايت"
 
-#: prefs.js:114
-msgid "Cache only favorites"
-msgstr "خزن فقط المفضلة"
-
-#: prefs.js:119
-msgid "Show notification on copy"
-msgstr "أظهر إشعار عند النسخ"
-
-#: prefs.js:124
-#, fuzzy
-msgid "Show confirmation on Clear History"
-msgstr "أظهر إشعار عند النسخ"
-
-#: prefs.js:129
-msgid "Move item to the top after selection"
-msgstr "انقل العنصر إلى الأعلى بعد إختياره"
-
-#: prefs.js:134
-#, fuzzy
-msgid "Enable shortcuts"
-msgstr "إختصارات لوحة المفاتيح"
-
-#: prefs.js:139
+#: prefs.js:58
 msgid "Number of characters in top bar"
 msgstr "عدد الأحرف في الشريط العلوي"
 
-#: prefs.js:144
+#: prefs.js:67
 msgid "What to show in top bar"
 msgstr "ما سيظهر في الشريط العلوي"
 
-#: prefs.js:149
+#: prefs.js:72
 #, fuzzy
 msgid "Remove down arrow in top bar"
 msgstr "إزالة السهم السفلي في الشريط العلوي"
 
-#: prefs.js:154
+#: prefs.js:76
+msgid "Cache only favorites"
+msgstr "خزن فقط المفضلة"
+
+#: prefs.js:80
+msgid "Show notification on copy"
+msgstr "أظهر إشعار عند النسخ"
+
+#: prefs.js:84
+#, fuzzy
+msgid "Show confirmation on Clear History"
+msgstr "أظهر إشعار عند النسخ"
+
+#: prefs.js:88
 msgid "Remove whitespace around text"
 msgstr "إزالة المسافات الفارغة حول النص"
 
-#: prefs.js:190
+#: prefs.js:92
+msgid "Move item to the top after selection"
+msgstr "انقل العنصر إلى الأعلى بعد إختياره"
+
+#: prefs.js:95
 msgid "UI"
 msgstr ""
 
-#: prefs.js:191
+#: prefs.js:96
 msgid "Limits"
 msgstr ""
 
-#: prefs.js:192
+#: prefs.js:97
 msgid "Topbar"
 msgstr ""
 
-#: prefs.js:193
+#: prefs.js:98
 msgid "Notifications"
 msgstr ""
 
-#: prefs.js:194
+#: prefs.js:99
 msgid "Shortcuts"
 msgstr ""
 
-#: prefs.js:235
+#: prefs.js:134
 msgid "Icon"
 msgstr "أيقونة"
 
-#: prefs.js:236
+#: prefs.js:135
 msgid "Clipboard Content"
 msgstr "محتوى الحافظة"
 
-#: prefs.js:237
+#: prefs.js:136
 msgid "Both"
 msgstr "كلاهما"
+
+#: prefs.js:146
+msgid "Toggle the menu"
+msgstr "أظهر/أخفي القائمة"
+
+#: prefs.js:148
+msgid "Previous entry"
+msgstr "الإدخال السابق"
+
+#: prefs.js:149
+msgid "Next entry"
+msgstr "الإدخال التالي"
+
+#: prefs.js:154
+#, fuzzy
+msgid "Enable shortcuts"
+msgstr "إختصارات لوحة المفاتيح"
+
+#: prefs.js:179
+#, fuzzy
+msgid "Enter shortcut"
+msgstr "إختصارات لوحة المفاتيح"
+
+#: prefs.js:193 prefs.js:223
+msgid "Disabled"
+msgstr ""
+
+#~ msgid "Refresh Interval (ms)"
+#~ msgstr "فترة التحديث بالمللي ثانية"
 
 #~ msgid "Disable cache file"
 #~ msgstr "إلغاء ملف ذاكرة التخزين المؤقت"

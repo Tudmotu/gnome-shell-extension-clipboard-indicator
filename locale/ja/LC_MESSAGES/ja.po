@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-09 22:18+0300\n"
+"POT-Creation-Date: 2023-09-12 02:22+0300\n"
 "PO-Revision-Date: 2021-08-27 16:24+0900\n"
 "Last-Translator: nexryai <nexryai@outlook.com>\n"
 "Language-Team: \n"
@@ -21,156 +21,164 @@ msgstr ""
 "X-Poedit-SearchPath-0: prefs.js\n"
 "X-Poedit-SearchPath-1: extension.js\n"
 
-#: extension.js:104
+#: extension.js:103
 msgid "Text will be here"
 msgstr "ここにテキストを入力"
 
-#: extension.js:168
+#: extension.js:167
 msgid "Type here to search..."
 msgstr "検索ワードを入力..."
 
-#: extension.js:231
+#: extension.js:229
 msgid "Private mode"
 msgstr "プライベートモード"
 
-#: extension.js:245 prefs.js:81
+#: extension.js:243 prefs.js:147
 msgid "Clear history"
 msgstr "履歴を消去"
 
-#: extension.js:257
+#: extension.js:255
 msgid "Settings"
 msgstr "設定"
 
-#: extension.js:280
+#: extension.js:278
 #, fuzzy
 msgid "Clipboard is empty"
 msgstr "クリップボードの内容"
 
-#: extension.js:460
+#: extension.js:468
 msgid "Clear all?"
 msgstr "全消去しますか？"
 
-#: extension.js:461
+#: extension.js:469
 msgid "Are you sure you want to delete all clipboard items?"
 msgstr "クリップボードの履歴を全て削除してよろしいですか？"
 
-#: extension.js:462
+#: extension.js:470
 msgid "This operation cannot be undone."
 msgstr "この操作を元に戻すことはできません。"
 
-#: extension.js:464
+#: extension.js:472
 msgid "Clear"
 msgstr "クリア"
 
-#: extension.js:464 extension.js:632 extension.js:669
+#: extension.js:472 extension.js:631
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: extension.js:485
+#: extension.js:486
 msgid "Clipboard history cleared"
 msgstr "消去しました"
 
-#: extension.js:631 extension.js:668
+#: extension.js:630
 msgid "Copied to clipboard"
 msgstr "コピーしました"
 
-#: prefs.js:79
-msgid "Toggle the menu"
-msgstr "メニュー"
-
-#: prefs.js:83
-msgid "Previous entry"
-msgstr "前へ"
-
-#: prefs.js:85
-msgid "Next entry"
-msgstr "次へ"
-
-#: prefs.js:94
+#: prefs.js:31
 msgid "History Size"
 msgstr "保存件数"
 
-#: prefs.js:99
-msgid "Refresh Interval (ms)"
-msgstr "更新間隔（ミリ秒）"
-
-#: prefs.js:104
+#: prefs.js:40
 msgid "Preview Size (characters)"
 msgstr "プレビュー文字数"
 
-#: prefs.js:109
+#: prefs.js:49
 msgid "Max cache file size (kb)"
 msgstr "最大キャッシュサイズ（KB）"
 
-#: prefs.js:114
+#: prefs.js:58
+msgid "Number of characters in top bar"
+msgstr "トップバーの単語数"
+
+#: prefs.js:67
+msgid "What to show in top bar"
+msgstr "表示内容"
+
+#: prefs.js:72
+msgid "Remove down arrow in top bar"
+msgstr "トップバーの単語数"
+
+#: prefs.js:76
 msgid "Cache only favorites"
 msgstr "お気に入りのみをキャッシュ"
 
-#: prefs.js:119
+#: prefs.js:80
 msgid "Show notification on copy"
 msgstr "コピー時に通知を表示する"
 
-#: prefs.js:124
+#: prefs.js:84
 #, fuzzy
 msgid "Show confirmation on Clear History"
 msgstr "コピー時に通知を表示する"
 
-#: prefs.js:129
+#: prefs.js:88
+msgid "Remove whitespace around text"
+msgstr "テキスト周りのホワイトスペースを削除する"
+
+#: prefs.js:92
 msgid "Move item to the top after selection"
 msgstr "選択後にアイテムをトップに移動"
 
+#: prefs.js:95
+msgid "UI"
+msgstr ""
+
+#: prefs.js:96
+msgid "Limits"
+msgstr ""
+
+#: prefs.js:97
+msgid "Topbar"
+msgstr ""
+
+#: prefs.js:98
+msgid "Notifications"
+msgstr ""
+
+#: prefs.js:99
+msgid "Shortcuts"
+msgstr ""
+
 #: prefs.js:134
+msgid "Icon"
+msgstr "アイコン"
+
+#: prefs.js:135
+msgid "Clipboard Content"
+msgstr "クリップボードの内容"
+
+#: prefs.js:136
+msgid "Both"
+msgstr "両方"
+
+#: prefs.js:146
+msgid "Toggle the menu"
+msgstr "メニュー"
+
+#: prefs.js:148
+msgid "Previous entry"
+msgstr "前へ"
+
+#: prefs.js:149
+msgid "Next entry"
+msgstr "次へ"
+
+#: prefs.js:154
 #, fuzzy
 msgid "Enable shortcuts"
 msgstr "キーボードショートカット"
 
-#: prefs.js:139
-msgid "Number of characters in top bar"
-msgstr "トップバーの単語数"
+#: prefs.js:179
+#, fuzzy
+msgid "Enter shortcut"
+msgstr "キーボードショートカット"
 
-#: prefs.js:144
-msgid "What to show in top bar"
-msgstr "表示内容"
-
-#: prefs.js:149
-msgid "Remove down arrow in top bar"
-msgstr "トップバーの単語数"
-
-#: prefs.js:154
-msgid "Remove whitespace around text"
-msgstr "テキスト周りのホワイトスペースを削除する"
-
-#: prefs.js:190
-msgid "UI"
+#: prefs.js:193 prefs.js:223
+msgid "Disabled"
 msgstr ""
 
-#: prefs.js:191
-msgid "Limits"
-msgstr ""
-
-#: prefs.js:192
-msgid "Topbar"
-msgstr ""
-
-#: prefs.js:193
-msgid "Notifications"
-msgstr ""
-
-#: prefs.js:194
-msgid "Shortcuts"
-msgstr ""
-
-#: prefs.js:235
-msgid "Icon"
-msgstr "アイコン"
-
-#: prefs.js:236
-msgid "Clipboard Content"
-msgstr "クリップボードの内容"
-
-#: prefs.js:237
-msgid "Both"
-msgstr "両方"
+#~ msgid "Refresh Interval (ms)"
+#~ msgstr "更新間隔（ミリ秒）"
 
 #~ msgid "Disable cache file"
 #~ msgstr "キャッシュを無効化"

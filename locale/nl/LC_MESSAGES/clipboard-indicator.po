@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-09 22:18+0300\n"
+"POT-Creation-Date: 2023-09-12 02:22+0300\n"
 "PO-Revision-Date: 2021-07-07 17:43+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: \n"
@@ -18,153 +18,161 @@ msgstr ""
 "X-Generator: Poedit 2.2.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: extension.js:104
+#: extension.js:103
 msgid "Text will be here"
 msgstr "Gekopieerde tekst wordt hier getoond"
 
-#: extension.js:168
+#: extension.js:167
 msgid "Type here to search..."
 msgstr "Typ om te zoeken…"
 
-#: extension.js:231
+#: extension.js:229
 msgid "Private mode"
 msgstr "Privémodus"
 
-#: extension.js:245 prefs.js:81
+#: extension.js:243 prefs.js:147
 msgid "Clear history"
 msgstr "Geschiedenis wissen"
 
-#: extension.js:257
+#: extension.js:255
 msgid "Settings"
 msgstr "Instellingen"
 
-#: extension.js:280
+#: extension.js:278
 #, fuzzy
 msgid "Clipboard is empty"
 msgstr "Klembordinhoud"
 
-#: extension.js:460
+#: extension.js:468
 msgid "Clear all?"
 msgstr "Alles wissen?"
 
-#: extension.js:461
+#: extension.js:469
 msgid "Are you sure you want to delete all clipboard items?"
 msgstr "Weet u zeker dat u alle klemborditems wilt wissen?"
 
-#: extension.js:462
+#: extension.js:470
 msgid "This operation cannot be undone."
 msgstr "Dit kan niet ongedaan worden gemaakt."
 
-#: extension.js:464
+#: extension.js:472
 msgid "Clear"
 msgstr "Wissen"
 
-#: extension.js:464 extension.js:632 extension.js:669
+#: extension.js:472 extension.js:631
 msgid "Cancel"
 msgstr "Annuleren"
 
-#: extension.js:485
+#: extension.js:486
 msgid "Clipboard history cleared"
 msgstr "De klembordgeschiedenis is gewist"
 
-#: extension.js:631 extension.js:668
+#: extension.js:630
 msgid "Copied to clipboard"
 msgstr "Gekopieerd naar het klembord"
 
-#: prefs.js:79
-msgid "Toggle the menu"
-msgstr "Menu tonen/verbergen"
-
-#: prefs.js:83
-msgid "Previous entry"
-msgstr "Vorig item"
-
-#: prefs.js:85
-msgid "Next entry"
-msgstr "Volgend item"
-
-#: prefs.js:94
+#: prefs.js:31
 msgid "History Size"
 msgstr "Geschiedenisomvang"
 
-#: prefs.js:99
-msgid "Refresh Interval (ms)"
-msgstr "Ververstussenpoos (in ms)"
-
-#: prefs.js:104
+#: prefs.js:40
 msgid "Preview Size (characters)"
 msgstr "Voorvertoningsomvang (aantal tekens)"
 
-#: prefs.js:109
+#: prefs.js:49
 msgid "Max cache file size (kb)"
 msgstr "Max. grootte van cachebestand (in kb)"
 
-#: prefs.js:114
+#: prefs.js:58
+msgid "Number of characters in top bar"
+msgstr "Aantal tekens op bovenbalk"
+
+#: prefs.js:67
+msgid "What to show in top bar"
+msgstr "Tonen op bovenbalk:"
+
+#: prefs.js:72
+msgid "Remove down arrow in top bar"
+msgstr "Geen uitklappijl tonen op bovenbalk"
+
+#: prefs.js:76
 msgid "Cache only favorites"
 msgstr "Alleen favorieten bewaren in cache"
 
-#: prefs.js:119
+#: prefs.js:80
 msgid "Show notification on copy"
 msgstr "Melding tonen na kopiëren"
 
-#: prefs.js:124
+#: prefs.js:84
 #, fuzzy
 msgid "Show confirmation on Clear History"
 msgstr "Melding tonen na kopiëren"
 
-#: prefs.js:129
+#: prefs.js:88
+msgid "Remove whitespace around text"
+msgstr "Witruimte rondom tekst wissen"
+
+#: prefs.js:92
 msgid "Move item to the top after selection"
 msgstr "Item bovenaan de lijst zetten na aanklikken"
 
+#: prefs.js:95
+msgid "UI"
+msgstr ""
+
+#: prefs.js:96
+msgid "Limits"
+msgstr ""
+
+#: prefs.js:97
+msgid "Topbar"
+msgstr ""
+
+#: prefs.js:98
+msgid "Notifications"
+msgstr ""
+
+#: prefs.js:99
+msgid "Shortcuts"
+msgstr ""
+
 #: prefs.js:134
+msgid "Icon"
+msgstr "Pictogram"
+
+#: prefs.js:135
+msgid "Clipboard Content"
+msgstr "Klembordinhoud"
+
+#: prefs.js:136
+msgid "Both"
+msgstr "Beide"
+
+#: prefs.js:146
+msgid "Toggle the menu"
+msgstr "Menu tonen/verbergen"
+
+#: prefs.js:148
+msgid "Previous entry"
+msgstr "Vorig item"
+
+#: prefs.js:149
+msgid "Next entry"
+msgstr "Volgend item"
+
+#: prefs.js:154
 #, fuzzy
 msgid "Enable shortcuts"
 msgstr "Sneltoetsen"
 
-#: prefs.js:139
-msgid "Number of characters in top bar"
-msgstr "Aantal tekens op bovenbalk"
+#: prefs.js:179
+#, fuzzy
+msgid "Enter shortcut"
+msgstr "Sneltoetsen"
 
-#: prefs.js:144
-msgid "What to show in top bar"
-msgstr "Tonen op bovenbalk:"
-
-#: prefs.js:149
-msgid "Remove down arrow in top bar"
-msgstr "Geen uitklappijl tonen op bovenbalk"
-
-#: prefs.js:154
-msgid "Remove whitespace around text"
-msgstr "Witruimte rondom tekst wissen"
-
-#: prefs.js:190
-msgid "UI"
+#: prefs.js:193 prefs.js:223
+msgid "Disabled"
 msgstr ""
 
-#: prefs.js:191
-msgid "Limits"
-msgstr ""
-
-#: prefs.js:192
-msgid "Topbar"
-msgstr ""
-
-#: prefs.js:193
-msgid "Notifications"
-msgstr ""
-
-#: prefs.js:194
-msgid "Shortcuts"
-msgstr ""
-
-#: prefs.js:235
-msgid "Icon"
-msgstr "Pictogram"
-
-#: prefs.js:236
-msgid "Clipboard Content"
-msgstr "Klembordinhoud"
-
-#: prefs.js:237
-msgid "Both"
-msgstr "Beide"
+#~ msgid "Refresh Interval (ms)"
+#~ msgstr "Ververstussenpoos (in ms)"

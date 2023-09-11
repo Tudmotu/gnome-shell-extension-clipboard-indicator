@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-09 22:18+0300\n"
+"POT-Creation-Date: 2023-09-12 02:22+0300\n"
 "PO-Revision-Date: 2021-11-20 14:03+0100\n"
 "Last-Translator: Quentin PAGÈS\n"
 "Language-Team: \n"
@@ -17,153 +17,161 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.0\n"
 
-#: extension.js:104
+#: extension.js:103
 msgid "Text will be here"
 msgstr "Lo tèxt serà aicí"
 
-#: extension.js:168
+#: extension.js:167
 msgid "Type here to search..."
 msgstr "Picatz aquí per recercar..."
 
-#: extension.js:231
+#: extension.js:229
 msgid "Private mode"
 msgstr "Mòde privat"
 
-#: extension.js:245 prefs.js:81
+#: extension.js:243 prefs.js:147
 msgid "Clear history"
 msgstr "Escafar l’istoric"
 
-#: extension.js:257
+#: extension.js:255
 msgid "Settings"
 msgstr "Preferéncias"
 
-#: extension.js:280
+#: extension.js:278
 #, fuzzy
 msgid "Clipboard is empty"
 msgstr "Contengut del quichapapièrs"
 
-#: extension.js:460
+#: extension.js:468
 msgid "Clear all?"
 msgstr "Tot escafar ?"
 
-#: extension.js:461
+#: extension.js:469
 msgid "Are you sure you want to delete all clipboard items?"
 msgstr "Volètz vertadièrament suprimir totes los elements del quichapapièr ?"
 
-#: extension.js:462
+#: extension.js:470
 msgid "This operation cannot be undone."
 msgstr "Aquò pòt pas èsser anullat."
 
-#: extension.js:464
+#: extension.js:472
 msgid "Clear"
 msgstr "Escafar"
 
-#: extension.js:464 extension.js:632 extension.js:669
+#: extension.js:472 extension.js:631
 msgid "Cancel"
 msgstr "Anullar"
 
-#: extension.js:485
+#: extension.js:486
 msgid "Clipboard history cleared"
 msgstr "Istoric del quichapapièrs escafat"
 
-#: extension.js:631 extension.js:668
+#: extension.js:630
 msgid "Copied to clipboard"
 msgstr "Copiat dins lo quichapapièrs"
 
-#: prefs.js:79
-msgid "Toggle the menu"
-msgstr "Alternar menú"
-
-#: prefs.js:83
-msgid "Previous entry"
-msgstr "Entrada precedenta"
-
-#: prefs.js:85
-msgid "Next entry"
-msgstr "Entrada seguenta"
-
-#: prefs.js:94
+#: prefs.js:31
 msgid "History Size"
 msgstr "Talha de l'istoric"
 
-#: prefs.js:99
-msgid "Refresh Interval (ms)"
-msgstr "Interval de refresquiment (ms)"
-
-#: prefs.js:104
+#: prefs.js:40
 msgid "Preview Size (characters)"
 msgstr "Talha de la previsualizacion (caractèrs)"
 
-#: prefs.js:109
+#: prefs.js:49
 msgid "Max cache file size (kb)"
 msgstr "Talha maximala del fichièr de cache (ko)"
 
-#: prefs.js:114
+#: prefs.js:58
+msgid "Number of characters in top bar"
+msgstr "Nombre de caractèrs a la barra d’ennaut"
+
+#: prefs.js:67
+msgid "What to show in top bar"
+msgstr "Qué veire a la barra d’ennaut"
+
+#: prefs.js:72
+msgid "Remove down arrow in top bar"
+msgstr "Suprimir la sageta bassa de la barra d’ennaut"
+
+#: prefs.js:76
 msgid "Cache only favorites"
 msgstr "Metre sonque los favorits en cache"
 
-#: prefs.js:119
+#: prefs.js:80
 msgid "Show notification on copy"
 msgstr "Afichar una notificacion en copiant"
 
-#: prefs.js:124
+#: prefs.js:84
 #, fuzzy
 msgid "Show confirmation on Clear History"
 msgstr "Afichar una notificacion en copiant"
 
-#: prefs.js:129
+#: prefs.js:88
+msgid "Remove whitespace around text"
+msgstr "Suprimir los espacis blancs a l’entorn del tèxt"
+
+#: prefs.js:92
 msgid "Move item to the top after selection"
 msgstr "Desplaçar l’element ennaut aprèp seleccion"
 
+#: prefs.js:95
+msgid "UI"
+msgstr ""
+
+#: prefs.js:96
+msgid "Limits"
+msgstr ""
+
+#: prefs.js:97
+msgid "Topbar"
+msgstr ""
+
+#: prefs.js:98
+msgid "Notifications"
+msgstr ""
+
+#: prefs.js:99
+msgid "Shortcuts"
+msgstr ""
+
 #: prefs.js:134
+msgid "Icon"
+msgstr "Icòna"
+
+#: prefs.js:135
+msgid "Clipboard Content"
+msgstr "Contengut del quichapapièrs"
+
+#: prefs.js:136
+msgid "Both"
+msgstr "Los dos"
+
+#: prefs.js:146
+msgid "Toggle the menu"
+msgstr "Alternar menú"
+
+#: prefs.js:148
+msgid "Previous entry"
+msgstr "Entrada precedenta"
+
+#: prefs.js:149
+msgid "Next entry"
+msgstr "Entrada seguenta"
+
+#: prefs.js:154
 #, fuzzy
 msgid "Enable shortcuts"
 msgstr "Acorchis de clavièr"
 
-#: prefs.js:139
-msgid "Number of characters in top bar"
-msgstr "Nombre de caractèrs a la barra d’ennaut"
+#: prefs.js:179
+#, fuzzy
+msgid "Enter shortcut"
+msgstr "Acorchis de clavièr"
 
-#: prefs.js:144
-msgid "What to show in top bar"
-msgstr "Qué veire a la barra d’ennaut"
-
-#: prefs.js:149
-msgid "Remove down arrow in top bar"
-msgstr "Suprimir la sageta bassa de la barra d’ennaut"
-
-#: prefs.js:154
-msgid "Remove whitespace around text"
-msgstr "Suprimir los espacis blancs a l’entorn del tèxt"
-
-#: prefs.js:190
-msgid "UI"
+#: prefs.js:193 prefs.js:223
+msgid "Disabled"
 msgstr ""
 
-#: prefs.js:191
-msgid "Limits"
-msgstr ""
-
-#: prefs.js:192
-msgid "Topbar"
-msgstr ""
-
-#: prefs.js:193
-msgid "Notifications"
-msgstr ""
-
-#: prefs.js:194
-msgid "Shortcuts"
-msgstr ""
-
-#: prefs.js:235
-msgid "Icon"
-msgstr "Icòna"
-
-#: prefs.js:236
-msgid "Clipboard Content"
-msgstr "Contengut del quichapapièrs"
-
-#: prefs.js:237
-msgid "Both"
-msgstr "Los dos"
+#~ msgid "Refresh Interval (ms)"
+#~ msgstr "Interval de refresquiment (ms)"

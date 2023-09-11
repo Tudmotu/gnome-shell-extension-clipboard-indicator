@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-09 22:18+0300\n"
+"POT-Creation-Date: 2023-09-12 02:22+0300\n"
 "PO-Revision-Date: 2020-10-31 16:25+0100\n"
 "Last-Translator: Meskó Balázs <mesko.balazs@fsf.hu>\n"
 "Language-Team: \n"
@@ -18,156 +18,164 @@ msgstr ""
 "X-Generator: Poedit 2.4.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: extension.js:104
+#: extension.js:103
 msgid "Text will be here"
 msgstr "A szöveg itt fog megjelenni"
 
-#: extension.js:168
+#: extension.js:167
 msgid "Type here to search..."
 msgstr "Írjon ide a kereséshez…"
 
-#: extension.js:231
+#: extension.js:229
 msgid "Private mode"
 msgstr "Privát mód"
 
-#: extension.js:245 prefs.js:81
+#: extension.js:243 prefs.js:147
 msgid "Clear history"
 msgstr "Előzmények törlése"
 
-#: extension.js:257
+#: extension.js:255
 msgid "Settings"
 msgstr "Beállítások"
 
-#: extension.js:280
+#: extension.js:278
 #, fuzzy
 msgid "Clipboard is empty"
 msgstr "Vágólap tartalma"
 
-#: extension.js:460
+#: extension.js:468
 msgid "Clear all?"
 msgstr "Összes törlése?"
 
-#: extension.js:461
+#: extension.js:469
 msgid "Are you sure you want to delete all clipboard items?"
 msgstr "Biztos, hogy törli az összes vágólapelemet?"
 
-#: extension.js:462
+#: extension.js:470
 msgid "This operation cannot be undone."
 msgstr "Ez a művelet nem vonható vissza."
 
-#: extension.js:464
+#: extension.js:472
 msgid "Clear"
 msgstr "Törlés"
 
-#: extension.js:464 extension.js:632 extension.js:669
+#: extension.js:472 extension.js:631
 msgid "Cancel"
 msgstr "Mégse"
 
-#: extension.js:485
+#: extension.js:486
 msgid "Clipboard history cleared"
 msgstr "Vágólap előzmények törölve"
 
-#: extension.js:631 extension.js:668
+#: extension.js:630
 msgid "Copied to clipboard"
 msgstr "Vágólapra másolva"
 
-#: prefs.js:79
-msgid "Toggle the menu"
-msgstr "Menü megnyitása/bezárása"
-
-#: prefs.js:83
-msgid "Previous entry"
-msgstr "Előző"
-
-#: prefs.js:85
-msgid "Next entry"
-msgstr "Következő"
-
-#: prefs.js:94
+#: prefs.js:31
 msgid "History Size"
 msgstr "Előzmények száma"
 
-#: prefs.js:99
-msgid "Refresh Interval (ms)"
-msgstr "Frissítési időköz (ms)"
-
-#: prefs.js:104
+#: prefs.js:40
 msgid "Preview Size (characters)"
 msgstr "Előnézet mérete (karakter)"
 
-#: prefs.js:109
+#: prefs.js:49
 msgid "Max cache file size (kb)"
 msgstr "Gyorsítótár mérete (KiB)"
 
-#: prefs.js:114
+#: prefs.js:58
+msgid "Number of characters in top bar"
+msgstr "Karakterek száma a felső sávban"
+
+#: prefs.js:67
+msgid "What to show in top bar"
+msgstr "Mi legyen látható a felső sávban"
+
+#: prefs.js:72
+msgid "Remove down arrow in top bar"
+msgstr "A lefelé mutató nyíl eltávolítása a felső sávból"
+
+#: prefs.js:76
 msgid "Cache only favorites"
 msgstr "Csak a kedvencek gyorsítótárazása"
 
-#: prefs.js:119
+#: prefs.js:80
 msgid "Show notification on copy"
 msgstr "Értesítés vágólapra másoláskor"
 
-#: prefs.js:124
+#: prefs.js:84
 #, fuzzy
 msgid "Show confirmation on Clear History"
 msgstr "Értesítés vágólapra másoláskor"
 
-#: prefs.js:129
+#: prefs.js:88
+msgid "Remove whitespace around text"
+msgstr "Szóközök eltávolítása a szöveg körül"
+
+#: prefs.js:92
 msgid "Move item to the top after selection"
 msgstr "Első helyre mozgatás kiválasztás után"
 
+#: prefs.js:95
+msgid "UI"
+msgstr ""
+
+#: prefs.js:96
+msgid "Limits"
+msgstr ""
+
+#: prefs.js:97
+msgid "Topbar"
+msgstr ""
+
+#: prefs.js:98
+msgid "Notifications"
+msgstr ""
+
+#: prefs.js:99
+msgid "Shortcuts"
+msgstr ""
+
 #: prefs.js:134
+msgid "Icon"
+msgstr "Ikon"
+
+#: prefs.js:135
+msgid "Clipboard Content"
+msgstr "Vágólap tartalma"
+
+#: prefs.js:136
+msgid "Both"
+msgstr "Mindkettő"
+
+#: prefs.js:146
+msgid "Toggle the menu"
+msgstr "Menü megnyitása/bezárása"
+
+#: prefs.js:148
+msgid "Previous entry"
+msgstr "Előző"
+
+#: prefs.js:149
+msgid "Next entry"
+msgstr "Következő"
+
+#: prefs.js:154
 #, fuzzy
 msgid "Enable shortcuts"
 msgstr "Gyorsbillentyűk"
 
-#: prefs.js:139
-msgid "Number of characters in top bar"
-msgstr "Karakterek száma a felső sávban"
+#: prefs.js:179
+#, fuzzy
+msgid "Enter shortcut"
+msgstr "Gyorsbillentyűk"
 
-#: prefs.js:144
-msgid "What to show in top bar"
-msgstr "Mi legyen látható a felső sávban"
-
-#: prefs.js:149
-msgid "Remove down arrow in top bar"
-msgstr "A lefelé mutató nyíl eltávolítása a felső sávból"
-
-#: prefs.js:154
-msgid "Remove whitespace around text"
-msgstr "Szóközök eltávolítása a szöveg körül"
-
-#: prefs.js:190
-msgid "UI"
+#: prefs.js:193 prefs.js:223
+msgid "Disabled"
 msgstr ""
 
-#: prefs.js:191
-msgid "Limits"
-msgstr ""
-
-#: prefs.js:192
-msgid "Topbar"
-msgstr ""
-
-#: prefs.js:193
-msgid "Notifications"
-msgstr ""
-
-#: prefs.js:194
-msgid "Shortcuts"
-msgstr ""
-
-#: prefs.js:235
-msgid "Icon"
-msgstr "Ikon"
-
-#: prefs.js:236
-msgid "Clipboard Content"
-msgstr "Vágólap tartalma"
-
-#: prefs.js:237
-msgid "Both"
-msgstr "Mindkettő"
+#~ msgid "Refresh Interval (ms)"
+#~ msgstr "Frissítési időköz (ms)"
 
 #~ msgid "Enable Deletion"
 #~ msgstr "Törlés engedélyezése"

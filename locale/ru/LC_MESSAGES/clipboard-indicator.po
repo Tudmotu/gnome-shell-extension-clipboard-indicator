@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-09 22:18+0300\n"
+"POT-Creation-Date: 2023-09-12 02:22+0300\n"
 "PO-Revision-Date: 2022-02-08 13:08+0300\n"
 "Last-Translator: Aleksandr Melman <Alexmelman88@gmail.com>\n"
 "Language-Team: \n"
@@ -19,153 +19,161 @@ msgstr ""
 "|| n%100>=20) ? 1 : 2);\n"
 "X-Generator: Poedit 3.0\n"
 
-#: extension.js:104
+#: extension.js:103
 msgid "Text will be here"
 msgstr "Текст будет здесь"
 
-#: extension.js:168
+#: extension.js:167
 msgid "Type here to search..."
 msgstr "Введите здесь для поиска..."
 
-#: extension.js:231
+#: extension.js:229
 msgid "Private mode"
 msgstr "Приватный режим"
 
-#: extension.js:245 prefs.js:81
+#: extension.js:243 prefs.js:147
 msgid "Clear history"
 msgstr "Очистить историю"
 
-#: extension.js:257
+#: extension.js:255
 msgid "Settings"
 msgstr "Настройки"
 
-#: extension.js:280
+#: extension.js:278
 #, fuzzy
 msgid "Clipboard is empty"
 msgstr "Содержимое буфера обмена"
 
-#: extension.js:460
+#: extension.js:468
 msgid "Clear all?"
 msgstr "Очистить все?"
 
-#: extension.js:461
+#: extension.js:469
 msgid "Are you sure you want to delete all clipboard items?"
 msgstr "Вы уверены, что хотите удалить все элементы буфера обмена?"
 
-#: extension.js:462
+#: extension.js:470
 msgid "This operation cannot be undone."
 msgstr "Эту операцию нельзя отменить."
 
-#: extension.js:464
+#: extension.js:472
 msgid "Clear"
 msgstr "Очистить"
 
-#: extension.js:464 extension.js:632 extension.js:669
+#: extension.js:472 extension.js:631
 msgid "Cancel"
 msgstr "Отменить"
 
-#: extension.js:485
+#: extension.js:486
 msgid "Clipboard history cleared"
 msgstr "История буфера обмена очищена"
 
-#: extension.js:631 extension.js:668
+#: extension.js:630
 msgid "Copied to clipboard"
 msgstr "Скопировано в буфер обмена"
 
-#: prefs.js:79
-msgid "Toggle the menu"
-msgstr "Показать меню"
-
-#: prefs.js:83
-msgid "Previous entry"
-msgstr "Предыдущая запись"
-
-#: prefs.js:85
-msgid "Next entry"
-msgstr "Следующая запись"
-
-#: prefs.js:94
+#: prefs.js:31
 msgid "History Size"
 msgstr "Размер истории"
 
-#: prefs.js:99
-msgid "Refresh Interval (ms)"
-msgstr "Интервал обновления (мс)"
-
-#: prefs.js:104
+#: prefs.js:40
 msgid "Preview Size (characters)"
 msgstr "Длина строки в меню (символов)"
 
-#: prefs.js:109
+#: prefs.js:49
 msgid "Max cache file size (kb)"
 msgstr "Максимальный размер кэша (кб)"
 
-#: prefs.js:114
+#: prefs.js:58
+msgid "Number of characters in top bar"
+msgstr "Количество символов в верхней панели"
+
+#: prefs.js:67
+msgid "What to show in top bar"
+msgstr "Что показывать в верхней панели"
+
+#: prefs.js:72
+msgid "Remove down arrow in top bar"
+msgstr "Убрать стрелку вниз в верхней панели"
+
+#: prefs.js:76
 msgid "Cache only favorites"
 msgstr "Кэшировать только избранное"
 
-#: prefs.js:119
+#: prefs.js:80
 msgid "Show notification on copy"
 msgstr "Уведомление при копировании"
 
-#: prefs.js:124
+#: prefs.js:84
 #, fuzzy
 msgid "Show confirmation on Clear History"
 msgstr "Уведомление при копировании"
 
-#: prefs.js:129
+#: prefs.js:88
+msgid "Remove whitespace around text"
+msgstr "Удалить пробелы в тексте"
+
+#: prefs.js:92
 msgid "Move item to the top after selection"
 msgstr "Переместить запись в начало после выделения"
 
+#: prefs.js:95
+msgid "UI"
+msgstr ""
+
+#: prefs.js:96
+msgid "Limits"
+msgstr ""
+
+#: prefs.js:97
+msgid "Topbar"
+msgstr ""
+
+#: prefs.js:98
+msgid "Notifications"
+msgstr ""
+
+#: prefs.js:99
+msgid "Shortcuts"
+msgstr ""
+
 #: prefs.js:134
+msgid "Icon"
+msgstr "Значок"
+
+#: prefs.js:135
+msgid "Clipboard Content"
+msgstr "Содержимое буфера обмена"
+
+#: prefs.js:136
+msgid "Both"
+msgstr "Оба"
+
+#: prefs.js:146
+msgid "Toggle the menu"
+msgstr "Показать меню"
+
+#: prefs.js:148
+msgid "Previous entry"
+msgstr "Предыдущая запись"
+
+#: prefs.js:149
+msgid "Next entry"
+msgstr "Следующая запись"
+
+#: prefs.js:154
 #, fuzzy
 msgid "Enable shortcuts"
 msgstr "Горячие клавиши"
 
-#: prefs.js:139
-msgid "Number of characters in top bar"
-msgstr "Количество символов в верхней панели"
+#: prefs.js:179
+#, fuzzy
+msgid "Enter shortcut"
+msgstr "Горячие клавиши"
 
-#: prefs.js:144
-msgid "What to show in top bar"
-msgstr "Что показывать в верхней панели"
-
-#: prefs.js:149
-msgid "Remove down arrow in top bar"
-msgstr "Убрать стрелку вниз в верхней панели"
-
-#: prefs.js:154
-msgid "Remove whitespace around text"
-msgstr "Удалить пробелы в тексте"
-
-#: prefs.js:190
-msgid "UI"
+#: prefs.js:193 prefs.js:223
+msgid "Disabled"
 msgstr ""
 
-#: prefs.js:191
-msgid "Limits"
-msgstr ""
-
-#: prefs.js:192
-msgid "Topbar"
-msgstr ""
-
-#: prefs.js:193
-msgid "Notifications"
-msgstr ""
-
-#: prefs.js:194
-msgid "Shortcuts"
-msgstr ""
-
-#: prefs.js:235
-msgid "Icon"
-msgstr "Значок"
-
-#: prefs.js:236
-msgid "Clipboard Content"
-msgstr "Содержимое буфера обмена"
-
-#: prefs.js:237
-msgid "Both"
-msgstr "Оба"
+#~ msgid "Refresh Interval (ms)"
+#~ msgstr "Интервал обновления (мс)"
