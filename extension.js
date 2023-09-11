@@ -477,20 +477,13 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     _clearHistory () {
-        let that = this;
-        // We can't actually remove all items, because the clipboard still
-        // has data that will be re-captured on next refresh, so we remove
-        // all except the currently selected item
-        // Don't remove favorites here
-        that.historySection._getMenuItems().forEach(function (mItem) {
+        // Don't remove pinned items
+        this.historySection._getMenuItems().forEach(mItem => {
             if (!mItem.currentlySelected) {
-                let idx = that.clipItemsRadioGroup.indexOf(mItem);
-                mItem.destroy();
-                that.clipItemsRadioGroup.splice(idx, 1);
+                this._removeEntry(mItem);
             }
         });
-        that._updateCache();
-        that._showNotification(_("Clipboard history cleared"));
+        this._showNotification(_("Clipboard history cleared"));
     }
 
     _removeAll () {
