@@ -3,11 +3,20 @@ import GObject from 'gi://GObject';
 import Clutter from 'gi://Clutter';
 import * as ModalDialog from 'resource:///org/gnome/shell/ui/modalDialog.js';
 
-let _openDialog;
+export class DialogManager {
+    #openDialog;
 
-export function openConfirmDialog(title, message, sub_message, ok_label, cancel_label, callback) {
-  if (!_openDialog)
-    _openDialog = new ConfirmDialog(title, message + "\n" + sub_message, ok_label, cancel_label, callback).open();
+    open (title, message, sub_message, ok_label, cancel_label, callback) {
+        if (this.#openDialog) return;
+        this.#openDialog = new ConfirmDialog(title, message + "\n" + sub_message, ok_label, cancel_label, callback);
+        this.#openDialog.onFinish = () => this.#openDialog = null;
+        this.#openDialog.open();
+    }
+
+    destroy () {
+        if (this.#openDialog) this.#openDialog.destroy();
+        this.#openDialog = null;
+    }
 }
 
 const ConfirmDialog = GObject.registerClass(
@@ -45,7 +54,7 @@ const ConfirmDialog = GObject.registerClass(
           label: cancel_label,
           action: () => {
             this.close();
-            _openDialog = null;
+            this.onFinish();
           },
           key: Clutter.Escape
         },
@@ -53,7 +62,7 @@ const ConfirmDialog = GObject.registerClass(
           label: ok_label,
           action: () => {
             this.close();
-            _openDialog = null;
+            this.onFinish();
             callback();
           }
         }

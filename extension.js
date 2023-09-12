@@ -12,10 +12,9 @@ import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import { Extension, gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import { Registry, ClipboardEntry } from './registry.js';
-import { openConfirmDialog } from './confirmDialog.js';
+import { DialogManager } from './confirmDialog.js';
 import { PrefsFields } from './constants.js';
 
-const Clipboard = St.Clipboard.get_default();
 const CLIPBOARD_TYPE = St.ClipboardType.CLIPBOARD;
 
 const INDICATOR_ICON = 'edit-paste-symbolic';
@@ -40,6 +39,7 @@ let PINNED_ON_BOTTOM          = false;
 export default class ClipboardIndicatorExtension extends Extension {
     enable () {
         this.clipboardIndicator = new ClipboardIndicator({
+            clipboard: St.Clipboard.get_default(),
             settings: this.getSettings(),
             openSettings: this.openPreferences,
             uuid: this.uuid
@@ -59,31 +59,23 @@ const ClipboardIndicator = GObject.registerClass({
 }, class ClipboardIndicator extends PanelMenu.Button {
     #refreshInProgress = false;
 
-    constructor (extension) {
-        super();
-        this.extension = extension;
-        this.registry = new Registry(extension);
-        this._loadSettings();
-        this._buildMenu();
-        this._updateTopbarLayout();
-        this._setupListener();
-    }
-
     destroy () {
         this._disconnectSettings();
         this._unbindShortcuts();
         this._disconnectSelectionListener();
-        this._clearLabelTimeout();
         this._clearDelayedSelectionTimeout();
+        this.#clearTimeouts();
+        this.dialogManager.destroy();
 
         super.destroy();
     }
 
-    _init () {
+    _init (extension) {
         super._init(0.0, "ClipboardIndicator");
+        this.extension = extension;
+        this.registry = new Registry(extension);
         this._settingsChangedId = null;
         this._selectionOwnerChangedId = null;
-        this._historyLabelTimeoutId = null;
         this._historyLabel = null;
         this._buttonText = null;
         this._disableDownArrow = null;
@@ -118,6 +110,11 @@ const ClipboardIndicator = GObject.registerClass({
         hbox.add(this._downArrow);
         this.add_child(hbox);
         this._createHistoryLabel();
+        this._loadSettings();
+        this._buildMenu();
+        this._updateTopbarLayout();
+        this._setupListener();
+        this.dialogManager = new DialogManager();
     }
 
     #updateIndicatorContent(entry) {
@@ -141,7 +138,7 @@ const ClipboardIndicator = GObject.registerClass({
                     img.y_align = Clutter.ActorAlign.CENTER;
 
                     // icon only renders properly in setTimeout for some arcane reason
-                    setTimeout(() => {
+                    this._imagePreviewTimeout = setTimeout(() => {
                         this._buttonImgPreview.set_child(img);
                     }, 0);
                 });
@@ -182,7 +179,7 @@ const ClipboardIndicator = GObject.registerClass({
             that._entryItem.add(that.searchEntry);
 
             that.menu.connect('open-state-changed', (self, open) => {
-                setTimeout(() => {
+                this._setFocusOnOpenTimeout = setTimeout(() => {
                     if (open) {
                         if (this.clipItemsRadioGroup.length > 0) {
                             that.searchEntry.set_text('');
@@ -510,9 +507,8 @@ const ClipboardIndicator = GObject.registerClass({
         const message = _("Are you sure you want to delete all clipboard items?");
         const sub_message = _("This operation cannot be undone.");
 
-        openConfirmDialog(title, message, sub_message, _("Clear"), _("Cancel"), () => {
-            let that = this;
-            that._clearHistory();
+        this.dialogManager.open(title, message, sub_message, _("Clear"), _("Cancel"), () => {
+            this._clearHistory();
         }
       );
     }
@@ -928,14 +924,6 @@ const ClipboardIndicator = GObject.registerClass({
         this.selection.disconnect(this._selectionOwnerChangedId);
     }
 
-    _clearLabelTimeout () {
-        if (!this._historyLabelTimeoutId)
-            return;
-
-        clearInterval(this._historyLabelTimeoutId);
-        this._historyLabelTimeoutId = null;
-    }
-
     _clearDelayedSelectionTimeout () {
         if (this._delayedSelectionTimeoutId) {
             clearInterval(this._delayedSelectionTimeoutId);
@@ -1002,13 +990,18 @@ const ClipboardIndicator = GObject.registerClass({
         this.menu.toggle();
     }
 
+    #clearTimeouts () {
+        if (this._imagePreviewTimeout) clearTimeout(this._imagePreviewTimeout);
+        if (this._setFocusOnOpenTimeout) clearTimeout(this._setFocusOnOpenTimeout);
+    }
+
     #clearClipboard () {
-        Clipboard.set_text(CLIPBOARD_TYPE, "");
+        this.extension.clipboard.set_text(CLIPBOARD_TYPE, "");
         this.#updateIndicatorContent(null);
     }
 
     #updateClipboard (entry) {
-        Clipboard.set_content(CLIPBOARD_TYPE, entry.mimetype(), entry.asBytes());
+        this.extension.clipboard.set_content(CLIPBOARD_TYPE, entry.mimetype(), entry.asBytes());
     }
 
     async #getClipboardContent () {
@@ -1024,7 +1017,7 @@ const ClipboardIndicator = GObject.registerClass({
         ];
 
         for (let type of mimetypes) {
-            let result = await new Promise(resolve => Clipboard.get_content(CLIPBOARD_TYPE, type, (clipBoard, bytes) => {
+            let result = await new Promise(resolve => this.extension.clipboard.get_content(CLIPBOARD_TYPE, type, (clipBoard, bytes) => {
                 if (bytes === null || bytes.get_size() === 0) {
                     resolve(null);
                     return;
