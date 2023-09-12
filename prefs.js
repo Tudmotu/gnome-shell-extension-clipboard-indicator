@@ -73,7 +73,7 @@ class Settings {
         });
 
         this.field_cache_disable = new Adw.SwitchRow({
-            title: _("Cache only favorites")
+            title: _("Cache only pinned items")
         });
 
         this.field_notification_toggle = new Adw.SwitchRow({
@@ -96,6 +96,11 @@ class Settings {
             title: _("Keep selected entry after Clear History")
         });
 
+        this.field_pinned_on_bottom = new Adw.SwitchRow({
+            title: _("Place the pinned section on the bottom"),
+            subtitle: _("Requires restarting the extension")
+        });
+
         this.ui =  new Adw.PreferencesGroup({ title: _('UI') });
         this.limits =  new Adw.PreferencesGroup({ title: _('Limits') });
         this.topbar =  new Adw.PreferencesGroup({ title: _('Topbar') });
@@ -106,6 +111,7 @@ class Settings {
         this.ui.add(this.field_move_item_first);
         this.ui.add(this.field_strip_text);
         this.ui.add(this.field_keep_selected_on_clear);
+        this.ui.add(this.field_pinned_on_bottom);
 
         this.limits.add(this.field_size);
         this.limits.add(this.field_cache_size);
@@ -132,6 +138,7 @@ class Settings {
         this.schema.bind(PrefsFields.DISABLE_DOWN_ARROW, this.field_disable_down_arrow, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.TOPBAR_PREVIEW_SIZE, this.field_topbar_preview_size, 'value', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.STRIP_TEXT, this.field_strip_text, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.PINNED_ON_BOTTOM, this.field_pinned_on_bottom, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.ENABLE_KEYBINDING, this.field_keybinding_activation, 'active', Gio.SettingsBindFlags.DEFAULT);
     }
 

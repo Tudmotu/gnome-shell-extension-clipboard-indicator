@@ -2,6 +2,14 @@
     <schema id="org.gnome.shell.extensions.clipboard-indicator"
         path="/org/gnome/shell/extensions/clipboard-indicator/">
 
+    <key name="pinned-on-bottom" type="b">
+        <default>false</default>
+        <summary>Display the pinned section on the bottom</summary>
+        <description>
+            If true, places the "pinned" section on the bottom
+        </description>
+    </key>
+
     <key name="enable-deletion" type="b">
         <default>true</default>
         <summary>Enable the deletion of clipboard items from your history</summary>

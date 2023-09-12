@@ -35,6 +35,7 @@ let TOPBAR_DISPLAY_MODE       = 1; //0 - only icon, 1 - only clipboard content, 
 let DISABLE_DOWN_ARROW        = false;
 let STRIP_TEXT                = false;
 let KEEP_SELECTED_ON_CLEAR    = false;
+let PINNED_ON_BOTTOM          = false;
 
 export default class ClipboardIndicatorExtension extends Extension {
     enable () {
@@ -206,7 +207,6 @@ const ClipboardIndicator = GObject.registerClass({
             this.favoritesScrollView.add_actor(that.favoritesSection.actor);
 
             that.scrollViewFavoritesMenuSection.actor.add_actor(this.favoritesScrollView);
-            that.menu.addMenuItem(that.scrollViewFavoritesMenuSection);
             this.favoritesSeparator = new PopupMenu.PopupSeparatorMenuItem();
 
             // History
@@ -221,10 +221,18 @@ const ClipboardIndicator = GObject.registerClass({
 
             that.scrollViewMenuSection.actor.add_actor(this.historyScrollView);
 
-            that.menu.addMenuItem(that.scrollViewMenuSection);
-
             // Add separator
             this.historySeparator = new PopupMenu.PopupSeparatorMenuItem();
+
+            // Add sections ordered according to settings
+            if (PINNED_ON_BOTTOM) {
+                that.menu.addMenuItem(that.scrollViewMenuSection);
+                that.menu.addMenuItem(that.scrollViewFavoritesMenuSection);
+            }
+            else {
+                that.menu.addMenuItem(that.scrollViewFavoritesMenuSection);
+                that.menu.addMenuItem(that.scrollViewMenuSection);
+            }
 
             // Private mode switch
             that.privateModeMenuItem = new PopupMenu.PopupSwitchMenuItem(
@@ -825,6 +833,7 @@ const ClipboardIndicator = GObject.registerClass({
         DISABLE_DOWN_ARROW     = settings.get_boolean(PrefsFields.DISABLE_DOWN_ARROW);
         STRIP_TEXT             = settings.get_boolean(PrefsFields.STRIP_TEXT);
         KEEP_SELECTED_ON_CLEAR = settings.get_boolean(PrefsFields.KEEP_SELECTED_ON_CLEAR);
+        PINNED_ON_BOTTOM       = settings.get_boolean(PrefsFields.PINNED_ON_BOTTOM);
 
     }
 
