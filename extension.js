@@ -386,6 +386,19 @@ const ClipboardIndicator = GObject.registerClass({
         }
     }
 
+    _findNextMenuItem (currentMenutItem) {
+        let currentIndex = this.clipItemsRadioGroup.indexOf(currentMenutItem);
+
+        for (let i = currentIndex +1; i < this.clipItemsRadioGroup.length; i++){
+            let menuItem  = this.clipItemsRadioGroup[i];
+            if(menuItem.actor.visible) {
+                return menuItem;
+            }
+        }
+
+        return null;
+    }
+
     _addEntry (entry, autoSelect, autoSetClip) {
         let menuItem = new PopupMenu.PopupMenuItem('');
 
@@ -395,6 +408,19 @@ const ClipboardIndicator = GObject.registerClass({
         menuItem.radioGroup = this.clipItemsRadioGroup;
         menuItem.buttonPressId = menuItem.connect('activate',
             autoSet => this._onMenuItemSelectedAndMenuClose(menuItem, autoSet));
+        menuItem.actor.connect('key-press-event', (actor, event) => {
+            if(event.get_key_symbol() === Clutter.KEY_Delete) {
+                this._removeEntry(menuItem, 'delete');
+
+                let nextMenuItem = this._findNextMenuItem(menuItem);
+
+                if (nextMenuItem) {
+                    nextMenuItem.actor.grab_key_focus();
+                } else {
+                    this.privateModeMenuItem.actor.grab_key_focus();
+                }
+            }
+        })
 
         this._setEntryLabel(menuItem);
         this.clipItemsRadioGroup.push(menuItem);
