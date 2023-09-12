@@ -2,6 +2,11 @@
 📋 Clipboard Indicator
 ============================
 
+.. image:: https://raw.githubusercontent.com/andyholmes/gnome-shell-extensions-badge/eb9af9a1c6f04eb060cb01de6aeb5c84232cd8c0/get-it-on-ego.svg?sanitize=true
+   :target: https://extensions.gnome.org/extension/779/clipboard-indicator/
+   :width: 180
+   :alt: Get it on GNOME Extensions
+
 The most popular, reliable and feature-rich clipboard manager for GNOME with
 over **1M** downloads.
 
@@ -18,10 +23,7 @@ over **1M** downloads.
 - Allows pinning items to top
 - Includes a "private" mode
 - Has configurable shortcuts
-
-Install it from e.g.o:
-
-https://extensions.gnome.org/extension/779/clipboard-indicator/
+- Keyboard control
 
 This extension is also packaged by the community for many popular Linux distros
 — search your package manager.
@@ -43,9 +45,9 @@ After cloning the repo, the extension is practically installed yet disabled. In 
 Depending on your GNOME version, you will need to install the following
 Clipboard Indicator versions:
 
-* GNOME 45:
+* GNOME 45 and above:
 
-  * v48 and above
+  * Use latest version
 
 * GNOME 42-44
 
