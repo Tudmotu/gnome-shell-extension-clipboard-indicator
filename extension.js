@@ -4,6 +4,7 @@ import Meta from 'gi://Meta';
 import Shell from 'gi://Shell';
 import St from 'gi://St';
 
+import * as AnimationUtils from 'resource:///org/gnome/shell/misc/animationUtils.js';
 import * as MessageTray from 'resource:///org/gnome/shell/ui/messageTray.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
@@ -198,13 +199,13 @@ const ClipboardIndicator = GObject.registerClass({
             that.favoritesSection = new PopupMenu.PopupMenuSection();
 
             that.scrollViewFavoritesMenuSection = new PopupMenu.PopupMenuSection();
-            let favoritesScrollView = new St.ScrollView({
+            this.favoritesScrollView = new St.ScrollView({
                 style_class: 'ci-history-menu-section',
                 overlay_scrollbars: true
             });
-            favoritesScrollView.add_actor(that.favoritesSection.actor);
+            this.favoritesScrollView.add_actor(that.favoritesSection.actor);
 
-            that.scrollViewFavoritesMenuSection.actor.add_actor(favoritesScrollView);
+            that.scrollViewFavoritesMenuSection.actor.add_actor(this.favoritesScrollView);
             that.menu.addMenuItem(that.scrollViewFavoritesMenuSection);
             this.favoritesSeparator = new PopupMenu.PopupSeparatorMenuItem();
 
@@ -212,13 +213,13 @@ const ClipboardIndicator = GObject.registerClass({
             that.historySection = new PopupMenu.PopupMenuSection();
 
             that.scrollViewMenuSection = new PopupMenu.PopupMenuSection();
-            let historyScrollView = new St.ScrollView({
+            this.historyScrollView = new St.ScrollView({
                 style_class: 'ci-main-menu-section ci-history-menu-section',
                 overlay_scrollbars: true
             });
-            historyScrollView.add_actor(that.historySection.actor);
+            this.historyScrollView.add_actor(that.historySection.actor);
 
-            that.scrollViewMenuSection.actor.add_actor(historyScrollView);
+            that.scrollViewMenuSection.actor.add_actor(this.historyScrollView);
 
             that.menu.addMenuItem(that.scrollViewMenuSection);
 
@@ -409,6 +410,11 @@ const ClipboardIndicator = GObject.registerClass({
         menuItem.radioGroup = this.clipItemsRadioGroup;
         menuItem.buttonPressId = menuItem.connect('activate',
             autoSet => this._onMenuItemSelectedAndMenuClose(menuItem, autoSet));
+        menuItem.connect('key-focus-in', () => {
+            const viewToScroll = menuItem.entry.isFavorite() ?
+                this.favoritesScrollView : this.historyScrollView;
+            AnimationUtils.ensureActorVisibleInScrollView(viewToScroll, menuItem);
+        });
         menuItem.actor.connect('key-press-event', (actor, event) => {
             if(event.get_key_symbol() === Clutter.KEY_Delete) {
                 this._removeEntry(menuItem, 'delete');
