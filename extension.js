@@ -33,6 +33,7 @@ let MAX_TOPBAR_LENGTH         = 15;
 let TOPBAR_DISPLAY_MODE       = 1; //0 - only icon, 1 - only clipboard content, 2 - both
 let DISABLE_DOWN_ARROW        = false;
 let STRIP_TEXT                = false;
+let KEEP_SELECTED_ON_CLEAR    = false;
 
 export default class ClipboardIndicatorExtension extends Extension {
     enable () {
@@ -505,8 +506,8 @@ const ClipboardIndicator = GObject.registerClass({
     _clearHistory () {
         // Don't remove pinned items
         this.historySection._getMenuItems().forEach(mItem => {
-            if (!mItem.currentlySelected) {
-                this._removeEntry(mItem);
+            if (KEEP_SELECTED_ON_CLEAR === false || !mItem.currentlySelected) {
+                this._removeEntry(mItem, 'delete');
             }
         });
         this._showNotification(_("Clipboard history cleared"));
@@ -805,18 +806,20 @@ const ClipboardIndicator = GObject.registerClass({
 
     _fetchSettings () {
         const { settings } = this.extension;
-        MAX_REGISTRY_LENGTH  = settings.get_int(PrefsFields.HISTORY_SIZE);
-        MAX_ENTRY_LENGTH     = settings.get_int(PrefsFields.PREVIEW_SIZE);
-        CACHE_ONLY_FAVORITE  = settings.get_boolean(PrefsFields.CACHE_ONLY_FAVORITE);
-        DELETE_ENABLED       = settings.get_boolean(PrefsFields.DELETE);
-        MOVE_ITEM_FIRST      = settings.get_boolean(PrefsFields.MOVE_ITEM_FIRST);
-        NOTIFY_ON_COPY       = settings.get_boolean(PrefsFields.NOTIFY_ON_COPY);
-        CONFIRM_ON_CLEAR     = settings.get_boolean(PrefsFields.CONFIRM_ON_CLEAR);
-        ENABLE_KEYBINDING    = settings.get_boolean(PrefsFields.ENABLE_KEYBINDING);
-        MAX_TOPBAR_LENGTH    = settings.get_int(PrefsFields.TOPBAR_PREVIEW_SIZE);
-        TOPBAR_DISPLAY_MODE  = settings.get_int(PrefsFields.TOPBAR_DISPLAY_MODE_ID);
-        DISABLE_DOWN_ARROW   = settings.get_boolean(PrefsFields.DISABLE_DOWN_ARROW);
-        STRIP_TEXT           = settings.get_boolean(PrefsFields.STRIP_TEXT);
+        MAX_REGISTRY_LENGTH    = settings.get_int(PrefsFields.HISTORY_SIZE);
+        MAX_ENTRY_LENGTH       = settings.get_int(PrefsFields.PREVIEW_SIZE);
+        CACHE_ONLY_FAVORITE    = settings.get_boolean(PrefsFields.CACHE_ONLY_FAVORITE);
+        DELETE_ENABLED         = settings.get_boolean(PrefsFields.DELETE);
+        MOVE_ITEM_FIRST        = settings.get_boolean(PrefsFields.MOVE_ITEM_FIRST);
+        NOTIFY_ON_COPY         = settings.get_boolean(PrefsFields.NOTIFY_ON_COPY);
+        CONFIRM_ON_CLEAR       = settings.get_boolean(PrefsFields.CONFIRM_ON_CLEAR);
+        ENABLE_KEYBINDING      = settings.get_boolean(PrefsFields.ENABLE_KEYBINDING);
+        MAX_TOPBAR_LENGTH      = settings.get_int(PrefsFields.TOPBAR_PREVIEW_SIZE);
+        TOPBAR_DISPLAY_MODE    = settings.get_int(PrefsFields.TOPBAR_DISPLAY_MODE_ID);
+        DISABLE_DOWN_ARROW     = settings.get_boolean(PrefsFields.DISABLE_DOWN_ARROW);
+        STRIP_TEXT             = settings.get_boolean(PrefsFields.STRIP_TEXT);
+        KEEP_SELECTED_ON_CLEAR = settings.get_boolean(PrefsFields.KEEP_SELECTED_ON_CLEAR);
+
     }
 
     async _onSettingsChange () {

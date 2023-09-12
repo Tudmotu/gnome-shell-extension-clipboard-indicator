@@ -92,6 +92,10 @@ class Settings {
             title: _("Move item to the top after selection")
         });
 
+        this.field_keep_selected_on_clear = new Adw.SwitchRow({
+            title: _("Keep selected entry after Clear History")
+        });
+
         this.ui =  new Adw.PreferencesGroup({ title: _('UI') });
         this.limits =  new Adw.PreferencesGroup({ title: _('Limits') });
         this.topbar =  new Adw.PreferencesGroup({ title: _('Topbar') });
@@ -101,6 +105,7 @@ class Settings {
         this.ui.add(this.field_preview_size);
         this.ui.add(this.field_move_item_first);
         this.ui.add(this.field_strip_text);
+        this.ui.add(this.field_keep_selected_on_clear);
 
         this.limits.add(this.field_size);
         this.limits.add(this.field_cache_size);
@@ -122,6 +127,7 @@ class Settings {
         this.schema.bind(PrefsFields.NOTIFY_ON_COPY, this.field_notification_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.CONFIRM_ON_CLEAR, this.field_confirm_clear_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.MOVE_ITEM_FIRST, this.field_move_item_first, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.KEEP_SELECTED_ON_CLEAR, this.field_keep_selected_on_clear, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.TOPBAR_DISPLAY_MODE_ID, this.field_display_mode, 'selected', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.DISABLE_DOWN_ARROW, this.field_disable_down_arrow, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.TOPBAR_PREVIEW_SIZE, this.field_topbar_preview_size, 'value', Gio.SettingsBindFlags.DEFAULT);
