@@ -78,7 +78,7 @@ export class Registry {
                 // If so, make a backup of file, and invoke callback with empty array
                 let file_info = src.query_info_finish(res);
 
-                if (file_info.get_size() >= CACHE_FILE_SIZE * 1024) {
+                if (file_info.get_size() >= CACHE_FILE_SIZE * 1024 * 1024) {
                     let destination = Gio.file_new_for_path(this.BACKUP_REGISTRY_PATH);
 
                     file.move(destination, FileCopyFlags.OVERWRITE, null, null);

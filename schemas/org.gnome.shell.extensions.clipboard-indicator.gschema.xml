@@ -48,13 +48,13 @@
     </key>
 
     <key type="i" name="cache-size">
-        <default>1024</default>
-        <summary>The allowed size for the registry cache file</summary>
+        <default>5</default>
+        <summary>The allowed size for the registry cache file in MB</summary>
         <description>
             If the cache overflows this limit, the file will be overriden.
             High limit might cause slowness of shell startup.
         </description>
-        <range min="512" max="102400"/>
+        <range min="1" max="256"/>
     </key>
 
     <key name="cache-only-favorites" type="b">

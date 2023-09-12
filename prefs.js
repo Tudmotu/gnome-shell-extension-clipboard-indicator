@@ -46,10 +46,10 @@ class Settings {
         });
 
         this.field_cache_size = new Adw.SpinRow({
-            title: _("Max cache file size (kb)"),
+            title: _("Max cache file size (MB)"),
             adjustment: new Gtk.Adjustment({
-                lower: 512,
-                upper: Math.pow(2, 14),
+                lower: 1,
+                upper: 256,
                 step_increment: 1
             })
         });
