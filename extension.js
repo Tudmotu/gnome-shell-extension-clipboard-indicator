@@ -14,6 +14,7 @@ import { Extension, gettext as _ } from 'resource:///org/gnome/shell/extensions/
 import { Registry, ClipboardEntry } from './registry.js';
 import { DialogManager } from './confirmDialog.js';
 import { PrefsFields } from './constants.js';
+import { Keyboard } from './keyboard.js';
 
 const CLIPBOARD_TYPE = St.ClipboardType.CLIPBOARD;
 
@@ -66,6 +67,7 @@ const ClipboardIndicator = GObject.registerClass({
         this._clearDelayedSelectionTimeout();
         this.#clearTimeouts();
         this.dialogManager.destroy();
+        this.keyboard.destroy();
 
         super.destroy();
     }
@@ -74,6 +76,7 @@ const ClipboardIndicator = GObject.registerClass({
         super._init(0.0, "ClipboardIndicator");
         this.extension = extension;
         this.registry = new Registry(extension);
+        this.keyboard = new Keyboard();
         this._settingsChangedId = null;
         this._selectionOwnerChangedId = null;
         this._historyLabel = null;
@@ -118,7 +121,7 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     #updateIndicatorContent(entry) {
-        if (TOPBAR_DISPLAY_MODE !== 1 && TOPBAR_DISPLAY_MODE !== 2) {
+        if (this.preventIndicatorUpdate || (TOPBAR_DISPLAY_MODE !== 1 && TOPBAR_DISPLAY_MODE !== 2)) {
             return;
         }
 
@@ -438,6 +441,9 @@ const ClipboardIndicator = GObject.registerClass({
             else if (event.get_key_symbol() === Clutter.KEY_p) {
                 this._favoriteToggle(menuItem);
                 this.#selectNextMenuItem(menuItem);
+            }
+            else if (event.get_key_symbol() === Clutter.KEY_v) {
+                this.#pasteItem(menuItem);
             }
         })
 
@@ -1002,9 +1008,39 @@ const ClipboardIndicator = GObject.registerClass({
         this.menu.toggle();
     }
 
+    #pasteItem (menuItem) {
+        this.menu.close();
+        const currentlySelected = this._getCurrentlySelectedItem();
+        this.preventIndicatorUpdate = true;
+        this.#updateClipboard(menuItem.entry);
+        this._pastingKeypressTimeout = setTimeout(() => {
+            if (this.keyboard.purpose === Clutter.InputContentPurpose.TERMINAL) {
+                this.keyboard.press(Clutter.KEY_Control_L);
+                this.keyboard.press(Clutter.KEY_Shift_L);
+                this.keyboard.press(Clutter.KEY_Insert);
+                this.keyboard.release(Clutter.KEY_Insert);
+                this.keyboard.release(Clutter.KEY_Shift_L);
+                this.keyboard.release(Clutter.KEY_Control_L);
+            }
+            else {
+                this.keyboard.press(Clutter.KEY_Shift_L);
+                this.keyboard.press(Clutter.KEY_Insert);
+                this.keyboard.release(Clutter.KEY_Insert);
+                this.keyboard.release(Clutter.KEY_Shift_L);
+            }
+
+            this._pastingResetTimeout = setTimeout(() => {
+                this.preventIndicatorUpdate = false;
+                this.#updateClipboard(currentlySelected.entry);
+            }, 50);
+        }, 50);
+    }
+
     #clearTimeouts () {
         if (this._imagePreviewTimeout) clearTimeout(this._imagePreviewTimeout);
         if (this._setFocusOnOpenTimeout) clearTimeout(this._setFocusOnOpenTimeout);
+        if (this._pastingKeypressTimeout) clearTimeout(this._pastingKeypressTimeout);
+        if (this._pastingResetTimeout) clearTimeout(this._pastingResetTimeout);
     }
 
     #clearClipboard () {
