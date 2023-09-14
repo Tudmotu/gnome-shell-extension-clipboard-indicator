@@ -2,6 +2,14 @@
     <schema id="org.gnome.shell.extensions.clipboard-indicator"
         path="/org/gnome/shell/extensions/clipboard-indicator/">
 
+    <key name="paste-button" type="b">
+        <default>true</default>
+        <summary>Add button to paste an entry</summary>
+        <description>
+            If true, adds another button to each menu entry that lets you immediately paste it
+        </description>
+    </key>
+
     <key name="pinned-on-bottom" type="b">
         <default>false</default>
         <summary>Display the pinned section on the bottom</summary>

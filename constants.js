@@ -13,6 +13,7 @@ export const PrefsFields = {
     DISABLE_DOWN_ARROW     : 'disable-down-arrow',
     STRIP_TEXT             : 'strip-text',
     KEEP_SELECTED_ON_CLEAR : 'keep-selected-on-clear',
+    PASTE_BUTTON           : 'paste-button',
     PINNED_ON_BOTTOM       : 'pinned-on-bottom',
     BINDING_TOGGLE_MENU    : 'toggle-menu',
     BINDING_CLEAR_HISTORY  : 'clear-history',

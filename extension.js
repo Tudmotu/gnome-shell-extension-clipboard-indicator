@@ -35,6 +35,7 @@ let TOPBAR_DISPLAY_MODE       = 1; //0 - only icon, 1 - only clipboard content, 
 let DISABLE_DOWN_ARROW        = false;
 let STRIP_TEXT                = false;
 let KEEP_SELECTED_ON_CLEAR    = false;
+let PASTE_BUTTON              = true;
 let PINNED_ON_BOTTOM          = false;
 
 export default class ClipboardIndicatorExtension extends Extension {
@@ -471,6 +472,26 @@ const ClipboardIndicator = GObject.registerClass({
             () => this._favoriteToggle(menuItem)
         );
 
+        // Paste button
+        menuItem.pasteBtn = new St.Button({
+            style_class: 'ci-action-btn',
+            can_focus: true,
+            child: new St.Icon({
+                icon_name: 'edit-paste-symbolic',
+                style_class: 'system-status-icon'
+            }),
+            x_align: Clutter.ActorAlign.END,
+            x_expand: false,
+            y_expand: true,
+            visible: PASTE_BUTTON
+        });
+
+        menuItem.pasteBtn.connect('clicked',
+            () => this.#pasteItem(menuItem)
+        );
+
+        menuItem.actor.add_child(menuItem.pasteBtn);
+
         // Delete button
         let icon = new St.Icon({
             icon_name: 'edit-delete-symbolic', //'mail-attachment-symbolic',
@@ -846,6 +867,7 @@ const ClipboardIndicator = GObject.registerClass({
         DISABLE_DOWN_ARROW     = settings.get_boolean(PrefsFields.DISABLE_DOWN_ARROW);
         STRIP_TEXT             = settings.get_boolean(PrefsFields.STRIP_TEXT);
         KEEP_SELECTED_ON_CLEAR = settings.get_boolean(PrefsFields.KEEP_SELECTED_ON_CLEAR);
+        PASTE_BUTTON           = settings.get_boolean(PrefsFields.PASTE_BUTTON);
         PINNED_ON_BOTTOM       = settings.get_boolean(PrefsFields.PINNED_ON_BOTTOM);
 
     }
@@ -862,6 +884,7 @@ const ClipboardIndicator = GObject.registerClass({
         // Re-set menu-items lables in case preview size changed
         this._getAllIMenuItems().forEach(function (mItem) {
             that._setEntryLabel(mItem);
+            mItem.pasteBtn.visible = PASTE_BUTTON;
         });
 
         //update topbar

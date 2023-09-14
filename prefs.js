@@ -93,6 +93,11 @@ class Settings {
             title: _("Keep selected entry after Clear History")
         });
 
+        this.field_paste_button = new Adw.SwitchRow({
+            title: _("Show paste buttons"),
+            subtitle: _("Adds a paste button to each entry that lets you paste it directly")
+        });
+
         this.field_pinned_on_bottom = new Adw.SwitchRow({
             title: _("Place the pinned section on the bottom"),
             subtitle: _("Requires restarting the extension")
@@ -108,6 +113,7 @@ class Settings {
         this.ui.add(this.field_move_item_first);
         this.ui.add(this.field_strip_text);
         this.ui.add(this.field_keep_selected_on_clear);
+        this.ui.add(this.field_paste_button);
         this.ui.add(this.field_pinned_on_bottom);
 
         this.limits.add(this.field_size);
@@ -135,6 +141,7 @@ class Settings {
         this.schema.bind(PrefsFields.DISABLE_DOWN_ARROW, this.field_disable_down_arrow, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.TOPBAR_PREVIEW_SIZE, this.field_topbar_preview_size, 'value', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.STRIP_TEXT, this.field_strip_text, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.PASTE_BUTTON, this.field_paste_button, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.PINNED_ON_BOTTOM, this.field_pinned_on_bottom, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.ENABLE_KEYBINDING, this.field_keybinding_activation, 'active', Gio.SettingsBindFlags.DEFAULT);
     }
