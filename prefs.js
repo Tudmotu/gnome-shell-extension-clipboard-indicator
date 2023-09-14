@@ -153,6 +153,7 @@ class Settings {
     }
 
     #shortcuts = {
+        [PrefsFields.BINDING_PRIVATE_MODE]: _("Private mode"),
         [PrefsFields.BINDING_TOGGLE_MENU]: _("Toggle the menu"),
         [PrefsFields.BINDING_CLEAR_HISTORY]: _("Clear history"),
         [PrefsFields.BINDING_PREV_ENTRY]: _("Previous entry"),

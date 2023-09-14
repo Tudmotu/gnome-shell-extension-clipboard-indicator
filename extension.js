@@ -773,6 +773,10 @@ const ClipboardIndicator = GObject.registerClass({
         this._historyLabel.hide();
     }
 
+    togglePrivateMode () {
+        this.privateModeMenuItem.toggle();
+    }
+
     _onPrivateModeSwitch () {
         let that = this;
         PRIVATEMODE = this.privateModeMenuItem.state;
@@ -864,6 +868,7 @@ const ClipboardIndicator = GObject.registerClass({
         this._bindShortcut(PrefsFields.BINDING_PREV_ENTRY, this._previousEntry);
         this._bindShortcut(PrefsFields.BINDING_NEXT_ENTRY, this._nextEntry);
         this._bindShortcut(PrefsFields.BINDING_TOGGLE_MENU, this._toggleMenu);
+        this._bindShortcut(PrefsFields.BINDING_PRIVATE_MODE, this.togglePrivateMode);
     }
 
     _unbindShortcuts () {
