@@ -190,7 +190,16 @@ class Settings {
             has_frame: false
         });
 
-        const originalValue = this.schema.get_strv(pref)[0];
+        const setLabelFromSettings = () => {
+            const originalValue = this.schema.get_strv(pref)[0];
+
+            if (!originalValue) {
+                button.set_label(_('Disabled'));
+            }
+            else {
+                button.set_label(originalValue);
+            }
+        };
 
         const startEditing = () => {
             button.isEditing = button.label;
@@ -203,16 +212,11 @@ class Settings {
         };
 
         const stopEditing = () => {
-            button.set_label(this.schema.get_strv(pref)[0]);
+            setLabelFromSettings();
             button.isEditing = null;
         };
 
-        if (!originalValue) {
-            button.set_label(_('Disabled'));
-        }
-        else {
-            button.set_label(originalValue);
-        }
+        setLabelFromSettings();
 
         button.connect('clicked', () => {
             if (button.isEditing) {
@@ -238,7 +242,9 @@ class Settings {
                             return Gdk.EVENT_STOP;
                         case Gdk.KEY_BackSpace:
                             this.schema.set_strv(pref, []);
-                            button.set_label(_('Disabled'));
+                            setLabelFromSettings();
+                            stopEditing();
+                            eventController.disconnect(connectId);
                             return Gdk.EVENT_STOP;
                     }
                 }
