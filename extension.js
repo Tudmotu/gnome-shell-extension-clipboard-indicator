@@ -400,11 +400,23 @@ const ClipboardIndicator = GObject.registerClass({
     _findNextMenuItem (currentMenutItem) {
         let currentIndex = this.clipItemsRadioGroup.indexOf(currentMenutItem);
 
-        for (let i = currentIndex +1; i < this.clipItemsRadioGroup.length; i++){
-            let menuItem  = this.clipItemsRadioGroup[i];
-            if(menuItem.actor.visible) {
+        // for only one item
+        if(this.clipItemsRadioGroup.length === 1) {
+            return null;
+        }
+
+        // when focus is in middle of the displayed list
+        for (let i = currentIndex - 1; i >= 0; i--) {
+            let menuItem = this.clipItemsRadioGroup[i];
+            if (menuItem.actor.visible) {
                 return menuItem;
             }
+        }
+
+        // when focus is at the last element of the displayed list
+        let beforeMenuItem = this.clipItemsRadioGroup[currentIndex + 1];
+        if(beforeMenuItem.actor.visible){
+          return beforeMenuItem; 
         }
 
         return null;
@@ -436,12 +448,12 @@ const ClipboardIndicator = GObject.registerClass({
         });
         menuItem.actor.connect('key-press-event', (actor, event) => {
             if(event.get_key_symbol() === Clutter.KEY_Delete) {
-                this._removeEntry(menuItem, 'delete');
                 this.#selectNextMenuItem(menuItem);
+                this._removeEntry(menuItem, 'delete');
             }
             else if (event.get_key_symbol() === Clutter.KEY_p) {
-                this._favoriteToggle(menuItem);
                 this.#selectNextMenuItem(menuItem);
+                this._favoriteToggle(menuItem);
             }
             else if (event.get_key_symbol() === Clutter.KEY_v) {
                 this.#pasteItem(menuItem);
