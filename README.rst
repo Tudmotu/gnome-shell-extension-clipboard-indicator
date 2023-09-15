@@ -16,7 +16,11 @@ over **1M** downloads.
   :width: 400
   :alt: A screenshot of the clipboard manager, showing clipboard history including images
 
-**Features:**
+This extension is also packaged by the community for many popular Linux distros
+— search your package manager.
+
+🧰 Features:
+----------------
 
 - Highly customizable
 - Supports both text and images
@@ -25,8 +29,13 @@ over **1M** downloads.
 - Has configurable shortcuts
 - Keyboard control
 
-This extension is also packaged by the community for many popular Linux distros
-— search your package manager.
+In-Menu Keyboard Controls
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+- Use arrows to navigate
+- :code:`v` to paste directly from menu
+- :code:`p` to pin item
+- :code:`<Delete>` to delete an item
 
 📦 Install from source
 ----------------
