@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-12 17:08+0300\n"
+"POT-Creation-Date: 2023-09-16 11:48+0300\n"
 "PO-Revision-Date: 2021-10-15 09:50+0330\n"
 "Last-Translator: eshagh <eshagh094@gmail.com>\n"
 "Language-Team: \n"
@@ -18,175 +18,183 @@ msgstr ""
 "X-Generator: Poedit 3.0\n"
 "Plural-Forms: nplurals=2; plural=(n==0 || n==1);\n"
 
-#: extension.js:106
+#: extension.js:102
 msgid "Text will be here"
 msgstr "متن اینجا خواهد بود"
 
-#: extension.js:170
+#: extension.js:171
 msgid "Type here to search..."
 msgstr "برای جست‌وجو اینجا بنویسید..."
 
-#: extension.js:239
+#: extension.js:240 prefs.js:163
 msgid "Private mode"
 msgstr "حالت خصوصی"
 
-#: extension.js:253 prefs.js:160
+#: extension.js:254 prefs.js:165
 msgid "Clear history"
 msgstr "پاک‌کردن تاریخچه"
 
-#: extension.js:265
+#: extension.js:266
 msgid "Settings"
 msgstr "تنظیمات"
 
-#: extension.js:288
+#: extension.js:289
 #, fuzzy
 msgid "Clipboard is empty"
 msgstr "محتویات تخته‌گیره"
 
-#: extension.js:509
+#: extension.js:552
 msgid "Clear all?"
 msgstr "همه پاک شوند؟"
 
-#: extension.js:510
+#: extension.js:553
 msgid "Are you sure you want to delete all clipboard items?"
 msgstr "آیا از حذف همه موارد تخته‌گیره مطمئنید؟"
 
-#: extension.js:511
+#: extension.js:554
 msgid "This operation cannot be undone."
 msgstr "این عملیات قابل بازگردانی نیست."
 
-#: extension.js:513
+#: extension.js:556
 msgid "Clear"
 msgstr "پاک‌کردن"
 
-#: extension.js:513 extension.js:672
+#: extension.js:556 extension.js:714
 msgid "Cancel"
 msgstr "لغو"
 
-#: extension.js:527
+#: extension.js:569
 msgid "Clipboard history cleared"
 msgstr "تاریخچهٔ تخته‌گیره پاک شد"
 
-#: extension.js:671
+#: extension.js:713
 msgid "Copied to clipboard"
 msgstr "رونوشت به تخته‌گیره"
 
-#: prefs.js:31
+#: prefs.js:28
 msgid "History Size"
 msgstr "اندازهٔ تاریخچه"
 
-#: prefs.js:40
+#: prefs.js:37
 msgid "Preview Size (characters)"
 msgstr "اندازهٔ پیش‌نمایش (نویسه)"
 
-#: prefs.js:49
+#: prefs.js:46
 #, fuzzy
 msgid "Max cache file size (MB)"
 msgstr "حداکثر اندازهٔ پروندهٔ انباره (کیلوبایت)"
 
-#: prefs.js:58
+#: prefs.js:55
 msgid "Number of characters in top bar"
 msgstr "تعداد نویسه‌ها در نوار بالا"
 
-#: prefs.js:67
+#: prefs.js:64
 msgid "What to show in top bar"
 msgstr "چه‌چیزی در نوار بالا دیده شود"
 
-#: prefs.js:72
+#: prefs.js:69
 msgid "Remove down arrow in top bar"
 msgstr "برداشتن فلش روبه پایین در نوار بالا"
 
-#: prefs.js:76
+#: prefs.js:73
 #, fuzzy
 msgid "Cache only pinned items"
 msgstr "فقط انبارش مورد علاقه‌ها"
 
-#: prefs.js:80
+#: prefs.js:77
 msgid "Show notification on copy"
 msgstr "نمایش آگاهی هنگام رونوشت"
 
-#: prefs.js:84
+#: prefs.js:81
 #, fuzzy
 msgid "Show confirmation on Clear History"
 msgstr "نمایش آگاهی هنگام رونوشت"
 
-#: prefs.js:88
+#: prefs.js:85
 msgid "Remove whitespace around text"
 msgstr "برداشتن فاصلهٔ اطراف متن"
 
-#: prefs.js:92
+#: prefs.js:89
 msgid "Move item to the top after selection"
 msgstr "جابه‌جایی مورد به بالا پس از گزینش"
 
-#: prefs.js:96
+#: prefs.js:93
 msgid "Keep selected entry after Clear History"
 msgstr ""
 
-#: prefs.js:100
+#: prefs.js:97
+msgid "Show paste buttons"
+msgstr ""
+
+#: prefs.js:98
+msgid "Adds a paste button to each entry that lets you paste it directly"
+msgstr ""
+
+#: prefs.js:102
 msgid "Place the pinned section on the bottom"
 msgstr ""
 
-#: prefs.js:101
+#: prefs.js:103
 msgid "Requires restarting the extension"
 msgstr ""
 
-#: prefs.js:104
+#: prefs.js:106
 msgid "UI"
 msgstr ""
 
-#: prefs.js:105
+#: prefs.js:107
 msgid "Limits"
 msgstr ""
 
-#: prefs.js:106
+#: prefs.js:108
 msgid "Topbar"
 msgstr ""
 
-#: prefs.js:107
+#: prefs.js:109
 msgid "Notifications"
 msgstr ""
 
-#: prefs.js:108
+#: prefs.js:110
 msgid "Shortcuts"
 msgstr ""
 
-#: prefs.js:147
+#: prefs.js:151
 msgid "Icon"
 msgstr "نقشک"
 
-#: prefs.js:148
+#: prefs.js:152
 msgid "Clipboard Content"
 msgstr "محتویات تخته‌گیره"
 
-#: prefs.js:149
+#: prefs.js:153
 msgid "Both"
 msgstr "هر دو"
 
-#: prefs.js:159
+#: prefs.js:164
 msgid "Toggle the menu"
 msgstr "تغییر وضعیت فهرست"
 
-#: prefs.js:161
+#: prefs.js:166
 msgid "Previous entry"
 msgstr "ورودی قبلی"
 
-#: prefs.js:162
+#: prefs.js:167
 msgid "Next entry"
 msgstr "ورودی بعدی"
 
-#: prefs.js:167
+#: prefs.js:172
 #, fuzzy
 msgid "Enable shortcuts"
 msgstr "میان‌بر صفحه‌کلید"
 
-#: prefs.js:192
+#: prefs.js:197
+msgid "Disabled"
+msgstr ""
+
+#: prefs.js:206
 #, fuzzy
 msgid "Enter shortcut"
 msgstr "میان‌بر صفحه‌کلید"
-
-#: prefs.js:206 prefs.js:236
-msgid "Disabled"
-msgstr ""
 
 #~ msgid "Refresh Interval (ms)"
 #~ msgstr "فاصلهٔ تازه‌سازی (میلی‌ثانیه)"
