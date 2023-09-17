@@ -115,10 +115,11 @@ const ClipboardIndicator = GObject.registerClass({
         this.add_child(hbox);
         this._createHistoryLabel();
         this._loadSettings();
-        this._buildMenu();
-        this._updateTopbarLayout();
-        this._setupListener();
         this.dialogManager = new DialogManager();
+        this._buildMenu().then(() => {
+            this._updateTopbarLayout();
+            this._setupListener();
+        });
     }
 
     #updateIndicatorContent(entry) {
@@ -150,155 +151,154 @@ const ClipboardIndicator = GObject.registerClass({
         }
     }
 
-    _buildMenu () {
+    async _buildMenu () {
         let that = this;
-        this._getCache(clipHistory => {
-            let lastIdx = clipHistory.length - 1;
-            let clipItemsArr = that.clipItemsRadioGroup;
+        const clipHistory = await this._getCache();
+        let lastIdx = clipHistory.length - 1;
+        let clipItemsArr = that.clipItemsRadioGroup;
 
-            /* This create the search entry, which is add to a menuItem.
-            The searchEntry is connected to the function for research.
-            The menu itself is connected to some shitty hack in order to
-            grab the focus of the keyboard. */
-            that._entryItem = new PopupMenu.PopupBaseMenuItem({
-                reactive: false,
-                can_focus: false
-            });
-            that.searchEntry = new St.Entry({
-                name: 'searchEntry',
-                style_class: 'search-entry',
-                can_focus: true,
-                hint_text: _('Type here to search...'),
-                track_hover: true,
-                x_expand: true,
-                y_expand: true,
-                primary_icon: new St.Icon({ icon_name: 'edit-find-symbolic' })
-            });
-
-            that.searchEntry.get_clutter_text().connect(
-                'text-changed',
-                that._onSearchTextChanged.bind(that)
-            );
-
-            that._entryItem.add(that.searchEntry);
-
-            that.menu.connect('open-state-changed', (self, open) => {
-                this._setFocusOnOpenTimeout = setTimeout(() => {
-                    if (open) {
-                        if (this.clipItemsRadioGroup.length > 0) {
-                            that.searchEntry.set_text('');
-                            global.stage.set_key_focus(that.searchEntry);
-                        }
-                        else {
-                            global.stage.set_key_focus(that.privateModeMenuItem);
-                        }
-                    }
-                }, 50);
-            });
-
-            // Create menu sections for items
-            // Favorites
-            that.favoritesSection = new PopupMenu.PopupMenuSection();
-
-            that.scrollViewFavoritesMenuSection = new PopupMenu.PopupMenuSection();
-            this.favoritesScrollView = new St.ScrollView({
-                style_class: 'ci-history-menu-section',
-                overlay_scrollbars: true
-            });
-            this.favoritesScrollView.add_actor(that.favoritesSection.actor);
-
-            that.scrollViewFavoritesMenuSection.actor.add_actor(this.favoritesScrollView);
-            this.favoritesSeparator = new PopupMenu.PopupSeparatorMenuItem();
-
-            // History
-            that.historySection = new PopupMenu.PopupMenuSection();
-
-            that.scrollViewMenuSection = new PopupMenu.PopupMenuSection();
-            this.historyScrollView = new St.ScrollView({
-                style_class: 'ci-main-menu-section ci-history-menu-section',
-                overlay_scrollbars: true
-            });
-            this.historyScrollView.add_actor(that.historySection.actor);
-
-            that.scrollViewMenuSection.actor.add_actor(this.historyScrollView);
-
-            // Add separator
-            this.historySeparator = new PopupMenu.PopupSeparatorMenuItem();
-
-            // Add sections ordered according to settings
-            if (PINNED_ON_BOTTOM) {
-                that.menu.addMenuItem(that.scrollViewMenuSection);
-                that.menu.addMenuItem(that.scrollViewFavoritesMenuSection);
-            }
-            else {
-                that.menu.addMenuItem(that.scrollViewFavoritesMenuSection);
-                that.menu.addMenuItem(that.scrollViewMenuSection);
-            }
-
-            // Private mode switch
-            that.privateModeMenuItem = new PopupMenu.PopupSwitchMenuItem(
-                _("Private mode"), PRIVATEMODE, { reactive: true });
-            that.privateModeMenuItem.connect('toggled',
-                that._onPrivateModeSwitch.bind(that));
-            that.privateModeMenuItem.insert_child_at_index(
-                new St.Icon({
-                    icon_name: 'security-medium-symbolic',
-                    style_class: 'clipboard-menu-icon',
-                    y_align: Clutter.ActorAlign.CENTER
-                }),
-                0
-            );
-            that.menu.addMenuItem(that.privateModeMenuItem);
-
-            // Add 'Clear' button which removes all items from cache
-            this.clearMenuItem = new PopupMenu.PopupMenuItem(_('Clear history'));
-            this.clearMenuItem.insert_child_at_index(
-                new St.Icon({
-                    icon_name: 'user-trash-symbolic',
-                    style_class: 'clipboard-menu-icon',
-                    y_align: Clutter.ActorAlign.CENTER
-                }),
-                0
-            );
-            this.clearMenuItem.connect('activate', that._removeAll.bind(that));
-
-            // Add 'Settings' menu item to open settings
-            this.settingsMenuItem = new PopupMenu.PopupMenuItem(_('Settings'));
-            this.settingsMenuItem.insert_child_at_index(
-                new St.Icon({
-                    icon_name: 'preferences-system-symbolic',
-                    style_class: 'clipboard-menu-icon',
-                    y_align: Clutter.ActorAlign.CENTER
-                }),
-                0
-            );
-            that.menu.addMenuItem(this.settingsMenuItem);
-            this.settingsMenuItem.connect('activate', that._openSettings.bind(that));
-
-            // Empty state section
-            this.emptyStateSection = new St.BoxLayout({
-                style_class: 'clipboard-indicator-empty-state',
-                vertical: true
-            });
-            this.emptyStateSection.add_child(new St.Icon({
-                icon_name: INDICATOR_ICON,
-                style_class: 'system-status-icon clipboard-indicator-icon',
-                x_align: Clutter.ActorAlign.CENTER
-            }));
-            this.emptyStateSection.add_child(new St.Label({
-                text: _('Clipboard is empty'),
-                x_align: Clutter.ActorAlign.CENTER
-            }));
-
-            // Add cached items
-            clipHistory.forEach(entry => this._addEntry(entry));
-
-            if (lastIdx >= 0) {
-                that._selectMenuItem(clipItemsArr[lastIdx]);
-            }
-
-            this.#showElements();
+        /* This create the search entry, which is add to a menuItem.
+        The searchEntry is connected to the function for research.
+        The menu itself is connected to some shitty hack in order to
+        grab the focus of the keyboard. */
+        that._entryItem = new PopupMenu.PopupBaseMenuItem({
+            reactive: false,
+            can_focus: false
         });
+        that.searchEntry = new St.Entry({
+            name: 'searchEntry',
+            style_class: 'search-entry',
+            can_focus: true,
+            hint_text: _('Type here to search...'),
+            track_hover: true,
+            x_expand: true,
+            y_expand: true,
+            primary_icon: new St.Icon({ icon_name: 'edit-find-symbolic' })
+        });
+
+        that.searchEntry.get_clutter_text().connect(
+            'text-changed',
+            that._onSearchTextChanged.bind(that)
+        );
+
+        that._entryItem.add(that.searchEntry);
+
+        that.menu.connect('open-state-changed', (self, open) => {
+            this._setFocusOnOpenTimeout = setTimeout(() => {
+                if (open) {
+                    if (this.clipItemsRadioGroup.length > 0) {
+                        that.searchEntry.set_text('');
+                        global.stage.set_key_focus(that.searchEntry);
+                    }
+                    else {
+                        global.stage.set_key_focus(that.privateModeMenuItem);
+                    }
+                }
+            }, 50);
+        });
+
+        // Create menu sections for items
+        // Favorites
+        that.favoritesSection = new PopupMenu.PopupMenuSection();
+
+        that.scrollViewFavoritesMenuSection = new PopupMenu.PopupMenuSection();
+        this.favoritesScrollView = new St.ScrollView({
+            style_class: 'ci-history-menu-section',
+            overlay_scrollbars: true
+        });
+        this.favoritesScrollView.add_actor(that.favoritesSection.actor);
+
+        that.scrollViewFavoritesMenuSection.actor.add_actor(this.favoritesScrollView);
+        this.favoritesSeparator = new PopupMenu.PopupSeparatorMenuItem();
+
+        // History
+        that.historySection = new PopupMenu.PopupMenuSection();
+
+        that.scrollViewMenuSection = new PopupMenu.PopupMenuSection();
+        this.historyScrollView = new St.ScrollView({
+            style_class: 'ci-main-menu-section ci-history-menu-section',
+            overlay_scrollbars: true
+        });
+        this.historyScrollView.add_actor(that.historySection.actor);
+
+        that.scrollViewMenuSection.actor.add_actor(this.historyScrollView);
+
+        // Add separator
+        this.historySeparator = new PopupMenu.PopupSeparatorMenuItem();
+
+        // Add sections ordered according to settings
+        if (PINNED_ON_BOTTOM) {
+            that.menu.addMenuItem(that.scrollViewMenuSection);
+            that.menu.addMenuItem(that.scrollViewFavoritesMenuSection);
+        }
+        else {
+            that.menu.addMenuItem(that.scrollViewFavoritesMenuSection);
+            that.menu.addMenuItem(that.scrollViewMenuSection);
+        }
+
+        // Private mode switch
+        that.privateModeMenuItem = new PopupMenu.PopupSwitchMenuItem(
+            _("Private mode"), PRIVATEMODE, { reactive: true });
+        that.privateModeMenuItem.connect('toggled',
+            that._onPrivateModeSwitch.bind(that));
+        that.privateModeMenuItem.insert_child_at_index(
+            new St.Icon({
+                icon_name: 'security-medium-symbolic',
+                style_class: 'clipboard-menu-icon',
+                y_align: Clutter.ActorAlign.CENTER
+            }),
+            0
+        );
+        that.menu.addMenuItem(that.privateModeMenuItem);
+
+        // Add 'Clear' button which removes all items from cache
+        this.clearMenuItem = new PopupMenu.PopupMenuItem(_('Clear history'));
+        this.clearMenuItem.insert_child_at_index(
+            new St.Icon({
+                icon_name: 'user-trash-symbolic',
+                style_class: 'clipboard-menu-icon',
+                y_align: Clutter.ActorAlign.CENTER
+            }),
+            0
+        );
+        this.clearMenuItem.connect('activate', that._removeAll.bind(that));
+
+        // Add 'Settings' menu item to open settings
+        this.settingsMenuItem = new PopupMenu.PopupMenuItem(_('Settings'));
+        this.settingsMenuItem.insert_child_at_index(
+            new St.Icon({
+                icon_name: 'preferences-system-symbolic',
+                style_class: 'clipboard-menu-icon',
+                y_align: Clutter.ActorAlign.CENTER
+            }),
+            0
+        );
+        that.menu.addMenuItem(this.settingsMenuItem);
+        this.settingsMenuItem.connect('activate', that._openSettings.bind(that));
+
+        // Empty state section
+        this.emptyStateSection = new St.BoxLayout({
+            style_class: 'clipboard-indicator-empty-state',
+            vertical: true
+        });
+        this.emptyStateSection.add_child(new St.Icon({
+            icon_name: INDICATOR_ICON,
+            style_class: 'system-status-icon clipboard-indicator-icon',
+            x_align: Clutter.ActorAlign.CENTER
+        }));
+        this.emptyStateSection.add_child(new St.Label({
+            text: _('Clipboard is empty'),
+            x_align: Clutter.ActorAlign.CENTER
+        }));
+
+        // Add cached items
+        clipHistory.forEach(entry => this._addEntry(entry));
+
+        if (lastIdx >= 0) {
+            that._selectMenuItem(clipItemsArr[lastIdx]);
+        }
+
+        this.#showElements();
     }
 
     #hideElements() {
@@ -659,8 +659,8 @@ const ClipboardIndicator = GObject.registerClass({
         menuItem.menu.close();
     }
 
-    _getCache (cb) {
-        return this.registry.read(cb);
+    _getCache () {
+        return this.registry.read();
     }
 
     #addToCache (entry) {
@@ -1089,7 +1089,7 @@ const ClipboardIndicator = GObject.registerClass({
 
     async #getClipboardContent () {
         const mimetypes = [
-            'text/plain',
+            'text/plain;charset=utf-8',
             'image/gif',
             'image/png',
             'image/jpg',

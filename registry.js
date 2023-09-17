@@ -64,70 +64,69 @@ export class Registry {
         });
     }
 
-    read (callback) {
-        if (typeof callback !== 'function')
-            throw TypeError('`callback` must be a function');
+    async read () {
+        return new Promise(resolve => {
+            if (GLib.file_test(this.REGISTRY_PATH, FileTest.EXISTS)) {
+                let file = Gio.file_new_for_path(this.REGISTRY_PATH);
+                let CACHE_FILE_SIZE = this.settings.get_int(PrefsFields.CACHE_FILE_SIZE);
 
-        if (GLib.file_test(this.REGISTRY_PATH, FileTest.EXISTS)) {
-            let file = Gio.file_new_for_path(this.REGISTRY_PATH);
-            let CACHE_FILE_SIZE = this.settings.get_int(PrefsFields.CACHE_FILE_SIZE);
+                file.query_info_async('*', FileQueryInfoFlags.NONE,
+                                      GLib.PRIORITY_DEFAULT, null, (src, res) => {
+                    // Check if file size is larger than CACHE_FILE_SIZE
+                    // If so, make a backup of file, and resolve with empty array
+                    let file_info = src.query_info_finish(res);
 
-            file.query_info_async('*', FileQueryInfoFlags.NONE,
-                                  GLib.PRIORITY_DEFAULT, null, (src, res) => {
-                // Check if file size is larger than CACHE_FILE_SIZE
-                // If so, make a backup of file, and invoke callback with empty array
-                let file_info = src.query_info_finish(res);
+                    if (file_info.get_size() >= CACHE_FILE_SIZE * 1024 * 1024) {
+                        let destination = Gio.file_new_for_path(this.BACKUP_REGISTRY_PATH);
 
-                if (file_info.get_size() >= CACHE_FILE_SIZE * 1024 * 1024) {
-                    let destination = Gio.file_new_for_path(this.BACKUP_REGISTRY_PATH);
+                        file.move(destination, FileCopyFlags.OVERWRITE, null, null);
+                        resolve([]);
+                        return;
+                    }
 
-                    file.move(destination, FileCopyFlags.OVERWRITE, null, null);
-                    callback([]);
-                    return;
-                }
+                    file.load_contents_async(null, (obj, res) => {
+                        let [success, contents] = obj.load_contents_finish(res);
 
-                file.load_contents_async(null, (obj, res) => {
-                    let [success, contents] = obj.load_contents_finish(res);
-
-                    if (success) {
-                        let max_size = this.settings.get_int(PrefsFields.HISTORY_SIZE);
-                        const registry = JSON.parse(new TextDecoder().decode(contents));
-                        const entriesPromises = registry.map(
-                            jsonEntry => {
-                                return ClipboardEntry.fromJSON(jsonEntry)
-                            }
-                        );
-
-                        Promise.all(entriesPromises).then(clipboardEntries => {
-                            let registryNoFavorite = clipboardEntries.filter(
-                                entry => entry.isFavorite()
+                        if (success) {
+                            let max_size = this.settings.get_int(PrefsFields.HISTORY_SIZE);
+                            const registry = JSON.parse(new TextDecoder().decode(contents));
+                            const entriesPromises = registry.map(
+                                jsonEntry => {
+                                    return ClipboardEntry.fromJSON(jsonEntry)
+                                }
                             );
 
-                            while (registryNoFavorite.length > max_size) {
-                                let oldestNoFavorite = registryNoFavorite.shift();
-                                let itemIdx = clipboardEntries.indexOf(oldestNoFavorite);
-                                clipboardEntries.splice(itemIdx,1);
-
-                                registryNoFavorite = clipboardEntries.filter(
+                            Promise.all(entriesPromises).then(clipboardEntries => {
+                                let registryNoFavorite = clipboardEntries.filter(
                                     entry => entry.isFavorite()
                                 );
-                            }
 
-                            callback(clipboardEntries);
-                        }).catch(e => {
-                            console.error('CLIPBOARD INDICATOR ERROR');
-                            console.error(e);
-                        });
-                    }
-                    else {
-                        console.error('Clipboard Indicator: failed to open registry file');
-                    }
+                                while (registryNoFavorite.length > max_size) {
+                                    let oldestNoFavorite = registryNoFavorite.shift();
+                                    let itemIdx = clipboardEntries.indexOf(oldestNoFavorite);
+                                    clipboardEntries.splice(itemIdx,1);
+
+                                    registryNoFavorite = clipboardEntries.filter(
+                                        entry => entry.isFavorite()
+                                    );
+                                }
+
+                                resolve(clipboardEntries);
+                            }).catch(e => {
+                                console.error('CLIPBOARD INDICATOR ERROR');
+                                console.error(e);
+                            });
+                        }
+                        else {
+                            console.error('Clipboard Indicator: failed to open registry file');
+                        }
+                    });
                 });
-            });
-        }
-        else {
-            callback([]);
-        }
+            }
+            else {
+                resolve([]);
+            }
+        });
     }
 
     #entryFileExists (entry) {
@@ -197,7 +196,7 @@ export class ClipboardEntry {
     }
 
     static async fromJSON (jsonEntry) {
-        const mimetype = jsonEntry.mimetype || 'text/plain';
+        const mimetype = jsonEntry.mimetype || 'text/plain;charset=utf-8';
         const favorite = jsonEntry.favorite;
         let bytes;
 
