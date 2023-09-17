@@ -1085,6 +1085,7 @@ const ClipboardIndicator = GObject.registerClass({
 
     #updateClipboard (entry) {
         this.extension.clipboard.set_content(CLIPBOARD_TYPE, entry.mimetype(), entry.asBytes());
+        this.#updateIndicatorContent(entry);
     }
 
     async #getClipboardContent () {
