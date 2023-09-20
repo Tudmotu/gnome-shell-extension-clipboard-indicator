@@ -686,9 +686,9 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     async _refreshIndicator () {
+        if (PRIVATEMODE) return; // Private mode, do not.
         if (this.#refreshInProgress) return;
         this.#refreshInProgress = true;
-        if (PRIVATEMODE) return; // Private mode, do not.
 
         try {
             const result = await this.#getClipboardContent();
