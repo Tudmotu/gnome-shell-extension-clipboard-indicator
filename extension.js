@@ -570,6 +570,7 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     _removeAll () {
+        if (PRIVATEMODE) return;
         var that = this;
 
         if (CONFIRM_ON_CLEAR) {
@@ -789,11 +790,11 @@ const ClipboardIndicator = GObject.registerClass({
 
     _showNotification (message, transformFn) {
         const dndOn = () =>
-          !Main.panel.statusArea.dateMenu._indicator._settings.get_boolean(
-            'show-banners',
-          );
+            !Main.panel.statusArea.dateMenu._indicator._settings.get_boolean(
+                'show-banners',
+            );
         if (PRIVATEMODE || dndOn()) {
-          return;
+            return;
         }
 
         let notification = null;
@@ -1002,6 +1003,7 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     _previousEntry () {
+        if (PRIVATEMODE) return;
         let that = this;
 
         that._clearDelayedSelectionTimeout();
@@ -1025,6 +1027,7 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     _nextEntry () {
+        if (PRIVATEMODE) return;
         let that = this;
 
         that._clearDelayedSelectionTimeout();
