@@ -788,6 +788,14 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     _showNotification (message, transformFn) {
+        const dndOn = () =>
+          !Main.panel.statusArea.dateMenu._indicator._settings.get_boolean(
+            'show-banners',
+          );
+        if (PRIVATEMODE || dndOn()) {
+          return;
+        }
+
         let notification = null;
 
         this._initNotifSource();
