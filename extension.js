@@ -707,7 +707,7 @@ const ClipboardIndicator = GObject.registerClass({
                 }
 
                 this.#addToCache(result);
-                this._addEntry(result, true);
+                this._addEntry(result, true, false);
                 this._removeOldestEntries();
                 if (NOTIFY_ON_COPY) {
                     this._showNotification(_("Copied to clipboard"), notif => {
