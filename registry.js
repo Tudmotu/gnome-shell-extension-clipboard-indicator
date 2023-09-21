@@ -97,9 +97,11 @@ export class Registry {
                             );
 
                             Promise.all(entriesPromises).then(clipboardEntries => {
-                                let registryNoFavorite = clipboardEntries.filter(
-                                    entry => entry.isFavorite()
-                                );
+                                clipboardEntries = clipboardEntries
+                                    .filter(entry => entry !== null);
+
+                                let registryNoFavorite = clipboardEntries
+                                    .filter(entry => entry.isFavorite());
 
                                 while (registryNoFavorite.length > max_size) {
                                     let oldestNoFavorite = registryNoFavorite.shift();
@@ -113,7 +115,6 @@ export class Registry {
 
                                 resolve(clipboardEntries);
                             }).catch(e => {
-                                console.error('CLIPBOARD INDICATOR ERROR');
                                 console.error(e);
                             });
                         }
@@ -204,7 +205,11 @@ export class ClipboardEntry {
             bytes = new TextEncoder().encode(jsonEntry.contents);
         }
         else {
-            let file = Gio.file_new_for_path(jsonEntry.contents);
+            const filename = jsonEntry.contents;
+            if (!GLib.file_test(filename, FileTest.EXISTS)) return null;
+
+            let file = Gio.file_new_for_path(filename);
+
             bytes = await new Promise((resolve, reject) => file.load_contents_async(null, (obj, res) => {
                 let [success, contents] = obj.load_contents_finish(res);
 
