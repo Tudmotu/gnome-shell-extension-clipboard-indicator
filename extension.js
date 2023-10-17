@@ -374,8 +374,9 @@ const ClipboardIndicator = GObject.registerClass({
     _truncate (string, length) {
         let shortened = string.replace(/\s+/g, ' ');
 
-        if (shortened.length > length)
-            shortened = shortened.substring(0,length-1) + '...';
+        let chars = [...shortened]
+        if (chars.length > length)
+            shortened = chars.slice(0, length - 1).join('') + '...';
 
         return shortened;
     }
