@@ -1,20 +1,29 @@
 <schemalist gettext-domain="gnome-shell-extensions">
-  <schema id="org.gnome.shell.extensions.clipboard-indicator"
-      path="/org/gnome/shell/extensions/clipboard-indicator/">
+    <schema id="org.gnome.shell.extensions.clipboard-indicator"
+        path="/org/gnome/shell/extensions/clipboard-indicator/">
+
+    <key name="paste-button" type="b">
+        <default>true</default>
+        <summary>Add button to paste an entry</summary>
+        <description>
+            If true, adds another button to each menu entry that lets you immediately paste it
+        </description>
+    </key>
+
+    <key name="pinned-on-bottom" type="b">
+        <default>false</default>
+        <summary>Display the pinned section on the bottom</summary>
+        <description>
+            If true, places the "pinned" section on the bottom
+        </description>
+    </key>
 
     <key name="enable-deletion" type="b">
-      <default>true</default>
+        <default>true</default>
         <summary>Enable the deletion of clipboard items from your history</summary>
         <description>
             If true, displays 'delete' buttons on each item, and a 'Clear History' option
         </description>
-    </key>
-
-    <key type="i" name="refresh-interval">
-        <default>1000</default>
-        <summary>The interval between updates in miliseconds</summary>
-        <description>The interval between updates in miliseconds </description>
-        <range min="500" max="5000"/>
     </key>
 
     <key type="i" name="history-size">
@@ -31,7 +40,7 @@
     </key>
 
     <key name="disable-down-arrow" type="b">
-      <default>true</default>
+        <default>true</default>
         <summary>Remove down arrow in top bar</summary>
     </key>
 
@@ -55,17 +64,17 @@
     </key>
 
     <key type="i" name="cache-size">
-        <default>1024</default>
-        <summary>The allowed size for the registry cache file</summary>
+        <default>5</default>
+        <summary>The allowed size for the registry cache file in MB</summary>
         <description>
             If the cache overflows this limit, the file will be overriden.
             High limit might cause slowness of shell startup.
         </description>
-        <range min="512" max="102400"/>
+        <range min="1" max="256"/>
     </key>
 
     <key name="cache-only-favorites" type="b">
-      <default>false</default>
+        <default>false</default>
         <summary>Disable the registry cache file for favorites and use memory only</summary>
         <description>
             Contents which are not favorites are not stored and retrieved from a cache (registry.txt) file.
@@ -75,7 +84,7 @@
     </key>
 
     <key name="notify-on-copy" type="b">
-      <default>false</default>
+        <default>false</default>
         <summary>Show notification on copy to clipboard</summary>
         <description>
             If true, a notification is shown when content is copied to clipboard.
@@ -83,60 +92,74 @@
     </key>
 
     <key name="confirm-clear" type="b">
-      <default>true</default>
+        <default>true</default>
         <summary>Show confirmation dialog on Clear History</summary>
         <description>
             If true, a confirmation dialog is shown when attempting to Clear History.
         </description>
     </key>
-    
+
     <key name="strip-text" type="b">
-      <default>false</default>
-      <summary>Remove whitespace around text</summary>
-      <description>
-        If true, white spaces around text will be removed.
-      </description>
+        <default>false</default>
+        <summary>Remove whitespace around text</summary>
+        <description>
+            If true, white spaces around text will be removed.
+        </description>
     </key>
     <key name="move-item-first" type="b">
-      <default>false</default>
+        <default>false</default>
         <summary>Move items to the top of the list when selected.</summary>
         <description>
             If true, move items to the top of the list when it is selected.
         </description>
     </key>
-
+    <key name="keep-selected-on-clear" type="b">
+        <default>false</default>
+        <summary>Keep selected item on clear</summary>
+        <description>
+            Whether to keep the currently selected entry in the clipboard
+            after clearing the history
+        </description>
+    </key>
     <key name="enable-keybindings" type="b">
-      <default>true</default>
+        <default>true</default>
         <summary>Enable the keyboard shortcuts</summary>
         <description>
             If true, user can delete and cycle through the history with keyboard shortcuts
         </description>
     </key>
     <key name="clear-history" type="as">
-      <default><![CDATA[['<Ctrl>F10']]]></default>
-      <summary>Key to clear the history</summary>
-      <description>
-      </description>
-    </key>
-    <key name="prev-entry" type="as">
-      <default><![CDATA[['<Ctrl>F11']]]></default>
-      <summary>Key to cycle to the previous entry in the clipboard</summary>
-      <description>
-      </description>
-    </key>
-    <key name="next-entry" type="as">
-      <default><![CDATA[['<Ctrl>F12']]]></default>
-      <summary>Next entry</summary>
-      <description>
-        Key to cycle to the next entry in the clipboard
-      </description>
-    </key>
-    <key name="toggle-menu" type="as">
-      <default><![CDATA[['<Ctrl>F9']]]></default>
-      <summary>Toggle the menu</summary>
-      <description>
-        Key to toggle the clipboard menu
-      </description>
-    </key>
-  </schema>
+        <default><![CDATA[['<Control>F10']]]></default>
+            <summary>Key to clear the history</summary>
+            <description>
+            </description>
+        </key>
+        <key name="prev-entry" type="as">
+        <default><![CDATA[['<Control>F11']]]></default>
+            <summary>Key to cycle to the previous entry in the clipboard</summary>
+            <description>
+            </description>
+        </key>
+        <key name="next-entry" type="as">
+        <default><![CDATA[['<Control>F12']]]></default>
+            <summary>Next entry</summary>
+            <description>
+                Key to cycle to the next entry in the clipboard
+            </description>
+        </key>
+        <key name="toggle-menu" type="as">
+        <default><![CDATA[['<Control>F9']]]></default>
+            <summary>Toggle the menu</summary>
+            <description>
+                Key to toggle the clipboard menu
+            </description>
+        </key>
+        <key name="private-mode-binding" type="as">
+        <default><![CDATA[['<Control>F8']]]></default>
+            <summary>Toggle "Private Mode"</summary>
+            <description>
+                Key to toggle the private mode
+            </description>
+        </key>
+    </schema>
 </schemalist>

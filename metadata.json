@@ -1,11 +1,11 @@
 {
     "shell-version": [
-        "42",
-        "43",
-        "44"
+        "45"
     ],
     "uuid": "clipboard-indicator@tudmotu.com",
     "name": "Clipboard Indicator",
-    "description": "Clipboard Manager extension for Gnome-Shell - Adds a clipboard indicator to the top panel, and caches clipboard history.",
-    "url": "https://github.com/Tudmotu/gnome-shell-extension-clipboard-indicator"
+    "description": "The most popular clipboard manager for GNOME, with over 1M downloads",
+    "url": "https://github.com/Tudmotu/gnome-shell-extension-clipboard-indicator",
+    "gettext-domain": "clipboard-indicator@tudmotu.com",
+    "settings-schema": "org.gnome.shell.extensions.clipboard-indicator"
 }

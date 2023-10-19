@@ -1,4 +1,4 @@
-.clipboard-indicator-icon.private-mode {
+.clipboard-indicator-hbox.private-mode {
     color: rgba(255,255,255,0.3);
 }
 
@@ -13,9 +13,59 @@
 }
 
 .popup-menu-item .ci-action-btn StIcon {
-    icon-size:16px;
+    icon-size:1.2em;
+    margin-left:.25em;
+}
+
+.popup-menu-item StEntry StIcon {
+    icon-size:1em;
+    margin:0 .25em;
+}
+
+.clipboard-indicator-empty-state {
+    width:350px;
+    color:#aaa;
+}
+
+.clipboard-indicator-empty-state StIcon {
+    icon-size:5em;
+    margin-top:3em;
+}
+
+.clipboard-indicator-empty-state StLabel {
+    margin:1em 0 3em 0;
 }
 
 .ci-history-menu-section {
     max-height:450px;
+}
+
+.ci-main-menu-section StButton.ci-pin-btn {
+    color: rgba(255,255,255,0.3);
+}
+
+.clipboard-hidden {
+    display:none!important;
+}
+
+.clipboard-menu-icon {
+    width:1em;
+    height:1em;
+    margin-right:.5em;
+}
+
+.clipboard-menu-img-preview {
+    border:solid 1px white;
+    overflow:hidden;
+    width:1.5em;
+    height:1.5em;
+    margin:0;
+    padding:0;
+}
+
+.clipboard-indicator-img-preview {
+    border:solid 1px white;
+    width:1em;
+    height:1em;
+    margin-right:.25em;
 }

@@ -1,4 +1,4 @@
-MODULES = extension.js confirmDialog.js locale/*/LC_MESSAGES/*.mo metadata.json stylesheet.css LICENSE.rst README.rst prefs.js schemas/ utils.js
+MODULES = *.js locale/*/LC_MESSAGES/*.mo metadata.json stylesheet.css LICENSE.rst README.rst schemas/
 INSTALLPATH=~/.local/share/gnome-shell/extensions/clipboard-indicator@tudmotu.com/
 
 all: compile-locales compile-settings
@@ -26,4 +26,4 @@ nested-session:
 		MUTTER_DEBUG_DUMMY_MONITOR_SCALES=2 gnome-shell --nested --wayland
 
 bundle: all
-	zip -r bundle.zip $(MODULES)
+	zip -FSr bundle.zip $(MODULES)

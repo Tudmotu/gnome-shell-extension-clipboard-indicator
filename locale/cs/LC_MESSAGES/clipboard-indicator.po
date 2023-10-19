@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-21 20:31+0100\n"
+"POT-Creation-Date: 2023-09-16 11:48+0300\n"
 "PO-Revision-Date: 2022-03-21 20:40+0100\n"
 "Last-Translator: Radek Šťastný <dedkus@gmail.com>\n"
 "Language-Team: \n"
@@ -16,129 +16,185 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: extension.js:88
+#: extension.js:102
 msgid "Text will be here"
 msgstr "Zde bude text"
 
-#: extension.js:130
+#: extension.js:171
 msgid "Type here to search..."
 msgstr "Vyhledávejte psaním…"
 
-#: extension.js:199
+#: extension.js:240 prefs.js:163
 msgid "Private mode"
 msgstr "Stop (proti úniku citlivých údajů)"
 
-#: extension.js:206 prefs.js:112
+#: extension.js:254 prefs.js:165
 msgid "Clear history"
 msgstr "Vyčistit historii"
 
-#: extension.js:211
+#: extension.js:266
 msgid "Settings"
 msgstr "Nastavení"
 
-#: extension.js:341
+#: extension.js:289
+#, fuzzy
+msgid "Clipboard is empty"
+msgstr "Obsah schránky"
+
+#: extension.js:552
 msgid "Clear all?"
 msgstr "Vyčistit vše?"
 
-#: extension.js:342
+#: extension.js:553
 msgid "Are you sure you want to delete all clipboard items?"
 msgstr "Opravdu chcete smazat všechny položky schránky?"
 
-#: extension.js:343
+#: extension.js:554
 msgid "This operation cannot be undone."
 msgstr "Tato operace nejde vrátit."
 
-#: extension.js:345
+#: extension.js:556
 msgid "Clear"
 msgstr "Vyčistit"
 
-#: extension.js:345 extension.js:512
+#: extension.js:556 extension.js:714
 msgid "Cancel"
 msgstr "Storno"
 
-#: extension.js:366
+#: extension.js:569
 msgid "Clipboard history cleared"
 msgstr "Historie schránky vyčištěna"
 
-#: extension.js:511
+#: extension.js:713
 msgid "Copied to clipboard"
 msgstr "Zkopírováno do schránky"
 
-#: prefs.js:110
-msgid "Toggle the menu"
-msgstr "Přepnout nabídku"
-
-#: prefs.js:114
-msgid "Previous entry"
-msgstr "Předchozí položka"
-
-#: prefs.js:116
-msgid "Next entry"
-msgstr "Následující položka"
-
-#: prefs.js:125
+#: prefs.js:28
 msgid "History Size"
 msgstr "Hloubka historie"
 
-#: prefs.js:130
-msgid "Refresh Interval (ms)"
-msgstr "Interval obnovování (ms)"
-
-#: prefs.js:135
+#: prefs.js:37
 msgid "Preview Size (characters)"
 msgstr "Délka náhledu (znaky)"
 
-#: prefs.js:140
-msgid "Max cache file size (kb)"
+#: prefs.js:46
+#, fuzzy
+msgid "Max cache file size (MB)"
 msgstr "Velikost mezipaměti nejvýše (KB)"
 
-#: prefs.js:145
-msgid "Cache only favorites"
-msgstr "Ukládat do mezipaměti pouze oblíbené"
-
-#: prefs.js:150
-msgid "Show notification on copy"
-msgstr "Při zkopírování zobrazit oznámení"
-
-#: prefs.js:155
-msgid "Show confirmation on Clear History"
-msgstr "Zobrazit oznámení při mazání historie"
-
-#: prefs.js:160
-msgid "Move item to the top after selection"
-msgstr "Po výběru posunout položku na začátek seznamu"
-
-#: prefs.js:165
-msgid "Keyboard shortcuts"
-msgstr "Klávesové zkratky"
-
-#: prefs.js:170
+#: prefs.js:55
 msgid "Number of characters in top bar"
 msgstr "Počet znaků v horní liště"
 
-#: prefs.js:175
+#: prefs.js:64
 msgid "What to show in top bar"
 msgstr "Co zobrazovat v horní liště"
 
-#: prefs.js:180
+#: prefs.js:69
 msgid "Remove down arrow in top bar"
 msgstr "Nezobrazovat šipku dolů v horní liště"
 
-#: prefs.js:185
+#: prefs.js:73
+#, fuzzy
+msgid "Cache only pinned items"
+msgstr "Ukládat do mezipaměti pouze oblíbené"
+
+#: prefs.js:77
+msgid "Show notification on copy"
+msgstr "Při zkopírování zobrazit oznámení"
+
+#: prefs.js:81
+msgid "Show confirmation on Clear History"
+msgstr "Zobrazit oznámení při mazání historie"
+
+#: prefs.js:85
 msgid "Remove whitespace around text"
 msgstr "Odebrat prázdné znaky kolem textu"
 
-#: prefs.js:242
+#: prefs.js:89
+msgid "Move item to the top after selection"
+msgstr "Po výběru posunout položku na začátek seznamu"
+
+#: prefs.js:93
+msgid "Keep selected entry after Clear History"
+msgstr ""
+
+#: prefs.js:97
+msgid "Show paste buttons"
+msgstr ""
+
+#: prefs.js:98
+msgid "Adds a paste button to each entry that lets you paste it directly"
+msgstr ""
+
+#: prefs.js:102
+msgid "Place the pinned section on the bottom"
+msgstr ""
+
+#: prefs.js:103
+msgid "Requires restarting the extension"
+msgstr ""
+
+#: prefs.js:106
+msgid "UI"
+msgstr ""
+
+#: prefs.js:107
+msgid "Limits"
+msgstr ""
+
+#: prefs.js:108
+msgid "Topbar"
+msgstr ""
+
+#: prefs.js:109
+msgid "Notifications"
+msgstr ""
+
+#: prefs.js:110
+msgid "Shortcuts"
+msgstr ""
+
+#: prefs.js:151
 msgid "Icon"
 msgstr "Ikona"
 
-#: prefs.js:243
+#: prefs.js:152
 msgid "Clipboard Content"
 msgstr "Obsah schránky"
 
-#: prefs.js:244
+#: prefs.js:153
 msgid "Both"
 msgstr "Obojí"
+
+#: prefs.js:164
+msgid "Toggle the menu"
+msgstr "Přepnout nabídku"
+
+#: prefs.js:166
+msgid "Previous entry"
+msgstr "Předchozí položka"
+
+#: prefs.js:167
+msgid "Next entry"
+msgstr "Následující položka"
+
+#: prefs.js:172
+#, fuzzy
+msgid "Enable shortcuts"
+msgstr "Klávesové zkratky"
+
+#: prefs.js:197
+msgid "Disabled"
+msgstr ""
+
+#: prefs.js:206
+#, fuzzy
+msgid "Enter shortcut"
+msgstr "Klávesové zkratky"
+
+#~ msgid "Refresh Interval (ms)"
+#~ msgstr "Interval obnovování (ms)"
 
 #~ msgid "Enable Deletion"
 #~ msgstr "Zapnout mazání"
