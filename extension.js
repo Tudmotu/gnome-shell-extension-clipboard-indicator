@@ -1103,6 +1103,7 @@ const ClipboardIndicator = GObject.registerClass({
     async #getClipboardContent () {
         const mimetypes = [
             'text/plain;charset=utf-8',
+            'text/plain',
             'image/gif',
             'image/png',
             'image/jpg',
