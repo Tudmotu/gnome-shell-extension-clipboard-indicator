@@ -150,7 +150,8 @@ class Settings {
         let options = [
             _("Icon"),
             _("Clipboard Content"),
-            _("Both")
+            _("Both"),
+            _("Neither")
         ];
         let liststore = new Gtk.StringList();
         for (let option of options) {

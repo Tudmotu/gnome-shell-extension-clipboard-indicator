@@ -31,7 +31,7 @@ let PRIVATEMODE               = false;
 let NOTIFY_ON_COPY            = true;
 let CONFIRM_ON_CLEAR          = true;
 let MAX_TOPBAR_LENGTH         = 15;
-let TOPBAR_DISPLAY_MODE       = 1; //0 - only icon, 1 - only clipboard content, 2 - both
+let TOPBAR_DISPLAY_MODE       = 1; //0 - only icon, 1 - only clipboard content, 2 - both, 3 - neither
 let DISABLE_DOWN_ARROW        = false;
 let STRIP_TEXT                = false;
 let KEEP_SELECTED_ON_CLEAR    = false;
@@ -956,14 +956,20 @@ const ClipboardIndicator = GObject.registerClass({
         if(TOPBAR_DISPLAY_MODE === 0){
             this.icon.visible = true;
             this._buttonText.visible = false;
+            this.show();
         }
         if(TOPBAR_DISPLAY_MODE === 1){
             this.icon.visible = false;
             this._buttonText.visible = true;
+            this.show();
         }
         if(TOPBAR_DISPLAY_MODE === 2){
             this.icon.visible = true;
             this._buttonText.visible = true;
+            this.show();
+        }
+        if (TOPBAR_DISPLAY_MODE === 3) {
+            this.hide();
         }
         if(!DISABLE_DOWN_ARROW) {
             this._downArrow.visible = true;

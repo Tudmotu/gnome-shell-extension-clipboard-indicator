@@ -165,26 +165,30 @@ msgstr ""
 msgid "Both"
 msgstr ""
 
-#: prefs.js:164
+#: prefs.js:154
+msgid "Neither"
+msgstr ""
+
+#: prefs.js:165
 msgid "Toggle the menu"
 msgstr ""
 
-#: prefs.js:166
+#: prefs.js:167
 msgid "Previous entry"
 msgstr ""
 
-#: prefs.js:167
+#: prefs.js:168
 msgid "Next entry"
 msgstr ""
 
-#: prefs.js:172
+#: prefs.js:173
 msgid "Enable shortcuts"
 msgstr ""
 
-#: prefs.js:197
+#: prefs.js:198
 msgid "Disabled"
 msgstr ""
 
-#: prefs.js:206
+#: prefs.js:207
 msgid "Enter shortcut"
 msgstr ""
