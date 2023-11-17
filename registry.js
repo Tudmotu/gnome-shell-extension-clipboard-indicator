@@ -185,6 +185,17 @@ export class Registry {
             console.error(e);
         }
     }
+
+    async removeEntryFile() {
+
+        try {
+            const file = Gio.file_new_for_path(this.REGISTRY_PATH);
+            file.delete(null);
+        }
+        catch (e) {
+            console.error(e);
+        }
+    }
 }
 
 export class ClipboardEntry {
