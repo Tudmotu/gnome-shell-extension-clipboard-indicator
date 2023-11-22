@@ -117,7 +117,7 @@ const ClipboardIndicator = GObject.registerClass({
         this._createHistoryLabel();
         this._loadSettings();
 
-        if (CLEAR_ON_BOOT) this.registry.removeEntryFile();
+        if (CLEAR_ON_BOOT) this.registry.clearCacheFolder();
 
         this.dialogManager = new DialogManager();
         this._buildMenu().then(() => {
