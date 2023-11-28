@@ -32,6 +32,7 @@ let NOTIFY_ON_COPY            = true;
 let CONFIRM_ON_CLEAR          = true;
 let MAX_TOPBAR_LENGTH         = 15;
 let TOPBAR_DISPLAY_MODE       = 1; //0 - only icon, 1 - only clipboard content, 2 - both, 3 - neither
+let CLEAR_ON_BOOT             = false;
 let DISABLE_DOWN_ARROW        = false;
 let STRIP_TEXT                = false;
 let KEEP_SELECTED_ON_CLEAR    = false;
@@ -115,6 +116,9 @@ const ClipboardIndicator = GObject.registerClass({
         this.add_child(hbox);
         this._createHistoryLabel();
         this._loadSettings();
+
+        if (CLEAR_ON_BOOT) this.registry.removeEntryFile();
+
         this.dialogManager = new DialogManager();
         this._buildMenu().then(() => {
             this._updateTopbarLayout();
@@ -886,6 +890,7 @@ const ClipboardIndicator = GObject.registerClass({
         ENABLE_KEYBINDING      = settings.get_boolean(PrefsFields.ENABLE_KEYBINDING);
         MAX_TOPBAR_LENGTH      = settings.get_int(PrefsFields.TOPBAR_PREVIEW_SIZE);
         TOPBAR_DISPLAY_MODE    = settings.get_int(PrefsFields.TOPBAR_DISPLAY_MODE_ID);
+        CLEAR_ON_BOOT          = settings.get_boolean(PrefsFields.CLEAR_ON_BOOT);
         DISABLE_DOWN_ARROW     = settings.get_boolean(PrefsFields.DISABLE_DOWN_ARROW);
         STRIP_TEXT             = settings.get_boolean(PrefsFields.STRIP_TEXT);
         KEEP_SELECTED_ON_CLEAR = settings.get_boolean(PrefsFields.KEEP_SELECTED_ON_CLEAR);

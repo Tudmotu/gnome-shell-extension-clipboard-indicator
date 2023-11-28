@@ -12,6 +12,7 @@ export default class ClipboardIndicatorPreferences extends ExtensionPreferences 
         const settingsUI = new Settings(window._settings);
         const page = new Adw.PreferencesPage();
         page.add(settingsUI.ui);
+        page.add(settingsUI.behavior);
         page.add(settingsUI.limits);
         page.add(settingsUI.topbar);
         page.add(settingsUI.notifications);
@@ -103,7 +104,12 @@ class Settings {
             subtitle: _("Requires restarting the extension")
         });
 
+        this.field_clear_on_boot = new Adw.SwitchRow({
+            title: _("Clear clipboard history on system reboot")
+        });
+
         this.ui =  new Adw.PreferencesGroup({ title: _('UI') });
+        this.behavior = new Adw.PreferencesGroup({title: _('Behavior')});
         this.limits =  new Adw.PreferencesGroup({ title: _('Limits') });
         this.topbar =  new Adw.PreferencesGroup({ title: _('Topbar') });
         this.notifications =  new Adw.PreferencesGroup({ title: _('Notifications') });
@@ -115,6 +121,8 @@ class Settings {
         this.ui.add(this.field_keep_selected_on_clear);
         this.ui.add(this.field_paste_button);
         this.ui.add(this.field_pinned_on_bottom);
+
+        this.behavior.add(this.field_clear_on_boot);
 
         this.limits.add(this.field_size);
         this.limits.add(this.field_cache_size);
@@ -144,6 +152,7 @@ class Settings {
         this.schema.bind(PrefsFields.PASTE_BUTTON, this.field_paste_button, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.PINNED_ON_BOTTOM, this.field_pinned_on_bottom, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.ENABLE_KEYBINDING, this.field_keybinding_activation, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.CLEAR_ON_BOOT, this.field_clear_on_boot, 'active', Gio.SettingsBindFlags.DEFAULT);
     }
 
     #createDisplayModeOptions () {
