@@ -187,10 +187,10 @@ export class Registry {
     }
 
     async removeEntryFile() {
-        const file = Gio.file_new_for_path(this.REGISTRY_PATH);
 
         try {
-            await file.delete_async(GLib.PRIORITY_DEFAULT, null);
+            const file = Gio.file_new_for_path(this.REGISTRY_PATH);
+            file.delete(null);
         }
         catch (e) {
             console.error(e);
