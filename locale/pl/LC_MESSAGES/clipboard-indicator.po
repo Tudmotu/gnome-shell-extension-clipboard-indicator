@@ -5,23 +5,23 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: clipboard-indicator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-16 11:48+0300\n"
-"PO-Revision-Date: 2017-12-02 09:23+0100\n"
+"PO-Revision-Date: 2023-12-01 21:58+0100\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
-"Language-Team: \n"
+"Language-Team: Piotr Strębski (strebski@gmail.com)\n"
 "Language: pl_PL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.4\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 3.4.1\n"
 
 #: extension.js:102
 msgid "Text will be here"
-msgstr ""
+msgstr "Będzie tutaj tekst"
 
 #: extension.js:171
 msgid "Type here to search..."
@@ -40,29 +40,28 @@ msgid "Settings"
 msgstr "Ustawienia"
 
 #: extension.js:289
-#, fuzzy
 msgid "Clipboard is empty"
-msgstr "Zawartość schowka"
+msgstr "Schowek jest pusty"
 
 #: extension.js:552
 msgid "Clear all?"
-msgstr ""
+msgstr "Wyczyścić wszystko?"
 
 #: extension.js:553
 msgid "Are you sure you want to delete all clipboard items?"
-msgstr ""
+msgstr "Czy na pewno chcesz wyczyścić całą zawartość schowka?"
 
 #: extension.js:554
 msgid "This operation cannot be undone."
-msgstr ""
+msgstr "Ta operacja nie może zostać wycofana."
 
 #: extension.js:556
 msgid "Clear"
-msgstr ""
+msgstr "Wyczyść"
 
 #: extension.js:556 extension.js:714
 msgid "Cancel"
-msgstr ""
+msgstr "Anuluj"
 
 #: extension.js:569
 msgid "Clipboard history cleared"
@@ -74,16 +73,15 @@ msgstr "Skopiowano do schowka"
 
 #: prefs.js:28
 msgid "History Size"
-msgstr "Rozmiar historii (liczba elementów)"
+msgstr "Rozmiar historii"
 
 #: prefs.js:37
 msgid "Preview Size (characters)"
 msgstr "Rozmiar podglądu (znaki)"
 
 #: prefs.js:46
-#, fuzzy
 msgid "Max cache file size (MB)"
-msgstr "Maksymalny rozmiar pliku pamięci podręcznej (kB)"
+msgstr "Maksymalny rozmiar pliku pamięci podręcznej (MB)"
 
 #: prefs.js:55
 msgid "Number of characters in top bar"
@@ -94,70 +92,70 @@ msgid "What to show in top bar"
 msgstr "Pokazuj na panelu"
 
 #: prefs.js:69
-#, fuzzy
 msgid "Remove down arrow in top bar"
-msgstr "Liczba znaków na panelu"
+msgstr "Usuń dolną strzałkę na panelu"
 
 #: prefs.js:73
 msgid "Cache only pinned items"
-msgstr ""
+msgstr "Przechowuj w pamięci podręcznej tylko przypięte elementy"
 
 #: prefs.js:77
 msgid "Show notification on copy"
 msgstr "Pokaż powiadomienie po skopiowaniu"
 
 #: prefs.js:81
-#, fuzzy
 msgid "Show confirmation on Clear History"
-msgstr "Pokaż powiadomienie po skopiowaniu"
+msgstr "Pokaż powiadomienie po wyczyszczeniu historii"
 
 #: prefs.js:85
 msgid "Remove whitespace around text"
-msgstr ""
+msgstr "Usuń białe przestrzenie dookoła tekstu"
 
 #: prefs.js:89
 msgid "Move item to the top after selection"
-msgstr ""
+msgstr "Po zaznaczeniu przesuń element na górę"
 
 #: prefs.js:93
 msgid "Keep selected entry after Clear History"
-msgstr ""
+msgstr "Zachowaj wybrany wpis po wyczyszczeniu historii"
 
 #: prefs.js:97
 msgid "Show paste buttons"
-msgstr ""
+msgstr "Pokaż przyciski wklejania"
 
 #: prefs.js:98
 msgid "Adds a paste button to each entry that lets you paste it directly"
 msgstr ""
+"Dodaje przycisk wklejania do każdego wpisu, który umożliwia bezpośrednie "
+"wklejenie go"
 
 #: prefs.js:102
 msgid "Place the pinned section on the bottom"
-msgstr ""
+msgstr "Umieść przypiętą część na dole"
 
 #: prefs.js:103
 msgid "Requires restarting the extension"
-msgstr ""
+msgstr "Wymaga ponownego uruchomienia rozszerzenia"
 
 #: prefs.js:106
 msgid "UI"
-msgstr ""
+msgstr "Interfejs użytkownika"
 
 #: prefs.js:107
 msgid "Limits"
-msgstr ""
+msgstr "Ograniczenia"
 
 #: prefs.js:108
 msgid "Topbar"
-msgstr ""
+msgstr "Panel górny"
 
 #: prefs.js:109
 msgid "Notifications"
-msgstr ""
+msgstr "Powiadomienia"
 
 #: prefs.js:110
 msgid "Shortcuts"
-msgstr ""
+msgstr "Skróty klawiszowe"
 
 #: prefs.js:151
 msgid "Icon"
@@ -184,18 +182,16 @@ msgid "Next entry"
 msgstr "Następna pozycja"
 
 #: prefs.js:172
-#, fuzzy
 msgid "Enable shortcuts"
-msgstr "Skróty klawiszowe"
+msgstr "Włącz skróty klawiszowe"
 
 #: prefs.js:197
 msgid "Disabled"
-msgstr ""
+msgstr "Wyłączone"
 
 #: prefs.js:206
-#, fuzzy
 msgid "Enter shortcut"
-msgstr "Skróty klawiszowe"
+msgstr "Wpisz skrót klawiszowy"
 
 #~ msgid "Refresh Interval (ms)"
 #~ msgstr "Interwał odświeżania (ms)"
