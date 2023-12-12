@@ -185,6 +185,24 @@ export class Registry {
             console.error(e);
         }
     }
+
+    clearCacheFolder() {
+
+        const CANCELLABLE = null;
+        try {
+            const folder = Gio.file_new_for_path(this.REGISTRY_DIR);
+            const enumerator = folder.enumerate_children("", 1, CANCELLABLE);
+
+            let file;
+            while ((file = enumerator.iterate(CANCELLABLE)[2]) != null) {
+                file.delete(CANCELLABLE);
+            }
+            
+        }
+        catch (e) {
+            console.error(e);
+        }
+    }
 }
 
 export class ClipboardEntry {
