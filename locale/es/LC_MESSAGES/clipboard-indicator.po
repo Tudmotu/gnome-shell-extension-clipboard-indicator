@@ -116,43 +116,43 @@ msgstr "Mover el ítem hacia arriba despues de seleccionarlo"
 
 #: prefs.js:93
 msgid "Keep selected entry after Clear History"
-msgstr ""
+msgstr "Mantener la entrada seleccionada después de limpiar el historial"
 
 #: prefs.js:97
 msgid "Show paste buttons"
-msgstr ""
+msgstr "Mostrar botones de pegar"
 
 #: prefs.js:98
 msgid "Adds a paste button to each entry that lets you paste it directly"
-msgstr ""
+msgstr "Añade un botón de pegar a cada entrada, que te permite pegarlo directamente"
 
 #: prefs.js:102
 msgid "Place the pinned section on the bottom"
-msgstr ""
+msgstr "Situar la sección anclada abajo"
 
 #: prefs.js:103
 msgid "Requires restarting the extension"
-msgstr ""
+msgstr "Requiere reiniciar la extensión"
 
 #: prefs.js:106
 msgid "UI"
-msgstr ""
+msgstr "Interfaz de Usuario"
 
 #: prefs.js:107
 msgid "Limits"
-msgstr ""
+msgstr "Limites"
 
 #: prefs.js:108
 msgid "Topbar"
-msgstr ""
+msgstr "Barra superior"
 
 #: prefs.js:109
 msgid "Notifications"
-msgstr ""
+msgstr "Notificaciones"
 
 #: prefs.js:110
 msgid "Shortcuts"
-msgstr ""
+msgstr "Atajos de teclado"
 
 #: prefs.js:151
 msgid "Icon"
@@ -184,7 +184,7 @@ msgstr "Habilitar atajos de teclado"
 
 #: prefs.js:197
 msgid "Disabled"
-msgstr ""
+msgstr "Deshabilitado"
 
 #: prefs.js:206
 msgid "Enter shortcut"
