@@ -24,7 +24,7 @@ msgstr "El texto aparecerá aquí"
 
 #: extension.js:171
 msgid "Type here to search..."
-msgstr "Escriba aquí para buscar…"
+msgstr "Escriba aquí para buscar..."
 
 #: extension.js:240 prefs.js:163
 msgid "Private mode"
@@ -39,9 +39,8 @@ msgid "Settings"
 msgstr "Configuración"
 
 #: extension.js:289
-#, fuzzy
 msgid "Clipboard is empty"
-msgstr "Contenido del portapapeles"
+msgstr "El portapapeles está vacío"
 
 #: extension.js:552
 msgid "Clear all?"
@@ -80,9 +79,8 @@ msgid "Preview Size (characters)"
 msgstr "Tamaño de previsualización (caracteres)"
 
 #: prefs.js:46
-#, fuzzy
 msgid "Max cache file size (MB)"
-msgstr "Tamaño máximo de antememoria (kB)"
+msgstr "Tamaño máximo de cache (MB)"
 
 #: prefs.js:55
 msgid "Number of characters in top bar"
@@ -97,18 +95,16 @@ msgid "Remove down arrow in top bar"
 msgstr "Quitar la flecha hacia abajo de la barra de arriba"
 
 #: prefs.js:73
-#, fuzzy
 msgid "Cache only pinned items"
-msgstr "Cachear solo las favoritas"
+msgstr "Cachear sólo los items anclados"
 
 #: prefs.js:77
 msgid "Show notification on copy"
 msgstr "Mostrar una notificación al copiar"
 
 #: prefs.js:81
-#, fuzzy
 msgid "Show confirmation on Clear History"
-msgstr "Mostrar una notificación al copiar"
+msgstr "Mostrar una confirmación al borrar el historial"
 
 #: prefs.js:85
 msgid "Remove whitespace around text"
@@ -183,18 +179,16 @@ msgid "Next entry"
 msgstr "Entrada siguiente"
 
 #: prefs.js:172
-#, fuzzy
 msgid "Enable shortcuts"
-msgstr "Atajos de teclado"
+msgstr "Habilitar atajos de teclado"
 
 #: prefs.js:197
 msgid "Disabled"
 msgstr ""
 
 #: prefs.js:206
-#, fuzzy
 msgid "Enter shortcut"
-msgstr "Atajos de teclado"
+msgstr "Introduce atajo de teclado"
 
 #~ msgid "Refresh Interval (ms)"
 #~ msgstr "Intervalo de actualización (ms)"
