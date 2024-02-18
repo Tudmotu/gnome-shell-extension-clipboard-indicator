@@ -281,7 +281,9 @@ export class ClipboardEntry {
     }
 
     isText () {
-        return this.#mimetype.startsWith('text/');
+        return this.#mimetype.startsWith('text/') ||
+            this.#mimetype === 'STRING' ||
+            this.#mimetype === 'UTF8_STRING';
     }
 
     isImage () {
