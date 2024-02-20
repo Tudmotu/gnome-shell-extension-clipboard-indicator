@@ -112,7 +112,7 @@ const ClipboardIndicator = GObject.registerClass({
         hbox.add_child(this._buttonText);
         hbox.add_child(this._buttonImgPreview);
         this._downArrow = PopupMenu.arrowIcon(St.Side.BOTTOM);
-        hbox.add(this._downArrow);
+        hbox.add_child(this._downArrow);
         this.add_child(hbox);
         this._createHistoryLabel();
         this._loadSettings();
@@ -185,7 +185,7 @@ const ClipboardIndicator = GObject.registerClass({
             that._onSearchTextChanged.bind(that)
         );
 
-        that._entryItem.add(that.searchEntry);
+        that._entryItem.add_child(that.searchEntry);
 
         that.menu.connect('open-state-changed', (self, open) => {
             this._setFocusOnOpenTimeout = setTimeout(() => {
@@ -210,9 +210,9 @@ const ClipboardIndicator = GObject.registerClass({
             style_class: 'ci-history-menu-section',
             overlay_scrollbars: true
         });
-        this.favoritesScrollView.add_actor(that.favoritesSection.actor);
+        this.favoritesScrollView.add_child(that.favoritesSection.actor);
 
-        that.scrollViewFavoritesMenuSection.actor.add_actor(this.favoritesScrollView);
+        that.scrollViewFavoritesMenuSection.actor.add_child(this.favoritesScrollView);
         this.favoritesSeparator = new PopupMenu.PopupSeparatorMenuItem();
 
         // History
@@ -223,9 +223,9 @@ const ClipboardIndicator = GObject.registerClass({
             style_class: 'ci-main-menu-section ci-history-menu-section',
             overlay_scrollbars: true
         });
-        this.historyScrollView.add_actor(that.historySection.actor);
+        this.historyScrollView.add_child(that.historySection.actor);
 
-        that.scrollViewMenuSection.actor.add_actor(this.historyScrollView);
+        that.scrollViewMenuSection.actor.add_child(this.historyScrollView);
 
         // Add separator
         this.historySeparator = new PopupMenu.PopupSeparatorMenuItem();
@@ -828,7 +828,7 @@ const ClipboardIndicator = GObject.registerClass({
             text: ''
         });
 
-        global.stage.add_actor(this._historyLabel);
+        global.stage.add_child(this._historyLabel);
 
         this._historyLabel.hide();
     }
