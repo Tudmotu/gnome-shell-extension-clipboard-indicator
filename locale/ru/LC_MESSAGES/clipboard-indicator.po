@@ -42,11 +42,11 @@ msgstr "Настройки"
 #: extension.js:289
 #, fuzzy
 msgid "Clipboard is empty"
-msgstr "Содержимое буфера обмена"
+msgstr "Буфер обмена пуст"
 
 #: extension.js:552
 msgid "Clear all?"
-msgstr "Очистить все?"
+msgstr "Очистить всё?"
 
 #: extension.js:553
 msgid "Are you sure you want to delete all clipboard items?"
@@ -83,7 +83,7 @@ msgstr "Длина строки в меню (символов)"
 #: prefs.js:46
 #, fuzzy
 msgid "Max cache file size (MB)"
-msgstr "Максимальный размер кэша (кб)"
+msgstr "Максимальный размер кэша (мб)"
 
 #: prefs.js:55
 msgid "Number of characters in top bar"
@@ -109,7 +109,7 @@ msgstr "Уведомление при копировании"
 #: prefs.js:81
 #, fuzzy
 msgid "Show confirmation on Clear History"
-msgstr "Уведомление при копировании"
+msgstr "Уведомление при очитске истории"
 
 #: prefs.js:85
 msgid "Remove whitespace around text"
@@ -121,43 +121,43 @@ msgstr "Переместить запись в начало после выде�
 
 #: prefs.js:93
 msgid "Keep selected entry after Clear History"
-msgstr ""
+msgstr "Не очищать выбранную запись после очитски истории"
 
 #: prefs.js:97
 msgid "Show paste buttons"
-msgstr ""
+msgstr "Показывать кнопки вставки"
 
 #: prefs.js:98
 msgid "Adds a paste button to each entry that lets you paste it directly"
-msgstr ""
+msgstr "Добавить кнопку вставки на каждую запись, позволяющая вставить напрямую"
 
 #: prefs.js:102
 msgid "Place the pinned section on the bottom"
-msgstr ""
+msgstr "Переместить избранный элемент в конец истории"
 
 #: prefs.js:103
 msgid "Requires restarting the extension"
-msgstr ""
+msgstr "Требует перезагрузки расширения"
 
 #: prefs.js:106
 msgid "UI"
-msgstr ""
+msgstr "Интерфейс"
 
 #: prefs.js:107
 msgid "Limits"
-msgstr ""
+msgstr "Ограничения"
 
 #: prefs.js:108
 msgid "Topbar"
-msgstr ""
+msgstr "Верхняя панель"
 
 #: prefs.js:109
 msgid "Notifications"
-msgstr ""
+msgstr "Уведомления"
 
 #: prefs.js:110
 msgid "Shortcuts"
-msgstr ""
+msgstr "Горячие клавиши"
 
 #: prefs.js:151
 msgid "Icon"
@@ -190,12 +190,12 @@ msgstr "Горячие клавиши"
 
 #: prefs.js:197
 msgid "Disabled"
-msgstr ""
+msgstr "Выключено"
 
 #: prefs.js:206
 #, fuzzy
 msgid "Enter shortcut"
-msgstr "Горячие клавиши"
+msgstr "Ввести горячие клавиши"
 
 #~ msgid "Refresh Interval (ms)"
 #~ msgstr "Интервал обновления (мс)"
