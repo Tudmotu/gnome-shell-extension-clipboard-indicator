@@ -121,43 +121,43 @@ msgstr "Porta l'elemento in cima dopo la selezione"
 
 #: prefs.js:93
 msgid "Keep selected entry after Clear History"
-msgstr ""
+msgstr "Mantieni la voce selezionata dopo aver cancellato la cronologia"
 
 #: prefs.js:97
 msgid "Show paste buttons"
-msgstr ""
+msgstr "Mostra bottone Incolla"
 
 #: prefs.js:98
 msgid "Adds a paste button to each entry that lets you paste it directly"
-msgstr ""
+msgstr "Aggiunge un pulsante Incolla a ciascuna voce che consente di incollarla direttamente"
 
 #: prefs.js:102
 msgid "Place the pinned section on the bottom"
-msgstr ""
+msgstr "Posiziona la sezione fissata sul fondo"
 
 #: prefs.js:103
 msgid "Requires restarting the extension"
-msgstr ""
+msgstr "Richiede di ricaricare l\'estensione"
 
 #: prefs.js:106
 msgid "UI"
-msgstr ""
+msgstr "UI"
 
 #: prefs.js:107
 msgid "Limits"
-msgstr ""
+msgstr "Limiti"
 
 #: prefs.js:108
 msgid "Topbar"
-msgstr ""
+msgstr "Topbar"
 
 #: prefs.js:109
 msgid "Notifications"
-msgstr ""
+msgstr "Notifiche"
 
 #: prefs.js:110
 msgid "Shortcuts"
-msgstr ""
+msgstr "Scorciatoie da tastiera"
 
 #: prefs.js:151
 msgid "Icon"
@@ -190,7 +190,7 @@ msgstr "Scorciatoie da tastiera"
 
 #: prefs.js:197
 msgid "Disabled"
-msgstr ""
+msgstr "Disabilitato"
 
 #: prefs.js:206
 #, fuzzy
