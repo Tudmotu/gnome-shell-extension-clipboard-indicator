@@ -54,9 +54,13 @@ After cloning the repo, the extension is practically installed yet disabled. In 
 Depending on your GNOME version, you will need to install the following
 Clipboard Indicator versions:
 
-* GNOME 45 and above:
+* GNOME 46 and above:
 
   * Use latest version
+
+* GNOME 45:
+
+  * v57
 
 * GNOME 42-44
 
