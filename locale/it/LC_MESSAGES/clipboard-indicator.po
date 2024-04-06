@@ -137,7 +137,7 @@ msgstr "Posiziona la sezione fissata sul fondo"
 
 #: prefs.js:103
 msgid "Requires restarting the extension"
-msgstr "Richiede di ricaricare l\'estensione"
+msgstr "Richiede di ricaricare l'estensione"
 
 #: prefs.js:106
 msgid "UI"
