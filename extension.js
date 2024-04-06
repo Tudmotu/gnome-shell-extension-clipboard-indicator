@@ -900,29 +900,34 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     async _onSettingsChange () {
-        var that = this;
+        try {
+            var that = this;
 
-        // Load the settings into variables
-        that._fetchSettings();
+            // Load the settings into variables
+            that._fetchSettings();
 
-        // Remove old entries in case the registry size changed
-        that._removeOldestEntries();
+            // Remove old entries in case the registry size changed
+            that._removeOldestEntries();
 
-        // Re-set menu-items lables in case preview size changed
-        this._getAllIMenuItems().forEach(function (mItem) {
-            that._setEntryLabel(mItem);
-            mItem.pasteBtn.visible = PASTE_BUTTON;
-        });
+            // Re-set menu-items lables in case preview size changed
+            this._getAllIMenuItems().forEach(function (mItem) {
+                that._setEntryLabel(mItem);
+                mItem.pasteBtn.visible = PASTE_BUTTON;
+            });
 
-        //update topbar
-        this._updateTopbarLayout();
-        that.#updateIndicatorContent(await this.#getClipboardContent());
+            //update topbar
+            this._updateTopbarLayout();
+            that.#updateIndicatorContent(await this.#getClipboardContent());
 
-        // Bind or unbind shortcuts
-        if (ENABLE_KEYBINDING)
-            that._bindShortcuts();
-        else
-            that._unbindShortcuts();
+            // Bind or unbind shortcuts
+            if (ENABLE_KEYBINDING)
+                that._bindShortcuts();
+            else
+                that._unbindShortcuts();
+        } catch (e) {
+            console.error('Clipboard Indicator: Failed to update registry');
+            console.error(e);
+        }
     }
 
     _bindShortcuts () {
