@@ -228,18 +228,32 @@ export class ClipboardEntry {
 
             let file = Gio.file_new_for_path(filename);
 
-            bytes = await new Promise((resolve, reject) => file.load_contents_async(null, (obj, res) => {
-                let [success, contents] = obj.load_contents_finish(res);
-
-                if (success) {
-                    resolve(contents);
-                }
-                else {
-                    reject(
-                        new Error('Clipboard Indicator: could not read image file from cache')
-                    );
+            const contentType = await new Promise((resolve, reject) => file.query_info_async(null, (obj, res) => {
+                try {
+                    const fileInfo = obj.query_info_finish(res);
+                    resolve(fileInfo.get_content_type());
+                } catch (e) {
+                    reject(e);
                 }
             }));
+
+            if (!contentType.startsWith('image/') && !contentType.startsWith('text/')) {
+                bytes = new TextEncoder().encode(jsonEntry.contents);
+            }
+            else {
+                bytes = await new Promise((resolve, reject) => file.load_contents_async(null, (obj, res) => {
+                    let [success, contents] = obj.load_contents_finish(res);
+
+                    if (success) {
+                        resolve(contents);
+                    }
+                    else {
+                        reject(
+                            new Error('Clipboard Indicator: could not read image file from cache')
+                        );
+                    }
+                }));
+            }
         }
 
         return new ClipboardEntry(mimetype, bytes, favorite);
