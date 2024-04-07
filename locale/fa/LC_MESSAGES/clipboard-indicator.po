@@ -1,30 +1,29 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# آوید <avds+git@disroot.org>, 2024.
 #
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: 60\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-16 11:48+0300\n"
-"PO-Revision-Date: 2021-10-15 09:50+0330\n"
-"Last-Translator: eshagh <eshagh094@gmail.com>\n"
-"Language-Team: \n"
-"Language: fa\n"
+"PO-Revision-Date: 2024-04-07 17:57+0330\n"
+"Last-Translator: Avid <avds+git@disroot.org>\n"
+"Language-Team: Farsi <avds+git@disroot.org>\n"
+"Language: fa_IR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.0\n"
-"Plural-Forms: nplurals=2; plural=(n==0 || n==1);\n"
 
 #: extension.js:102
 msgid "Text will be here"
-msgstr "متن اینجا خواهد بود"
+msgstr "متن این‌جا خواهد بود"
 
 #: extension.js:171
 msgid "Type here to search..."
-msgstr "برای جست‌وجو اینجا بنویسید..."
+msgstr "برای جست‌وجو این‌جا بنویسید..."
 
 #: extension.js:240 prefs.js:163
 msgid "Private mode"
@@ -32,16 +31,15 @@ msgstr "حالت خصوصی"
 
 #: extension.js:254 prefs.js:165
 msgid "Clear history"
-msgstr "پاک‌کردن تاریخچه"
+msgstr "پاک‌سازی تاریخچه"
 
 #: extension.js:266
 msgid "Settings"
 msgstr "تنظیمات"
 
 #: extension.js:289
-#, fuzzy
 msgid "Clipboard is empty"
-msgstr "محتویات تخته‌گیره"
+msgstr "تخته‌گیره خالیست"
 
 #: extension.js:552
 msgid "Clear all?"
@@ -49,15 +47,15 @@ msgstr "همه پاک شوند؟"
 
 #: extension.js:553
 msgid "Are you sure you want to delete all clipboard items?"
-msgstr "آیا از حذف همه موارد تخته‌گیره مطمئنید؟"
+msgstr "آیا از حذف همهٔ موارد تخته‌گیره مطمئنید؟"
 
 #: extension.js:554
 msgid "This operation cannot be undone."
-msgstr "این عملیات قابل بازگردانی نیست."
+msgstr "این عملیات نمی‌تواند بازگردانی شود."
 
 #: extension.js:556
 msgid "Clear"
-msgstr "پاک‌کردن"
+msgstr "پاک‌سازی"
 
 #: extension.js:556 extension.js:714
 msgid "Cancel"
@@ -69,50 +67,47 @@ msgstr "تاریخچهٔ تخته‌گیره پاک شد"
 
 #: extension.js:713
 msgid "Copied to clipboard"
-msgstr "رونوشت به تخته‌گیره"
+msgstr "به تخته‌گیره رونوشت شد"
 
 #: prefs.js:28
 msgid "History Size"
-msgstr "اندازهٔ تاریخچه"
+msgstr "اندازهٔ‌ تاریخچه"
 
 #: prefs.js:37
 msgid "Preview Size (characters)"
 msgstr "اندازهٔ پیش‌نمایش (نویسه)"
 
 #: prefs.js:46
-#, fuzzy
 msgid "Max cache file size (MB)"
-msgstr "حداکثر اندازهٔ پروندهٔ انباره (کیلوبایت)"
+msgstr "بیشینهٔ اندازهٔ پروندهٔ انبارش (م‌ب)"
 
 #: prefs.js:55
 msgid "Number of characters in top bar"
-msgstr "تعداد نویسه‌ها در نوار بالا"
+msgstr "شمار نویسه‌ها در نوار بالایی"
 
 #: prefs.js:64
 msgid "What to show in top bar"
-msgstr "چه‌چیزی در نوار بالا دیده شود"
+msgstr "چه در نوار بالایی نمایش داده شود"
 
 #: prefs.js:69
 msgid "Remove down arrow in top bar"
-msgstr "برداشتن فلش روبه پایین در نوار بالا"
+msgstr "برداشتن پیکان رو به پایین در نوار بالایی"
 
 #: prefs.js:73
-#, fuzzy
 msgid "Cache only pinned items"
-msgstr "فقط انبارش مورد علاقه‌ها"
+msgstr "فقط انبارش موارد سنجاق‌شده"
 
 #: prefs.js:77
 msgid "Show notification on copy"
 msgstr "نمایش آگاهی هنگام رونوشت"
 
 #: prefs.js:81
-#, fuzzy
 msgid "Show confirmation on Clear History"
-msgstr "نمایش آگاهی هنگام رونوشت"
+msgstr "نمایش تائیدیه هنگام پاک‌سازی تاریخچه"
 
 #: prefs.js:85
 msgid "Remove whitespace around text"
-msgstr "برداشتن فاصلهٔ اطراف متن"
+msgstr "برداشتن فاصلهٔ دور متن"
 
 #: prefs.js:89
 msgid "Move item to the top after selection"
@@ -120,43 +115,43 @@ msgstr "جابه‌جایی مورد به بالا پس از گزینش"
 
 #: prefs.js:93
 msgid "Keep selected entry after Clear History"
-msgstr ""
+msgstr "نگاه داشتن ورودی برگزیده پس از پاک‌سازی تاریخچه"
 
 #: prefs.js:97
 msgid "Show paste buttons"
-msgstr ""
+msgstr "نمایش دکمهٔ جای‌گذاری"
 
 #: prefs.js:98
 msgid "Adds a paste button to each entry that lets you paste it directly"
-msgstr ""
+msgstr "افزودن یک دکمه به هر ورودی برای جای‌گذاری مستقیم"
 
 #: prefs.js:102
 msgid "Place the pinned section on the bottom"
-msgstr ""
+msgstr "جای دادن بخش سنجاق‌شده در پایین"
 
 #: prefs.js:103
 msgid "Requires restarting the extension"
-msgstr ""
+msgstr "نیازمند راه‌اندازی دوبارهٔ افزونه"
 
 #: prefs.js:106
 msgid "UI"
-msgstr ""
+msgstr "رابط کاربری"
 
 #: prefs.js:107
 msgid "Limits"
-msgstr ""
+msgstr "محدودیت‌ها"
 
 #: prefs.js:108
 msgid "Topbar"
-msgstr ""
+msgstr "نوار بالایی"
 
 #: prefs.js:109
 msgid "Notifications"
-msgstr ""
+msgstr "آگاهی‌ها"
 
 #: prefs.js:110
 msgid "Shortcuts"
-msgstr ""
+msgstr "میان‌برها"
 
 #: prefs.js:151
 msgid "Icon"
@@ -170,31 +165,30 @@ msgstr "محتویات تخته‌گیره"
 msgid "Both"
 msgstr "هر دو"
 
-#: prefs.js:164
+#: prefs.js:154
+msgid "Neither"
+msgstr "هیچ‌کدام"
+
+#: prefs.js:165
 msgid "Toggle the menu"
 msgstr "تغییر وضعیت فهرست"
 
-#: prefs.js:166
-msgid "Previous entry"
-msgstr "ورودی قبلی"
-
 #: prefs.js:167
+msgid "Previous entry"
+msgstr "ورودی پیشین"
+
+#: prefs.js:168
 msgid "Next entry"
-msgstr "ورودی بعدی"
+msgstr "ورودی پسین"
 
-#: prefs.js:172
-#, fuzzy
+#: prefs.js:173
 msgid "Enable shortcuts"
-msgstr "میان‌بر صفحه‌کلید"
+msgstr "به کار اندازی میان‌برها"
 
-#: prefs.js:197
+#: prefs.js:198
 msgid "Disabled"
-msgstr ""
+msgstr "از کار افتاده"
 
-#: prefs.js:206
-#, fuzzy
+#: prefs.js:207
 msgid "Enter shortcut"
-msgstr "میان‌بر صفحه‌کلید"
-
-#~ msgid "Refresh Interval (ms)"
-#~ msgstr "فاصلهٔ تازه‌سازی (میلی‌ثانیه)"
+msgstr "ورود میان‌بر"
