@@ -769,11 +769,15 @@ const ClipboardIndicator = GObject.registerClass({
 
     _initNotifSource () {
         if (!this._notifSource) {
-            this._notifSource = new MessageTray.Source('ClipboardIndicator',
-                                    INDICATOR_ICON);
+            this._notifSource = new MessageTray.Source({
+                title: 'Clipboard Indicator',
+                'icon-name': INDICATOR_ICON
+            });
+
             this._notifSource.connect('destroy', () => {
                 this._notifSource = null;
             });
+
             Main.messageTray.add(this._notifSource);
         }
     }
@@ -807,19 +811,23 @@ const ClipboardIndicator = GObject.registerClass({
         this._initNotifSource();
 
         if (this._notifSource.count === 0) {
-            notification = new MessageTray.Notification(this._notifSource, message);
+            notification = new MessageTray.Notification({
+                source: this._notifSource,
+                body: message,
+                'is-transient': true
+            });
         }
         else {
             notification = this._notifSource.notifications[0];
-            notification.update(message, '', { clear: true });
+            notification.body = message;
+            notification.clearActions();
         }
 
         if (typeof transformFn === 'function') {
             transformFn(notification);
         }
 
-        notification.setTransient(true);
-        this._notifSource.showNotification(notification);
+        this._notifSource.addNotification(notification);
     }
 
     _createHistoryLabel () {
