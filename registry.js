@@ -197,7 +197,7 @@ export class Registry {
             while ((file = enumerator.iterate(CANCELLABLE)[2]) != null) {
                 file.delete(CANCELLABLE);
             }
-            
+
         }
         catch (e) {
             console.error(e);
@@ -228,16 +228,16 @@ export class ClipboardEntry {
 
             let file = Gio.file_new_for_path(filename);
 
-            const contentType = await new Promise((resolve, reject) => file.query_info_async(null, (obj, res) => {
+            const contentType = await file.query_info_async('*', FileQueryInfoFlags.NONE, GLib.PRIORITY_DEFAULT, null, (obj, res) => {
                 try {
                     const fileInfo = obj.query_info_finish(res);
-                    resolve(fileInfo.get_content_type());
+                    return fileInfo.get_content_type();
                 } catch (e) {
-                    reject(e);
+                    console.error(e);
                 }
-            }));
+            });
 
-            if (!contentType.startsWith('image/') && !contentType.startsWith('text/')) {
+            if (contentType && !contentType.startsWith('image/') && !contentType.startsWith('text/')) {
                 bytes = new TextEncoder().encode(jsonEntry.contents);
             }
             else {
