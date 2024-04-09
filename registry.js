@@ -235,7 +235,7 @@ export class ClipboardEntry {
                 } catch (e) {
                     console.error(e);
                 }
-            })
+            });
 
             if (contentType && !contentType.startsWith('image/') && !contentType.startsWith('text/')) {
                 bytes = new TextEncoder().encode(jsonEntry.contents);
