@@ -130,7 +130,7 @@ msgstr "Dodaje przycisk wklejania przy każdym wpisie, który pozwala wkleić go
 
 #: prefs.js:103
 msgid "Place the pinned section on the bottom"
-msgstr "Umieść sekcje z przypiętymi pozycjami na górze"
+msgstr "Umieść sekcje z przypiętymi pozycjami na dole"
 
 #: prefs.js:104
 msgid "Requires restarting the extension"
