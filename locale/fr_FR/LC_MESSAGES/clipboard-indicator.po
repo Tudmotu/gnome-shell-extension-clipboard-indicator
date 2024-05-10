@@ -2,6 +2,8 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Raphael Rochet <raphael@rri.fr>, inconnu.
+# Wedone <wedoneofficiel@outlook.fr>, 2024.
 #
 msgid ""
 msgstr ""
@@ -9,7 +11,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-16 11:48+0300\n"
 "PO-Revision-Date: 2020-05-04 11:15+0200\n"
-"Last-Translator: Raphael Rochet <raphael@rri.fr>\n"
+"Last-Translator: Wedone <wedoneofficiel@outlook.fr>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
@@ -121,43 +123,43 @@ msgstr "Déplacer l'élément sélectionné en haut"
 
 #: prefs.js:93
 msgid "Keep selected entry after Clear History"
-msgstr ""
+msgstr "Conserver l'entrée sélectionnée après l'effacement de l'historique"
 
 #: prefs.js:97
 msgid "Show paste buttons"
-msgstr ""
+msgstr "Afficher le bouton coller"
 
 #: prefs.js:98
 msgid "Adds a paste button to each entry that lets you paste it directly"
-msgstr ""
+msgstr "Ajout d'un bouton "coller" à chaque entrée ce qui vous permet de la coller directement"
 
 #: prefs.js:102
 msgid "Place the pinned section on the bottom"
-msgstr ""
+msgstr Placer la section épinglée au fond""
 
 #: prefs.js:103
 msgid "Requires restarting the extension"
-msgstr ""
+msgstr "Nécessite le redémarrage de l'extension"
 
 #: prefs.js:106
 msgid "UI"
-msgstr ""
+msgstr "UI"
 
 #: prefs.js:107
 msgid "Limits"
-msgstr ""
+msgstr "Limites"
 
 #: prefs.js:108
 msgid "Topbar"
-msgstr ""
+msgstr "Topbar"
 
 #: prefs.js:109
 msgid "Notifications"
-msgstr ""
+msgstr "Notifications"
 
 #: prefs.js:110
 msgid "Shortcuts"
-msgstr ""
+msgstr "Raccourcis"
 
 #: prefs.js:151
 msgid "Icon"
@@ -190,7 +192,7 @@ msgstr "Raccourcis clavier"
 
 #: prefs.js:197
 msgid "Disabled"
-msgstr ""
+msgstr "Désactivé"
 
 #: prefs.js:206
 #, fuzzy
