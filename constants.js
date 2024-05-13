@@ -20,4 +20,5 @@ export const PrefsFields = {
     BINDING_PREV_ENTRY     : 'prev-entry',
     BINDING_NEXT_ENTRY     : 'next-entry',
     BINDING_PRIVATE_MODE   : 'private-mode-binding',
+    CLEAR_ON_BOOT          : 'clear-on-boot'
 };

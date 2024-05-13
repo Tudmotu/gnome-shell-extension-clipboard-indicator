@@ -185,6 +185,24 @@ export class Registry {
             console.error(e);
         }
     }
+
+    clearCacheFolder() {
+
+        const CANCELLABLE = null;
+        try {
+            const folder = Gio.file_new_for_path(this.REGISTRY_DIR);
+            const enumerator = folder.enumerate_children("", 1, CANCELLABLE);
+
+            let file;
+            while ((file = enumerator.iterate(CANCELLABLE)[2]) != null) {
+                file.delete(CANCELLABLE);
+            }
+
+        }
+        catch (e) {
+            console.error(e);
+        }
+    }
 }
 
 export class ClipboardEntry {
@@ -210,18 +228,32 @@ export class ClipboardEntry {
 
             let file = Gio.file_new_for_path(filename);
 
-            bytes = await new Promise((resolve, reject) => file.load_contents_async(null, (obj, res) => {
-                let [success, contents] = obj.load_contents_finish(res);
+            const contentType = await file.query_info_async('*', FileQueryInfoFlags.NONE, GLib.PRIORITY_DEFAULT, null, (obj, res) => {
+                try {
+                    const fileInfo = obj.query_info_finish(res);
+                    return fileInfo.get_content_type();
+                } catch (e) {
+                    console.error(e);
+                }
+            });
 
-                if (success) {
-                    resolve(contents);
-                }
-                else {
-                    reject(
-                        new Error('Clipboard Indicator: could not read image file from cache')
-                    );
-                }
-            }));
+            if (contentType && !contentType.startsWith('image/') && !contentType.startsWith('text/')) {
+                bytes = new TextEncoder().encode(jsonEntry.contents);
+            }
+            else {
+                bytes = await new Promise((resolve, reject) => file.load_contents_async(null, (obj, res) => {
+                    let [success, contents] = obj.load_contents_finish(res);
+
+                    if (success) {
+                        resolve(contents);
+                    }
+                    else {
+                        reject(
+                            new Error('Clipboard Indicator: could not read image file from cache')
+                        );
+                    }
+                }));
+            }
         }
 
         return new ClipboardEntry(mimetype, bytes, favorite);
@@ -263,7 +295,9 @@ export class ClipboardEntry {
     }
 
     isText () {
-        return this.#mimetype.startsWith('text/');
+        return this.#mimetype.startsWith('text/') ||
+            this.#mimetype === 'STRING' ||
+            this.#mimetype === 'UTF8_STRING';
     }
 
     isImage () {

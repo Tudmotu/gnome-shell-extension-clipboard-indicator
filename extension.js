@@ -32,6 +32,7 @@ let NOTIFY_ON_COPY            = true;
 let CONFIRM_ON_CLEAR          = true;
 let MAX_TOPBAR_LENGTH         = 15;
 let TOPBAR_DISPLAY_MODE       = 1; //0 - only icon, 1 - only clipboard content, 2 - both, 3 - neither
+let CLEAR_ON_BOOT             = false;
 let DISABLE_DOWN_ARROW        = false;
 let STRIP_TEXT                = false;
 let KEEP_SELECTED_ON_CLEAR    = false;
@@ -111,10 +112,13 @@ const ClipboardIndicator = GObject.registerClass({
         hbox.add_child(this._buttonText);
         hbox.add_child(this._buttonImgPreview);
         this._downArrow = PopupMenu.arrowIcon(St.Side.BOTTOM);
-        hbox.add(this._downArrow);
+        hbox.add_child(this._downArrow);
         this.add_child(hbox);
         this._createHistoryLabel();
         this._loadSettings();
+
+        if (CLEAR_ON_BOOT) this.registry.clearCacheFolder();
+
         this.dialogManager = new DialogManager();
         this._buildMenu().then(() => {
             this._updateTopbarLayout();
@@ -181,7 +185,7 @@ const ClipboardIndicator = GObject.registerClass({
             that._onSearchTextChanged.bind(that)
         );
 
-        that._entryItem.add(that.searchEntry);
+        that._entryItem.add_child(that.searchEntry);
 
         that.menu.connect('open-state-changed', (self, open) => {
             this._setFocusOnOpenTimeout = setTimeout(() => {
@@ -206,9 +210,9 @@ const ClipboardIndicator = GObject.registerClass({
             style_class: 'ci-history-menu-section',
             overlay_scrollbars: true
         });
-        this.favoritesScrollView.add_actor(that.favoritesSection.actor);
+        this.favoritesScrollView.add_child(that.favoritesSection.actor);
 
-        that.scrollViewFavoritesMenuSection.actor.add_actor(this.favoritesScrollView);
+        that.scrollViewFavoritesMenuSection.actor.add_child(this.favoritesScrollView);
         this.favoritesSeparator = new PopupMenu.PopupSeparatorMenuItem();
 
         // History
@@ -219,9 +223,9 @@ const ClipboardIndicator = GObject.registerClass({
             style_class: 'ci-main-menu-section ci-history-menu-section',
             overlay_scrollbars: true
         });
-        this.historyScrollView.add_actor(that.historySection.actor);
+        this.historyScrollView.add_child(that.historySection.actor);
 
-        that.scrollViewMenuSection.actor.add_actor(this.historyScrollView);
+        that.scrollViewMenuSection.actor.add_child(this.historyScrollView);
 
         // Add separator
         this.historySeparator = new PopupMenu.PopupSeparatorMenuItem();
@@ -765,11 +769,15 @@ const ClipboardIndicator = GObject.registerClass({
 
     _initNotifSource () {
         if (!this._notifSource) {
-            this._notifSource = new MessageTray.Source('ClipboardIndicator',
-                                    INDICATOR_ICON);
+            this._notifSource = new MessageTray.Source({
+                title: 'Clipboard Indicator',
+                'icon-name': INDICATOR_ICON
+            });
+
             this._notifSource.connect('destroy', () => {
                 this._notifSource = null;
             });
+
             Main.messageTray.add(this._notifSource);
         }
     }
@@ -803,19 +811,23 @@ const ClipboardIndicator = GObject.registerClass({
         this._initNotifSource();
 
         if (this._notifSource.count === 0) {
-            notification = new MessageTray.Notification(this._notifSource, message);
+            notification = new MessageTray.Notification({
+                source: this._notifSource,
+                body: message,
+                'is-transient': true
+            });
         }
         else {
             notification = this._notifSource.notifications[0];
-            notification.update(message, '', { clear: true });
+            notification.body = message;
+            notification.clearActions();
         }
 
         if (typeof transformFn === 'function') {
             transformFn(notification);
         }
 
-        notification.setTransient(true);
-        this._notifSource.showNotification(notification);
+        this._notifSource.addNotification(notification);
     }
 
     _createHistoryLabel () {
@@ -824,7 +836,7 @@ const ClipboardIndicator = GObject.registerClass({
             text: ''
         });
 
-        global.stage.add_actor(this._historyLabel);
+        global.stage.add_child(this._historyLabel);
 
         this._historyLabel.hide();
     }
@@ -886,6 +898,7 @@ const ClipboardIndicator = GObject.registerClass({
         ENABLE_KEYBINDING      = settings.get_boolean(PrefsFields.ENABLE_KEYBINDING);
         MAX_TOPBAR_LENGTH      = settings.get_int(PrefsFields.TOPBAR_PREVIEW_SIZE);
         TOPBAR_DISPLAY_MODE    = settings.get_int(PrefsFields.TOPBAR_DISPLAY_MODE_ID);
+        CLEAR_ON_BOOT          = settings.get_boolean(PrefsFields.CLEAR_ON_BOOT);
         DISABLE_DOWN_ARROW     = settings.get_boolean(PrefsFields.DISABLE_DOWN_ARROW);
         STRIP_TEXT             = settings.get_boolean(PrefsFields.STRIP_TEXT);
         KEEP_SELECTED_ON_CLEAR = settings.get_boolean(PrefsFields.KEEP_SELECTED_ON_CLEAR);
@@ -895,29 +908,34 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     async _onSettingsChange () {
-        var that = this;
+        try {
+            var that = this;
 
-        // Load the settings into variables
-        that._fetchSettings();
+            // Load the settings into variables
+            that._fetchSettings();
 
-        // Remove old entries in case the registry size changed
-        that._removeOldestEntries();
+            // Remove old entries in case the registry size changed
+            that._removeOldestEntries();
 
-        // Re-set menu-items lables in case preview size changed
-        this._getAllIMenuItems().forEach(function (mItem) {
-            that._setEntryLabel(mItem);
-            mItem.pasteBtn.visible = PASTE_BUTTON;
-        });
+            // Re-set menu-items lables in case preview size changed
+            this._getAllIMenuItems().forEach(function (mItem) {
+                that._setEntryLabel(mItem);
+                mItem.pasteBtn.visible = PASTE_BUTTON;
+            });
 
-        //update topbar
-        this._updateTopbarLayout();
-        that.#updateIndicatorContent(await this.#getClipboardContent());
+            //update topbar
+            this._updateTopbarLayout();
+            that.#updateIndicatorContent(await this.#getClipboardContent());
 
-        // Bind or unbind shortcuts
-        if (ENABLE_KEYBINDING)
-            that._bindShortcuts();
-        else
-            that._unbindShortcuts();
+            // Bind or unbind shortcuts
+            if (ENABLE_KEYBINDING)
+                that._bindShortcuts();
+            else
+                that._unbindShortcuts();
+        } catch (e) {
+            console.error('Clipboard Indicator: Failed to update registry');
+            console.error(e);
+        }
     }
 
     _bindShortcuts () {
@@ -1108,8 +1126,10 @@ const ClipboardIndicator = GObject.registerClass({
 
     async #getClipboardContent () {
         const mimetypes = [
-            'text/plain;charset=utf-8',
-            'text/plain',
+            "text/plain;charset=utf-8",
+            "UTF8_STRING",
+            "text/plain",
+            "STRING",
             'image/gif',
             'image/png',
             'image/jpg',
