@@ -214,12 +214,18 @@ export class ClipboardEntry {
         return Uint8Array.from(contents.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)));
     }
 
+    static __isText (mimetype) {
+        return mimetype.startsWith('text/') ||
+            mimetype === 'STRING' ||
+            mimetype === 'UTF8_STRING';
+    }
+
     static async fromJSON (jsonEntry) {
         const mimetype = jsonEntry.mimetype || 'text/plain;charset=utf-8';
         const favorite = jsonEntry.favorite;
         let bytes;
 
-        if (mimetype.startsWith('text/')) {
+        if (ClipboardEntry.__isText(mimetype)) {
             bytes = new TextEncoder().encode(jsonEntry.contents);
         }
         else {
@@ -295,9 +301,7 @@ export class ClipboardEntry {
     }
 
     isText () {
-        return this.#mimetype.startsWith('text/') ||
-            this.#mimetype === 'STRING' ||
-            this.#mimetype === 'UTF8_STRING';
+        return ClipboardEntry.__isText(this.#mimetype);
     }
 
     isImage () {
