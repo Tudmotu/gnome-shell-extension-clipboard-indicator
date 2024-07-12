@@ -115,7 +115,7 @@ msgstr "جابه‌جایی مورد به بالا پس از گزینش"
 
 #: prefs.js:93
 msgid "Keep selected entry after Clear History"
-msgstr "نگاه داشتن ورودی برگزیده پس از پاک‌سازی تاریخچه"
+msgstr "نگه داشتن ورودی برگزیده پس از پاک‌سازی تاریخچه"
 
 #: prefs.js:97
 msgid "Show paste buttons"
