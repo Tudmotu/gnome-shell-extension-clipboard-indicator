@@ -12,9 +12,10 @@
     width:400px;
 }
 
-.popup-menu-item {
-    margin: 0 .8em;
+.ci-history-menu-section .popup-menu-item {
+    margin-right: .8em;
 }
+
 .popup-menu-item .ci-action-btn StIcon {
     icon-size:1.2em;
     margin-left:.25em;
