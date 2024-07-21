@@ -444,6 +444,17 @@ const ClipboardIndicator = GObject.registerClass({
         menuItem.entry = entry;
         menuItem.clipContents = entry.getStringValue();
         menuItem.radioGroup = this.clipItemsRadioGroup;
+        const allowedKeysyms = [
+            Clutter.KEY_KP_Enter,
+            Clutter.KEY_Return,
+          ];
+        menuItem.keyPressId = menuItem.connect('key-press-event', (actor, event) => {
+            if (allowedKeysyms.includes(event.get_key_symbol())) {
+                this._onMenuItemSelectedAndMenuClose(menuItem, 'activate')
+                return true;
+            }
+            return false;
+        })
         menuItem.buttonPressId = menuItem.connect('activate',
             autoSet => this._onMenuItemSelectedAndMenuClose(menuItem, autoSet));
         menuItem.connect('key-focus-in', () => {
