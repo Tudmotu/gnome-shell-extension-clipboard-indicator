@@ -29,7 +29,7 @@ class Settings {
             title: _("History Size"),
             adjustment: new Gtk.Adjustment({
                 lower: 1,
-                upper: 200,
+                upper: 1000,
                 step_increment: 1
             })
         });
@@ -47,7 +47,7 @@ class Settings {
             title: _("Max cache file size (MB)"),
             adjustment: new Gtk.Adjustment({
                 lower: 1,
-                upper: 256,
+                upper: 1024,
                 step_increment: 1
             })
         });
