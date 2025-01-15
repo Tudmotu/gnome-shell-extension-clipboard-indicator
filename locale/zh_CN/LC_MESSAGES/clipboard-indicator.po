@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-16 11:48+0300\n"
+"POT-Creation-Date: 2025-01-14 19:49-0800\n"
 "PO-Revision-Date: 2024-01-27 14:47+0800\n"
 "Last-Translator: hiiiha\n"
 "Language-Team: \n"
@@ -22,55 +22,55 @@ msgstr ""
 "X-Poedit-SearchPath-0: prefs.js\n"
 "X-Poedit-SearchPath-1: extension.js\n"
 
-#: extension.js:102
+#: extension.js:104
 msgid "Text will be here"
 msgstr "文本将在此处显示"
 
-#: extension.js:171
+#: extension.js:177
 msgid "Type here to search..."
 msgstr "在此输入以搜索…"
 
-#: extension.js:240 prefs.js:163
+#: extension.js:246 prefs.js:179
 msgid "Private mode"
 msgstr "隐私模式"
 
-#: extension.js:254 prefs.js:165
+#: extension.js:260 prefs.js:181
 msgid "Clear history"
 msgstr "清空历史"
 
-#: extension.js:266
+#: extension.js:272
 msgid "Settings"
 msgstr "设置"
 
-#: extension.js:289
+#: extension.js:295
 msgid "Clipboard is empty"
 msgstr "剪贴板为空"
 
-#: extension.js:552
+#: extension.js:578
 msgid "Clear all?"
 msgstr "清除所有记录吗？"
 
-#: extension.js:553
+#: extension.js:579
 msgid "Are you sure you want to delete all clipboard items?"
 msgstr "确定要删除所有剪贴板条目吗？"
 
-#: extension.js:554
+#: extension.js:580
 msgid "This operation cannot be undone."
 msgstr "此操作不可撤销。"
 
-#: extension.js:556
+#: extension.js:582
 msgid "Clear"
 msgstr "清除"
 
-#: extension.js:556 extension.js:714
+#: extension.js:582 extension.js:741
 msgid "Cancel"
 msgstr "取消"
 
-#: extension.js:569
+#: extension.js:595
 msgid "Clipboard history cleared"
 msgstr "剪贴板已清空"
 
-#: extension.js:713
+#: extension.js:740
 msgid "Copied to clipboard"
 msgstr "已复制到剪贴板"
 
@@ -138,71 +138,75 @@ msgstr "将收藏的内容置底"
 msgid "Requires restarting the extension"
 msgstr "需要重启此扩展"
 
-#: prefs.js:111
-msgid "UI"
-msgstr "界面"
-
-#: prefs.js:113
-msgid "Limits"
-msgstr "限制"
-
-#: prefs.js:114
-msgid "Topbar"
-msgstr "顶栏"
-
 #: prefs.js:108
 msgid "Clear clipboard history on system reboot"
 msgstr "系统重启时清除历史记录"
 
+#: prefs.js:112
+msgid "Paste on select"
+msgstr ""
+
 #: prefs.js:115
-msgid "Notifications"
-msgstr "通知"
+msgid "UI"
+msgstr "界面"
 
 #: prefs.js:116
-msgid "Shortcuts"
-msgstr "快捷键"
-
-#: prefs.js:112
 msgid "Behavior"
 msgstr "行为"
 
-#: prefs.js:160
+#: prefs.js:117
+msgid "Limits"
+msgstr "限制"
+
+#: prefs.js:118
+msgid "Topbar"
+msgstr "顶栏"
+
+#: prefs.js:119
+msgid "Notifications"
+msgstr "通知"
+
+#: prefs.js:120
+msgid "Shortcuts"
+msgstr "快捷键"
+
+#: prefs.js:166
 msgid "Icon"
 msgstr "图标"
 
-#: prefs.js:161
+#: prefs.js:167
 msgid "Clipboard Content"
 msgstr "剪贴板内容"
 
-#: prefs.js:162
+#: prefs.js:168
 msgid "Both"
 msgstr "图标和剪贴板内容"
 
-#: prefs.js:163
+#: prefs.js:169
 msgid "Neither"
 msgstr "不显示"
 
-#: prefs.js:174
+#: prefs.js:180
 msgid "Toggle the menu"
 msgstr "切换菜单"
 
-#: prefs.js:176
+#: prefs.js:182
 msgid "Previous entry"
 msgstr "上一条"
 
-#: prefs.js:177
+#: prefs.js:183
 msgid "Next entry"
 msgstr "下一条"
 
-#: prefs.js:182
+#: prefs.js:188
 msgid "Enable shortcuts"
 msgstr "开启键盘快捷键"
 
-#: prefs.js:207
+#: prefs.js:213
 msgid "Disabled"
 msgstr "关闭"
 
-#: prefs.js:216
+#: prefs.js:222
 msgid "Enter shortcut"
 msgstr "输入键盘快捷键"
 

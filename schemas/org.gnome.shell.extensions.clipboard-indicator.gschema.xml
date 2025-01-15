@@ -49,6 +49,11 @@
         <summary>Clear clipboard history on every system reboot.</summary>
     </key>
 
+    <key name="paste-on-select" type="b">
+        <default>false</default>
+        <summary>Paste on select</summary>
+    </key>
+
     <key type="i" name="preview-size">
         <default>30</default>
         <summary>Amount of visible characters for clipboard items </summary>
