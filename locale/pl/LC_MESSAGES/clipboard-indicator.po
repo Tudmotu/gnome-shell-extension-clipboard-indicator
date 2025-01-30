@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-16 11:48+0300\n"
+"POT-Creation-Date: 2025-01-14 19:49-0800\n"
 "PO-Revision-Date: 2017-12-02 09:23+0100\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
@@ -20,55 +20,55 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
-#: extension.js:103
+#: extension.js:104
 msgid "Text will be here"
 msgstr "Treść będzie tutaj"
 
-#: extension.js:176
+#: extension.js:177
 msgid "Type here to search..."
 msgstr "Szukaj..."
 
-#: extension.js:245 prefs.js:173
+#: extension.js:246 prefs.js:179
 msgid "Private mode"
 msgstr "Tryb prywatny"
 
-#: extension.js:259 prefs.js:175
+#: extension.js:260 prefs.js:181
 msgid "Clear history"
 msgstr "Wyczyść historię"
 
-#: extension.js:271
+#: extension.js:272
 msgid "Settings"
 msgstr "Ustawienia"
 
-#: extension.js:294
+#: extension.js:295
 msgid "Clipboard is empty"
 msgstr "Schowek jest pusty"
 
-#: extension.js:557
+#: extension.js:578
 msgid "Clear all?"
 msgstr "Wyczyścić wszystko?"
 
-#: extension.js:558
+#: extension.js:579
 msgid "Are you sure you want to delete all clipboard items?"
 msgstr "Czy jesteś pewien, że chcesz usunąć wszystkie elementy ze schowka?"
 
-#: extension.js:559
+#: extension.js:580
 msgid "This operation cannot be undone."
 msgstr "Tej operacji nie będzie można cofnąć."
 
-#: extension.js:561
+#: extension.js:582
 msgid "Clear"
 msgstr "Wyczyść"
 
-#: extension.js:561 extension.js:720
+#: extension.js:582 extension.js:741
 msgid "Cancel"
 msgstr "Anuluj"
 
-#: extension.js:574
+#: extension.js:595
 msgid "Clipboard history cleared"
 msgstr "Wyczyszczono historię schowka"
 
-#: extension.js:719
+#: extension.js:740
 msgid "Copied to clipboard"
 msgstr "Skopiowano do schowka"
 
@@ -126,7 +126,9 @@ msgstr "Pokaż przyciski wklejania"
 
 #: prefs.js:99
 msgid "Adds a paste button to each entry that lets you paste it directly"
-msgstr "Dodaje przycisk wklejania przy każdym wpisie, który pozwala wkleić go bezpośrednio"
+msgstr ""
+"Dodaje przycisk wklejania przy każdym wpisie, który pozwala wkleić go "
+"bezpośrednio"
 
 #: prefs.js:103
 msgid "Place the pinned section on the bottom"
@@ -140,67 +142,70 @@ msgstr "Wymaga ponownego uruchomienia rozszerzenia"
 msgid "Clear clipboard history on system reboot"
 msgstr "Wyczyść historię przy uruchamianiu systemu"
 
-#: prefs.js:111
+#: prefs.js:112
+msgid "Paste on select"
+msgstr ""
+
+#: prefs.js:115
 msgid "UI"
 msgstr "Interfejs użytkownika"
 
-#: prefs.js:112
+#: prefs.js:116
 msgid "Behavior"
 msgstr "Zachowanie"
 
-#: prefs.js:113
+#: prefs.js:117
 msgid "Limits"
 msgstr "Limity"
 
-#: prefs.js:114
+#: prefs.js:118
 msgid "Topbar"
 msgstr "Panel systemowy"
 
-#: prefs.js:115
+#: prefs.js:119
 msgid "Notifications"
 msgstr "Powiadomienia"
 
-#: prefs.js:116
+#: prefs.js:120
 msgid "Shortcuts"
 msgstr "Skróty klawiszowe"
 
-#: prefs.js:160
+#: prefs.js:166
 msgid "Icon"
 msgstr "Ikona"
 
-#: prefs.js:161
+#: prefs.js:167
 msgid "Clipboard Content"
 msgstr "Zawartość schowka"
 
-#: prefs.js:162
+#: prefs.js:168
 msgid "Both"
 msgstr "Ikona oraz zawartość schowka"
 
-#: prefs.js:163
+#: prefs.js:169
 msgid "Neither"
 msgstr "Żaden"
 
-#: prefs.js:174
+#: prefs.js:180
 msgid "Toggle the menu"
 msgstr "Przełącz menu"
 
-#: prefs.js:176
+#: prefs.js:182
 msgid "Previous entry"
 msgstr "Poprzednia pozycja"
 
-#: prefs.js:177
+#: prefs.js:183
 msgid "Next entry"
 msgstr "Następna pozycja"
 
-#: prefs.js:182
+#: prefs.js:188
 msgid "Enable shortcuts"
 msgstr "Włącz skróty klawiszowe"
 
-#: prefs.js:207
+#: prefs.js:213
 msgid "Disabled"
 msgstr "Wyłączony"
 
-#: prefs.js:216
+#: prefs.js:222
 msgid "Enter shortcut"
 msgstr "Wprowadź skrót klawiszowy"
-
