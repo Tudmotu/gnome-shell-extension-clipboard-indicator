@@ -1,0 +1,195 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-09-16 11:48+0300\n"
+"PO-Revision-Date: 2024-11-19 14:49+0900\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.4.2\n"
+
+#: extension.js:102
+msgid "Text will be here"
+msgstr "텍스트가 여기에 표시됩니다"
+
+#: extension.js:171
+msgid "Type here to search..."
+msgstr "검색하려면 입력..."
+
+#: extension.js:240 prefs.js:163
+msgid "Private mode"
+msgstr "프라이빗 모드"
+
+#: extension.js:254 prefs.js:165
+msgid "Clear history"
+msgstr "기록 지우기"
+
+#: extension.js:266
+msgid "Settings"
+msgstr "설정"
+
+#: extension.js:289
+msgid "Clipboard is empty"
+msgstr "클립보드가 비었습니다"
+
+#: extension.js:552
+msgid "Clear all?"
+msgstr "모두 지우시겠습니까?"
+
+#: extension.js:553
+msgid "Are you sure you want to delete all clipboard items?"
+msgstr "모든 클립보드 항목을 지우시겠습니까?"
+
+#: extension.js:554
+msgid "This operation cannot be undone."
+msgstr "이 동작은 되돌릴 수 없습니다."
+
+#: extension.js:556
+msgid "Clear"
+msgstr "지우기"
+
+#: extension.js:556 extension.js:714
+msgid "Cancel"
+msgstr "취소"
+
+#: extension.js:569
+msgid "Clipboard history cleared"
+msgstr "클립보드 기록을 지움"
+
+#: extension.js:713
+msgid "Copied to clipboard"
+msgstr "클립보드에 복사됨"
+
+#: prefs.js:28
+msgid "History Size"
+msgstr "기록 크기"
+
+#: prefs.js:37
+msgid "Preview Size (characters)"
+msgstr "미리보기 크기 (글자 수)"
+
+#: prefs.js:46
+msgid "Max cache file size (MB)"
+msgstr "최대 캐시 파일 크기 (MB)"
+
+#: prefs.js:55
+msgid "Number of characters in top bar"
+msgstr ""
+
+#: prefs.js:64
+msgid "What to show in top bar"
+msgstr ""
+
+#: prefs.js:69
+msgid "Remove down arrow in top bar"
+msgstr ""
+
+#: prefs.js:73
+msgid "Cache only pinned items"
+msgstr "고정된 항목만 캐시하기"
+
+#: prefs.js:77
+msgid "Show notification on copy"
+msgstr ""
+
+#: prefs.js:81
+msgid "Show confirmation on Clear History"
+msgstr ""
+
+#: prefs.js:85
+msgid "Remove whitespace around text"
+msgstr ""
+
+#: prefs.js:89
+msgid "Move item to the top after selection"
+msgstr ""
+
+#: prefs.js:93
+msgid "Keep selected entry after Clear History"
+msgstr ""
+
+#: prefs.js:97
+msgid "Show paste buttons"
+msgstr ""
+
+#: prefs.js:98
+msgid "Adds a paste button to each entry that lets you paste it directly"
+msgstr ""
+
+#: prefs.js:102
+msgid "Place the pinned section on the bottom"
+msgstr ""
+
+#: prefs.js:103
+msgid "Requires restarting the extension"
+msgstr "확장 재시작이 필요합니다"
+
+#: prefs.js:106
+msgid "UI"
+msgstr "UI"
+
+#: prefs.js:107
+msgid "Limits"
+msgstr ""
+
+#: prefs.js:108
+msgid "Topbar"
+msgstr "상단바"
+
+#: prefs.js:109
+msgid "Notifications"
+msgstr "알림"
+
+#: prefs.js:110
+msgid "Shortcuts"
+msgstr ""
+
+#: prefs.js:151
+msgid "Icon"
+msgstr "아이콘"
+
+#: prefs.js:152
+msgid "Clipboard Content"
+msgstr "클립보드 내용"
+
+#: prefs.js:153
+msgid "Both"
+msgstr ""
+
+#: prefs.js:154
+msgid "Neither"
+msgstr ""
+
+#: prefs.js:165
+msgid "Toggle the menu"
+msgstr ""
+
+#: prefs.js:167
+msgid "Previous entry"
+msgstr ""
+
+#: prefs.js:168
+msgid "Next entry"
+msgstr ""
+
+#: prefs.js:173
+msgid "Enable shortcuts"
+msgstr ""
+
+#: prefs.js:198
+msgid "Disabled"
+msgstr ""
+
+#: prefs.js:207
+msgid "Enter shortcut"
+msgstr ""
