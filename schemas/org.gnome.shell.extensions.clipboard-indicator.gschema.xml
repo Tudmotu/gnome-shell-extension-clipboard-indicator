@@ -171,5 +171,12 @@
                 Key to toggle the private mode
             </description>
         </key>
+        <key name="cache-images" type="b">
+            <default>true</default>
+            <summary>Cache images</summary>
+            <description>
+                Allow caching images to disk
+            </description>
+        </key>
     </schema>
 </schemalist>
