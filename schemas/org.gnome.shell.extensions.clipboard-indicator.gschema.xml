@@ -101,6 +101,14 @@
         </description>
     </key>
 
+    <key name="notify-on-cycle" type="b">
+        <default>true</default>
+        <summary>Show notification when cycling through the entries with hotkeys</summary>
+        <description>
+            If true, a notification is shown when cycling through the clipboard entries using hotkeys.
+        </description>
+    </key>
+
     <key name="confirm-clear" type="b">
         <default>true</default>
         <summary>Show confirmation dialog on Clear History</summary>
