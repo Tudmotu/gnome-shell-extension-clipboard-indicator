@@ -129,7 +129,7 @@ msgstr "Afficher les boutons de collage"
 
 #: prefs.js:98
 msgid "Adds a paste button to each entry that lets you paste it directly"
-msgstr "Ajout d'un bouton "coller" à chaque entrée qui vous permet de la coller directement"
+msgstr "Ajout d'un bouton \"coller\" à chaque entrée qui vous permet de la coller directement"
 
 #: prefs.js:102
 msgid "Place the pinned section on the bottom"
