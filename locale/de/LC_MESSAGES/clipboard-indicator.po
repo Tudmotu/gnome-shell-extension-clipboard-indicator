@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-16 11:48+0300\n"
+"POT-Creation-Date: 2025-01-14 19:49-0800\n"
 "PO-Revision-Date: 2024-04-23 18:10+0200\n"
 "Last-Translator: Norman Henges <normanhenges@gmail.com>\n"
 "Language-Team: Deutsch <openweather@jenslody.de>\n"
@@ -18,55 +18,55 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.4.2\n"
 
-#: extension.js:103
+#: extension.js:104
 msgid "Text will be here"
 msgstr "Text wird hier angezeigt"
 
-#: extension.js:176
+#: extension.js:177
 msgid "Type here to search..."
 msgstr "Text eingeben, um zu suchen…"
 
-#: extension.js:245 prefs.js:173
+#: extension.js:246 prefs.js:179
 msgid "Private mode"
 msgstr "Privater Modus"
 
-#: extension.js:259 prefs.js:175
+#: extension.js:260 prefs.js:181
 msgid "Clear history"
 msgstr "Verlauf löschen"
 
-#: extension.js:271
+#: extension.js:272
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: extension.js:294
+#: extension.js:295
 msgid "Clipboard is empty"
 msgstr "Zwischenablage ist leer"
 
-#: extension.js:557
+#: extension.js:578
 msgid "Clear all?"
 msgstr "Alles löschen?"
 
-#: extension.js:558
+#: extension.js:579
 msgid "Are you sure you want to delete all clipboard items?"
 msgstr "Soll die Zwischenablage wirklich geleert werden?"
 
-#: extension.js:559
+#: extension.js:580
 msgid "This operation cannot be undone."
 msgstr "Diese Aktion kann nicht rückgängig gemacht werden."
 
-#: extension.js:561
+#: extension.js:582
 msgid "Clear"
 msgstr "Löschen"
 
-#: extension.js:561 extension.js:720
+#: extension.js:582 extension.js:741
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: extension.js:574
+#: extension.js:595
 msgid "Clipboard history cleared"
 msgstr "Verlauf der Zwischenablage gelöscht"
 
-#: extension.js:719
+#: extension.js:740
 msgid "Copied to clipboard"
 msgstr "In Zwischenablage kopiert"
 
@@ -138,67 +138,71 @@ msgstr "Erfordert Neustart der Erweiterung"
 msgid "Clear clipboard history on system reboot"
 msgstr "Verlauf beim Neustart des Systems löschen"
 
-#: prefs.js:111
+#: prefs.js:112
+msgid "Paste on select"
+msgstr ""
+
+#: prefs.js:115
 msgid "UI"
 msgstr "Oberfläche"
 
-#: prefs.js:112
+#: prefs.js:116
 msgid "Behavior"
 msgstr "Verhalten"
 
-#: prefs.js:113
+#: prefs.js:117
 msgid "Limits"
 msgstr "Grenzwerte"
 
-#: prefs.js:114
+#: prefs.js:118
 msgid "Topbar"
 msgstr "Obere Leiste"
 
-#: prefs.js:115
+#: prefs.js:119
 msgid "Notifications"
 msgstr "Benachrichtigungen"
 
-#: prefs.js:116
+#: prefs.js:120
 msgid "Shortcuts"
 msgstr "Tastenkombinationen"
 
-#: prefs.js:160
+#: prefs.js:166
 msgid "Icon"
 msgstr "Symbol"
 
-#: prefs.js:161
+#: prefs.js:167
 msgid "Clipboard Content"
 msgstr "Inhalt der Zwischenablage"
 
-#: prefs.js:162
+#: prefs.js:168
 msgid "Both"
 msgstr "Beides"
 
-#: prefs.js:163
+#: prefs.js:169
 msgid "Neither"
 msgstr "Nichts"
 
-#: prefs.js:174
+#: prefs.js:180
 msgid "Toggle the menu"
 msgstr "Menü öffnen/schließen"
 
-#: prefs.js:176
+#: prefs.js:182
 msgid "Previous entry"
 msgstr "Vorheriger Eintrag"
 
-#: prefs.js:177
+#: prefs.js:183
 msgid "Next entry"
 msgstr "Nächster Eintrag"
 
-#: prefs.js:182
+#: prefs.js:188
 msgid "Enable shortcuts"
 msgstr "Tastenkombinationen aktivieren"
 
-#: prefs.js:207
+#: prefs.js:213
 msgid "Disabled"
 msgstr "Deaktiviert"
 
-#: prefs.js:216
+#: prefs.js:222
 msgid "Enter shortcut"
 msgstr "Tastenkombination eingeben"
 
