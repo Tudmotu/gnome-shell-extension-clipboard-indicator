@@ -30,7 +30,7 @@
         <default>15</default>
         <summary>The number of items to save in history</summary>
         <description></description>
-        <range min="1" max="200"/>
+        <range min="1" max="10000"/>
     </key>
 
     <key type="i" name="display-mode">
@@ -75,7 +75,7 @@
             If the cache overflows this limit, the file will be overriden.
             High limit might cause slowness of shell startup.
         </description>
-        <range min="1" max="256"/>
+        <range min="1" max="1024"/>
     </key>
 
     <key name="cache-only-favorites" type="b">
