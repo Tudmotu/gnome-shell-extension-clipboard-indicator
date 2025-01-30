@@ -39,6 +39,7 @@ let STRIP_TEXT                = false;
 let KEEP_SELECTED_ON_CLEAR    = false;
 let PASTE_BUTTON              = true;
 let PINNED_ON_BOTTOM          = false;
+let CACHE_IMAGES              = true;
 
 export default class ClipboardIndicatorExtension extends Extension {
     enable () {
@@ -915,7 +916,7 @@ const ClipboardIndicator = GObject.registerClass({
         KEEP_SELECTED_ON_CLEAR = settings.get_boolean(PrefsFields.KEEP_SELECTED_ON_CLEAR);
         PASTE_BUTTON           = settings.get_boolean(PrefsFields.PASTE_BUTTON);
         PINNED_ON_BOTTOM       = settings.get_boolean(PrefsFields.PINNED_ON_BOTTOM);
-
+        CACHE_IMAGES           = settings.get_boolean(PrefsFields.CACHE_IMAGES);
     }
 
     async _onSettingsChange () {
@@ -1158,13 +1159,20 @@ const ClipboardIndicator = GObject.registerClass({
                 }
 
                 const entry = new ClipboardEntry(type, bytes.get_data(), false);
-                if (entry.isImage()) {
+                if (CACHE_IMAGES && entry.isImage()) {
                     this.registry.writeEntryFile(entry);
                 }
                 resolve(entry);
             }));
 
-            if (result) return result;
+            if (result) {
+                if (!CACHE_IMAGES && result.isImage()) {
+                    return null;
+                }
+                else {
+                    return result;
+                }
+            }
         }
 
         return null;

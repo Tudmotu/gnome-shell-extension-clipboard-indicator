@@ -112,6 +112,11 @@ class Settings {
             title: _("Paste on select")
         });
 
+        this.field_cache_images = new Adw.SwitchRow({
+            title: _("Cache images"),
+            active: true
+        });
+
         this.ui =  new Adw.PreferencesGroup({ title: _('UI') });
         this.behavior = new Adw.PreferencesGroup({title: _('Behavior')});
         this.limits =  new Adw.PreferencesGroup({ title: _('Limits') });
@@ -128,6 +133,7 @@ class Settings {
 
         this.behavior.add(this.field_clear_on_boot);
         this.behavior.add(this.field_paste_on_select);
+        this.behavior.add(this.field_cache_images);
 
         this.limits.add(this.field_size);
         this.limits.add(this.field_cache_size);
@@ -159,6 +165,7 @@ class Settings {
         this.schema.bind(PrefsFields.ENABLE_KEYBINDING, this.field_keybinding_activation, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.CLEAR_ON_BOOT, this.field_clear_on_boot, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.PASTE_ON_SELECT, this.field_paste_on_select, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.CACHE_IMAGES, this.field_cache_images, 'active', Gio.SettingsBindFlags.DEFAULT);
     }
 
     #createDisplayModeOptions () {
