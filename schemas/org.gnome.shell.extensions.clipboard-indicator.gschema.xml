@@ -186,5 +186,12 @@
                 Allow caching images to disk
             </description>
         </key>
+        <key name="excluded-apps" type="as">
+            <default>[]</default>
+            <summary>List of excluded applications</summary>
+            <description>
+                A list of applications that are excluded from clipboard history.
+            </description>
+        </key>
     </schema>
 </schemalist>

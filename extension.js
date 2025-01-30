@@ -41,6 +41,7 @@ let KEEP_SELECTED_ON_CLEAR    = false;
 let PASTE_BUTTON              = true;
 let PINNED_ON_BOTTOM          = false;
 let CACHE_IMAGES              = true;
+let EXCLUDED_APPS             = [];
 
 export default class ClipboardIndicatorExtension extends Extension {
     enable () {
@@ -705,6 +706,12 @@ const ClipboardIndicator = GObject.registerClass({
 
     async _refreshIndicator () {
         if (PRIVATEMODE) return; // Private mode, do not.
+
+        const focussedWindow = Shell.Global.get().display.focusWindow;
+        const wmClass = focussedWindow?.get_wm_class();
+        
+        if (wmClass && EXCLUDED_APPS.includes(wmClass)) return; // Excluded app, do not.
+
         if (this.#refreshInProgress) return;
         this.#refreshInProgress = true;
 
@@ -919,6 +926,7 @@ const ClipboardIndicator = GObject.registerClass({
         PASTE_BUTTON           = settings.get_boolean(PrefsFields.PASTE_BUTTON);
         PINNED_ON_BOTTOM       = settings.get_boolean(PrefsFields.PINNED_ON_BOTTOM);
         CACHE_IMAGES           = settings.get_boolean(PrefsFields.CACHE_IMAGES);
+        EXCLUDED_APPS          = settings.get_strv(PrefsFields.EXCLUDED_APPS);
     }
 
     async _onSettingsChange () {

@@ -24,4 +24,5 @@ export const PrefsFields = {
     CLEAR_ON_BOOT          : 'clear-on-boot',
     PASTE_ON_SELECT        : 'paste-on-select',
     CACHE_IMAGES           : 'cache-images',
+    EXCLUDED_APPS          : 'excluded-apps',
 };

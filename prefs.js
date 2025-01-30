@@ -14,6 +14,7 @@ export default class ClipboardIndicatorPreferences extends ExtensionPreferences 
         page.add(settingsUI.ui);
         page.add(settingsUI.behavior);
         page.add(settingsUI.limits);
+        page.add(settingsUI.exclusion); 
         page.add(settingsUI.topbar);
         page.add(settingsUI.notifications);
         page.add(settingsUI.shortcuts);
@@ -121,8 +122,30 @@ class Settings {
             active: true
         });
 
+        this.field_exclusion_row = new Adw.ExpanderRow({
+            title: _('Excluded Apps'),
+            subtitle: _('Content copied will not be saved while these apps are in focus'),
+        });
+
+        this.field_exclusion_row_add_button = new Gtk.Button({
+            iconName: 'list-add-symbolic',
+            cssClasses: ['flat'],
+            valign: Gtk.Align.CENTER,
+            halign: Gtk.Align.CENTER,
+        });
+
+        this.field_exclusion_row_add_button.connect('clicked', () => {
+            this.field_exclusion_row_add_button.set_sensitive(false);
+            this.excluded_row_counter++;
+            this.field_exclusion_row.set_expanded(true);
+            this.field_exclusion_row.add_row(this.#createExcludedAppInputRow());
+        });
+
+        this.field_exclusion_row.add_suffix(this.field_exclusion_row_add_button);
+
         this.ui =  new Adw.PreferencesGroup({ title: _('UI') });
         this.behavior = new Adw.PreferencesGroup({title: _('Behavior')});
+        this.exclusion = new Adw.PreferencesGroup({ title: _('Exclusion') });
         this.limits =  new Adw.PreferencesGroup({ title: _('Limits') });
         this.topbar =  new Adw.PreferencesGroup({ title: _('Topbar') });
         this.notifications =  new Adw.PreferencesGroup({ title: _('Notifications') });
@@ -138,6 +161,9 @@ class Settings {
         this.behavior.add(this.field_clear_on_boot);
         this.behavior.add(this.field_paste_on_select);
         this.behavior.add(this.field_cache_images);
+
+        this.exclusion.add(this.field_exclusion_row);
+        this.exclusion.add(this.field_exclusion_row_add_button);
 
         this.limits.add(this.field_size);
         this.limits.add(this.field_cache_size);
@@ -172,6 +198,8 @@ class Settings {
         this.schema.bind(PrefsFields.CLEAR_ON_BOOT, this.field_clear_on_boot, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.PASTE_ON_SELECT, this.field_paste_on_select, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.CACHE_IMAGES, this.field_cache_images, 'active', Gio.SettingsBindFlags.DEFAULT);
+
+        this.#fetchExludedAppsList();
     }
 
     #createDisplayModeOptions () {
@@ -298,5 +326,107 @@ class Settings {
         });
 
         return button;
+    }
+
+    #excluded_row_counter = 0;
+
+    set excluded_row_counter(value) {
+        this.#excluded_row_counter = value;
+        this.#updateExcludedAppRow();
+    }
+
+    get excluded_row_counter() {
+        return this.#excluded_row_counter;
+    }
+
+    #createExcludedAppInputRow() {
+        const entry_row = new Adw.ActionRow();
+        const entry = new Gtk.Entry({
+            placeholderText: ('Window class name, e.g. "KeePassXC"'),
+            halign: Gtk.Align.FILL,
+            valign: Gtk.Align.CENTER,
+            hexpand: true,
+        });
+
+        entry.connect('map', () => {
+            entry.grab_focus();
+        });
+
+        const ok_button = new Gtk.Button({
+            cssClasses: ['flat'],
+            iconName: 'emblem-ok-symbolic',
+            valign: Gtk.Align.CENTER,
+            halign: Gtk.Align.CENTER,
+        });
+
+        ok_button.connect('clicked', () => {
+            const text = entry.get_text();
+            if (text !== null && text.trim() !== '') {
+                this.field_exclusion_row.remove(entry_row);
+                this.field_exclusion_row.add_row(this.#createExludedAppRow(text.trim()));
+                this.field_exclusion_row_add_button.set_sensitive(true);
+                this.schema.set_strv('excluded-apps', [...this.schema.get_strv('excluded-apps'), text.trim()]);
+            }
+        });
+
+        entry.connect('activate', () => {
+            ok_button.emit('clicked');
+        });
+
+        const cancel_button = new Gtk.Button({
+            cssClasses: ['flat'],
+            iconName: 'window-close-symbolic',
+            valign: Gtk.Align.CENTER,
+            halign: Gtk.Align.CENTER,
+        });
+
+        cancel_button.connect('clicked', () => {
+            this.field_exclusion_row.remove(entry_row);
+            this.field_exclusion_row_add_button.set_sensitive(true);
+            this.excluded_row_counter--;
+            this.field_exclusion_row_add_button.set_sensitive(true);
+        });
+
+        entry_row.add_prefix(entry);
+        entry_row.add_suffix(ok_button);
+        entry_row.add_suffix(cancel_button);
+
+        return entry_row;
+    }
+
+    #createExludedAppRow(app_class_name) {
+        const excluded_row = new Adw.ActionRow({
+            title: app_class_name,
+        });
+
+        const remove_button = new Gtk.Button({
+            cssClasses: ['destructive-action'],
+            iconName: 'edit-delete-symbolic',
+            valign: Gtk.Align.CENTER,
+            halign: Gtk.Align.CENTER,
+        });
+        remove_button.connect('clicked', () => {
+            this.field_exclusion_row.remove(excluded_row);
+            const updated_list = this.schema.get_strv('excluded-apps').filter(app => app !== app_class_name);
+            this.schema.set_strv('excluded-apps', updated_list);
+            this.excluded_row_counter--;
+        });
+        excluded_row.add_suffix(remove_button);
+
+        return excluded_row;
+    }
+
+    #fetchExludedAppsList() {
+        const excludedApps = this.schema.get_strv('excluded-apps');
+        for (const app of excludedApps) {
+            this.field_exclusion_row.add_row(this.#createExludedAppRow(app));
+        }
+        this.excluded_row_counter = excludedApps.length;
+    }
+
+    #updateExcludedAppRow() {
+        const hasExcludedApps = this.excluded_row_counter > 0;
+        this.field_exclusion_row.set_enable_expansion(hasExcludedApps);
+        this.field_exclusion_row.set_expanded(hasExcludedApps);
     }
 }
