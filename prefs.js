@@ -29,7 +29,7 @@ class Settings {
             title: _("History Size"),
             adjustment: new Gtk.Adjustment({
                 lower: 1,
-                upper: 1000,
+                upper: 10000,
                 step_increment: 1
             })
         });
