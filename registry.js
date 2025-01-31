@@ -15,6 +15,7 @@ export class Registry {
         this.REGISTRY_DIR = GLib.get_user_cache_dir() + '/' + this.uuid;
         this.REGISTRY_PATH = this.REGISTRY_DIR + '/' + this.REGISTRY_FILE;
         this.BACKUP_REGISTRY_PATH = this.REGISTRY_PATH + '~';
+        this.hashmap = new WeakMap();
     }
 
     write (entries) {
@@ -148,9 +149,19 @@ export class Registry {
         const stIcon = new St.Icon({ gicon });
         return stIcon;
     }
+    
+    getEntryHash(entry) {
+        if (this.hashmap.has(entry)) {
+            return this.hashmap.get(entry);
+        }
+        const hash = entry.asBytes().hash();
+        this.hashmap.set(entry, hash)
+        return hash
+    }
 
     getEntryFilename (entry) {
-        return `${this.REGISTRY_DIR}/${entry.asBytes().hash()}`;
+        const hash = this.getEntryHash(entry);
+        return `${this.REGISTRY_DIR}/${hash}`;
     }
 
     async writeEntryFile (entry) {
