@@ -138,7 +138,7 @@ const ClipboardIndicator = GObject.registerClass({
             this._buttonText.set_text("...")
         } else {
             if (entry.isText()) {
-                this._buttonText.set_text(this._truncate(entry.getStringValue(), MAX_TOPBAR_LENGTH));
+                this._buttonText.set_text(entry.getTruncatedText(MAX_TOPBAR_LENGTH));
                 this._buttonImgPreview.destroy_all_children();
             }
             else if (entry.isImage()) {
@@ -390,7 +390,7 @@ const ClipboardIndicator = GObject.registerClass({
     _setEntryLabel (menuItem) {
         const { entry } = menuItem;
         if (entry.isText()) {
-            menuItem.label.set_text(this._truncate(entry.getStringValue(), MAX_ENTRY_LENGTH));
+            menuItem.label.set_text(entry.getTruncatedText(MAX_ENTRY_LENGTH));
         }
         else if (entry.isImage()) {
             this.registry.getEntryAsImage(entry).then(img => {
@@ -712,7 +712,7 @@ const ClipboardIndicator = GObject.registerClass({
 
             if (result) {
                 for (let menuItem of this.clipItemsRadioGroup) {
-                    if (menuItem.entry.equals(result)) {
+                    if (!menuItem.entry.isImage() && menuItem.entry.equals(result)) {
                         this._selectMenuItem(menuItem, false);
 
                         if (!menuItem.entry.isFavorite() && MOVE_ITEM_FIRST) {
@@ -746,11 +746,6 @@ const ClipboardIndicator = GObject.registerClass({
         this._removeEntry(item);
         this._addEntry(item.entry, item.currentlySelected, false);
         this._updateCache();
-    }
-
-    _findItem (text) {
-        return this.clipItemsRadioGroup.filter(
-            item => item.clipContents === text)[0];
     }
 
     _getCurrentlySelectedItem () {

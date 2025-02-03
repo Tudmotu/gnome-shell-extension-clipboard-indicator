@@ -149,19 +149,10 @@ export class Registry {
         const stIcon = new St.Icon({ gicon });
         return stIcon;
     }
-    
-    getEntryHash(entry) {
-        if (this.hashmap.has(entry)) {
-            return this.hashmap.get(entry);
-        }
-        const hash = entry.asBytes().hash();
-        this.hashmap.set(entry, hash)
-        return hash
-    }
-
+  
     getEntryFilename (entry) {
-        const hash = this.getEntryHash(entry);
-        return `${this.REGISTRY_DIR}/${hash}`;
+        const filename = entry.getStringValue();
+        return `${this.REGISTRY_DIR}/${filename}`;
     }
 
     async writeEntryFile (entry) {
@@ -220,6 +211,8 @@ export class ClipboardEntry {
     #mimetype;
     #bytes;
     #favorite;
+    #hash;
+    #id;
 
     static #decode (contents) {
         return Uint8Array.from(contents.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)));
@@ -280,6 +273,7 @@ export class ClipboardEntry {
         this.#mimetype = mimetype;
         this.#bytes = bytes;
         this.#favorite = favorite;
+        this.#id = GLib.uuid_string_random();
     }
 
     #encode () {
@@ -291,12 +285,23 @@ export class ClipboardEntry {
             .map(x => x.toString(16).padStart(2, '0'))
             .join('');
     }
-
-    getStringValue () {
-        if (this.isImage()) {
-            return `[Image ${this.asBytes().hash()}]`;
+    
+    getBytesHash () {
+        if (this.#hash) {
+            return this.#hash;
         }
-        return new TextDecoder().decode(this.#bytes);
+        this.#hash = this.asBytes().hash();
+        return this.#hash;
+    }
+
+    // UUID
+    getStringValue () {
+      return this.#id;
+    }
+    
+    getTruncatedText(maxLength) {
+        const text = new TextDecoder().decode(this.#bytes.slice(0, maxLength))
+        return (text.length < this.#bytes.length ? text + '...' : text).replace(/\s+/g, ' ')
     }
 
     mimetype () {
