@@ -29,14 +29,9 @@ export class Registry {
 
             registryContent.push(item);
 
-            if (entry.isText()) {
-                item.contents = entry.getStringValue();
-            }
-            else if (entry.isImage()) {
-                const filename = this.getEntryFilename(entry);
-                item.contents = filename;
-                this.writeEntryFile(entry);
-            }
+            const filename = this.getEntryFilename(entry);
+            item.contents = filename;
+            this.writeEntryFile(entry);
         }
 
         this.writeToFile(registryContent);
@@ -229,7 +224,7 @@ export class ClipboardEntry {
         const favorite = jsonEntry.favorite;
         let bytes;
 
-        if (ClipboardEntry.__isText(mimetype)) {
+        if (false) {
             bytes = new TextEncoder().encode(jsonEntry.contents);
         }
         else {
@@ -247,7 +242,7 @@ export class ClipboardEntry {
                 }
             });
 
-            if (contentType && !contentType.startsWith('image/') && !contentType.startsWith('text/')) {
+            if (false) {
                 bytes = new TextEncoder().encode(jsonEntry.contents);
             }
             else {
