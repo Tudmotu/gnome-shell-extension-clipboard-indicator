@@ -2,14 +2,14 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # Stanisław Zadorozhnyi <zadorozhniy123@icloud.com>, 2021.
-# Yevhen Popok <xalt7x.service@gmail.com>, 2023.
+# Yevhen Popok <xalt7x.service@gmail.com>, 2023-2025.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-14 19:49-0800\n"
-"PO-Revision-Date: 2024-04-03 13:10+0300\n"
+"POT-Creation-Date: 2025-02-19 00:06+0200\n"
+"PO-Revision-Date: 2025-02-19 00:12+0200\n"
 "Last-Translator: Yevhen Popok <xalt7x.service@gmail.com>\n"
 "Language-Team: \n"
 "Language: uk\n"
@@ -18,57 +18,57 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : "
 "n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Poedit 3.4.4\n"
 
-#: extension.js:104
+#: extension.js:105
 msgid "Text will be here"
 msgstr "Текст буде тут"
 
-#: extension.js:177
+#: extension.js:178
 msgid "Type here to search..."
 msgstr "Пишіть тут для пошуку..."
 
-#: extension.js:246 prefs.js:179
+#: extension.js:247 prefs.js:186
 msgid "Private mode"
 msgstr "Приватний режим"
 
-#: extension.js:260 prefs.js:181
+#: extension.js:261 prefs.js:188
 msgid "Clear history"
 msgstr "Очистити історію"
 
-#: extension.js:272
+#: extension.js:273
 msgid "Settings"
 msgstr "Параметри"
 
-#: extension.js:295
+#: extension.js:296
 msgid "Clipboard is empty"
 msgstr "Вміст буфера обміну порожній"
 
-#: extension.js:578
+#: extension.js:568
 msgid "Clear all?"
 msgstr "Очистити все?"
 
-#: extension.js:579
+#: extension.js:569
 msgid "Are you sure you want to delete all clipboard items?"
 msgstr "Точно видалити всі записи з буфера обміну?"
 
-#: extension.js:580
+#: extension.js:570
 msgid "This operation cannot be undone."
 msgstr "Цю операцію неможливо скасувати."
 
-#: extension.js:582
+#: extension.js:572
 msgid "Clear"
 msgstr "Очистити"
 
-#: extension.js:582 extension.js:741
+#: extension.js:572 extension.js:731
 msgid "Cancel"
 msgstr "Скасувати"
 
-#: extension.js:595
+#: extension.js:585
 msgid "Clipboard history cleared"
 msgstr "Історію буфера обміну очищено"
 
-#: extension.js:740
+#: extension.js:730
 msgid "Copied to clipboard"
 msgstr "Скопійовано до буфера обміну"
 
@@ -114,11 +114,11 @@ msgstr "Вилучати проміжки навколо тексту"
 
 #: prefs.js:90
 msgid "Move item to the top after selection"
-msgstr "Переміщувати вибраний елемент догори"
+msgstr "Переміщувати вибраний елемент вгору"
 
 #: prefs.js:94
 msgid "Keep selected entry after Clear History"
-msgstr "Зберегти вибраний запис після очищення історії"
+msgstr "Зберігати вибраний запис після очищення історії"
 
 #: prefs.js:98
 msgid "Show paste buttons"
@@ -143,68 +143,72 @@ msgstr "Очищати історію буфера обміну під час п
 
 #: prefs.js:112
 msgid "Paste on select"
-msgstr ""
+msgstr "Вставляти під час вибору"
 
-#: prefs.js:115
+#: prefs.js:116
+msgid "Cache images"
+msgstr "Кешувати зображення"
+
+#: prefs.js:120
 msgid "UI"
 msgstr "Інтерфейс"
 
-#: prefs.js:116
+#: prefs.js:121
 msgid "Behavior"
 msgstr "Поведінка"
 
-#: prefs.js:117
+#: prefs.js:122
 msgid "Limits"
 msgstr "Обмеження"
 
-#: prefs.js:118
+#: prefs.js:123
 msgid "Topbar"
 msgstr "Верхня панель"
 
-#: prefs.js:119
+#: prefs.js:124
 msgid "Notifications"
 msgstr "Сповіщення"
 
-#: prefs.js:120
+#: prefs.js:125
 msgid "Shortcuts"
 msgstr "Клавіатурні скорочення"
 
-#: prefs.js:166
+#: prefs.js:173
 msgid "Icon"
 msgstr "Піктограма"
 
-#: prefs.js:167
+#: prefs.js:174
 msgid "Clipboard Content"
 msgstr "Вміст буфера обміну"
 
-#: prefs.js:168
+#: prefs.js:175
 msgid "Both"
 msgstr "Все"
 
-#: prefs.js:169
+#: prefs.js:176
 msgid "Neither"
 msgstr "Нічого"
 
-#: prefs.js:180
+#: prefs.js:187
 msgid "Toggle the menu"
 msgstr "Перемкнути меню"
 
-#: prefs.js:182
+#: prefs.js:189
 msgid "Previous entry"
 msgstr "Попередній запис"
 
-#: prefs.js:183
+#: prefs.js:190
 msgid "Next entry"
 msgstr "Наступний запис"
 
-#: prefs.js:188
+#: prefs.js:195
 msgid "Enable shortcuts"
 msgstr "Увімкнути клавіатурні скорочення"
 
-#: prefs.js:213
+#: prefs.js:220
 msgid "Disabled"
 msgstr "Вимкнено"
 
-#: prefs.js:222
+#: prefs.js:229
 msgid "Enter shortcut"
 msgstr "Введіть клавіатурне скорочення"
