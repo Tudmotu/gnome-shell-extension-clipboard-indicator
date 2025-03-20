@@ -74,8 +74,12 @@ class Settings {
             title: _("Cache only pinned items")
         });
 
-        this.field_notification_toggle = new Adw.SwitchRow({
+        this.field_clear_notification_toggle = new Adw.SwitchRow({
             title: _("Show notification on copy")
+        });
+
+        this.field_cycle_notification_toggle = new Adw.SwitchRow({
+            title: _("Show notification on cycle")
         });
 
         this.field_confirm_clear_toggle = new Adw.SwitchRow({
@@ -143,7 +147,8 @@ class Settings {
         this.topbar.add(this.field_topbar_preview_size);
         this.topbar.add(this.field_disable_down_arrow);
 
-        this.notifications.add(this.field_notification_toggle);
+        this.notifications.add(this.field_clear_notification_toggle);
+        this.notifications.add(this.field_cycle_notification_toggle)
         this.notifications.add(this.field_confirm_clear_toggle);
 
         this.#buildShorcuts(this.shortcuts);
@@ -152,7 +157,8 @@ class Settings {
         this.schema.bind(PrefsFields.PREVIEW_SIZE, this.field_preview_size, 'value', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.CACHE_FILE_SIZE, this.field_cache_size, 'value', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.CACHE_ONLY_FAVORITE, this.field_cache_disable, 'active', Gio.SettingsBindFlags.DEFAULT);
-        this.schema.bind(PrefsFields.NOTIFY_ON_COPY, this.field_notification_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.NOTIFY_ON_COPY, this.field_clear_notification_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.NOTIFY_ON_CYCLE, this.field_cycle_notification_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.CONFIRM_ON_CLEAR, this.field_confirm_clear_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.MOVE_ITEM_FIRST, this.field_move_item_first, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.KEEP_SELECTED_ON_CLEAR, this.field_keep_selected_on_clear, 'active', Gio.SettingsBindFlags.DEFAULT);

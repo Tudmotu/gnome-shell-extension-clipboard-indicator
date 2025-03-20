@@ -29,6 +29,7 @@ let MOVE_ITEM_FIRST           = false;
 let ENABLE_KEYBINDING         = true;
 let PRIVATEMODE               = false;
 let NOTIFY_ON_COPY            = true;
+let NOTIFY_ON_CYCLE           = true;
 let CONFIRM_ON_CLEAR          = true;
 let MAX_TOPBAR_LENGTH         = 15;
 let TOPBAR_DISPLAY_MODE       = 1; //0 - only icon, 1 - only clipboard content, 2 - both, 3 - neither
@@ -905,6 +906,7 @@ const ClipboardIndicator = GObject.registerClass({
         DELETE_ENABLED         = settings.get_boolean(PrefsFields.DELETE);
         MOVE_ITEM_FIRST        = settings.get_boolean(PrefsFields.MOVE_ITEM_FIRST);
         NOTIFY_ON_COPY         = settings.get_boolean(PrefsFields.NOTIFY_ON_COPY);
+        NOTIFY_ON_CYCLE        = settings.get_boolean(PrefsFields.NOTIFY_ON_CYCLE);
         CONFIRM_ON_CLEAR       = settings.get_boolean(PrefsFields.CONFIRM_ON_CLEAR);
         ENABLE_KEYBINDING      = settings.get_boolean(PrefsFields.ENABLE_KEYBINDING);
         MAX_TOPBAR_LENGTH      = settings.get_int(PrefsFields.TOPBAR_PREVIEW_SIZE);
@@ -1050,7 +1052,10 @@ const ClipboardIndicator = GObject.registerClass({
                 i--;                                 //get the previous index
                 if (i < 0) i = menuItems.length - 1; //cycle if out of bound
                 let index = i + 1;                   //index to be displayed
-                that._showNotification(index + ' / ' + menuItems.length + ': ' + menuItems[i].entry.getStringValue());
+                
+                if(NOTIFY_ON_CYCLE) {
+                    that._showNotification(index + ' / ' + menuItems.length + ': ' + menuItems[i].entry.getStringValue());
+                }
                 if (MOVE_ITEM_FIRST) {
                     that._selectEntryWithDelay(menuItems[i]);
                 }
@@ -1074,7 +1079,10 @@ const ClipboardIndicator = GObject.registerClass({
                 i++;                                 //get the next index
                 if (i === menuItems.length) i = 0;   //cycle if out of bound
                 let index = i + 1;                     //index to be displayed
-                that._showNotification(index + ' / ' + menuItems.length + ': ' + menuItems[i].entry.getStringValue());
+
+                if(NOTIFY_ON_CYCLE) {
+                    that._showNotification(index + ' / ' + menuItems.length + ': ' + menuItems[i].entry.getStringValue());
+                }
                 if (MOVE_ITEM_FIRST) {
                     that._selectEntryWithDelay(menuItems[i]);
                 }
