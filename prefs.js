@@ -118,26 +118,26 @@ class Settings {
             active: true
         });
 
-        this.exclusion_row = new Adw.ExpanderRow({
+        this.field_exclusion_row = new Adw.ExpanderRow({
             title: _('Excluded Apps'),
             subtitle: _('Content copied will not be saved while these apps are in focus'),
         });
 
-        this.exclusion_row_add_button = new Gtk.Button({
+        this.field_exclusion_row_add_button = new Gtk.Button({
             iconName: 'list-add-symbolic',
             cssClasses: ['flat'],
             valign: Gtk.Align.CENTER,
             halign: Gtk.Align.CENTER,
         });
 
-        this.exclusion_row_add_button.connect('clicked', () => {
-            this.exclusion_row_add_button.set_sensitive(false);
+        this.field_exclusion_row_add_button.connect('clicked', () => {
+            this.field_exclusion_row_add_button.set_sensitive(false);
             this.excluded_row_counter++;
-            this.exclusion_row.set_expanded(true);
-            this.exclusion_row.add_row(this.#createExcludedAppInputRow());
+            this.field_exclusion_row.set_expanded(true);
+            this.field_exclusion_row.add_row(this.#createExcludedAppInputRow());
         });
 
-        this.exclusion_row.add_suffix(this.exclusion_row_add_button);
+        this.field_exclusion_row.add_suffix(this.field_exclusion_row_add_button);
 
         this.ui =  new Adw.PreferencesGroup({ title: _('UI') });
         this.behavior = new Adw.PreferencesGroup({title: _('Behavior')});
@@ -158,8 +158,8 @@ class Settings {
         this.behavior.add(this.field_paste_on_select);
         this.behavior.add(this.field_cache_images);
 
-        this.exclusion.add(this.exclusion_row);
-        this.exclusion.add(this.exclusion_row_add_button);
+        this.exclusion.add(this.field_exclusion_row);
+        this.exclusion.add(this.field_exclusion_row_add_button);
 
         this.limits.add(this.field_size);
         this.limits.add(this.field_cache_size);
@@ -356,9 +356,9 @@ class Settings {
         ok_button.connect('clicked', () => {
             const text = entry.get_text();
             if (text !== null && text.trim() !== '') {
-                this.exclusion_row.remove(entry_row);
-                this.exclusion_row.add_row(this.#createExludedAppRow(text.trim()));
-                this.exclusion_row_add_button.set_sensitive(true);
+                this.field_exclusion_row.remove(entry_row);
+                this.field_exclusion_row.add_row(this.#createExludedAppRow(text.trim()));
+                this.field_exclusion_row_add_button.set_sensitive(true);
                 this.schema.set_strv('excluded-apps', [...this.schema.get_strv('excluded-apps'), text.trim()]);
             }
         });
@@ -375,10 +375,10 @@ class Settings {
         });
 
         cancel_button.connect('clicked', () => {
-            this.exclusion_row.remove(entry_row);
-            this.exclusion_row_add_button.set_sensitive(true);
+            this.field_exclusion_row.remove(entry_row);
+            this.field_exclusion_row_add_button.set_sensitive(true);
             this.excluded_row_counter--;
-            this.exclusion_row_add_button.set_sensitive(true);
+            this.field_exclusion_row_add_button.set_sensitive(true);
         });
 
         entry_row.add_prefix(entry);
@@ -400,7 +400,7 @@ class Settings {
             halign: Gtk.Align.CENTER,
         });
         remove_button.connect('clicked', () => {
-            this.exclusion_row.remove(excluded_row);
+            this.field_exclusion_row.remove(excluded_row);
             const updated_list = this.schema.get_strv('excluded-apps').filter(app => app !== app_class_name);
             this.schema.set_strv('excluded-apps', updated_list);
             this.excluded_row_counter--;
@@ -413,14 +413,14 @@ class Settings {
     #fetchExludedAppsList() {
         const excludedApps = this.schema.get_strv('excluded-apps');
         for (const app of excludedApps) {
-            this.exclusion_row.add_row(this.#createExludedAppRow(app));
+            this.field_exclusion_row.add_row(this.#createExludedAppRow(app));
         }
         this.excluded_row_counter = excludedApps.length;
     }
 
     #updateExcludedAppRow() {
         const hasExcludedApps = this.excluded_row_counter > 0;
-        this.exclusion_row.set_enable_expansion(hasExcludedApps);
-        this.exclusion_row.set_expanded(hasExcludedApps);
+        this.field_exclusion_row.set_enable_expansion(hasExcludedApps);
+        this.field_exclusion_row.set_expanded(hasExcludedApps);
     }
 }
