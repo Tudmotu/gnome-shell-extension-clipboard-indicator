@@ -986,11 +986,13 @@ const ClipboardIndicator = GObject.registerClass({
         if(TOPBAR_DISPLAY_MODE === 0){
             this.icon.visible = true;
             this._buttonText.visible = false;
+            this._buttonImgPreview.visible = false;
             this.show();
         }
         if(TOPBAR_DISPLAY_MODE === 1){
             this.icon.visible = false;
             this._buttonText.visible = true;
+            this._buttonImgPreview.visible = false;
             this.show();
         }
         if(TOPBAR_DISPLAY_MODE === 2){
