@@ -327,7 +327,6 @@ class Settings {
     set excluded_row_counter(value) {
         this.#excluded_row_counter = value;
         this.#updateExcludedAppRow();
-        log('[EXTENSION_LOG]', "asd");
     }
 
     get excluded_row_counter() {
@@ -358,8 +357,9 @@ class Settings {
             const text = entry.get_text();
             if (text !== null && text.trim() !== '') {
                 this.exclusion_row.remove(entry_row);
-                this.exclusion_rowy
+                this.exclusion_row.add_row(this.#createExludedAppRow(text.trim()));
                 this.exclusion_row_add_button.set_sensitive(true);
+                this.schema.set_strv('excluded-apps', [...this.schema.get_strv('excluded-apps'), text.trim()]);
             }
         });
 
