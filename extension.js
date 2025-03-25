@@ -1158,6 +1158,12 @@ const ClipboardIndicator = GObject.registerClass({
                     return;
                 }
 
+                // HACK: workaround for GNOME 2nd+ copy mangling mimetypes https://gitlab.gnome.org/GNOME/gnome-shell/-/issues/8233
+                // In theory GNOME or XWayland should auto-convert this back to UTF8_STRING for legacy apps when it's needed https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/5300
+                if (type === "UTF8_STRING") {
+                    type = "text/plain;charset=utf-8";
+                }
+                
                 const entry = new ClipboardEntry(type, bytes.get_data(), false);
                 if (CACHE_IMAGES && entry.isImage()) {
                     this.registry.writeEntryFile(entry);
