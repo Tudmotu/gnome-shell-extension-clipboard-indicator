@@ -58,6 +58,7 @@ export default class ClipboardIndicatorExtension extends Extension {
     disable () {
         this.clipboardIndicator.destroy();
         this.clipboardIndicator = null;
+        EXCLUDED_APPS = [];
     }
 }
 
