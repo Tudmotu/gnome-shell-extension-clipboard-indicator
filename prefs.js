@@ -14,7 +14,7 @@ export default class ClipboardIndicatorPreferences extends ExtensionPreferences 
         page.add(settingsUI.ui);
         page.add(settingsUI.behavior);
         page.add(settingsUI.limits);
-        page.add(settingsUI.exclusion); 
+        page.add(settingsUI.exclusion);
         page.add(settingsUI.topbar);
         page.add(settingsUI.notifications);
         page.add(settingsUI.shortcuts);
@@ -143,6 +143,23 @@ class Settings {
 
         this.field_exclusion_row.add_suffix(this.field_exclusion_row_add_button);
 
+        this.field_clear_history_on_interval = new Adw.SwitchRow({
+            title: _("Clear history on interval")
+        });
+
+        this.field_clear_history_interval = new Adw.SpinRow({
+            title: _("History clear interval (in minutes)"),
+            adjustment: new Gtk.Adjustment({
+            lower: 0,
+            upper: 1440,
+            step_increment: 10
+            })
+        });
+
+        this.field_clear_history_on_interval.connect('notify::active', (widget) => {
+            this.field_clear_history_interval.set_sensitive(widget.active);
+        });
+
         this.ui =  new Adw.PreferencesGroup({ title: _('UI') });
         this.behavior = new Adw.PreferencesGroup({title: _('Behavior')});
         this.exclusion = new Adw.PreferencesGroup({ title: _('Exclusion') });
@@ -158,9 +175,11 @@ class Settings {
         this.ui.add(this.field_paste_button);
         this.ui.add(this.field_pinned_on_bottom);
 
-        this.behavior.add(this.field_clear_on_boot);
         this.behavior.add(this.field_paste_on_select);
         this.behavior.add(this.field_cache_images);
+        this.behavior.add(this.field_clear_on_boot);
+        this.behavior.add(this.field_clear_history_on_interval);
+        this.behavior.add(this.field_clear_history_interval);
 
         this.exclusion.add(this.field_exclusion_row);
         this.exclusion.add(this.field_exclusion_row_add_button);
@@ -198,7 +217,10 @@ class Settings {
         this.schema.bind(PrefsFields.CLEAR_ON_BOOT, this.field_clear_on_boot, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.PASTE_ON_SELECT, this.field_paste_on_select, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.CACHE_IMAGES, this.field_cache_images, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.CLEAR_HISTORY_ON_INTERVAL, this.field_clear_history_on_interval, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.CLEAR_HISTORY_INTERVAL, this.field_clear_history_interval, 'value', Gio.SettingsBindFlags.DEFAULT);
 
+        this.field_clear_history_interval.set_sensitive(this.field_clear_history_on_interval.active);
         this.#fetchExludedAppsList();
     }
 
