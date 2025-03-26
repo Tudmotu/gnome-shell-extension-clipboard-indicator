@@ -825,7 +825,42 @@ const ClipboardIndicator = GObject.registerClass({
 
         this.extension.settings.set_int(PrefsFields.NEXT_HISTORY_CLEAR, NEXT_HISTORY_CLEAR);
 
+        this._intervalSettingChangedId = this.extension.settings.connect(
+            `changed::${PrefsFields.CLEAR_HISTORY_INTERVAL}`,
+            this._onIntervalSettingChanged.bind(this)
+        );
+
         this._scheduleNextHistoryClear();
+    }
+
+    _scheduleNextHistoryClear() {
+        if (this._historyClearTimeoutId) {
+            clearTimeout(this._historyClearTimeoutId);
+            this._historyClearTimeoutId = null;
+        }
+
+        if (!CLEAR_HISTORY_ON_INTERVAL) return;
+
+        const currentTime = new Date().getTime() / 1000;
+        const timeoutMs = Math.max(1000, (NEXT_HISTORY_CLEAR - currentTime) * 1000);
+
+        this._historyClearTimeoutId = setTimeout(() => {
+            this._setupHistoryIntervalClearing();
+        }, timeoutMs);
+    }
+
+    _onIntervalSettingChanged() {
+        //basically just reset the timer and set the new one
+        CLEAR_HISTORY_INTERVAL = this.extension.settings.get_int(PrefsFields.CLEAR_HISTORY_INTERVAL);
+
+        if (CLEAR_HISTORY_ON_INTERVAL) {
+            const currentTime = new Date().getTime() / 1000;
+            NEXT_HISTORY_CLEAR = currentTime + CLEAR_HISTORY_INTERVAL * 60;
+            this.extension.settings.set_int(PrefsFields.NEXT_HISTORY_CLEAR, NEXT_HISTORY_CLEAR);
+
+            this._updateIntervalTimer();
+            this._scheduleNextHistoryClear();
+        }
     }
 
     _updateIntervalTimer() {
@@ -854,7 +889,6 @@ const ClipboardIndicator = GObject.registerClass({
         }
         formattedTime += `${seconds}s`;
         this.timerLabel.set_text(formattedTime);
-
     }
 
     _openSettings () {
@@ -1104,6 +1138,16 @@ const ClipboardIndicator = GObject.registerClass({
 
         this.extension.settings.disconnect(this._settingsChangedId);
         this._settingsChangedId = null;
+        
+        if (this._intervalSettingChangedId) {
+            this.extension.settings.disconnect(this._intervalSettingChangedId);
+            this._intervalSettingChangedId = null;
+        }
+        
+        if (this._historyClearTimeoutId) {
+            clearTimeout(this._historyClearTimeoutId);
+            this._historyClearTimeoutId = null;
+        }
     }
 
     _disconnectSelectionListener () {
@@ -1220,6 +1264,8 @@ const ClipboardIndicator = GObject.registerClass({
         if (this._setFocusOnOpenTimeout) clearTimeout(this._setFocusOnOpenTimeout);
         if (this._pastingKeypressTimeout) clearTimeout(this._pastingKeypressTimeout);
         if (this._pastingResetTimeout) clearTimeout(this._pastingResetTimeout);
+        if (this._historyClearTimeoutId) clearTimeout(this._historyClearTimeoutId);
+        if (this._timerIntervalId) clearInterval(this._timerIntervalId);
     }
 
     #clearClipboard () {
