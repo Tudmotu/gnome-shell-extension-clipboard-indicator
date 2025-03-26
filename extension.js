@@ -593,14 +593,20 @@ const ClipboardIndicator = GObject.registerClass({
       );
     }
 
-    _clearHistory () {
+    _clearHistory (invokedAutomatically = false) {
         // Don't remove pinned items
         this.historySection._getMenuItems().forEach(mItem => {
             if (KEEP_SELECTED_ON_CLEAR === false || !mItem.currentlySelected) {
                 this._removeEntry(mItem, 'delete');
             }
         });
-        this._showNotification(_("Clipboard history cleared"));
+
+        if (!invokedAutomatically) {
+            this._showNotification(_("Clipboard history cleared"));
+        }
+        else {
+            this._showNotification(_("Clipboard history cleared automatically"));
+        }
     }
 
     _removeAll () {
@@ -848,7 +854,7 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     _redoMissedClearing() {
-        this._clearHistory();
+        this._clearHistory(true);
 
         const currentTime = new Date().getTime() / 1000;
         const intervalSeconds = CLEAR_HISTORY_INTERVAL * 60;
@@ -882,7 +888,7 @@ const ClipboardIndicator = GObject.registerClass({
             clearInterval(this._timerIntervalId);
             this._timerIntervalId = null;
         }
-    
+
         if (CLEAR_HISTORY_ON_INTERVAL) {
             const currentTime = new Date().getTime() / 1000;
             NEXT_HISTORY_CLEAR = currentTime + CLEAR_HISTORY_INTERVAL * 60;
