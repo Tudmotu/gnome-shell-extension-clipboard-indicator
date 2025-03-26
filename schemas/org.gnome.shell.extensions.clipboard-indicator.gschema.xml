@@ -206,7 +206,7 @@
             <description>
                 The interval in minutes at which the clipboard history will be cleared.
             </description>
-            <range min="0"/>
+            <range min="1"/>
         </key>
         <key name="next-history-clear" type="i">
             <default>-1</default>

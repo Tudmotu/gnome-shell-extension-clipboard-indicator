@@ -150,7 +150,7 @@ class Settings {
         this.field_clear_history_interval = new Adw.SpinRow({
             title: _("History clear interval (in minutes)"),
             adjustment: new Gtk.Adjustment({
-            lower: 0,
+            lower: 1,
             upper: 1440,
             step_increment: 10
             })
