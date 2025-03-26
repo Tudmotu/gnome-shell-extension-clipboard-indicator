@@ -273,6 +273,23 @@ const ClipboardIndicator = GObject.registerClass({
             }),
             0
         );
+        
+        // Add timer label for next clear interval
+        this.timerLabel = new St.Label({
+            text: '',
+            style_class: 'clipboard-timer-label',
+            style: 'margin-left: auto; min-width: 40px; font-family: monospace;',
+            x_expand: true,
+            x_align: Clutter.ActorAlign.END,
+            y_align: Clutter.ActorAlign.CENTER
+        });
+        this.clearMenuItem.add_child(this.timerLabel);
+    
+        this._updateIntervalTimer();
+        this._timerIntervalId = setInterval(() => {
+            this._updateIntervalTimer();
+        }, 1000);
+        
         this.clearMenuItem.connect('activate', that._removeAll.bind(that));
 
         // Add 'Settings' menu item to open settings
@@ -788,30 +805,56 @@ const ClipboardIndicator = GObject.registerClass({
 
     _setupHistoryIntervalClearing() {
         NEXT_HISTORY_CLEAR = this.extension.settings.get_int(PrefsFields.NEXT_HISTORY_CLEAR);
-        
+
         if (!CLEAR_HISTORY_ON_INTERVAL) return;
 
         let currentTime = new Date().getTime() / 1000;
-        
+
         if (NEXT_HISTORY_CLEAR === -1) {
             NEXT_HISTORY_CLEAR = currentTime + CLEAR_HISTORY_INTERVAL * 60;
         }
 
         if (currentTime >= NEXT_HISTORY_CLEAR) {
             this._clearHistory();
-            
+
             const intervalSeconds = CLEAR_HISTORY_INTERVAL * 60;
             const elapsedIntervals = Math.floor((currentTime - NEXT_HISTORY_CLEAR) / intervalSeconds) + 1;
-            
+
             NEXT_HISTORY_CLEAR += elapsedIntervals * intervalSeconds;
         }
-                            
+
         this.extension.settings.set_int(PrefsFields.NEXT_HISTORY_CLEAR, NEXT_HISTORY_CLEAR);
 
-        const timeoutMs = (NEXT_HISTORY_CLEAR - currentTime) * 1000;
-        setTimeout(() => {
-            this._setupHistoryIntervalClearing();
-        }, timeoutMs);
+        this._scheduleNextHistoryClear();
+    }
+
+    _updateIntervalTimer() {
+        this.timerLabel.visible = CLEAR_HISTORY_ON_INTERVAL;
+        if (!CLEAR_HISTORY_ON_INTERVAL) return;
+
+
+        let currentTime = new Date().getTime() / 1000;
+        let timeLeft = NEXT_HISTORY_CLEAR - currentTime;
+
+        if (timeLeft <= 0) {
+            this.timerLabel.set_text('');
+            return;
+        }
+
+        let hours = Math.floor(timeLeft / 3600);
+        let minutes = Math.floor(timeLeft / 60);
+        let seconds = Math.floor(timeLeft % 60);
+
+        let formattedTime = '';
+        if (hours > 0) {
+            formattedTime += `${hours}h `;
+        }
+        if (minutes > 0) {
+            formattedTime += `${minutes}m `;
+        }
+        formattedTime += `${seconds}s`;
+        this.timerLabel.set_text(formattedTime);
+
     }
 
     _openSettings () {
