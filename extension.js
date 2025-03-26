@@ -284,11 +284,6 @@ const ClipboardIndicator = GObject.registerClass({
             y_align: Clutter.ActorAlign.CENTER
         });
         this.clearMenuItem.add_child(this.timerLabel);
-    
-        this._updateIntervalTimer();
-        this._timerIntervalId = setInterval(() => {
-            this._updateIntervalTimer();
-        }, 1000);
         
         this.clearMenuItem.connect('activate', that._removeAll.bind(that));
 
@@ -827,6 +822,9 @@ const ClipboardIndicator = GObject.registerClass({
             `changed::${PrefsFields.CLEAR_HISTORY_ON_INTERVAL}`,
             this._resetHistoryClearTimer.bind(this)
         );
+        this._timerIntervalId = setInterval(() => {
+            this._updateIntervalTimer();
+        }, 1000);
 
         const currentTime = new Date().getTime() / 1000;
         NEXT_HISTORY_CLEAR = this.extension.settings.get_int(PrefsFields.NEXT_HISTORY_CLEAR);
@@ -879,6 +877,12 @@ const ClipboardIndicator = GObject.registerClass({
         CLEAR_HISTORY_INTERVAL = this.extension.settings.get_int(PrefsFields.CLEAR_HISTORY_INTERVAL);
         CLEAR_HISTORY_ON_INTERVAL = this.extension.settings.get_boolean(PrefsFields.CLEAR_HISTORY_ON_INTERVAL);
 
+        // stop the interval timer updating the timer label, and then restart it so that it aligns with the new interval
+        if (this._timerIntervalId) {
+            clearInterval(this._timerIntervalId);
+            this._timerIntervalId = null;
+        }
+    
         if (CLEAR_HISTORY_ON_INTERVAL) {
             const currentTime = new Date().getTime() / 1000;
             NEXT_HISTORY_CLEAR = currentTime + CLEAR_HISTORY_INTERVAL * 60;
@@ -886,6 +890,9 @@ const ClipboardIndicator = GObject.registerClass({
 
             this._scheduleNextHistoryClear();
         }
+        this._timerIntervalId = setInterval(() => {
+            this._updateIntervalTimer();
+        }, 1000);
         this._updateIntervalTimer();
     }
 
