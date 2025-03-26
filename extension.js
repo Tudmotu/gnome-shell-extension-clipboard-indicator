@@ -804,7 +804,9 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     _setupHistoryIntervalClearing() {
-        this._fetchSettings();
+        NEXT_HISTORY_CLEAR = this.extension.settings.get_int(PrefsFields.NEXT_HISTORY_CLEAR);
+        CLEAR_HISTORY_INTERVAL = this.extension.settings.get_int(PrefsFields.CLEAR_HISTORY_INTERVAL);
+        CLEAR_HISTORY_ON_INTERVAL = this.extension.settings.get_boolean(PrefsFields.CLEAR_HISTORY_ON_INTERVAL);
 
         const currentTime = new Date().getTime() / 1000;
 
@@ -825,7 +827,6 @@ const ClipboardIndicator = GObject.registerClass({
 
         if (!CLEAR_HISTORY_ON_INTERVAL) return;
 
-        //do this only when the setting is enabled
         this.extension.settings.set_int(PrefsFields.NEXT_HISTORY_CLEAR, NEXT_HISTORY_CLEAR);
 
         if (currentTime >= NEXT_HISTORY_CLEAR) this._redoMissedClearing();
@@ -1050,6 +1051,7 @@ const ClipboardIndicator = GObject.registerClass({
         EXCLUDED_APPS               = settings.get_strv(PrefsFields.EXCLUDED_APPS);
         CLEAR_HISTORY_ON_INTERVAL   = settings.get_boolean(PrefsFields.CLEAR_HISTORY_ON_INTERVAL);
         CLEAR_HISTORY_INTERVAL      = settings.get_int(PrefsFields.CLEAR_HISTORY_INTERVAL);
+        NEXT_HISTORY_CLEAR          = settings.get_int(PrefsFields.NEXT_HISTORY_CLEAR);
     }
 
     async _onSettingsChange () {
