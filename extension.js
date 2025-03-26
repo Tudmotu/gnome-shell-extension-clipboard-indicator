@@ -840,13 +840,13 @@ const ClipboardIndicator = GObject.registerClass({
             return;
         }
 
-        if (NEXT_HISTORY_CLEAR === -1 || NEXT_HISTORY_CLEAR < currentTime) {
-            if (NEXT_HISTORY_CLEAR !== -1) {
-                this._redoMissedClearing();
-            } else {
-                NEXT_HISTORY_CLEAR = currentTime + CLEAR_HISTORY_INTERVAL * 60;
-                this.extension.settings.set_int(PrefsFields.NEXT_HISTORY_CLEAR, NEXT_HISTORY_CLEAR);
-            }
+        if (NEXT_HISTORY_CLEAR === -1) {
+            NEXT_HISTORY_CLEAR = currentTime + CLEAR_HISTORY_INTERVAL * 60;
+            this.extension.settings.set_int(PrefsFields.NEXT_HISTORY_CLEAR, NEXT_HISTORY_CLEAR);
+        }
+        
+        if (NEXT_HISTORY_CLEAR < currentTime) {
+            this._redoMissedClearing();
         }
 
         this._updateIntervalTimer();
@@ -908,7 +908,7 @@ const ClipboardIndicator = GObject.registerClass({
 
 
         let currentTime = new Date().getTime() / 1000;
-        let timeLeft = NEXT_HISTORY_CLEAR - currentTime;
+        let timeLeft = NEXT_HISTORY_CLEAR - currentTime + 1;
 
         if (timeLeft <= 0) {
             this.timerLabel.set_text('');
