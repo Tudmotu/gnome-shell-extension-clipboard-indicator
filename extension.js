@@ -804,33 +804,46 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     _setupHistoryIntervalClearing() {
-        NEXT_HISTORY_CLEAR = this.extension.settings.get_int(PrefsFields.NEXT_HISTORY_CLEAR);
+        this._fetchSettings();
 
-        if (!CLEAR_HISTORY_ON_INTERVAL) return;
-
-        let currentTime = new Date().getTime() / 1000;
+        const currentTime = new Date().getTime() / 1000;
 
         if (NEXT_HISTORY_CLEAR === -1) {
             NEXT_HISTORY_CLEAR = currentTime + CLEAR_HISTORY_INTERVAL * 60;
         }
 
-        if (currentTime >= NEXT_HISTORY_CLEAR) {
-            this._clearHistory();
-
-            const intervalSeconds = CLEAR_HISTORY_INTERVAL * 60;
-            const elapsedIntervals = Math.floor((currentTime - NEXT_HISTORY_CLEAR) / intervalSeconds) + 1;
-
-            NEXT_HISTORY_CLEAR += elapsedIntervals * intervalSeconds;
-        }
-
-        this.extension.settings.set_int(PrefsFields.NEXT_HISTORY_CLEAR, NEXT_HISTORY_CLEAR);
+        this._updateIntervalTimer();
 
         this._intervalSettingChangedId = this.extension.settings.connect(
             `changed::${PrefsFields.CLEAR_HISTORY_INTERVAL}`,
-            this._onIntervalSettingChanged.bind(this)
+            this._resetHistoryClearTimer.bind(this)
+        );
+        this._intervalToggleChangedId = this.extension.settings.connect(
+            `changed::${PrefsFields.CLEAR_HISTORY_ON_INTERVAL}`,
+            this._resetHistoryClearTimer.bind(this)
         );
 
+        if (!CLEAR_HISTORY_ON_INTERVAL) return;
+
+        //do this only when the setting is enabled
+        this.extension.settings.set_int(PrefsFields.NEXT_HISTORY_CLEAR, NEXT_HISTORY_CLEAR);
+
+        if (currentTime >= NEXT_HISTORY_CLEAR) this._redoMissedClearing();
+
         this._scheduleNextHistoryClear();
+    }
+
+    _redoMissedClearing() {
+        this._clearHistory();
+
+        //calculate how many intervals have passed since the last clear
+        const currentTime = new Date().getTime() / 1000;
+        const intervalSeconds = CLEAR_HISTORY_INTERVAL * 60;
+        const elapsedIntervals = Math.floor((currentTime - NEXT_HISTORY_CLEAR) / intervalSeconds) + 1;
+
+        //set the next clear time to the current time + the number of intervals that have passed
+        NEXT_HISTORY_CLEAR += elapsedIntervals * intervalSeconds;
+        this.extension.settings.set_int(PrefsFields.NEXT_HISTORY_CLEAR, NEXT_HISTORY_CLEAR);
     }
 
     _scheduleNextHistoryClear() {
@@ -838,8 +851,6 @@ const ClipboardIndicator = GObject.registerClass({
             clearTimeout(this._historyClearTimeoutId);
             this._historyClearTimeoutId = null;
         }
-
-        if (!CLEAR_HISTORY_ON_INTERVAL) return;
 
         const currentTime = new Date().getTime() / 1000;
         const timeoutMs = Math.max(1000, (NEXT_HISTORY_CLEAR - currentTime) * 1000);
@@ -849,18 +860,19 @@ const ClipboardIndicator = GObject.registerClass({
         }, timeoutMs);
     }
 
-    _onIntervalSettingChanged() {
+    _resetHistoryClearTimer() {
         //basically just reset the timer and set the new one
         CLEAR_HISTORY_INTERVAL = this.extension.settings.get_int(PrefsFields.CLEAR_HISTORY_INTERVAL);
+        CLEAR_HISTORY_ON_INTERVAL = this.extension.settings.get_boolean(PrefsFields.CLEAR_HISTORY_ON_INTERVAL);
 
         if (CLEAR_HISTORY_ON_INTERVAL) {
             const currentTime = new Date().getTime() / 1000;
             NEXT_HISTORY_CLEAR = currentTime + CLEAR_HISTORY_INTERVAL * 60;
             this.extension.settings.set_int(PrefsFields.NEXT_HISTORY_CLEAR, NEXT_HISTORY_CLEAR);
 
-            this._updateIntervalTimer();
             this._scheduleNextHistoryClear();
         }
+        this._updateIntervalTimer();
     }
 
     _updateIntervalTimer() {
@@ -877,7 +889,7 @@ const ClipboardIndicator = GObject.registerClass({
         }
 
         let hours = Math.floor(timeLeft / 3600);
-        let minutes = Math.floor(timeLeft / 60);
+        let minutes = Math.floor((timeLeft % 3600) / 60);
         let seconds = Math.floor(timeLeft % 60);
 
         let formattedTime = '';
@@ -1142,6 +1154,11 @@ const ClipboardIndicator = GObject.registerClass({
         if (this._intervalSettingChangedId) {
             this.extension.settings.disconnect(this._intervalSettingChangedId);
             this._intervalSettingChangedId = null;
+        }
+
+        if (this._intervalToggleChangedId) {
+            this.extension.settings.disconnect(this._intervalToggleChangedId);
+            this._intervalToggleChangedId = null;
         }
         
         if (this._historyClearTimeoutId) {
