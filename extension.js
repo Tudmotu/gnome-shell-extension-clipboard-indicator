@@ -804,17 +804,20 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     _setupHistoryIntervalClearing() {
-        NEXT_HISTORY_CLEAR = this.extension.settings.get_int(PrefsFields.NEXT_HISTORY_CLEAR);
-        CLEAR_HISTORY_INTERVAL = this.extension.settings.get_int(PrefsFields.CLEAR_HISTORY_INTERVAL);
-        CLEAR_HISTORY_ON_INTERVAL = this.extension.settings.get_boolean(PrefsFields.CLEAR_HISTORY_ON_INTERVAL);
+        this._fetchSettings();
 
-        const currentTime = new Date().getTime() / 1000;
-
-        if (NEXT_HISTORY_CLEAR === -1) {
-            NEXT_HISTORY_CLEAR = currentTime + CLEAR_HISTORY_INTERVAL * 60;
+        if (this._intervalSettingChangedId) {
+            this.extension.settings.disconnect(this._intervalSettingChangedId);
+            this._intervalSettingChangedId = null;
         }
-
-        this._updateIntervalTimer();
+        if (this._intervalToggleChangedId) {
+            this.extension.settings.disconnect(this._intervalToggleChangedId);
+            this._intervalToggleChangedId = null;
+        }
+        if (this._historyClearTimeoutId) {
+            clearTimeout(this._historyClearTimeoutId);
+            this._historyClearTimeoutId = null;
+        }
 
         this._intervalSettingChangedId = this.extension.settings.connect(
             `changed::${PrefsFields.CLEAR_HISTORY_INTERVAL}`,
@@ -825,24 +828,34 @@ const ClipboardIndicator = GObject.registerClass({
             this._resetHistoryClearTimer.bind(this)
         );
 
-        if (!CLEAR_HISTORY_ON_INTERVAL) return;
+        const currentTime = new Date().getTime() / 1000;
+        NEXT_HISTORY_CLEAR = this.extension.settings.get_int(PrefsFields.NEXT_HISTORY_CLEAR);
 
-        this.extension.settings.set_int(PrefsFields.NEXT_HISTORY_CLEAR, NEXT_HISTORY_CLEAR);
+        if (!CLEAR_HISTORY_ON_INTERVAL) {
+            this._updateIntervalTimer();
+            return;
+        }
 
-        if (currentTime >= NEXT_HISTORY_CLEAR) this._redoMissedClearing();
+        if (NEXT_HISTORY_CLEAR === -1 || NEXT_HISTORY_CLEAR < currentTime) {
+            if (NEXT_HISTORY_CLEAR !== -1) {
+                this._redoMissedClearing();
+            } else {
+                NEXT_HISTORY_CLEAR = currentTime + CLEAR_HISTORY_INTERVAL * 60;
+                this.extension.settings.set_int(PrefsFields.NEXT_HISTORY_CLEAR, NEXT_HISTORY_CLEAR);
+            }
+        }
 
+        this._updateIntervalTimer();
         this._scheduleNextHistoryClear();
     }
 
     _redoMissedClearing() {
         this._clearHistory();
 
-        //calculate how many intervals have passed since the last clear
         const currentTime = new Date().getTime() / 1000;
         const intervalSeconds = CLEAR_HISTORY_INTERVAL * 60;
         const elapsedIntervals = Math.floor((currentTime - NEXT_HISTORY_CLEAR) / intervalSeconds) + 1;
 
-        //set the next clear time to the current time + the number of intervals that have passed
         NEXT_HISTORY_CLEAR += elapsedIntervals * intervalSeconds;
         this.extension.settings.set_int(PrefsFields.NEXT_HISTORY_CLEAR, NEXT_HISTORY_CLEAR);
     }
