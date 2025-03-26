@@ -787,27 +787,31 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     _setupHistoryIntervalClearing() {
+        NEXT_HISTORY_CLEAR = this.extension.settings.get_int(PrefsFields.NEXT_HISTORY_CLEAR);
+        
         if (!CLEAR_HISTORY_ON_INTERVAL) return;
 
-        let currentTime = new Date().getTime();
+        let currentTime = new Date().getTime() / 1000;
         
         if (NEXT_HISTORY_CLEAR === -1) {
-            NEXT_HISTORY_CLEAR = currentTime + CLEAR_HISTORY_INTERVAL * 60 * 1000;
+            NEXT_HISTORY_CLEAR = currentTime + CLEAR_HISTORY_INTERVAL * 60;
         }
 
         if (currentTime >= NEXT_HISTORY_CLEAR) {
             this._clearHistory();
-            while (currentTime >= NEXT_HISTORY_CLEAR) {
-                NEXT_HISTORY_CLEAR += CLEAR_HISTORY_INTERVAL * 60 * 1000;
-            }
+            
+            const intervalSeconds = CLEAR_HISTORY_INTERVAL * 60;
+            const elapsedIntervals = Math.floor((currentTime - NEXT_HISTORY_CLEAR) / intervalSeconds) + 1;
+            
+            NEXT_HISTORY_CLEAR += elapsedIntervals * intervalSeconds;
         }
-        
+                            
         this.extension.settings.set_int(PrefsFields.NEXT_HISTORY_CLEAR, NEXT_HISTORY_CLEAR);
 
+        const timeoutMs = (NEXT_HISTORY_CLEAR - currentTime) * 1000;
         setTimeout(() => {
             this._setupHistoryIntervalClearing();
-        }, NEXT_HISTORY_CLEAR - currentTime);
-        
+        }, timeoutMs);
     }
 
     _openSettings () {
@@ -957,7 +961,6 @@ const ClipboardIndicator = GObject.registerClass({
         EXCLUDED_APPS               = settings.get_strv(PrefsFields.EXCLUDED_APPS);
         CLEAR_HISTORY_ON_INTERVAL   = settings.get_boolean(PrefsFields.CLEAR_HISTORY_ON_INTERVAL);
         CLEAR_HISTORY_INTERVAL      = settings.get_int(PrefsFields.CLEAR_HISTORY_INTERVAL);
-        NEXT_HISTORY_CLEAR          = settings.get_int(PrefsFields.NEXT_HISTORY_CLEAR);
     }
 
     async _onSettingsChange () {
