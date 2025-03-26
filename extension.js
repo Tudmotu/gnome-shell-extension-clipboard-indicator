@@ -273,17 +273,38 @@ const ClipboardIndicator = GObject.registerClass({
             }),
             0
         );
-        
-        // Add timer label for next clear interval
+
+        let timerBox = new St.BoxLayout({
+            x_align: Clutter.ActorAlign.END,
+            x_expand: true
+        });
+
         this.timerLabel = new St.Label({
             text: '',
-            style_class: 'clipboard-timer-label',
-            style: 'margin-left: auto; min-width: 40px; font-family: monospace;',
-            x_expand: true,
+            style: 'font-family: monospace;',
             x_align: Clutter.ActorAlign.END,
-            y_align: Clutter.ActorAlign.CENTER
+            x_expand: true
         });
-        this.clearMenuItem.add_child(this.timerLabel);
+
+        this.resetTimerButton = new St.Button({
+            style_class: 'ci-action-btn',
+            can_focus: true,
+            child: new St.Icon({
+                icon_name: 'view-refresh-symbolic',
+                style_class: 'system-status-icon',
+                icon_size: 14
+            }),
+            x_align: Clutter.ActorAlign.END,
+            y_align: Clutter.ActorAlign.CENTER,
+        });
+
+        this.resetTimerButton.connect('clicked', () => {
+            this._scheduleNextHistoryClear();
+        });
+
+        timerBox.add_child(this.timerLabel);
+        timerBox.add_child(this.resetTimerButton);
+        this.clearMenuItem.add_child(timerBox);
         
         this.clearMenuItem.connect('activate', that._removeAll.bind(that));
 
@@ -822,93 +843,107 @@ const ClipboardIndicator = GObject.registerClass({
 
         this._intervalSettingChangedId = this.extension.settings.connect(
             `changed::${PrefsFields.CLEAR_HISTORY_INTERVAL}`,
-            this._resetHistoryClearTimer.bind(this)
+            this._onHistoryIntervalClearSettingsChanged.bind(this)
         );
         this._intervalToggleChangedId = this.extension.settings.connect(
             `changed::${PrefsFields.CLEAR_HISTORY_ON_INTERVAL}`,
-            this._resetHistoryClearTimer.bind(this)
+            this._onHistoryIntervalClearSettingsChanged.bind(this)
         );
-        this._timerIntervalId = setInterval(() => {
-            this._updateIntervalTimer();
-        }, 1000);
 
-        const currentTime = new Date().getTime() / 1000;
-        NEXT_HISTORY_CLEAR = this.extension.settings.get_int(PrefsFields.NEXT_HISTORY_CLEAR);
 
+        
         if (!CLEAR_HISTORY_ON_INTERVAL) {
             this._updateIntervalTimer();
             return;
         }
 
-        if (NEXT_HISTORY_CLEAR === -1) {
-            NEXT_HISTORY_CLEAR = currentTime + CLEAR_HISTORY_INTERVAL * 60;
-            this.extension.settings.set_int(PrefsFields.NEXT_HISTORY_CLEAR, NEXT_HISTORY_CLEAR);
-        }
-        
-        if (NEXT_HISTORY_CLEAR < currentTime) {
-            this._redoMissedClearing();
-        }
+        const currentTime = Math.ceil(new Date().getTime() / 1000);
 
-        this._updateIntervalTimer();
-        this._scheduleNextHistoryClear();
+        if (NEXT_HISTORY_CLEAR === -1) { //new timer or timer expired
+            this._scheduleNextHistoryClear();
+        }
+        else if (NEXT_HISTORY_CLEAR < currentTime) { //timer expired
+            this._clearHistory();
+            this._scheduleNextHistoryClear();
+        }
+        else { //timer already set, but not expired
+            const timeoutMs = (NEXT_HISTORY_CLEAR - currentTime) * 1000;
+            this._historyClearTimeoutId = setTimeout(() => {
+                this._clearHistory();
+                this._scheduleNextHistoryClear(true);
+            }, timeoutMs);
+            this._timerIntervalId = setInterval(() => {
+                this._updateIntervalTimer();
+            }, 1000);
+        }
     }
 
-    _redoMissedClearing() {
-        this._clearHistory(true);
-
-        const currentTime = new Date().getTime() / 1000;
-        const intervalSeconds = CLEAR_HISTORY_INTERVAL * 60;
-        const elapsedIntervals = Math.floor((currentTime - NEXT_HISTORY_CLEAR) / intervalSeconds) + 1;
-
-        NEXT_HISTORY_CLEAR += elapsedIntervals * intervalSeconds;
-        this.extension.settings.set_int(PrefsFields.NEXT_HISTORY_CLEAR, NEXT_HISTORY_CLEAR);
+    _onHistoryIntervalClearSettingsChanged(_settings, key) {
+        this._fetchSettings();
+        if (key === PrefsFields.CLEAR_HISTORY_INTERVAL) {
+            this._scheduleNextHistoryClear();
+        }
+        else if (key === PrefsFields.CLEAR_HISTORY_ON_INTERVAL) {
+            if (CLEAR_HISTORY_ON_INTERVAL) {
+                this._resetHistoryClearTimer();
+                this._setupHistoryIntervalClearing();
+            } else {
+                this._resetHistoryClearTimer();
+            }
+        }
     }
 
     _scheduleNextHistoryClear() {
+        this._fetchSettings();
+
+        clearInterval(this._timerIntervalId);
         if (this._historyClearTimeoutId) {
             clearTimeout(this._historyClearTimeoutId);
             this._historyClearTimeoutId = null;
         }
 
-        const currentTime = new Date().getTime() / 1000;
-        const timeoutMs = Math.max(1000, (NEXT_HISTORY_CLEAR - currentTime) * 1000);
+        if(!CLEAR_HISTORY_ON_INTERVAL) {
+            this._resetHistoryClearTimer();
+            return;
+        }
+
+        const currentTime = Math.ceil(new Date().getTime() / 1000);
+        NEXT_HISTORY_CLEAR = currentTime + CLEAR_HISTORY_INTERVAL * 60;
+        const timeoutMs = (NEXT_HISTORY_CLEAR - currentTime) * 1000;
+
+        this.extension.settings.set_int(PrefsFields.NEXT_HISTORY_CLEAR, NEXT_HISTORY_CLEAR);
+        
+        this._updateIntervalTimer();
+        this._timerIntervalId = setInterval(() => {
+            this._updateIntervalTimer();
+        }, 1000);
 
         this._historyClearTimeoutId = setTimeout(() => {
-            this._setupHistoryIntervalClearing();
+            this._clearHistory();
+            this._scheduleNextHistoryClear();
         }, timeoutMs);
     }
 
     _resetHistoryClearTimer() {
-        //basically just reset the timer and set the new one
-        CLEAR_HISTORY_INTERVAL = this.extension.settings.get_int(PrefsFields.CLEAR_HISTORY_INTERVAL);
-        CLEAR_HISTORY_ON_INTERVAL = this.extension.settings.get_boolean(PrefsFields.CLEAR_HISTORY_ON_INTERVAL);
-
-        // stop the interval timer updating the timer label, and then restart it so that it aligns with the new interval
-        if (this._timerIntervalId) {
-            clearInterval(this._timerIntervalId);
-            this._timerIntervalId = null;
+        //basically just reset and stop the timer
+        if (this._historyClearTimeoutId) {
+            clearTimeout(this._historyClearTimeoutId);
+            this._historyClearTimeoutId = null;
         }
-
-        if (CLEAR_HISTORY_ON_INTERVAL) {
-            const currentTime = new Date().getTime() / 1000;
-            NEXT_HISTORY_CLEAR = currentTime + CLEAR_HISTORY_INTERVAL * 60;
-            this.extension.settings.set_int(PrefsFields.NEXT_HISTORY_CLEAR, NEXT_HISTORY_CLEAR);
-
-            this._scheduleNextHistoryClear();
-        }
-        this._timerIntervalId = setInterval(() => {
-            this._updateIntervalTimer();
-        }, 1000);
+        clearInterval(this._timerIntervalId);
+        this._timerIntervalId = null;
         this._updateIntervalTimer();
+        this.extension.settings.set_int(PrefsFields.NEXT_HISTORY_CLEAR, -1);
     }
 
     _updateIntervalTimer() {
+        this._fetchSettings();
         this.timerLabel.visible = CLEAR_HISTORY_ON_INTERVAL;
         if (!CLEAR_HISTORY_ON_INTERVAL) return;
 
 
-        let currentTime = new Date().getTime() / 1000;
-        let timeLeft = NEXT_HISTORY_CLEAR - currentTime + 1;
+        let currentTime = Math.ceil(new Date().getTime() / 1000);
+        let timeLeft = NEXT_HISTORY_CLEAR - currentTime;
 
         if (timeLeft <= 0) {
             this.timerLabel.set_text('');
