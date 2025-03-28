@@ -859,7 +859,7 @@ const ClipboardIndicator = GObject.registerClass({
 
         const currentTime = Math.ceil(new Date().getTime() / 1000);
 
-        if (NEXT_HISTORY_CLEAR === -1) { //new timer or timer expired
+        if (NEXT_HISTORY_CLEAR === -1) { //new timer
             this._scheduleNextHistoryClear();
         }
         else if (NEXT_HISTORY_CLEAR < currentTime) { //timer expired
