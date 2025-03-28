@@ -144,7 +144,7 @@ class Settings {
         this.field_exclusion_row.add_suffix(this.field_exclusion_row_add_button);
 
         this.field_clear_history_on_interval = new Adw.SwitchRow({
-            title: _("Clear history on interval")
+            title: _("Clear clipboard history on interval")
         });
 
         this.field_clear_history_interval = new Adw.SpinRow({
