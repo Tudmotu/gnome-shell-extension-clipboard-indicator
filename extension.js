@@ -863,14 +863,14 @@ const ClipboardIndicator = GObject.registerClass({
             this._scheduleNextHistoryClear();
         }
         else if (NEXT_HISTORY_CLEAR < currentTime) { //timer expired
-            this._clearHistory();
+            this._clearHistory(true);
             this._scheduleNextHistoryClear();
         }
         else { //timer already set, but not expired
             const timeoutMs = (NEXT_HISTORY_CLEAR - currentTime) * 1000;
             this._historyClearTimeoutId = setTimeout(() => {
-                this._clearHistory();
-                this._scheduleNextHistoryClear(true);
+                this._clearHistory(true);
+                this._scheduleNextHistoryClear();
             }, timeoutMs);
             this._timerIntervalId = setInterval(() => {
                 this._updateIntervalTimer();
@@ -919,7 +919,7 @@ const ClipboardIndicator = GObject.registerClass({
         }, 1000);
 
         this._historyClearTimeoutId = setTimeout(() => {
-            this._clearHistory();
+            this._clearHistory(true);
             this._scheduleNextHistoryClear();
         }, timeoutMs);
     }
