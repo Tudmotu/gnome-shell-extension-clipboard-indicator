@@ -1056,7 +1056,6 @@ const ClipboardIndicator = GObject.registerClass({
         this.scrollViewFavoritesMenuSection.actor.visible = !PRIVATEMODE;
         // If we get out of private mode then we restore the clipboard to old state
         if (!PRIVATEMODE) {
-            this._setupHistoryIntervalClearing();
             let selectList = this.clipItemsRadioGroup.filter((item) => !!item.currentlySelected);
 
             if (selectList.length) {
@@ -1074,7 +1073,6 @@ const ClipboardIndicator = GObject.registerClass({
             this.hbox.remove_style_class_name('private-mode');
             this.#showElements();
         } else {
-            this._resetHistoryClearTimer();
             this.hbox.add_style_class_name('private-mode');
             this.#updateIndicatorContent(null);
             this.#hideElements();
