@@ -340,23 +340,142 @@ class Settings {
     }
 
     #createExcludedAppInputRow() {
-        const entry_row = new Adw.ActionRow();
+        //The entry row for adding new excluded apps
+        const entry_row = new Adw.ActionRow({
+            hexpand: false,
+        });
+
+        //The input field for the app wm class name
         const entry = new Gtk.Entry({
-            placeholderText: ('Window class name, e.g. "KeePassXC"'),
+            placeholderText: _('Window class name, e.g. "KeePassXC"'),
             halign: Gtk.Align.FILL,
             valign: Gtk.Align.CENTER,
             hexpand: true,
         });
 
-        entry.connect('map', () => {
+        //The button to open the popover with the list of installed applications
+        const appButton = new Gtk.MenuButton({
+            iconName: 'view-list-symbolic',
+            cssClasses: ['flat'],
+            valign: Gtk.Align.CENTER,
+            halign: Gtk.Align.CENTER,
+            tooltip_text: _('Choose from installed applications'),
+        });
+
+        //The popover
+        const popover = new Gtk.Popover();
+
+        //The popover box
+        const popoverBox = new Gtk.Box({
+            orientation: Gtk.Orientation.VERTICAL,
+            margin_top: 6,
+            margin_bottom: 6,
+            margin_start: 6,
+            margin_end: 6,
+        });
+
+        //The search entry in the popover list for searching applications
+        const searchEntry = new Gtk.SearchEntry({
+            placeholder_text: _('Search applications...'),
+            margin_bottom: 6,
+        });
+
+        //The scrolled window for the list of applications
+        const scrolledWindow = new Gtk.ScrolledWindow({
+            hscrollbar_policy: Gtk.PolicyType.NEVER,
+            vscrollbar_policy: Gtk.PolicyType.AUTOMATIC,
+            height_request: 300,
+            width_request: 300,
+        });
+
+        const listBox = new Gtk.ListBox();
+
+        entry.connect('activate', () => {
+            ok_button.emit('clicked');
+        });
+
+        popoverBox.append(searchEntry);
+
+        popoverBox.append(scrolledWindow);
+
+        scrolledWindow.set_child(listBox);
+
+        popover.set_child(popoverBox);
+        appButton.set_popover(popover);
+
+        const appInfoList = Gio.AppInfo.get_all();
+        const appRows = [];
+
+        appInfoList.sort((a, b) => {
+            return a.get_display_name().localeCompare(b.get_display_name());
+        }).forEach(appInfo => {
+            if (appInfo.should_show()) {
+                const row = new Gtk.ListBoxRow();
+                const box = new Gtk.Box({
+                    orientation: Gtk.Orientation.HORIZONTAL,
+                    spacing: 10,
+                    margin_top: 6,
+                    margin_bottom: 6,
+                    margin_start: 6,
+                    margin_end: 6,
+                });
+
+                const icon = appInfo.get_icon();
+                if (icon) {
+                    const image = new Gtk.Image({
+                        gicon: icon,
+                        pixel_size: 24,
+                    });
+                    box.append(image);
+                }
+
+                const label = new Gtk.Label({
+                    label: appInfo.get_display_name(),
+                    halign: Gtk.Align.START,
+                    hexpand: true,
+                });
+                box.append(label);
+
+                row.set_child(box);
+                row.appInfo = appInfo;
+                listBox.append(row);
+                appRows.push({ row, appInfo });
+            }
+        });
+
+        //for searching the list of applications
+        searchEntry.connect('search-changed', () => {
+            const text = searchEntry.get_text().toLowerCase();
+            for (const { row, appInfo } of appRows) {
+                const appName = appInfo.get_display_name().toLowerCase();
+                row.set_visible(appName.includes(text));
+            }
+        });
+
+        //when using enter on the search entry, select the first row and focus the entry
+        searchEntry.connect('activate', () => {
+            const firstVisibleRow = appRows.find(({ row }) => row.visible);
+            if (firstVisibleRow) {
+                listBox.emit('row-activated', firstVisibleRow.row);
+            }
             entry.grab_focus();
         });
 
+        //when selecting an application, set the entry text to the app class name and close the popover
+        listBox.connect('row-activated', (list, row) => {
+            if (row && row.appInfo) {
+                const appClassName = row.appInfo.get_id().replace(/\.desktop$/, '');
+                entry.set_text(appClassName);
+                popover.popdown();
+            }
+        });
+
+        //The suffix buttons
         const ok_button = new Gtk.Button({
-            cssClasses: ['flat'],
             iconName: 'emblem-ok-symbolic',
             valign: Gtk.Align.CENTER,
             halign: Gtk.Align.CENTER,
+            cssClasses: ['flat'],
         });
 
         ok_button.connect('clicked', () => {
@@ -369,24 +488,20 @@ class Settings {
             }
         });
 
-        entry.connect('activate', () => {
-            ok_button.emit('clicked');
-        });
-
         const cancel_button = new Gtk.Button({
-            cssClasses: ['flat'],
             iconName: 'window-close-symbolic',
             valign: Gtk.Align.CENTER,
             halign: Gtk.Align.CENTER,
+            cssClasses: ['flat'],
         });
 
         cancel_button.connect('clicked', () => {
             this.field_exclusion_row.remove(entry_row);
             this.field_exclusion_row_add_button.set_sensitive(true);
             this.excluded_row_counter--;
-            this.field_exclusion_row_add_button.set_sensitive(true);
         });
 
+        entry_row.add_prefix(appButton);
         entry_row.add_prefix(entry);
         entry_row.add_suffix(ok_button);
         entry_row.add_suffix(cancel_button);
