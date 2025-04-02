@@ -158,6 +158,32 @@ class Settings {
         this.ui.add(this.field_paste_button);
         this.ui.add(this.field_pinned_on_bottom);
 
+        
+        this.field_show_search_bar = new Adw.SwitchRow({
+          title: _("Show Search Bar")
+        });
+        this.schema.bind(PrefsFields.SHOW_SEARCH_BAR, this.field_show_search_bar, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.ui.add(this.field_show_search_bar);
+    
+        this.field_show_private_mode = new Adw.SwitchRow({
+          title: _("Show Private Mode")
+        });
+        this.schema.bind(PrefsFields.SHOW_PRIVATE_MODE, this.field_show_private_mode, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.ui.add(this.field_show_private_mode);
+    
+        this.field_show_settings_button = new Adw.SwitchRow({
+          title: _("Show Settings Button")
+        });
+        this.schema.bind(PrefsFields.SHOW_SETTINGS_BUTTON, this.field_show_settings_button, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.ui.add(this.field_show_settings_button);
+    
+        this.field_show_clear_history_button = new Adw.SwitchRow({
+          title: _("Show Clear History Button")
+        });
+        this.schema.bind(PrefsFields.SHOW_CLEAR_HISTORY_BUTTON, this.field_show_clear_history_button, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.ui.add(this.field_show_clear_history_button);
+
+
         this.behavior.add(this.field_clear_on_boot);
         this.behavior.add(this.field_paste_on_select);
         this.behavior.add(this.field_cache_images);

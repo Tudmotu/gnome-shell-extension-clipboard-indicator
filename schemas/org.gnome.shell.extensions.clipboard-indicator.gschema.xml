@@ -44,6 +44,27 @@
         <summary>Remove down arrow in top bar</summary>
     </key>
 
+    <key name="show-search-bar" type="b">
+        <default>true</default>
+        <summary>Show the search bar</summary>
+    </key>
+
+    <key name="show-private-mode" type="b">
+        <default>true</default>
+        <summary>Show the private mode toggle</summary>
+    </key>
+
+    <key name="show-settings-button" type="b">
+        <default>true</default>
+        <summary>Show the settings button</summary>
+    </key>
+
+    <key name="show-clear-history-button" type="b">
+        <default>true</default>
+        <summary>Show the clear history button</summary>
+        <description>If true, the clear history button will be displayed.</description>
+    </key>
+
     <key name="clear-on-boot" type="b">
         <default>false</default>
         <summary>Clear clipboard history on every system reboot.</summary>

@@ -42,6 +42,10 @@ let PASTE_BUTTON              = true;
 let PINNED_ON_BOTTOM          = false;
 let CACHE_IMAGES              = true;
 let EXCLUDED_APPS             = [];
+let SHOW_SEARCH_BAR = true;
+let SHOW_PRIVATE_MODE = true;
+let SHOW_SETTINGS_BUTTON = true;
+let SHOW_CLEAR_HISTORY_BUTTON = true;
 
 export default class ClipboardIndicatorExtension extends Extension {
     enable () {
@@ -194,53 +198,51 @@ const ClipboardIndicator = GObject.registerClass({
 
         that.menu.connect('open-state-changed', (self, open) => {
             this._setFocusOnOpenTimeout = setTimeout(() => {
-                if (open) {
-                    if (this.clipItemsRadioGroup.length > 0) {
-                        that.searchEntry.set_text('');
-                        global.stage.set_key_focus(that.searchEntry);
-                    }
-                    else {
-                        global.stage.set_key_focus(that.privateModeMenuItem);
-                    }
+              if (open) {
+                if (SHOW_SEARCH_BAR && this.clipItemsRadioGroup.length > 0) {
+                  that.searchEntry.set_text('');
+                  global.stage.set_key_focus(that.searchEntry);
+                } else if (this.clipItemsRadioGroup.length > 0) {
+                  // If the search bar is off, focus the currently selected menu item.
+                  let currentItem = this._getCurrentlySelectedItem();
+                  if (currentItem) {
+                    global.stage.set_key_focus(currentItem.actor);
+                  }
+                } else {
+                  // If no items at all, focus the private mode button (if it exists)
+                  if (that.privateModeMenuItem)
+                    global.stage.set_key_focus(that.privateModeMenuItem.actor);
                 }
+              }
             }, 50);
         });
 
-        // Create menu sections for items
-        // Favorites
+        // --- Menu Sections (Favorites and History) ---
         that.favoritesSection = new PopupMenu.PopupMenuSection();
-
         that.scrollViewFavoritesMenuSection = new PopupMenu.PopupMenuSection();
         this.favoritesScrollView = new St.ScrollView({
-            style_class: 'ci-history-menu-section',
-            overlay_scrollbars: true
+          style_class: 'ci-history-menu-section',
+          overlay_scrollbars: true
         });
         this.favoritesScrollView.add_child(that.favoritesSection.actor);
-
         that.scrollViewFavoritesMenuSection.actor.add_child(this.favoritesScrollView);
         this.favoritesSeparator = new PopupMenu.PopupSeparatorMenuItem();
 
-        // History
         that.historySection = new PopupMenu.PopupMenuSection();
-
         that.scrollViewMenuSection = new PopupMenu.PopupMenuSection();
         this.historyScrollView = new St.ScrollView({
-            style_class: 'ci-main-menu-section ci-history-menu-section',
-            overlay_scrollbars: true
+          style_class: 'ci-main-menu-section ci-history-menu-section',
+          overlay_scrollbars: true
         });
         this.historyScrollView.add_child(that.historySection.actor);
-
         that.scrollViewMenuSection.actor.add_child(this.historyScrollView);
-
-        // Add separator
         this.historySeparator = new PopupMenu.PopupSeparatorMenuItem();
 
         // Add sections ordered according to settings
         if (PINNED_ON_BOTTOM) {
             that.menu.addMenuItem(that.scrollViewMenuSection);
             that.menu.addMenuItem(that.scrollViewFavoritesMenuSection);
-        }
-        else {
+        } else {
             that.menu.addMenuItem(that.scrollViewFavoritesMenuSection);
             that.menu.addMenuItem(that.scrollViewMenuSection);
         }
@@ -258,7 +260,7 @@ const ClipboardIndicator = GObject.registerClass({
             }),
             0
         );
-        that.menu.addMenuItem(that.privateModeMenuItem);
+        // (Not added to menu here; handled in #showElements)
 
         // Add 'Clear' button which removes all items from cache
         this.clearMenuItem = new PopupMenu.PopupMenuItem(_('Clear history'));
@@ -271,6 +273,7 @@ const ClipboardIndicator = GObject.registerClass({
             0
         );
         this.clearMenuItem.connect('activate', that._removeAll.bind(that));
+        // (Not added to menu here; handled in #showElements)
 
         // Add 'Settings' menu item to open settings
         this.settingsMenuItem = new PopupMenu.PopupMenuItem(_('Settings'));
@@ -282,8 +285,8 @@ const ClipboardIndicator = GObject.registerClass({
             }),
             0
         );
-        that.menu.addMenuItem(this.settingsMenuItem);
         this.settingsMenuItem.connect('activate', that._openSettings.bind(that));
+        // (Not added to menu here; handled in #showElements)
 
         // Empty state section
         this.emptyStateSection = new St.BoxLayout({
@@ -319,38 +322,65 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     #showElements() {
-        if (this.clipItemsRadioGroup.length > 0) {
-            if (this.menu.box.contains(this._entryItem) === false) {
-                this.menu.box.insert_child_at_index(this._entryItem, 0);
-            }
-            if (this.menu.box.contains(this.clearMenuItem) === false) {
-                this.menu.box.insert_child_below(this.clearMenuItem, this.settingsMenuItem);
-            }
-            if (this.menu.box.contains(this.emptyStateSection) === true) {
-                this.menu.box.remove_child(this.emptyStateSection);
-            }
-
-            if (this.favoritesSection._getMenuItems().length > 0) {
-                if (this.menu.box.contains(this.favoritesSeparator) === false) {
-                    this.menu.box.insert_child_above(this.favoritesSeparator, this.scrollViewFavoritesMenuSection.actor);
-                }
-            }
-            else if (this.menu.box.contains(this.favoritesSeparator) === true) {
-                this.menu.box.remove_child(this.favoritesSeparator);
-            }
-
-            if (this.historySection._getMenuItems().length > 0) {
-                if (this.menu.box.contains(this.historySeparator) === false) {
-                    this.menu.box.insert_child_above(this.historySeparator, this.scrollViewMenuSection.actor);
-                }
-            }
-            else if (this.menu.box.contains(this.historySeparator) === true) {
-                this.menu.box.remove_child(this.historySeparator);
-            }
+      // --- Handle the Search Bar ---
+      if (SHOW_SEARCH_BAR) {
+        if (!this.menu.box.contains(this._entryItem))
+          this.menu.box.insert_child_at_index(this._entryItem, 0);
+      } else {
+        if (this.menu.box.contains(this._entryItem))
+          this.menu.box.remove_child(this._entryItem);
+      }
+  
+      // --- Handle Favorites Separator ---
+      if (this.clipItemsRadioGroup.length > 0) {
+        if (this.favoritesSection._getMenuItems().length > 0) {
+          if (!this.menu.box.contains(this.favoritesSeparator))
+            this.menu.box.insert_child_above(this.favoritesSeparator, this.scrollViewFavoritesMenuSection.actor);
+        } else if (this.menu.box.contains(this.favoritesSeparator)) {
+          this.menu.box.remove_child(this.favoritesSeparator);
         }
-        else if (this.menu.box.contains(this.emptyStateSection) === false) {
-            this.#renderEmptyState();
-        }
+      }
+  
+      // --- Handle the History Separator (between history and toggled buttons) ---
+      // Show the history separator only if there are history items and at least one toggle button is enabled.
+      if (this.clipItemsRadioGroup.length > 0 &&
+        this.historySection._getMenuItems().length > 0 &&
+        (SHOW_PRIVATE_MODE || SHOW_SETTINGS_BUTTON || SHOW_CLEAR_HISTORY_BUTTON)) {
+        if (!this.menu.box.contains(this.historySeparator))
+          this.menu.box.insert_child_above(this.historySeparator, this.scrollViewMenuSection.actor);
+      } else {
+        if (this.menu.box.contains(this.historySeparator))
+          this.menu.box.remove_child(this.historySeparator);
+      }
+  
+      // --- Handle Empty State ---
+      if (this.clipItemsRadioGroup.length === 0 && !this.menu.box.contains(this.emptyStateSection)) {
+        this.#renderEmptyState();
+      }
+  
+      // --- Handle the Toggled Buttons in Fixed Order ---
+      // First, remove all toggled button actors.
+      if (this.menu.box.contains(this.privateModeMenuItem.actor))
+        this.menu.box.remove_child(this.privateModeMenuItem.actor);
+      if (this.menu.box.contains(this.settingsMenuItem.actor))
+        this.menu.box.remove_child(this.settingsMenuItem.actor);
+      if (this.menu.box.contains(this.clearMenuItem.actor))
+        this.menu.box.remove_child(this.clearMenuItem.actor);
+  
+      // Append toggled buttons in the fixed order at the end of the container.
+      let index = this.menu.box.get_n_children(); // Append at the end.
+      if (SHOW_PRIVATE_MODE) {
+        this.menu.box.insert_child_at_index(this.privateModeMenuItem.actor, index);
+        index++;
+      }
+      if (SHOW_SETTINGS_BUTTON) {
+        this.menu.box.insert_child_at_index(this.settingsMenuItem.actor, index);
+        index++;
+      }
+      if (SHOW_CLEAR_HISTORY_BUTTON) {
+        this.menu.box.insert_child_at_index(this.clearMenuItem.actor, index);
+        index++;
+      }
     }
 
     #renderEmptyState () {
@@ -449,8 +479,18 @@ const ClipboardIndicator = GObject.registerClass({
         menuItem.entry = entry;
         menuItem.clipContents = entry.getStringValue();
         menuItem.radioGroup = this.clipItemsRadioGroup;
-        menuItem.buttonPressId = menuItem.connect('activate',
-            autoSet => this._onMenuItemSelectedAndMenuClose(menuItem, autoSet));
+        
+        /* This change fixes the issue that causes Paste on Select to fail when 
+        using clicking rather than pressing Enter. Now pressing Enter and 
+        clicking will have consistent behaviour. */
+        menuItem.buttonPressId = menuItem.connect('activate', (autoSet) => {
+          if (PASTE_ON_SELECT) {
+            this.#pasteItem(menuItem);
+          }
+          this._onMenuItemSelectedAndMenuClose(menuItem, autoSet);
+        });
+
+
         menuItem.connect('key-focus-in', () => {
             const viewToScroll = menuItem.entry.isFavorite() ?
                 this.favoritesScrollView : this.historyScrollView;
@@ -471,9 +511,7 @@ const ClipboardIndicator = GObject.registerClass({
                     break;
                 case Clutter.KEY_KP_Enter:
                 case Clutter.KEY_Return:
-                    if (PASTE_ON_SELECT) {
-                        this.#pasteItem(menuItem);
-                    }
+                    // Let the 'activate' event handle the paste (to prevent double pasting)
                     this._onMenuItemSelectedAndMenuClose(menuItem, true);
                     break;
             }
