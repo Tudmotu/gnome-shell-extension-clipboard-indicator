@@ -42,9 +42,9 @@ let PASTE_BUTTON              = true;
 let PINNED_ON_BOTTOM          = false;
 let CACHE_IMAGES              = true;
 let EXCLUDED_APPS             = [];
-let SHOW_SEARCH_BAR = true;
-let SHOW_PRIVATE_MODE = true;
-let SHOW_SETTINGS_BUTTON = true;
+let SHOW_SEARCH_BAR           = true;
+let SHOW_PRIVATE_MODE         = true;
+let SHOW_SETTINGS_BUTTON      = true;
 let SHOW_CLEAR_HISTORY_BUTTON = true;
 
 export default class ClipboardIndicatorExtension extends Extension {
@@ -210,7 +210,7 @@ const ClipboardIndicator = GObject.registerClass({
                   }
                 } else {
                   // If no items at all, focus the private mode button (if it exists)
-                  if (that.privateModeMenuItem)
+                  if (SHOW_PRIVATE_MODE && that.privateModeMenuItem)
                     global.stage.set_key_focus(that.privateModeMenuItem.actor);
                 }
               }
@@ -221,8 +221,8 @@ const ClipboardIndicator = GObject.registerClass({
         that.favoritesSection = new PopupMenu.PopupMenuSection();
         that.scrollViewFavoritesMenuSection = new PopupMenu.PopupMenuSection();
         this.favoritesScrollView = new St.ScrollView({
-          style_class: 'ci-history-menu-section',
-          overlay_scrollbars: true
+            style_class: 'ci-history-menu-section',
+            overlay_scrollbars: true
         });
         this.favoritesScrollView.add_child(that.favoritesSection.actor);
         that.scrollViewFavoritesMenuSection.actor.add_child(this.favoritesScrollView);
@@ -231,8 +231,8 @@ const ClipboardIndicator = GObject.registerClass({
         that.historySection = new PopupMenu.PopupMenuSection();
         that.scrollViewMenuSection = new PopupMenu.PopupMenuSection();
         this.historyScrollView = new St.ScrollView({
-          style_class: 'ci-main-menu-section ci-history-menu-section',
-          overlay_scrollbars: true
+            style_class: 'ci-main-menu-section ci-history-menu-section',
+            overlay_scrollbars: true
         });
         this.historyScrollView.add_child(that.historySection.actor);
         that.scrollViewMenuSection.actor.add_child(this.historyScrollView);
@@ -242,7 +242,8 @@ const ClipboardIndicator = GObject.registerClass({
         if (PINNED_ON_BOTTOM) {
             that.menu.addMenuItem(that.scrollViewMenuSection);
             that.menu.addMenuItem(that.scrollViewFavoritesMenuSection);
-        } else {
+        }
+        else {
             that.menu.addMenuItem(that.scrollViewFavoritesMenuSection);
             that.menu.addMenuItem(that.scrollViewMenuSection);
         }
@@ -260,7 +261,6 @@ const ClipboardIndicator = GObject.registerClass({
             }),
             0
         );
-        // (Not added to menu here; handled in #showElements)
 
         // Add 'Clear' button which removes all items from cache
         this.clearMenuItem = new PopupMenu.PopupMenuItem(_('Clear history'));
@@ -273,8 +273,7 @@ const ClipboardIndicator = GObject.registerClass({
             0
         );
         this.clearMenuItem.connect('activate', that._removeAll.bind(that));
-        // (Not added to menu here; handled in #showElements)
-
+        
         // Add 'Settings' menu item to open settings
         this.settingsMenuItem = new PopupMenu.PopupMenuItem(_('Settings'));
         this.settingsMenuItem.insert_child_at_index(
@@ -286,8 +285,7 @@ const ClipboardIndicator = GObject.registerClass({
             0
         );
         this.settingsMenuItem.connect('activate', that._openSettings.bind(that));
-        // (Not added to menu here; handled in #showElements)
-
+        
         // Empty state section
         this.emptyStateSection = new St.BoxLayout({
             style_class: 'clipboard-indicator-empty-state',
@@ -389,7 +387,7 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     /* When text change, this function will check, for each item of the
-    historySection and favoritesSestion, if it should be visible or not (based on words contained
+    historySection and favoritesSection, if it should be visible or not (based on words contained
     in the clipContents attribute of the item). It doesn't destroy or create
     items. It the entry is empty, the section is restored with all items
     set as visible. */
@@ -946,26 +944,30 @@ const ClipboardIndicator = GObject.registerClass({
 
     _fetchSettings () {
         const { settings } = this.extension;
-        MAX_REGISTRY_LENGTH    = settings.get_int(PrefsFields.HISTORY_SIZE);
-        MAX_ENTRY_LENGTH       = settings.get_int(PrefsFields.PREVIEW_SIZE);
-        CACHE_ONLY_FAVORITE    = settings.get_boolean(PrefsFields.CACHE_ONLY_FAVORITE);
-        DELETE_ENABLED         = settings.get_boolean(PrefsFields.DELETE);
-        MOVE_ITEM_FIRST        = settings.get_boolean(PrefsFields.MOVE_ITEM_FIRST);
-        NOTIFY_ON_COPY         = settings.get_boolean(PrefsFields.NOTIFY_ON_COPY);
-        NOTIFY_ON_CYCLE        = settings.get_boolean(PrefsFields.NOTIFY_ON_CYCLE);
-        CONFIRM_ON_CLEAR       = settings.get_boolean(PrefsFields.CONFIRM_ON_CLEAR);
-        ENABLE_KEYBINDING      = settings.get_boolean(PrefsFields.ENABLE_KEYBINDING);
-        MAX_TOPBAR_LENGTH      = settings.get_int(PrefsFields.TOPBAR_PREVIEW_SIZE);
-        TOPBAR_DISPLAY_MODE    = settings.get_int(PrefsFields.TOPBAR_DISPLAY_MODE_ID);
-        CLEAR_ON_BOOT          = settings.get_boolean(PrefsFields.CLEAR_ON_BOOT);
-        PASTE_ON_SELECT        = settings.get_boolean(PrefsFields.PASTE_ON_SELECT);
-        DISABLE_DOWN_ARROW     = settings.get_boolean(PrefsFields.DISABLE_DOWN_ARROW);
-        STRIP_TEXT             = settings.get_boolean(PrefsFields.STRIP_TEXT);
-        KEEP_SELECTED_ON_CLEAR = settings.get_boolean(PrefsFields.KEEP_SELECTED_ON_CLEAR);
-        PASTE_BUTTON           = settings.get_boolean(PrefsFields.PASTE_BUTTON);
-        PINNED_ON_BOTTOM       = settings.get_boolean(PrefsFields.PINNED_ON_BOTTOM);
-        CACHE_IMAGES           = settings.get_boolean(PrefsFields.CACHE_IMAGES);
-        EXCLUDED_APPS          = settings.get_strv(PrefsFields.EXCLUDED_APPS);
+        SHOW_SEARCH_BAR           = settings.get_boolean(PrefsFields.SHOW_SEARCH_BAR);
+        SHOW_PRIVATE_MODE         = settings.get_boolean(PrefsFields.SHOW_PRIVATE_MODE);
+        SHOW_SETTINGS_BUTTON      = settings.get_boolean(PrefsFields.SHOW_SETTINGS_BUTTON);
+        SHOW_CLEAR_HISTORY_BUTTON = settings.get_boolean(PrefsFields.SHOW_CLEAR_HISTORY_BUTTON);
+        MAX_REGISTRY_LENGTH       = settings.get_int(PrefsFields.HISTORY_SIZE);
+        MAX_ENTRY_LENGTH          = settings.get_int(PrefsFields.PREVIEW_SIZE);
+        CACHE_ONLY_FAVORITE       = settings.get_boolean(PrefsFields.CACHE_ONLY_FAVORITE);
+        DELETE_ENABLED            = settings.get_boolean(PrefsFields.DELETE);
+        MOVE_ITEM_FIRST           = settings.get_boolean(PrefsFields.MOVE_ITEM_FIRST);
+        NOTIFY_ON_COPY            = settings.get_boolean(PrefsFields.NOTIFY_ON_COPY);
+        NOTIFY_ON_CYCLE           = settings.get_boolean(PrefsFields.NOTIFY_ON_CYCLE);
+        CONFIRM_ON_CLEAR          = settings.get_boolean(PrefsFields.CONFIRM_ON_CLEAR);
+        ENABLE_KEYBINDING         = settings.get_boolean(PrefsFields.ENABLE_KEYBINDING);
+        MAX_TOPBAR_LENGTH         = settings.get_int(PrefsFields.TOPBAR_PREVIEW_SIZE);
+        TOPBAR_DISPLAY_MODE       = settings.get_int(PrefsFields.TOPBAR_DISPLAY_MODE_ID);
+        CLEAR_ON_BOOT             = settings.get_boolean(PrefsFields.CLEAR_ON_BOOT);
+        PASTE_ON_SELECT           = settings.get_boolean(PrefsFields.PASTE_ON_SELECT);
+        DISABLE_DOWN_ARROW        = settings.get_boolean(PrefsFields.DISABLE_DOWN_ARROW);
+        STRIP_TEXT                = settings.get_boolean(PrefsFields.STRIP_TEXT);
+        KEEP_SELECTED_ON_CLEAR    = settings.get_boolean(PrefsFields.KEEP_SELECTED_ON_CLEAR);
+        PASTE_BUTTON              = settings.get_boolean(PrefsFields.PASTE_BUTTON);
+        PINNED_ON_BOTTOM          = settings.get_boolean(PrefsFields.PINNED_ON_BOTTOM);
+        CACHE_IMAGES              = settings.get_boolean(PrefsFields.CACHE_IMAGES);
+        EXCLUDED_APPS             = settings.get_strv(PrefsFields.EXCLUDED_APPS);
     }
 
     async _onSettingsChange () {
@@ -993,6 +995,9 @@ const ClipboardIndicator = GObject.registerClass({
                 that._bindShortcuts();
             else
                 that._unbindShortcuts();
+
+            // Re-show/hide toggled UI elements based on the current settings
+            that.#showElements();
         } catch (e) {
             console.error('Clipboard Indicator: Failed to update registry');
             console.error(e);
