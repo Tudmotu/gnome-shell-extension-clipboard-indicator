@@ -273,7 +273,7 @@ const ClipboardIndicator = GObject.registerClass({
             0
         );
         this.clearMenuItem.connect('activate', that._removeAll.bind(that));
-        
+
         // Add 'Settings' menu item to open settings
         this.settingsMenuItem = new PopupMenu.PopupMenuItem(_('Settings'));
         this.settingsMenuItem.insert_child_at_index(
@@ -285,7 +285,7 @@ const ClipboardIndicator = GObject.registerClass({
             0
         );
         this.settingsMenuItem.connect('activate', that._openSettings.bind(that));
-        
+
         // Empty state section
         this.emptyStateSection = new St.BoxLayout({
             style_class: 'clipboard-indicator-empty-state',
