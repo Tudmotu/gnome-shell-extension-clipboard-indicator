@@ -71,6 +71,7 @@ const ClipboardIndicator = GObject.registerClass({
 }, class ClipboardIndicator extends PanelMenu.Button {
     #refreshInProgress = false;
     _pastePending = null;
+    _previewLaterId = 0;
     preventIndicatorUpdate = false
 
     destroy () {
@@ -151,21 +152,36 @@ const ClipboardIndicator = GObject.registerClass({
                 this._buttonImgPreview.destroy_all_children();
             }
             else if (entry.isImage()) {
-                this._buttonText.set_text('');
-                this._buttonImgPreview.destroy_all_children();
-                this.registry.getEntryAsImage(entry).then(img => {
-                    img.add_style_class_name('clipboard-indicator-img-preview');
-                    img.y_align = Clutter.ActorAlign.CENTER;
-
-                    // icon only renders properly in setTimeout for some arcane reason
-                    this._imagePreviewLaterId =
-                        Meta.Laters.add(global.compositor.get_laters(),
-                                        Meta.LaterType.BEFORE_REDRAW, () => {
-                            this._buttonImgPreview.set_child(img);
-                            return GLib.SOURCE_REMOVE;
-                        });     
-                });
-            }
+              this._buttonText.set_text('');
+              this._buttonImgPreview.destroy_all_children();
+          
+              // ── cancel any still-pending preview update ─────────────────────────────
+              if (this._previewLaterId) {
+                  const laters = global.compositor.get_laters?.();
+                  laters && Meta.Laters.remove
+                      ? Meta.Laters.remove(laters, this._previewLaterId)
+                      : GLib.source_remove(this._previewLaterId);
+                  this._previewLaterId = 0;
+              }
+          
+              // ── load the thumbnail and queue it for the next frame ──────────────────
+              this.registry.getEntryAsImage(entry).then(img => {
+                  img.add_style_class_name('clipboard-indicator-img-preview');
+                  img.y_align = Clutter.ActorAlign.CENTER;
+          
+                  const laters = global.compositor.get_laters?.();
+                  this._previewLaterId = laters && Meta.Laters.add
+                      ? Meta.Laters.add(
+                            laters,
+                            Meta.LaterType.AFTER_REDRAW,
+                            () => (this._buttonImgPreview.set_child(img), GLib.SOURCE_REMOVE)
+                        )
+                      : GLib.idle_add(
+                            GLib.PRIORITY_DEFAULT,
+                            () => (this._buttonImgPreview.set_child(img), GLib.SOURCE_REMOVE)
+                        );
+              });
+          }          
         }
     }
 
@@ -750,10 +766,6 @@ const ClipboardIndicator = GObject.registerClass({
             const { previous } = this._pastePending;
             this._pastePending = null;
                 this._keyboardPaste();            // paste immediately
-                /* optional auto-restore — uncomment if desired
-            if (previous)
-                this.#updateClipboard(previous);
-            */
                 this.preventIndicatorUpdate = false;
             return;
         }
@@ -1108,18 +1120,6 @@ const ClipboardIndicator = GObject.registerClass({
         }
     }
 
-    _selectEntryWithDelay (entry) {
-        let that = this;
-        that._selectMenuItem(entry, false);
-
-        that._delayedSelectionSourceId = GLib.timeout_add(GLib.PRIORITY_DEFAULT,
-          DELAYED_SELECTION_TIMEOUT, () => {
-              that._selectMenuItem(entry);  //select the item
-              that._delayedSelectionSourceId = null;
-              return GLib.SOURCE_REMOVE;
-        });
-    }
-
     _previousEntry () {
         if (PRIVATEMODE) return;
         let that = this;
@@ -1187,14 +1187,26 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     #clearTimeouts () {
-      for (const id of [
-          this._imagePreviewLaterId,
-          this._setFocusOnOpenIdleId,
-      ]) {
-          if (id) GLib.source_remove(id);
-       }
-    }
+        for (const id of [
+            this._setFocusOnOpenIdleId,
+        ]) {
+            if (!id)
+                continue;
+            const laters = global.compositor.get_laters();
+            if (laters && Meta.Laters.remove){
+                Meta.Laters.remove(laters, id);  // GNOME 44 +
+            } else { GLib.source_remove(id); }     // Idle fallback    }
+        }
 
+        if (this._previewLaterId) {
+            const laters = global.compositor.get_laters?.();
+            laters && Meta.Laters.remove
+                ? Meta.Laters.remove(laters, this._previewLaterId)
+                : GLib.source_remove(this._previewLaterId);
+            this._previewLaterId = 0;
+        }      
+    }
+    
     #clearClipboard () {
         this.extension.clipboard.set_text(CLIPBOARD_TYPE, "");
         this.#updateIndicatorContent(null);
