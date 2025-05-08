@@ -21,7 +21,6 @@ const CLIPBOARD_TYPE = St.ClipboardType.CLIPBOARD;
 
 const INDICATOR_ICON = 'edit-paste-symbolic';
 
-let DELAYED_SELECTION_TIMEOUT = 750;
 let MAX_REGISTRY_LENGTH       = 15;
 let MAX_ENTRY_LENGTH          = 50;
 let CACHE_ONLY_FAVORITE       = false;
@@ -71,6 +70,8 @@ const ClipboardIndicator = GObject.registerClass({
     GTypeName: 'ClipboardIndicator'
 }, class ClipboardIndicator extends PanelMenu.Button {
     #refreshInProgress = false;
+    _pastePending = null;
+    preventIndicatorUpdate = false
 
     destroy () {
         this._disconnectSettings();
@@ -741,9 +742,24 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     async _onSelectionChange (selection, selectionType, selectionSource) {
-        if (selectionType === Meta.SelectionType.SELECTION_CLIPBOARD) {
-            this._refreshIndicator();
+        if (selectionType !== Meta.SelectionType.SELECTION_CLIPBOARD)
+            return;
+        
+        // Step 3 — clipboard owner is now the one we set in #pasteItem()
+        if (this._pastePending) {
+            const { previous } = this._pastePending;
+            this._pastePending = null;
+                this._keyboardPaste();            // paste immediately
+                /* optional auto-restore — uncomment if desired
+            if (previous)
+                this.#updateClipboard(previous);
+            */
+                this.preventIndicatorUpdate = false;
+            return;
         }
+        
+        // Regular external copy
+        this._refreshIndicator();
     }
 
     async _refreshIndicator () {
@@ -1119,12 +1135,8 @@ const ClipboardIndicator = GObject.registerClass({
                 if(NOTIFY_ON_CYCLE) {
                     that._showNotification(index + ' / ' + menuItems.length + ': ' + menuItems[i].entry.getStringValue());
                 }
-                if (MOVE_ITEM_FIRST) {
-                    that._selectEntryWithDelay(menuItems[i]);
-                }
-                else {
-                    that._selectMenuItem(menuItems[i]);
-                }
+                that._selectMenuItem(menuItems[i]);
+                
                 return true;
             }
             return false;
@@ -1133,71 +1145,51 @@ const ClipboardIndicator = GObject.registerClass({
 
     _nextEntry () {
         if (PRIVATEMODE) return;
-        let that = this;
-
-        that._clearDelayedSelectionTimeout();
-
-        this._getAllIMenuItems().some(function (mItem, i, menuItems){
+        this._getAllIMenuItems().some((mItem, i, menuItems) => {
             if (mItem.currentlySelected) {
-                i++;                                 //get the next index
-                if (i === menuItems.length) i = 0;   //cycle if out of bound
-                let index = i + 1;                     //index to be displayed
-
-                if(NOTIFY_ON_CYCLE) {
-                    that._showNotification(index + ' / ' + menuItems.length + ': ' + menuItems[i].entry.getStringValue());
-                }
-                if (MOVE_ITEM_FIRST) {
-                    that._selectEntryWithDelay(menuItems[i]);
-                }
-                else {
-                    that._selectMenuItem(menuItems[i]);
-                }
+                i = (i + 1) % menuItems.length;
+                this._showNotification(/* … */);
+                this._selectMenuItem(menuItems[i]);     // synchronous selection
                 return true;
             }
             return false;
         });
     }
-
+  
     _toggleMenu () {
         this.menu.toggle();
     }
 
     #pasteItem (menuItem) {
-        this.menu.close();
-        const currentlySelected = this._getCurrentlySelectedItem();
+        this.menu.close();                         // return focus
+        this._pastePending = {
+            entry:    menuItem.entry,
+            previous: this._getCurrentlySelectedItem()?.entry
+        };
         this.preventIndicatorUpdate = true;
-        this.#updateClipboard(menuItem.entry);
-        this._pastingKeypressIdleId = GLib.idle_add(GLib.PRIORITY_DEFAULT, () => {
-            if (this.keyboard.purpose === Clutter.InputContentPurpose.TERMINAL) {
-                this.keyboard.press(Clutter.KEY_Control_L);
-                this.keyboard.press(Clutter.KEY_Shift_L);
-                this.keyboard.press(Clutter.KEY_Insert);
-                this.keyboard.release(Clutter.KEY_Insert);
-                this.keyboard.release(Clutter.KEY_Shift_L);
-                this.keyboard.release(Clutter.KEY_Control_L);
-            }
-            else {
-                this.keyboard.press(Clutter.KEY_Shift_L);
-                this.keyboard.press(Clutter.KEY_Insert);
-                this.keyboard.release(Clutter.KEY_Insert);
-                this.keyboard.release(Clutter.KEY_Shift_L);
-            }
+        this.#updateClipboard(menuItem.entry);     // triggers owner-changed
+    }
 
-            this._pastingResetIdleId = GLib.idle_add(GLib.PRIORITY_DEFAULT, () => {
-                this.preventIndicatorUpdate = false;
-                this.#updateClipboard(currentlySelected.entry);
-                return GLib.SOURCE_REMOVE;
-            });
-            return GLib.SOURCE_REMOVE;
-        });
+    _keyboardPaste () {             // helper: paste via Shift+Insert
+        if (this.keyboard.purpose === Clutter.InputContentPurpose.TERMINAL) {
+            this.keyboard.press(Clutter.KEY_Control_L);
+            this.keyboard.press(Clutter.KEY_Shift_L);
+            this.keyboard.press(Clutter.KEY_Insert);
+            this.keyboard.release(Clutter.KEY_Insert);
+            this.keyboard.release(Clutter.KEY_Shift_L);
+            this.keyboard.release(Clutter.KEY_Control_L);
+        } else {
+            this.keyboard.press(Clutter.KEY_Shift_L);
+            this.keyboard.press(Clutter.KEY_Insert);
+            this.keyboard.release(Clutter.KEY_Insert);
+            this.keyboard.release(Clutter.KEY_Shift_L);
+        }
     }
 
     #clearTimeouts () {
       for (const id of [
           this._imagePreviewLaterId,
           this._setFocusOnOpenIdleId,
-          this._pastingKeypressIdleId,
-          this._pastingResetIdleId,
       ]) {
           if (id) GLib.source_remove(id);
        }
