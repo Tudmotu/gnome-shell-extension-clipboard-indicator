@@ -1,4 +1,5 @@
 import Clutter from 'gi://Clutter';
+import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
 import Meta from 'gi://Meta';
 import Shell from 'gi://Shell';
@@ -156,9 +157,12 @@ const ClipboardIndicator = GObject.registerClass({
                     img.y_align = Clutter.ActorAlign.CENTER;
 
                     // icon only renders properly in setTimeout for some arcane reason
-                    this._imagePreviewTimeout = setTimeout(() => {
-                        this._buttonImgPreview.set_child(img);
-                    }, 0);
+                    this._imagePreviewLaterId =
+                        Meta.Laters.add(global.compositor.get_laters(),
+                                        Meta.LaterType.BEFORE_REDRAW, () => {
+                            this._buttonImgPreview.set_child(img);
+                            return GLib.SOURCE_REMOVE;
+                        });     
                 });
             }
         }
@@ -197,7 +201,7 @@ const ClipboardIndicator = GObject.registerClass({
         that._entryItem.add_child(that.searchEntry);
 
         that.menu.connect('open-state-changed', (self, open) => {
-            this._setFocusOnOpenTimeout = setTimeout(() => {
+          this._setFocusOnOpenIdleId = GLib.idle_add(GLib.PRIORITY_DEFAULT, () => {
               if (open) {
                 if (SHOW_SEARCH_BAR && this.clipItemsRadioGroup.length > 0) {
                   that.searchEntry.set_text('');
@@ -214,7 +218,8 @@ const ClipboardIndicator = GObject.registerClass({
                     global.stage.set_key_focus(that.privateModeMenuItem.actor);
                 }
               }
-            }, 50);
+              return GLib.SOURCE_REMOVE;
+            });
         });
 
         // --- Menu Sections (Favorites and History) ---
@@ -1081,8 +1086,9 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     _clearDelayedSelectionTimeout () {
-        if (this._delayedSelectionTimeoutId) {
-            clearInterval(this._delayedSelectionTimeoutId);
+        if (this._delayedSelectionSourceId) {
+            GLib.source_remove(this._delayedSelectionSourceId);
+            this._delayedSelectionSourceId = null;
         }
     }
 
@@ -1090,10 +1096,12 @@ const ClipboardIndicator = GObject.registerClass({
         let that = this;
         that._selectMenuItem(entry, false);
 
-        that._delayedSelectionTimeoutId = setTimeout(function () {
-            that._selectMenuItem(entry);  //select the item
-            that._delayedSelectionTimeoutId = null;
-        }, DELAYED_SELECTION_TIMEOUT);
+        that._delayedSelectionSourceId = GLib.timeout_add(GLib.PRIORITY_DEFAULT,
+          DELAYED_SELECTION_TIMEOUT, () => {
+              that._selectMenuItem(entry);  //select the item
+              that._delayedSelectionSourceId = null;
+              return GLib.SOURCE_REMOVE;
+        });
     }
 
     _previousEntry () {
@@ -1159,7 +1167,7 @@ const ClipboardIndicator = GObject.registerClass({
         const currentlySelected = this._getCurrentlySelectedItem();
         this.preventIndicatorUpdate = true;
         this.#updateClipboard(menuItem.entry);
-        this._pastingKeypressTimeout = setTimeout(() => {
+        this._pastingKeypressIdleId = GLib.idle_add(GLib.PRIORITY_DEFAULT, () => {
             if (this.keyboard.purpose === Clutter.InputContentPurpose.TERMINAL) {
                 this.keyboard.press(Clutter.KEY_Control_L);
                 this.keyboard.press(Clutter.KEY_Shift_L);
@@ -1175,18 +1183,24 @@ const ClipboardIndicator = GObject.registerClass({
                 this.keyboard.release(Clutter.KEY_Shift_L);
             }
 
-            this._pastingResetTimeout = setTimeout(() => {
+            this._pastingResetIdleId = GLib.idle_add(GLib.PRIORITY_DEFAULT, () => {
                 this.preventIndicatorUpdate = false;
                 this.#updateClipboard(currentlySelected.entry);
-            }, 50);
-        }, 50);
+                return GLib.SOURCE_REMOVE;
+            });
+            return GLib.SOURCE_REMOVE;
+        });
     }
 
     #clearTimeouts () {
-        if (this._imagePreviewTimeout) clearTimeout(this._imagePreviewTimeout);
-        if (this._setFocusOnOpenTimeout) clearTimeout(this._setFocusOnOpenTimeout);
-        if (this._pastingKeypressTimeout) clearTimeout(this._pastingKeypressTimeout);
-        if (this._pastingResetTimeout) clearTimeout(this._pastingResetTimeout);
+      for (const id of [
+          this._imagePreviewLaterId,
+          this._setFocusOnOpenIdleId,
+          this._pastingKeypressIdleId,
+          this._pastingResetIdleId,
+      ]) {
+          if (id) GLib.source_remove(id);
+       }
     }
 
     #clearClipboard () {
