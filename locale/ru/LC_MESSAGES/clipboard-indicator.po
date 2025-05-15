@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-02 05:25+0300\n"
-"PO-Revision-Date: 2025-05-02 05:30+0300\n"
+"PO-Revision-Date: 2025-05-15 18:37+0300\n"
 "Last-Translator: Mariya Shikunova <translation-team@basealt.ru>\n"
 "Language-Team: Basealt Translation Team\n"
 "Language: ru\n"
@@ -101,15 +101,15 @@ msgstr "Кэшировать только избранное"
 
 #: prefs.js:79
 msgid "Show notification on copy"
-msgstr "Уведомление при копировании"
+msgstr "Показывать уведомление при копировании"
 
 #: prefs.js:83
 msgid "Show notification on cycle"
-msgstr "Уведомление при копировании"
+msgstr "Показывать уведомление при циклическом переключении"
 
 #: prefs.js:87
 msgid "Show confirmation on Clear History"
-msgstr "Уведомление при очистке истории"
+msgstr "Показывать уведомление при очистке истории"
 
 #: prefs.js:91
 msgid "Remove whitespace around text"
