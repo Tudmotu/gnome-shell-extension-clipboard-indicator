@@ -109,7 +109,7 @@ msgstr "Bildirimleri döngüyle göster"
 
 #: prefs.js:87
 msgid "Show confirmation on Clear History"
-msgstr "Geçmişi Temizle'rken onay iste"
+msgstr "Geçmişi temizlerken onay iste"
 
 #: prefs.js:91
 msgid "Remove whitespace around text"
