@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-14 19:49-0800\n"
+"POT-Creation-Date: 2025-05-23 11:43+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,190 +17,210 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: extension.js:104
+#: extension.js:108
 msgid "Text will be here"
 msgstr ""
 
-#: extension.js:177
+#: extension.js:181
 msgid "Type here to search..."
 msgstr ""
 
-#: extension.js:246 prefs.js:179
+#: extension.js:250 prefs.js:220
 msgid "Private mode"
 msgstr ""
 
-#: extension.js:260 prefs.js:181
+#: extension.js:264 prefs.js:222
 msgid "Clear history"
 msgstr ""
 
-#: extension.js:272
+#: extension.js:276
 msgid "Settings"
 msgstr ""
 
-#: extension.js:295
+#: extension.js:299
 msgid "Clipboard is empty"
 msgstr ""
 
-#: extension.js:578
+#: extension.js:571
 msgid "Clear all?"
 msgstr ""
 
-#: extension.js:579
+#: extension.js:572
 msgid "Are you sure you want to delete all clipboard items?"
 msgstr ""
 
-#: extension.js:580
+#: extension.js:573
 msgid "This operation cannot be undone."
 msgstr ""
 
-#: extension.js:582
+#: extension.js:575
 msgid "Clear"
 msgstr ""
 
-#: extension.js:582 extension.js:741
+#: extension.js:575 extension.js:740
 msgid "Cancel"
 msgstr ""
 
-#: extension.js:595
+#: extension.js:588
 msgid "Clipboard history cleared"
 msgstr ""
 
-#: extension.js:740
+#: extension.js:739
 msgid "Copied to clipboard"
 msgstr ""
 
-#: prefs.js:29
+#: prefs.js:30
 msgid "History Size"
 msgstr ""
 
-#: prefs.js:38
+#: prefs.js:39
 msgid "Preview Size (characters)"
 msgstr ""
 
-#: prefs.js:47
+#: prefs.js:48
 msgid "Max cache file size (MB)"
 msgstr ""
 
-#: prefs.js:56
+#: prefs.js:57
 msgid "Number of characters in top bar"
 msgstr ""
 
-#: prefs.js:65
+#: prefs.js:66
 msgid "What to show in top bar"
 msgstr ""
 
-#: prefs.js:70
+#: prefs.js:71
 msgid "Remove down arrow in top bar"
 msgstr ""
 
-#: prefs.js:74
+#: prefs.js:75
 msgid "Cache only pinned items"
 msgstr ""
 
-#: prefs.js:78
+#: prefs.js:79
 msgid "Show notification on copy"
 msgstr ""
 
-#: prefs.js:82
+#: prefs.js:83
+msgid "Show notification on cycle"
+msgstr ""
+
+#: prefs.js:87
 msgid "Show confirmation on Clear History"
 msgstr ""
 
-#: prefs.js:86
+#: prefs.js:91
 msgid "Remove whitespace around text"
 msgstr ""
 
-#: prefs.js:90
+#: prefs.js:95
 msgid "Move item to the top after selection"
 msgstr ""
 
-#: prefs.js:94
+#: prefs.js:99
 msgid "Keep selected entry after Clear History"
 msgstr ""
 
-#: prefs.js:98
+#: prefs.js:103
 msgid "Show paste buttons"
 msgstr ""
 
-#: prefs.js:99
+#: prefs.js:104
 msgid "Adds a paste button to each entry that lets you paste it directly"
 msgstr ""
 
-#: prefs.js:103
+#: prefs.js:108
 msgid "Place the pinned section on the bottom"
 msgstr ""
 
-#: prefs.js:104
+#: prefs.js:109
 msgid "Requires restarting the extension"
 msgstr ""
 
-#: prefs.js:108
+#: prefs.js:113
 msgid "Clear clipboard history on system reboot"
 msgstr ""
 
-#: prefs.js:112
+#: prefs.js:117
 msgid "Paste on select"
 msgstr ""
 
-#: prefs.js:115
+#: prefs.js:121
+msgid "Cache images"
+msgstr ""
+
+#: prefs.js:126
+msgid "Excluded Apps"
+msgstr ""
+
+#: prefs.js:127
+msgid "Content copied will not be saved while these apps are in focus"
+msgstr ""
+
+#: prefs.js:146
 msgid "UI"
 msgstr ""
 
-#: prefs.js:116
+#: prefs.js:147
 msgid "Behavior"
 msgstr ""
 
-#: prefs.js:117
+#: prefs.js:148
+msgid "Exclusion"
+msgstr ""
+
+#: prefs.js:149
 msgid "Limits"
 msgstr ""
 
-#: prefs.js:118
+#: prefs.js:150
 msgid "Topbar"
 msgstr ""
 
-#: prefs.js:119
+#: prefs.js:151
 msgid "Notifications"
 msgstr ""
 
-#: prefs.js:120
+#: prefs.js:152
 msgid "Shortcuts"
 msgstr ""
 
-#: prefs.js:166
+#: prefs.js:207
 msgid "Icon"
 msgstr ""
 
-#: prefs.js:167
+#: prefs.js:208
 msgid "Clipboard Content"
 msgstr ""
 
-#: prefs.js:168
+#: prefs.js:209
 msgid "Both"
 msgstr ""
 
-#: prefs.js:169
+#: prefs.js:210
 msgid "Neither"
 msgstr ""
 
-#: prefs.js:180
+#: prefs.js:221
 msgid "Toggle the menu"
 msgstr ""
 
-#: prefs.js:182
+#: prefs.js:223
 msgid "Previous entry"
 msgstr ""
 
-#: prefs.js:183
+#: prefs.js:224
 msgid "Next entry"
 msgstr ""
 
-#: prefs.js:188
+#: prefs.js:229
 msgid "Enable shortcuts"
 msgstr ""
 
-#: prefs.js:213
+#: prefs.js:254
 msgid "Disabled"
 msgstr ""
 
-#: prefs.js:222
+#: prefs.js:263
 msgid "Enter shortcut"
 msgstr ""

@@ -2,216 +2,232 @@
 # Copyright (C) 2017-2018, neynefes
 # This file is distributed under the same license as the gnome-shell-extension-clipboard-indicator package.
 # Hüseyin Karacabey <neynefes@ubuntu-tr.net>, 2017.
+# Osman Coskun <osman.coskun@pardus.org.tr>, 2025.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: unnamed project\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-14 19:49-0800\n"
-"PO-Revision-Date: 2020-10-24 20:50+0300\n"
-"Last-Translator: Muha Aliss <muhaaliss@gmail.com>\n"
-"Language-Team: Turkish <neynefes@ubuntu-tr.net>\n"
+"POT-Creation-Date: 2025-05-23 11:43+0300\n"
+"PO-Revision-Date: 2025-05-23 11:46+0300\n"
+"Last-Translator: Osman Coskun <osman.coskun@pardus.org.tr>\n"
+"Language-Team: Turkish <dev@pardus.org.tr>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.4.1\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Gtranslator 48.0\n"
 
-#: extension.js:104
+#: extension.js:108
 msgid "Text will be here"
 msgstr "Metin burada olacak"
 
-#: extension.js:177
+#: extension.js:181
 msgid "Type here to search..."
 msgstr "Aramak için buraya yazınız..."
 
-#: extension.js:246 prefs.js:179
+#: extension.js:250 prefs.js:220
 msgid "Private mode"
 msgstr "Gizli kip"
 
-#: extension.js:260 prefs.js:181
+#: extension.js:264 prefs.js:222
 msgid "Clear history"
 msgstr "Geçmişi temizle"
 
-#: extension.js:272
+#: extension.js:276
 msgid "Settings"
 msgstr "Ayarlar"
 
-#: extension.js:295
-#, fuzzy
+#: extension.js:299
 msgid "Clipboard is empty"
-msgstr "Pano İçeriği"
+msgstr "Pano boş"
 
-#: extension.js:578
+#: extension.js:571
 msgid "Clear all?"
 msgstr "Hepsi temizlensin mi?"
 
-#: extension.js:579
+#: extension.js:572
 msgid "Are you sure you want to delete all clipboard items?"
 msgstr "Tüm pano öğelerini silmek istediğinizden emin misiniz?"
 
-#: extension.js:580
+#: extension.js:573
 msgid "This operation cannot be undone."
 msgstr "Bu işlem geri alınamaz."
 
-#: extension.js:582
+#: extension.js:575
 msgid "Clear"
 msgstr "Temizle"
 
-#: extension.js:582 extension.js:741
+#: extension.js:575 extension.js:740
 msgid "Cancel"
 msgstr "İptal"
 
-#: extension.js:595
+#: extension.js:588
 msgid "Clipboard history cleared"
 msgstr "Pano geçmişi temizlendi"
 
-#: extension.js:740
+#: extension.js:739
 msgid "Copied to clipboard"
 msgstr "Panoya kopyalandı"
 
-#: prefs.js:29
+#: prefs.js:30
 msgid "History Size"
 msgstr "Geçmiş boyutu"
 
-#: prefs.js:38
+#: prefs.js:39
 msgid "Preview Size (characters)"
 msgstr "Önizleme boyutu (karakter)"
 
-#: prefs.js:47
-#, fuzzy
+#: prefs.js:48
 msgid "Max cache file size (MB)"
-msgstr "En yüksek önbelek boyutu (kb)"
+msgstr "En yüksek önbelek boyutu (MB)"
 
-#: prefs.js:56
+#: prefs.js:57
 msgid "Number of characters in top bar"
 msgstr "Üst çubukta görüntülenecek karakter sayısı"
 
-#: prefs.js:65
+#: prefs.js:66
 msgid "What to show in top bar"
 msgstr "Üst çubukta görüntülenecek"
 
-#: prefs.js:70
+#: prefs.js:71
 msgid "Remove down arrow in top bar"
 msgstr "Üst çubuktaki oku kaldır"
 
-#: prefs.js:74
-#, fuzzy
+#: prefs.js:75
 msgid "Cache only pinned items"
-msgstr "Yalnızca favorileri önbelleğe al"
+msgstr "Sadece sabitlenen öğeleri ön bellekte tut."
 
-#: prefs.js:78
+#: prefs.js:79
 msgid "Show notification on copy"
 msgstr "Kopyalandığında bildirim göster"
 
-#: prefs.js:82
-#, fuzzy
+#: prefs.js:83
+msgid "Show notification on cycle"
+msgstr "Bildirimleri döngüyle göster"
+
+#: prefs.js:87
 msgid "Show confirmation on Clear History"
-msgstr "Kopyalandığında bildirim göster"
+msgstr "Geçmişi Temizle'rken onay iste"
 
-#: prefs.js:86
+#: prefs.js:91
 msgid "Remove whitespace around text"
-msgstr "\t"
+msgstr "Metin etrafındaki boşlukları sil"
 
-#: prefs.js:90
+#: prefs.js:95
 msgid "Move item to the top after selection"
 msgstr "Seçtiğim öğeyi en üste taşı"
 
-#: prefs.js:94
-msgid "Keep selected entry after Clear History"
-msgstr ""
-
-#: prefs.js:98
-msgid "Show paste buttons"
-msgstr ""
-
 #: prefs.js:99
-msgid "Adds a paste button to each entry that lets you paste it directly"
-msgstr ""
+msgid "Keep selected entry after Clear History"
+msgstr "Seçili girdikleri geçmişi temizlerken sakla"
 
 #: prefs.js:103
-msgid "Place the pinned section on the bottom"
-msgstr ""
+msgid "Show paste buttons"
+msgstr "Yapıştırma düğmelerini göster"
 
 #: prefs.js:104
-msgid "Requires restarting the extension"
+msgid "Adds a paste button to each entry that lets you paste it directly"
 msgstr ""
+"Her bir girdiye direkt olarak yapıştırmanızı sağlayan bir yapıştırma düğmesi "
+"ekler"
 
 #: prefs.js:108
-#, fuzzy
+msgid "Place the pinned section on the bottom"
+msgstr "Sabitlenmiş bölmeyi aşağıda göster"
+
+#: prefs.js:109
+msgid "Requires restarting the extension"
+msgstr "Eklentinin yeniden başlatılmasını gerektirir"
+
+#: prefs.js:113
 msgid "Clear clipboard history on system reboot"
-msgstr "Pano geçmişi temizlendi"
-
-#: prefs.js:112
-msgid "Paste on select"
-msgstr ""
-
-#: prefs.js:115
-msgid "UI"
-msgstr ""
-
-#: prefs.js:116
-msgid "Behavior"
-msgstr ""
+msgstr "Pano geçmişini sistem yeniden başlatıldığında temizle"
 
 #: prefs.js:117
+msgid "Paste on select"
+msgstr "Seçerken yapıştır"
+
+#: prefs.js:121
+msgid "Cache images"
+msgstr "Resimleri önbellekte tut"
+
+#: prefs.js:126
+msgid "Excluded Apps"
+msgstr "Hariç Tutulan Uygulamalar"
+
+#: prefs.js:127
+msgid "Content copied will not be saved while these apps are in focus"
+msgstr "Bu uygulamalar odaklanmışşsa kopyalanan içerikler kaydedilmeyecek"
+
+#: prefs.js:146
+msgid "UI"
+msgstr "Arayüz"
+
+#: prefs.js:147
+msgid "Behavior"
+msgstr "Davranış"
+
+#: prefs.js:148
+msgid "Exclusion"
+msgstr "Hariç Tutulanlar"
+
+#: prefs.js:149
 msgid "Limits"
-msgstr ""
+msgstr "Sınırlamalar"
 
-#: prefs.js:118
+#: prefs.js:150
 msgid "Topbar"
-msgstr ""
+msgstr "Üst Çubuk"
 
-#: prefs.js:119
+#: prefs.js:151
 msgid "Notifications"
-msgstr ""
+msgstr "Bildirimler"
 
-#: prefs.js:120
+#: prefs.js:152
 msgid "Shortcuts"
-msgstr ""
+msgstr "Kısayollar"
 
-#: prefs.js:166
+#: prefs.js:207
 msgid "Icon"
-msgstr "İkon"
+msgstr "Simge"
 
-#: prefs.js:167
+#: prefs.js:208
 msgid "Clipboard Content"
 msgstr "Pano İçeriği"
 
-#: prefs.js:168
+#: prefs.js:209
 msgid "Both"
 msgstr "Her ikisi de"
 
-#: prefs.js:169
+#: prefs.js:210
 msgid "Neither"
-msgstr ""
+msgstr "Hiçbiri"
 
-#: prefs.js:180
+#: prefs.js:221
 msgid "Toggle the menu"
 msgstr "Menüyü değiştir"
 
-#: prefs.js:182
+#: prefs.js:223
 msgid "Previous entry"
 msgstr "Önceki girdi"
 
-#: prefs.js:183
+#: prefs.js:224
 msgid "Next entry"
 msgstr "Sonraki girdi"
 
-#: prefs.js:188
-#, fuzzy
+#: prefs.js:229
 msgid "Enable shortcuts"
-msgstr "Kılavye kısayolları"
+msgstr "Kısayolları etkinleştir"
 
-#: prefs.js:213
+#: prefs.js:254
 msgid "Disabled"
-msgstr ""
+msgstr "Devre Dışı"
 
-#: prefs.js:222
-#, fuzzy
+#: prefs.js:263
 msgid "Enter shortcut"
-msgstr "Kılavye kısayolları"
+msgstr "Kısayol gir"
 
 #~ msgid "Refresh Interval (ms)"
 #~ msgstr "Yenileme sıklığı (ms)"
