@@ -42,7 +42,8 @@ let PASTE_BUTTON              = true;
 let PINNED_ON_BOTTOM          = false;
 let CACHE_IMAGES              = true;
 let EXCLUDED_APPS             = [];
-
+let CASE_SENSITIVE_SEARCH     = false;
+let REGEX_SEARCH              = false;
 export default class ClipboardIndicatorExtension extends Extension {
     enable () {
         this.clipboardIndicator = new ClipboardIndicator({
@@ -364,7 +365,10 @@ const ClipboardIndicator = GObject.registerClass({
     items. It the entry is empty, the section is restored with all items
     set as visible. */
     _onSearchTextChanged () {
-        let searchedText = this.searchEntry.get_text().toLowerCase();
+
+        // Text to be searched converted to lowercase if search is case insensitive
+        let searchedText = this.searchEntry.get_text();
+        if (!CASE_SENSITIVE_SEARCH) searchedText = searchedText.toLowerCase();
 
         if(searchedText === '') {
             this._getAllIMenuItems().forEach(function(mItem){
@@ -373,8 +377,21 @@ const ClipboardIndicator = GObject.registerClass({
         }
         else {
             this._getAllIMenuItems().forEach(function(mItem){
-                let text = mItem.clipContents.toLowerCase();
-                let isMatching = text.indexOf(searchedText) >= 0;
+                // Clip content converted to lowercase if search is case insensitive
+                let text = mItem.clipContents;
+                if (!CASE_SENSITIVE_SEARCH) text = text.toLowerCase();
+
+                let isMatching = false;
+                if (REGEX_SEARCH){
+                    /* Regex flags:
+                       - 'm' for multiline matching (when multiline content is copied)
+                       - 'i' for case insensitive matching when search is not set to case sensitive
+                    */
+                    let text_regex = new RegExp(searchedText, 'm' + (CASE_SENSITIVE_SEARCH ? '' : 'i'));
+                    isMatching = text_regex.test(text);
+                }else{
+                    isMatching = text.indexOf(searchedText) >= 0;
+                }
                 mItem.actor.visible = isMatching
             });
         }
@@ -928,6 +945,8 @@ const ClipboardIndicator = GObject.registerClass({
         PINNED_ON_BOTTOM       = settings.get_boolean(PrefsFields.PINNED_ON_BOTTOM);
         CACHE_IMAGES           = settings.get_boolean(PrefsFields.CACHE_IMAGES);
         EXCLUDED_APPS          = settings.get_strv(PrefsFields.EXCLUDED_APPS);
+        CASE_SENSITIVE_SEARCH  = settings.get_boolean(PrefsFields.CASE_SENSITIVE_SEARCH);
+        REGEX_SEARCH           = settings.get_boolean(PrefsFields.REGEX_SEARCH);
     }
 
     async _onSettingsChange () {
