@@ -2,149 +2,146 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Jiri Grönroos <jiri.gronroos+l10n@iki.fi>, 2017.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-14 19:49-0800\n"
-"PO-Revision-Date: 2018-05-17 09:27+0200\n"
-"Last-Translator: Robin <bisio.97@gmail.com>\n"
-"Language-Team: jimmy.scionti@gmail.com\n"
-"Language: it\n"
+"PO-Revision-Date: 2017-09-06 09:53+0300\n"
+"Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
+"Language-Team: suomi <lokalisointi-lista@googlegroups.com>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.6\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Gtranslator 2.91.7\n"
 
 #: extension.js:104
 msgid "Text will be here"
-msgstr "Il testo sarà qui"
+msgstr ""
 
 #: extension.js:177
 msgid "Type here to search..."
-msgstr "Digita qui per cercare…"
+msgstr ""
 
 #: extension.js:246 prefs.js:179
 msgid "Private mode"
-msgstr "Modalità privata"
+msgstr "Yksityistila"
 
 #: extension.js:260 prefs.js:181
 msgid "Clear history"
-msgstr "Cancella la cronologia"
+msgstr "Tyhjennä historia"
 
 #: extension.js:272
 msgid "Settings"
-msgstr "Impostazioni"
+msgstr "Asetukset"
 
 #: extension.js:295
 #, fuzzy
 msgid "Clipboard is empty"
-msgstr "Contenuto Clipboard"
+msgstr "Leikepöydän sisältö tyhjennetty"
 
 #: extension.js:578
 msgid "Clear all?"
-msgstr "Cancellare tutto?"
+msgstr ""
 
 #: extension.js:579
 msgid "Are you sure you want to delete all clipboard items?"
-msgstr "Si è certi di voler eliminare tutti gli appunti nella cronologia?"
+msgstr ""
 
 #: extension.js:580
 msgid "This operation cannot be undone."
-msgstr "Questa operazione non può essere annullata."
+msgstr ""
 
 #: extension.js:582
 msgid "Clear"
-msgstr "Elimina"
+msgstr ""
 
 #: extension.js:582 extension.js:741
 msgid "Cancel"
-msgstr "Annulla"
+msgstr ""
 
 #: extension.js:595
 msgid "Clipboard history cleared"
-msgstr "Cronologia cancellata"
+msgstr "Leikepöydän sisältö tyhjennetty"
 
 #: extension.js:740
 msgid "Copied to clipboard"
-msgstr "Copiato negli appunti"
+msgstr "Kopioitu leikepöydälle"
 
 #: prefs.js:29
 msgid "History Size"
-msgstr "Dimensioni della cronologia"
+msgstr "Historian koko"
 
 #: prefs.js:38
 msgid "Preview Size (characters)"
-msgstr "Dimensioni dell'anteprima (caratteri)"
+msgstr "Esikatselun koko (merkkejä)"
 
 #: prefs.js:47
 #, fuzzy
 msgid "Max cache file size (MB)"
-msgstr "Dimensioni massime della cache (kB)"
+msgstr "Välimuistin enimmäiskoko (kt)"
 
 #: prefs.js:56
 msgid "Number of characters in top bar"
-msgstr "Numero di caratteri sul pannello"
+msgstr ""
 
 #: prefs.js:65
 msgid "What to show in top bar"
-msgstr "Cosa mostrare sul pannello"
+msgstr ""
 
 #: prefs.js:70
-#, fuzzy
 msgid "Remove down arrow in top bar"
-msgstr "Numero di caratteri sul pannello"
+msgstr ""
 
 #: prefs.js:74
-#, fuzzy
 msgid "Cache only pinned items"
-msgstr "Metti in cache solo i preferiti"
+msgstr ""
 
 #: prefs.js:78
 msgid "Show notification on copy"
-msgstr "Mostra una notifica quando copi"
+msgstr "Näytä ilmoitus kopioitaessa"
 
 #: prefs.js:82
 #, fuzzy
 msgid "Show confirmation on Clear History"
-msgstr "Mostra una notifica quando copi"
+msgstr "Näytä ilmoitus kopioitaessa"
 
 #: prefs.js:86
 msgid "Remove whitespace around text"
-msgstr "Rimuovi lo spazio bianco intorno al testo"
+msgstr ""
 
 #: prefs.js:90
 msgid "Move item to the top after selection"
-msgstr "Porta l'elemento in cima dopo la selezione"
+msgstr ""
 
 #: prefs.js:94
 msgid "Keep selected entry after Clear History"
-msgstr "Mantieni la voce selezionata dopo aver cancellato la cronologia"
+msgstr ""
 
 #: prefs.js:98
 msgid "Show paste buttons"
-msgstr "Mostra bottone Incolla"
+msgstr ""
 
 #: prefs.js:99
 msgid "Adds a paste button to each entry that lets you paste it directly"
 msgstr ""
-"Aggiunge un pulsante Incolla a ciascuna voce che consente di incollarla "
-"direttamente"
 
 #: prefs.js:103
 msgid "Place the pinned section on the bottom"
-msgstr "Posiziona la sezione fissata sul fondo"
+msgstr ""
 
 #: prefs.js:104
 msgid "Requires restarting the extension"
-msgstr "Richiede di ricaricare l'estensione"
+msgstr ""
 
 #: prefs.js:108
 #, fuzzy
 msgid "Clear clipboard history on system reboot"
-msgstr "Cronologia cancellata"
+msgstr "Leikepöydän sisältö tyhjennetty"
 
 #: prefs.js:112
 msgid "Paste on select"
@@ -152,7 +149,7 @@ msgstr ""
 
 #: prefs.js:115
 msgid "UI"
-msgstr "UI"
+msgstr ""
 
 #: prefs.js:116
 msgid "Behavior"
@@ -160,31 +157,31 @@ msgstr ""
 
 #: prefs.js:117
 msgid "Limits"
-msgstr "Limiti"
+msgstr ""
 
 #: prefs.js:118
 msgid "Topbar"
-msgstr "Topbar"
+msgstr ""
 
 #: prefs.js:119
 msgid "Notifications"
-msgstr "Notifiche"
+msgstr ""
 
 #: prefs.js:120
 msgid "Shortcuts"
-msgstr "Scorciatoie da tastiera"
+msgstr ""
 
 #: prefs.js:166
 msgid "Icon"
-msgstr "Icona"
+msgstr ""
 
 #: prefs.js:167
 msgid "Clipboard Content"
-msgstr "Contenuto Clipboard"
+msgstr ""
 
 #: prefs.js:168
 msgid "Both"
-msgstr "Entrambi"
+msgstr ""
 
 #: prefs.js:169
 msgid "Neither"
@@ -192,35 +189,29 @@ msgstr ""
 
 #: prefs.js:180
 msgid "Toggle the menu"
-msgstr "Mostra/nascondi il menu"
+msgstr "Näytä/piilota valikko"
 
 #: prefs.js:182
 msgid "Previous entry"
-msgstr "Voce precedente"
+msgstr "Edellinen tietue"
 
 #: prefs.js:183
 msgid "Next entry"
-msgstr "Voce successiva"
+msgstr "Seuraava tietue"
 
 #: prefs.js:188
 #, fuzzy
 msgid "Enable shortcuts"
-msgstr "Scorciatoie da tastiera"
+msgstr "Pikanäppäimet"
 
 #: prefs.js:213
 msgid "Disabled"
-msgstr "Disabilitato"
+msgstr ""
 
 #: prefs.js:222
 #, fuzzy
 msgid "Enter shortcut"
-msgstr "Scorciatoie da tastiera"
+msgstr "Pikanäppäimet"
 
 #~ msgid "Refresh Interval (ms)"
-#~ msgstr "Intervallo di aggiornamento (ms)"
-
-#~ msgid "Enable Deletion"
-#~ msgstr "Abilita cancellazione"
-
-#~ msgid "Disable cache file"
-#~ msgstr "Disabilità la cache dei file"
+#~ msgstr "Päivitysväli (ms)"
