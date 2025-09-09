@@ -224,3 +224,7 @@ msgstr ""
 #: prefs.js:263
 msgid "Enter shortcut"
 msgstr ""
+
+#: prefs.js:345
+msgid "Window class name, e.g. \"KeePassXC\""
+msgstr ""
