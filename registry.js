@@ -15,6 +15,7 @@ export class Registry {
         this.REGISTRY_DIR = GLib.get_user_cache_dir() + '/' + this.uuid;
         this.REGISTRY_PATH = this.REGISTRY_DIR + '/' + this.REGISTRY_FILE;
         this.BACKUP_REGISTRY_PATH = this.REGISTRY_PATH + '~';
+        this.hashmap = new WeakMap();
     }
 
     write (entries) {
@@ -28,14 +29,9 @@ export class Registry {
 
             registryContent.push(item);
 
-            if (entry.isText()) {
-                item.contents = entry.getStringValue();
-            }
-            else if (entry.isImage()) {
-                const filename = this.getEntryFilename(entry);
-                item.contents = filename;
-                this.writeEntryFile(entry);
-            }
+            const filename = this.getEntryFilename(entry);
+            item.contents = filename;
+            this.writeEntryFile(entry);
         }
 
         this.writeToFile(registryContent);
@@ -148,9 +144,10 @@ export class Registry {
         const stIcon = new St.Icon({ gicon });
         return stIcon;
     }
-
+  
     getEntryFilename (entry) {
-        return `${this.REGISTRY_DIR}/${entry.asBytes().hash()}`;
+        const filename = entry.getStringValue();
+        return `${this.REGISTRY_DIR}/${filename}`;
     }
 
     async writeEntryFile (entry) {
@@ -209,6 +206,8 @@ export class ClipboardEntry {
     #mimetype;
     #bytes;
     #favorite;
+    #hash;
+    #id;
 
     static #decode (contents) {
         return Uint8Array.from(contents.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)));
@@ -225,7 +224,7 @@ export class ClipboardEntry {
         const favorite = jsonEntry.favorite;
         let bytes;
 
-        if (ClipboardEntry.__isText(mimetype)) {
+        if (false) {
             bytes = new TextEncoder().encode(jsonEntry.contents);
         }
         else {
@@ -243,7 +242,7 @@ export class ClipboardEntry {
                 }
             });
 
-            if (contentType && !contentType.startsWith('image/') && !contentType.startsWith('text/')) {
+            if (false) {
                 bytes = new TextEncoder().encode(jsonEntry.contents);
             }
             else {
@@ -269,6 +268,7 @@ export class ClipboardEntry {
         this.#mimetype = mimetype;
         this.#bytes = bytes;
         this.#favorite = favorite;
+        this.#id = GLib.uuid_string_random();
     }
 
     #encode () {
@@ -280,12 +280,23 @@ export class ClipboardEntry {
             .map(x => x.toString(16).padStart(2, '0'))
             .join('');
     }
-
-    getStringValue () {
-        if (this.isImage()) {
-            return `[Image ${this.asBytes().hash()}]`;
+    
+    getBytesHash () {
+        if (this.#hash) {
+            return this.#hash;
         }
-        return new TextDecoder().decode(this.#bytes);
+        this.#hash = this.asBytes().hash();
+        return this.#hash;
+    }
+
+    // UUID
+    getStringValue () {
+      return this.#id;
+    }
+    
+    getTruncatedText(maxLength) {
+        const text = new TextDecoder().decode(this.#bytes.slice(0, maxLength))
+        return (text.length < this.#bytes.length ? text + '...' : text).replace(/\s+/g, ' ')
     }
 
     mimetype () {
