@@ -368,7 +368,7 @@ class Settings {
     #createExcludedAppInputRow() {
         const entry_row = new Adw.ActionRow();
         const entry = new Gtk.Entry({
-            placeholderText: ('Window class name, e.g. "KeePassXC"'),
+            placeholderText: _('Window class name, e.g. "KeePassXC"'),
             halign: Gtk.Align.FILL,
             valign: Gtk.Align.CENTER,
             hexpand: true,
