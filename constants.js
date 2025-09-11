@@ -25,4 +25,6 @@ export const PrefsFields = {
     PASTE_ON_SELECT        : 'paste-on-select',
     CACHE_IMAGES           : 'cache-images',
     EXCLUDED_APPS          : 'excluded-apps',
+    CASE_SENSITIVE_SEARCH  : 'case-sensitive-search',
+    REGEX_SEARCH           : 'regex-search'
 };

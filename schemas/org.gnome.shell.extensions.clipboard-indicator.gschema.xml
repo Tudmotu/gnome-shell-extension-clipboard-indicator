@@ -193,5 +193,15 @@
                 A list of applications that are excluded from clipboard history.
             </description>
         </key>
+        <key name="case-sensitive-search" type="b">
+        <default>false</default>
+        <summary>Case sensitive search</summary>
+        <description>Make search case sensitive</description>
+        </key>
+        <key name="regex-search" type="b">
+        <default>false</default>
+        <summary>Regex-based search</summary>
+        <description>Allow regular expressions in search</description>
+        </key>
     </schema>
 </schemalist>
