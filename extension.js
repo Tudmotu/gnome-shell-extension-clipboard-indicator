@@ -42,6 +42,9 @@ let PASTE_BUTTON              = true;
 let PINNED_ON_BOTTOM          = false;
 let CACHE_IMAGES              = true;
 let EXCLUDED_APPS             = [];
+let CLEAR_HISTORY_ON_INTERVAL = false;
+let CLEAR_HISTORY_INTERVAL    = 60;
+let NEXT_HISTORY_CLEAR        = -1;
 
 export default class ClipboardIndicatorExtension extends Extension {
     enable () {
@@ -128,6 +131,7 @@ const ClipboardIndicator = GObject.registerClass({
         this._buildMenu().then(() => {
             this._updateTopbarLayout();
             this._setupListener();
+            this._setupHistoryIntervalClearing();
         });
     }
 
@@ -270,6 +274,39 @@ const ClipboardIndicator = GObject.registerClass({
             }),
             0
         );
+
+        let timerBox = new St.BoxLayout({
+            x_align: Clutter.ActorAlign.END,
+            x_expand: true
+        });
+
+        this.timerLabel = new St.Label({
+            text: '',
+            style: 'font-family: monospace;',
+            x_align: Clutter.ActorAlign.END,
+            x_expand: true
+        });
+
+        this.resetTimerButton = new St.Button({
+            style_class: 'ci-action-btn',
+            can_focus: true,
+            child: new St.Icon({
+                icon_name: 'view-refresh-symbolic',
+                style_class: 'system-status-icon',
+                icon_size: 14
+            }),
+            x_align: Clutter.ActorAlign.END,
+            y_align: Clutter.ActorAlign.CENTER,
+        });
+
+        this.resetTimerButton.connect('clicked', () => {
+            this._scheduleNextHistoryClear();
+        });
+
+        timerBox.add_child(this.timerLabel);
+        timerBox.add_child(this.resetTimerButton);
+        this.clearMenuItem.add_child(timerBox);
+        
         this.clearMenuItem.connect('activate', that._removeAll.bind(that));
 
         // Add 'Settings' menu item to open settings
@@ -578,14 +615,20 @@ const ClipboardIndicator = GObject.registerClass({
       );
     }
 
-    _clearHistory () {
+    _clearHistory (invokedAutomatically = false) {
         // Don't remove pinned items
         this.historySection._getMenuItems().forEach(mItem => {
             if (KEEP_SELECTED_ON_CLEAR === false || !mItem.currentlySelected) {
                 this._removeEntry(mItem, 'delete');
             }
         });
-        this._showNotification(_("Clipboard history cleared"));
+
+        if (!invokedAutomatically) {
+            this._showNotification(_("Clipboard history cleared"));
+        }
+        else {
+            this._showNotification(_("Clipboard history cleared automatically"));
+        }
     }
 
     _removeAll () {
@@ -783,6 +826,147 @@ const ClipboardIndicator = GObject.registerClass({
         });
     }
 
+    _setupHistoryIntervalClearing() {
+        this._fetchSettings();
+
+        if (this._intervalSettingChangedId) {
+            this.extension.settings.disconnect(this._intervalSettingChangedId);
+            this._intervalSettingChangedId = null;
+        }
+        if (this._intervalToggleChangedId) {
+            this.extension.settings.disconnect(this._intervalToggleChangedId);
+            this._intervalToggleChangedId = null;
+        }
+        if (this._historyClearTimeoutId) {
+            clearTimeout(this._historyClearTimeoutId);
+            this._historyClearTimeoutId = null;
+        }
+
+        this._intervalSettingChangedId = this.extension.settings.connect(
+            `changed::${PrefsFields.CLEAR_HISTORY_INTERVAL}`,
+            this._onHistoryIntervalClearSettingsChanged.bind(this)
+        );
+        this._intervalToggleChangedId = this.extension.settings.connect(
+            `changed::${PrefsFields.CLEAR_HISTORY_ON_INTERVAL}`,
+            this._onHistoryIntervalClearSettingsChanged.bind(this)
+        );
+
+
+        
+        if (!CLEAR_HISTORY_ON_INTERVAL) {
+            this._updateIntervalTimer();
+            return;
+        }
+
+        const currentTime = Math.ceil(new Date().getTime() / 1000);
+
+        if (NEXT_HISTORY_CLEAR === -1) { //new timer
+            this._scheduleNextHistoryClear();
+        }
+        else if (NEXT_HISTORY_CLEAR < currentTime) { //timer expired
+            this._clearHistory(true);
+            this._scheduleNextHistoryClear();
+        }
+        else { //timer already set, but not expired
+            const timeoutMs = (NEXT_HISTORY_CLEAR - currentTime) * 1000;
+            this._historyClearTimeoutId = setTimeout(() => {
+                this._clearHistory(true);
+                this._scheduleNextHistoryClear();
+            }, timeoutMs);
+            this._timerIntervalId = setInterval(() => {
+                this._updateIntervalTimer();
+            }, 1000);
+        }
+    }
+
+    _onHistoryIntervalClearSettingsChanged(_settings, key) {
+        this._fetchSettings();
+        if (key === PrefsFields.CLEAR_HISTORY_INTERVAL) {
+            this._scheduleNextHistoryClear();
+        }
+        else if (key === PrefsFields.CLEAR_HISTORY_ON_INTERVAL) {
+            if (CLEAR_HISTORY_ON_INTERVAL) {
+                this._resetHistoryClearTimer();
+                this._setupHistoryIntervalClearing();
+            } else {
+                this._resetHistoryClearTimer();
+            }
+        }
+    }
+
+    _scheduleNextHistoryClear() {
+        this._fetchSettings();
+
+        clearInterval(this._timerIntervalId);
+        if (this._historyClearTimeoutId) {
+            clearTimeout(this._historyClearTimeoutId);
+            this._historyClearTimeoutId = null;
+        }
+
+        if(!CLEAR_HISTORY_ON_INTERVAL) {
+            this._resetHistoryClearTimer();
+            return;
+        }
+
+        const currentTime = Math.ceil(new Date().getTime() / 1000);
+        NEXT_HISTORY_CLEAR = currentTime + CLEAR_HISTORY_INTERVAL * 60;
+        const timeoutMs = (NEXT_HISTORY_CLEAR - currentTime) * 1000;
+
+        this.extension.settings.set_int(PrefsFields.NEXT_HISTORY_CLEAR, NEXT_HISTORY_CLEAR);
+        
+        this._updateIntervalTimer();
+        this._timerIntervalId = setInterval(() => {
+            this._updateIntervalTimer();
+        }, 1000);
+
+        this._historyClearTimeoutId = setTimeout(() => {
+            this._clearHistory(true);
+            this._scheduleNextHistoryClear();
+        }, timeoutMs);
+    }
+
+    _resetHistoryClearTimer() {
+        //basically just reset and stop the timer
+        if (this._historyClearTimeoutId) {
+            clearTimeout(this._historyClearTimeoutId);
+            this._historyClearTimeoutId = null;
+        }
+        clearInterval(this._timerIntervalId);
+        this._timerIntervalId = null;
+        this._updateIntervalTimer();
+        this.extension.settings.set_int(PrefsFields.NEXT_HISTORY_CLEAR, -1);
+    }
+
+    _updateIntervalTimer() {
+        this._fetchSettings();
+        this.resetTimerButton.visible = CLEAR_HISTORY_ON_INTERVAL;
+        this.timerLabel.visible = CLEAR_HISTORY_ON_INTERVAL;
+        if (!CLEAR_HISTORY_ON_INTERVAL) return;
+
+
+        let currentTime = Math.ceil(new Date().getTime() / 1000);
+        let timeLeft = NEXT_HISTORY_CLEAR - currentTime;
+
+        if (timeLeft <= 0) {
+            this.timerLabel.set_text('');
+            return;
+        }
+
+        let hours = Math.floor(timeLeft / 3600);
+        let minutes = Math.floor((timeLeft % 3600) / 60);
+        let seconds = Math.floor(timeLeft % 60);
+
+        let formattedTime = '';
+        if (hours > 0) {
+            formattedTime += `${hours}h `;
+        }
+        if (minutes > 0) {
+            formattedTime += `${minutes}m `;
+        }
+        formattedTime += `${seconds}s`;
+        this.timerLabel.set_text(formattedTime);
+    }
+
     _openSettings () {
         this.extension.openSettings();
     }
@@ -908,26 +1092,29 @@ const ClipboardIndicator = GObject.registerClass({
 
     _fetchSettings () {
         const { settings } = this.extension;
-        MAX_REGISTRY_LENGTH    = settings.get_int(PrefsFields.HISTORY_SIZE);
-        MAX_ENTRY_LENGTH       = settings.get_int(PrefsFields.PREVIEW_SIZE);
-        CACHE_ONLY_FAVORITE    = settings.get_boolean(PrefsFields.CACHE_ONLY_FAVORITE);
-        DELETE_ENABLED         = settings.get_boolean(PrefsFields.DELETE);
-        MOVE_ITEM_FIRST        = settings.get_boolean(PrefsFields.MOVE_ITEM_FIRST);
-        NOTIFY_ON_COPY         = settings.get_boolean(PrefsFields.NOTIFY_ON_COPY);
-        NOTIFY_ON_CYCLE        = settings.get_boolean(PrefsFields.NOTIFY_ON_CYCLE);
-        CONFIRM_ON_CLEAR       = settings.get_boolean(PrefsFields.CONFIRM_ON_CLEAR);
-        ENABLE_KEYBINDING      = settings.get_boolean(PrefsFields.ENABLE_KEYBINDING);
-        MAX_TOPBAR_LENGTH      = settings.get_int(PrefsFields.TOPBAR_PREVIEW_SIZE);
-        TOPBAR_DISPLAY_MODE    = settings.get_int(PrefsFields.TOPBAR_DISPLAY_MODE_ID);
-        CLEAR_ON_BOOT          = settings.get_boolean(PrefsFields.CLEAR_ON_BOOT);
-        PASTE_ON_SELECT        = settings.get_boolean(PrefsFields.PASTE_ON_SELECT);
-        DISABLE_DOWN_ARROW     = settings.get_boolean(PrefsFields.DISABLE_DOWN_ARROW);
-        STRIP_TEXT             = settings.get_boolean(PrefsFields.STRIP_TEXT);
-        KEEP_SELECTED_ON_CLEAR = settings.get_boolean(PrefsFields.KEEP_SELECTED_ON_CLEAR);
-        PASTE_BUTTON           = settings.get_boolean(PrefsFields.PASTE_BUTTON);
-        PINNED_ON_BOTTOM       = settings.get_boolean(PrefsFields.PINNED_ON_BOTTOM);
-        CACHE_IMAGES           = settings.get_boolean(PrefsFields.CACHE_IMAGES);
-        EXCLUDED_APPS          = settings.get_strv(PrefsFields.EXCLUDED_APPS);
+        MAX_REGISTRY_LENGTH         = settings.get_int(PrefsFields.HISTORY_SIZE);
+        MAX_ENTRY_LENGTH            = settings.get_int(PrefsFields.PREVIEW_SIZE);
+        CACHE_ONLY_FAVORITE         = settings.get_boolean(PrefsFields.CACHE_ONLY_FAVORITE);
+        DELETE_ENABLED              = settings.get_boolean(PrefsFields.DELETE);
+        MOVE_ITEM_FIRST             = settings.get_boolean(PrefsFields.MOVE_ITEM_FIRST);
+        NOTIFY_ON_COPY              = settings.get_boolean(PrefsFields.NOTIFY_ON_COPY);
+        NOTIFY_ON_CYCLE             = settings.get_boolean(PrefsFields.NOTIFY_ON_CYCLE);
+        CONFIRM_ON_CLEAR            = settings.get_boolean(PrefsFields.CONFIRM_ON_CLEAR);
+        ENABLE_KEYBINDING           = settings.get_boolean(PrefsFields.ENABLE_KEYBINDING);
+        MAX_TOPBAR_LENGTH           = settings.get_int(PrefsFields.TOPBAR_PREVIEW_SIZE);
+        TOPBAR_DISPLAY_MODE         = settings.get_int(PrefsFields.TOPBAR_DISPLAY_MODE_ID);
+        CLEAR_ON_BOOT               = settings.get_boolean(PrefsFields.CLEAR_ON_BOOT);
+        PASTE_ON_SELECT             = settings.get_boolean(PrefsFields.PASTE_ON_SELECT);
+        DISABLE_DOWN_ARROW          = settings.get_boolean(PrefsFields.DISABLE_DOWN_ARROW);
+        STRIP_TEXT                  = settings.get_boolean(PrefsFields.STRIP_TEXT);
+        KEEP_SELECTED_ON_CLEAR      = settings.get_boolean(PrefsFields.KEEP_SELECTED_ON_CLEAR);
+        PASTE_BUTTON                = settings.get_boolean(PrefsFields.PASTE_BUTTON);
+        PINNED_ON_BOTTOM            = settings.get_boolean(PrefsFields.PINNED_ON_BOTTOM);
+        CACHE_IMAGES                = settings.get_boolean(PrefsFields.CACHE_IMAGES);
+        EXCLUDED_APPS               = settings.get_strv(PrefsFields.EXCLUDED_APPS);
+        CLEAR_HISTORY_ON_INTERVAL   = settings.get_boolean(PrefsFields.CLEAR_HISTORY_ON_INTERVAL);
+        CLEAR_HISTORY_INTERVAL      = settings.get_int(PrefsFields.CLEAR_HISTORY_INTERVAL);
+        NEXT_HISTORY_CLEAR          = settings.get_int(PrefsFields.NEXT_HISTORY_CLEAR);
     }
 
     async _onSettingsChange () {
@@ -1028,6 +1215,21 @@ const ClipboardIndicator = GObject.registerClass({
 
         this.extension.settings.disconnect(this._settingsChangedId);
         this._settingsChangedId = null;
+        
+        if (this._intervalSettingChangedId) {
+            this.extension.settings.disconnect(this._intervalSettingChangedId);
+            this._intervalSettingChangedId = null;
+        }
+
+        if (this._intervalToggleChangedId) {
+            this.extension.settings.disconnect(this._intervalToggleChangedId);
+            this._intervalToggleChangedId = null;
+        }
+        
+        if (this._historyClearTimeoutId) {
+            clearTimeout(this._historyClearTimeoutId);
+            this._historyClearTimeoutId = null;
+        }
     }
 
     _disconnectSelectionListener () {
@@ -1144,6 +1346,8 @@ const ClipboardIndicator = GObject.registerClass({
         if (this._setFocusOnOpenTimeout) clearTimeout(this._setFocusOnOpenTimeout);
         if (this._pastingKeypressTimeout) clearTimeout(this._pastingKeypressTimeout);
         if (this._pastingResetTimeout) clearTimeout(this._pastingResetTimeout);
+        if (this._historyClearTimeoutId) clearTimeout(this._historyClearTimeoutId);
+        if (this._timerIntervalId) clearInterval(this._timerIntervalId);
     }
 
     #clearClipboard () {
