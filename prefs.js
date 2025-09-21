@@ -13,6 +13,7 @@ export default class ClipboardIndicatorPreferences extends ExtensionPreferences 
         const page = new Adw.PreferencesPage();
         page.add(settingsUI.ui);
         page.add(settingsUI.behavior);
+        page.add(settingsUI.search);
         page.add(settingsUI.limits);
         page.add(settingsUI.exclusion);
         page.add(settingsUI.topbar);
@@ -134,6 +135,14 @@ class Settings {
             halign: Gtk.Align.CENTER,
         });
 
+        this.case_sensitive_search = new Adw.SwitchRow({
+            title: _("Case-sensitive search")
+        });
+
+        this.regex_search = new Adw.SwitchRow({
+            title: _("Regular expression matching in search")
+        });
+
         this.field_exclusion_row_add_button.connect('clicked', () => {
             this.field_exclusion_row_add_button.set_sensitive(false);
             this.excluded_row_counter++;
@@ -167,6 +176,7 @@ class Settings {
         this.topbar =  new Adw.PreferencesGroup({ title: _('Topbar') });
         this.notifications =  new Adw.PreferencesGroup({ title: _('Notifications') });
         this.shortcuts =  new Adw.PreferencesGroup({ title: _('Shortcuts') });
+        this.search = new Adw.PreferencesGroup({title: _('Search')});
 
         this.ui.add(this.field_preview_size);
         this.ui.add(this.field_move_item_first);
@@ -196,6 +206,9 @@ class Settings {
         this.notifications.add(this.field_cycle_notification_toggle)
         this.notifications.add(this.field_confirm_clear_toggle);
 
+        this.search.add(this.case_sensitive_search);
+        this.search.add(this.regex_search);
+
         this.#buildShorcuts(this.shortcuts);
 
         this.schema.bind(PrefsFields.HISTORY_SIZE, this.field_size, 'value', Gio.SettingsBindFlags.DEFAULT);
@@ -219,6 +232,8 @@ class Settings {
         this.schema.bind(PrefsFields.CACHE_IMAGES, this.field_cache_images, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.CLEAR_HISTORY_ON_INTERVAL, this.field_clear_history_on_interval, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.CLEAR_HISTORY_INTERVAL, this.field_clear_history_interval, 'value', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.CASE_SENSITIVE_SEARCH, this.case_sensitive_search, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.REGEX_SEARCH, this.regex_search, 'active', Gio.SettingsBindFlags.DEFAULT);
 
         this.field_clear_history_interval.set_sensitive(this.field_clear_history_on_interval.active);
         this.#fetchExludedAppsList();
