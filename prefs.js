@@ -494,7 +494,7 @@ class Settings {
 
         //The suffix buttons
         const ok_button = new Gtk.Button({
-            iconName: 'emblem-ok-symbolic',
+            iconName: 'object-select-symbolic',
             valign: Gtk.Align.CENTER,
             halign: Gtk.Align.CENTER,
             cssClasses: ['flat'],
@@ -523,8 +523,15 @@ class Settings {
             this.excluded_row_counter--;
         });
 
-        entry_row.add_prefix(appButton);
+        // Hide the title/subtitle/icon children of the ActionRow
+        let child = entry_row.child.get_first_child();
+        while (child) {
+            child.visible = false;
+            child = child.get_next_sibling();
+        }
+
         entry_row.add_prefix(entry);
+        entry_row.add_suffix(appButton);
         entry_row.add_suffix(ok_button);
         entry_row.add_suffix(cancel_button);
 
