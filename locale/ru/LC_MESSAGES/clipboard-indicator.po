@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-02 05:25+0300\n"
+"POT-Creation-Date: 2025-09-21 16:41+0300\n"
 "PO-Revision-Date: 2025-05-15 18:37+0300\n"
 "Last-Translator: Mariya Shikunova <translation-team@basealt.ru>\n"
 "Language-Team: Basealt Translation Team\n"
@@ -229,6 +229,10 @@ msgstr "Выключено"
 #: prefs.js:263
 msgid "Enter shortcut"
 msgstr "Ввести горячие клавиши"
+
+#: prefs.js:345
+msgid "Window class name, e.g. \"KeePassXC\""
+msgstr ""
 
 #~ msgid "Refresh Interval (ms)"
 #~ msgstr "Интервал обновления (мс)"
