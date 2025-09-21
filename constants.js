@@ -28,4 +28,6 @@ export const PrefsFields = {
     CLEAR_HISTORY_ON_INTERVAL       : 'clear-history-on-interval',
     CLEAR_HISTORY_INTERVAL          : 'clear-history-interval',
     NEXT_HISTORY_CLEAR              : 'next-history-clear',
+    CASE_SENSITIVE_SEARCH           : 'case-sensitive-search',
+    REGEX_SEARCH                    : 'regex-search',
 };

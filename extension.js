@@ -45,6 +45,8 @@ let EXCLUDED_APPS             = [];
 let CLEAR_HISTORY_ON_INTERVAL = false;
 let CLEAR_HISTORY_INTERVAL    = 60;
 let NEXT_HISTORY_CLEAR        = -1;
+let CASE_SENSITIVE_SEARCH     = false;
+let REGEX_SEARCH              = false;
 
 export default class ClipboardIndicatorExtension extends Extension {
     enable () {
@@ -401,7 +403,10 @@ const ClipboardIndicator = GObject.registerClass({
     items. It the entry is empty, the section is restored with all items
     set as visible. */
     _onSearchTextChanged () {
-        let searchedText = this.searchEntry.get_text().toLowerCase();
+
+        // Text to be searched converted to lowercase if search is case insensitive
+        let searchedText = this.searchEntry.get_text();
+        if (!CASE_SENSITIVE_SEARCH) searchedText = searchedText.toLowerCase();
 
         if(searchedText === '') {
             this._getAllIMenuItems().forEach(function(mItem){
@@ -410,8 +415,21 @@ const ClipboardIndicator = GObject.registerClass({
         }
         else {
             this._getAllIMenuItems().forEach(function(mItem){
-                let text = mItem.clipContents.toLowerCase();
-                let isMatching = text.indexOf(searchedText) >= 0;
+                // Clip content converted to lowercase if search is case insensitive
+                let text = mItem.clipContents;
+                if (!CASE_SENSITIVE_SEARCH) text = text.toLowerCase();
+
+                let isMatching = false;
+                if (REGEX_SEARCH){
+                    /* Regex flags:
+                       - 'm' for multiline matching (when multiline content is copied)
+                       - 'i' for case insensitive matching when search is not set to case sensitive
+                    */
+                    let text_regex = new RegExp(searchedText, 'm' + (CASE_SENSITIVE_SEARCH ? '' : 'i'));
+                    isMatching = text_regex.test(text);
+                }else{
+                    isMatching = text.indexOf(searchedText) >= 0;
+                }
                 mItem.actor.visible = isMatching
             });
         }
@@ -1115,6 +1133,8 @@ const ClipboardIndicator = GObject.registerClass({
         CLEAR_HISTORY_ON_INTERVAL   = settings.get_boolean(PrefsFields.CLEAR_HISTORY_ON_INTERVAL);
         CLEAR_HISTORY_INTERVAL      = settings.get_int(PrefsFields.CLEAR_HISTORY_INTERVAL);
         NEXT_HISTORY_CLEAR          = settings.get_int(PrefsFields.NEXT_HISTORY_CLEAR);
+        CASE_SENSITIVE_SEARCH       = settings.get_boolean(PrefsFields.CASE_SENSITIVE_SEARCH);
+        REGEX_SEARCH                = settings.get_boolean(PrefsFields.REGEX_SEARCH);
     }
 
     async _onSettingsChange () {
