@@ -70,9 +70,9 @@ const ClipboardIndicator = GObject.registerClass({
     GTypeName: 'ClipboardIndicator'
 }, class ClipboardIndicator extends PanelMenu.Button {
     #refreshInProgress = false;
-    _pastePending = null;
-    _previewLaterId = 0;
-    preventIndicatorUpdate = false
+    #pastePending = null;
+    #previewIdleId = 0;
+    #preventIndicatorUpdate = false;
 
     destroy () {
         this._disconnectSettings();
@@ -139,50 +139,43 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     #updateIndicatorContent(entry) {
-        if (this.preventIndicatorUpdate || (TOPBAR_DISPLAY_MODE !== 1 && TOPBAR_DISPLAY_MODE !== 2)) {
-            return;
+      if (this.#preventIndicatorUpdate || (TOPBAR_DISPLAY_MODE !== 1 && TOPBAR_DISPLAY_MODE !== 2))
+        return;
+
+      if (!entry || PRIVATEMODE) {
+        this._buttonImgPreview.destroy_all_children();
+        this._buttonText.set_text("...");
+        return;
+      }
+
+      if (entry.isText()) {
+        this._buttonText.set_text(this._truncate(entry.getStringValue(), MAX_TOPBAR_LENGTH));
+        this._buttonImgPreview.destroy_all_children();
+        return;
+      }
+
+      if (entry.isImage()) {
+        this._buttonText.set_text('');
+        this._buttonImgPreview.destroy_all_children();
+
+        // cancel any pending preview idle
+        if (this.#previewIdleId) {
+          GLib.source_remove(this.#previewIdleId);
+          this.#previewIdleId = 0;
         }
 
-        if (!entry || PRIVATEMODE) {
-            this._buttonImgPreview.destroy_all_children();
-            this._buttonText.set_text("...")
-        } else {
-            if (entry.isText()) {
-                this._buttonText.set_text(this._truncate(entry.getStringValue(), MAX_TOPBAR_LENGTH));
-                this._buttonImgPreview.destroy_all_children();
-            }
-            else if (entry.isImage()) {
-              this._buttonText.set_text('');
-              this._buttonImgPreview.destroy_all_children();
-          
-              // ── cancel any still-pending preview update ─────────────────────────────
-              if (this._previewLaterId) {
-                  const laters = global.compositor.get_laters?.();
-                  laters && Meta.Laters.remove
-                      ? Meta.Laters.remove(laters, this._previewLaterId)
-                      : GLib.source_remove(this._previewLaterId);
-                  this._previewLaterId = 0;
-              }
-          
-              // ── load the thumbnail and queue it for the next frame ──────────────────
-              this.registry.getEntryAsImage(entry).then(img => {
-                  img.add_style_class_name('clipboard-indicator-img-preview');
-                  img.y_align = Clutter.ActorAlign.CENTER;
-          
-                  const laters = global.compositor.get_laters?.();
-                  this._previewLaterId = laters && Meta.Laters.add
-                      ? Meta.Laters.add(
-                            laters,
-                            Meta.LaterType.AFTER_REDRAW,
-                            () => (this._buttonImgPreview.set_child(img), GLib.SOURCE_REMOVE)
-                        )
-                      : GLib.idle_add(
-                            GLib.PRIORITY_DEFAULT,
-                            () => (this._buttonImgPreview.set_child(img), GLib.SOURCE_REMOVE)
-                        );
-              });
-          }          
-        }
+        this.registry.getEntryAsImage(entry).then(img => {
+          img.add_style_class_name('clipboard-indicator-img-preview');
+          img.y_align = Clutter.ActorAlign.CENTER;
+
+          // schedule setting the child on the next main-loop idle
+          this.#previewIdleId = GLib.idle_add(GLib.PRIORITY_DEFAULT, () => {
+            this._buttonImgPreview.set_child(img);
+            this.#previewIdleId = 0;
+            return GLib.SOURCE_REMOVE;
+          });
+        });
+      }
     }
 
     async _buildMenu () {
@@ -218,25 +211,29 @@ const ClipboardIndicator = GObject.registerClass({
         that._entryItem.add_child(that.searchEntry);
 
         that.menu.connect('open-state-changed', (self, open) => {
+          // cancel any previously queued idle to avoid piling up
+          if (this._setFocusOnOpenIdleId) {
+            GLib.source_remove(this._setFocusOnOpenIdleId);
+            this._setFocusOnOpenIdleId = 0;
+          }
+
           this._setFocusOnOpenIdleId = GLib.idle_add(GLib.PRIORITY_DEFAULT, () => {
-              if (open) {
-                if (SHOW_SEARCH_BAR && this.clipItemsRadioGroup.length > 0) {
-                  that.searchEntry.set_text('');
-                  global.stage.set_key_focus(that.searchEntry);
-                } else if (this.clipItemsRadioGroup.length > 0) {
-                  // If the search bar is off, focus the currently selected menu item.
-                  let currentItem = this._getCurrentlySelectedItem();
-                  if (currentItem) {
-                    global.stage.set_key_focus(currentItem.actor);
-                  }
-                } else {
-                  // If no items at all, focus the private mode button (if it exists)
-                  if (SHOW_PRIVATE_MODE && that.privateModeMenuItem)
-                    global.stage.set_key_focus(that.privateModeMenuItem.actor);
-                }
+            // clear the handle as soon as we run
+            this._setFocusOnOpenIdleId = 0;
+
+            if (open) {
+              if (SHOW_SEARCH_BAR && this.clipItemsRadioGroup.length > 0) {
+                that.searchEntry.set_text('');
+                global.stage.set_key_focus(that.searchEntry);
+              } else if (this.clipItemsRadioGroup.length > 0) {
+                const currentItem = this._getCurrentlySelectedItem();
+                if (currentItem) global.stage.set_key_focus(currentItem.actor);
+              } else if (SHOW_PRIVATE_MODE && that.privateModeMenuItem) {
+                global.stage.set_key_focus(that.privateModeMenuItem.actor);
               }
-              return GLib.SOURCE_REMOVE;
-            });
+            }
+            return GLib.SOURCE_REMOVE;
+          });
         });
 
         // --- Menu Sections (Favorites and History) ---
@@ -503,13 +500,14 @@ const ClipboardIndicator = GObject.registerClass({
         /* This change fixes the issue that causes Paste on Select to fail when 
         using clicking rather than pressing Enter. Now pressing Enter and 
         clicking will have consistent behaviour. */
-        menuItem.buttonPressId = menuItem.connect('activate', (autoSet) => {
+        menuItem.connect('activate', () => {
           if (PASTE_ON_SELECT) {
             this.#pasteItem(menuItem);
+            this._onMenuItemSelectedAndMenuClose(menuItem, false);
+          } else {
+            this._onMenuItemSelectedAndMenuClose(menuItem, true);
           }
-          this._onMenuItemSelectedAndMenuClose(menuItem, autoSet);
         });
-
 
         menuItem.connect('key-focus-in', () => {
             const viewToScroll = menuItem.entry.isFavorite() ?
@@ -517,25 +515,21 @@ const ClipboardIndicator = GObject.registerClass({
             AnimationUtils.ensureActorVisibleInScrollView(viewToScroll, menuItem);
         });
         menuItem.actor.connect('key-press-event', (actor, event) => {
-            switch (event.get_key_symbol()) {
-                case Clutter.KEY_Delete:
-                    this.#selectNextMenuItem(menuItem);
-                    this._removeEntry(menuItem, 'delete');
-                    break;
-                case Clutter.KEY_p:
-                    this.#selectNextMenuItem(menuItem);
-                    this._favoriteToggle(menuItem);
-                    break;
-                case Clutter.KEY_v:
-                    this.#pasteItem(menuItem);
-                    break;
-                case Clutter.KEY_KP_Enter:
-                case Clutter.KEY_Return:
-                    // Let the 'activate' event handle the paste (to prevent double pasting)
-                    this._onMenuItemSelectedAndMenuClose(menuItem, true);
-                    break;
-            }
-        })
+          switch (event.get_key_symbol()) {
+            case Clutter.KEY_Delete:
+              this.#selectNextMenuItem(menuItem);
+              this._removeEntry(menuItem, 'delete');
+              return Clutter.EVENT_STOP;
+            case Clutter.KEY_p:
+              this.#selectNextMenuItem(menuItem);
+              this._favoriteToggle(menuItem);
+              return Clutter.EVENT_STOP;
+            case Clutter.KEY_v:
+              this.#pasteItem(menuItem);
+              return Clutter.EVENT_STOP;
+          }
+          return Clutter.EVENT_PROPAGATE;
+        });
 
         this._setEntryLabel(menuItem);
         this.clipItemsRadioGroup.push(menuItem);
@@ -758,20 +752,16 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     async _onSelectionChange (selection, selectionType, selectionSource) {
-        if (selectionType !== Meta.SelectionType.SELECTION_CLIPBOARD)
-            return;
-        
-        // Step 3 — clipboard owner is now the one we set in #pasteItem()
-        if (this._pastePending) {
-            const { previous } = this._pastePending;
-            this._pastePending = null;
-                this._keyboardPaste();            // paste immediately
-                this.preventIndicatorUpdate = false;
-            return;
-        }
-        
-        // Regular external copy
-        this._refreshIndicator();
+      if (selectionType !== Meta.SelectionType.SELECTION_CLIPBOARD) return;
+
+      if (this.#pastePending) {
+        const { previous } = this.#pastePending;
+        this.#pastePending = null;
+        this._keyboardPaste();
+        this.#preventIndicatorUpdate = false;
+        return;
+      }
+      this._refreshIndicator();
     }
 
     async _refreshIndicator () {
@@ -1107,24 +1097,22 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     _disconnectSelectionListener () {
-        if (!this._selectionOwnerChangedId)
-            return;
-
+      if (this._selectionOwnerChangedId && this.selection) {
         this.selection.disconnect(this._selectionOwnerChangedId);
+      }
+      this._selectionOwnerChangedId = null;
     }
 
     _clearDelayedSelectionTimeout () {
-        if (this._delayedSelectionSourceId) {
-            GLib.source_remove(this._delayedSelectionSourceId);
-            this._delayedSelectionSourceId = null;
-        }
+      if (this._delayedSelectionSourceId) {
+        GLib.source_remove(this._delayedSelectionSourceId);
+        this._delayedSelectionSourceId = null;
+      }
     }
 
     _previousEntry () {
         if (PRIVATEMODE) return;
         let that = this;
-
-        that._clearDelayedSelectionTimeout();
 
         this._getAllIMenuItems().some(function (mItem, i, menuItems){
             if (mItem.currentlySelected) {
@@ -1145,14 +1133,36 @@ const ClipboardIndicator = GObject.registerClass({
 
     _nextEntry () {
         if (PRIVATEMODE) return;
+        const that = this;
+
         this._getAllIMenuItems().some((mItem, i, menuItems) => {
-            if (mItem.currentlySelected) {
-                i = (i + 1) % menuItems.length;
-                this._showNotification(/* … */);
-                this._selectMenuItem(menuItems[i]);     // synchronous selection
-                return true;
+            if (!mItem.currentlySelected)
+                return false;
+
+            // advance and wrap
+            i = (i + 1) % menuItems.length;
+            const nextItem = menuItems[i];
+            const index = i + 1; // 1-based for display
+
+            if (NOTIFY_ON_CYCLE) {
+                that._showNotification(index + ' / ' + menuItems.length + ': ' +
+                                      nextItem.entry.getStringValue());
             }
-            return false;
+
+            if (MOVE_ITEM_FIRST) {
+                // Reorder first, then select on idle so we pick up the new actor
+                that._moveItemFirst(nextItem);
+                GLib.idle_add(GLib.PRIORITY_DEFAULT, () => {
+                    // re-find and select the moved item
+                    const ref = that._getAllIMenuItems().find(mi => mi.entry.equals(nextItem.entry));
+                    if (ref) that._selectMenuItem(ref);
+                    return GLib.SOURCE_REMOVE;
+                });
+            } else {
+                that._selectMenuItem(nextItem);  // synchronous selection
+            }
+
+            return true;
         });
     }
   
@@ -1161,13 +1171,10 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     #pasteItem (menuItem) {
-        this.menu.close();                         // return focus
-        this._pastePending = {
-            entry:    menuItem.entry,
-            previous: this._getCurrentlySelectedItem()?.entry
-        };
-        this.preventIndicatorUpdate = true;
-        this.#updateClipboard(menuItem.entry);     // triggers owner-changed
+      this.menu.close();
+      this.#pastePending = { entry: menuItem.entry, previous: this._getCurrentlySelectedItem()?.entry };
+      this.#preventIndicatorUpdate = true;
+      this.#updateClipboard(menuItem.entry);
     }
 
     _keyboardPaste () {             // helper: paste via Shift+Insert
@@ -1187,24 +1194,14 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     #clearTimeouts () {
-        for (const id of [
-            this._setFocusOnOpenIdleId,
-        ]) {
-            if (!id)
-                continue;
-            const laters = global.compositor.get_laters();
-            if (laters && Meta.Laters.remove){
-                Meta.Laters.remove(laters, id);  // GNOME 44 +
-            } else { GLib.source_remove(id); }     // Idle fallback    }
-        }
-
-        if (this._previewLaterId) {
-            const laters = global.compositor.get_laters?.();
-            laters && Meta.Laters.remove
-                ? Meta.Laters.remove(laters, this._previewLaterId)
-                : GLib.source_remove(this._previewLaterId);
-            this._previewLaterId = 0;
-        }      
+      if (this._setFocusOnOpenIdleId) {
+        GLib.source_remove(this._setFocusOnOpenIdleId);
+        this._setFocusOnOpenIdleId = 0;
+      }
+      if (this.#previewIdleId) {
+        GLib.source_remove(this.#previewIdleId);
+        this.#previewIdleId = 0;
+      }
     }
     
     #clearClipboard () {
