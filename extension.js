@@ -487,7 +487,7 @@ const ClipboardIndicator = GObject.registerClass({
           this._onMenuItemSelectedAndMenuClose(menuItem, autoSet);
         });
 
-        
+
         menuItem.connect('key-focus-in', () => {
             const viewToScroll = menuItem.entry.isFavorite() ?
                 this.favoritesScrollView : this.historyScrollView;
