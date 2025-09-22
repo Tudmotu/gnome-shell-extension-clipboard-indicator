@@ -3,15 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # Jacob the Liar <jacob_the_liar@tlen.pl>, 2024
-# Adam lewicki <a.lewicki95@gmail.com>, 2025
 # Adam Lewicki <a.lewick95@gmail.com>, 2025.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: unnamed project\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-21 16:41+0300\n"
-"PO-Revision-Date: 2025-09-09 20:02+0200\n"
+"POT-Creation-Date: 2025-09-22 19:09+0200\n"
+"PO-Revision-Date: 2025-09-22 19:17+0200\n"
 "Last-Translator: Adam Lewicki <a.lewick95@gmail.com>\n"
 "Language-Team: Polish\n"
 "Language: pl\n"
@@ -22,47 +21,499 @@ msgstr ""
 "|| n%100>=20) ? 1 : 2);\n"
 "X-Generator: Poedit 3.7\n"
 
-#: extension.js:108
+#: extension.js:113
 msgid "Text will be here"
 msgstr "Treść będzie tutaj"
 
-#: extension.js:181
+#: extension.js:187
 msgid "Type here to search..."
 msgstr "Wpisz tutaj, aby wyszukać..."
 
-#: extension.js:250 prefs.js:220
+#: extension.js:256 prefs.js:257
 msgid "Private mode"
 msgstr "Tryb prywatny"
 
-#: extension.js:264 prefs.js:222
+#: extension.js:270 prefs.js:259
 msgid "Clear history"
 msgstr "Wyczyść historię"
 
-#: extension.js:276
+#: extension.js:315
 msgid "Settings"
 msgstr "Ustawienia"
 
-#: extension.js:299
+#: extension.js:338
 msgid "Clipboard is empty"
 msgstr "Schowek jest pusty"
 
-#: extension.js:571
+#: extension.js:626
 msgid "Clear all?"
 msgstr "Wyczyścić wszystko?"
 
-#: extension.js:572
+#: extension.js:627
 msgid "Are you sure you want to delete all clipboard items?"
 msgstr "Czy jesteś pewien, że chcesz usunąć wszystkie elementy ze schowka?"
 
-#: extension.js:573
+#: extension.js:628
 msgid "This operation cannot be undone."
 msgstr "Tej operacji nie będzie można cofnąć."
 
-#: extension.js:575
+#: extension.js:630
 msgid "Clear"
 msgstr "Wyczyść"
 
-#: extension.js:575 extension.js:740
+#: extension.js:630 extension.js:801
+msgid "Cancel"
+msgstr "Anuluj"
+
+#: extension.js:645
+msgid "Clipboard history cleared"
+msgstr "Wyczyszczono historię schowka"
+
+#: extension.js:648
+msgid "Clipboard history cleared automatically"
+msgstr "Automatycznie wyczyszczono historię schowka"
+
+#: extension.js:800
+msgid "Copied to clipboard"
+msgstr "Skopiowano do schowka"
+
+#: prefs.js:31
+msgid "History Size"
+msgstr "Rozmiar historii"
+
+#: prefs.js:40
+msgid "Preview Size (characters)"
+msgstr "Rozmiar podglądu (znaki)"
+
+#: prefs.js:49
+msgid "Max cache file size (MB)"
+msgstr "Maksymalny rozmiar buforu (MB)"
+
+#: prefs.js:58
+msgid "Number of characters in top bar"
+msgstr "Liczba znaków na panelu"
+
+#: prefs.js:67
+msgid "What to show in top bar"
+msgstr "Pokazywanie na panelu"
+
+#: prefs.js:72
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:44
+msgid "Remove down arrow in top bar"
+msgstr "Usuń strzałkę w dół na panelu"
+
+#: prefs.js:76
+msgid "Cache only pinned items"
+msgstr "Pamięć podręczna tylko dla przypiętych elementów"
+
+#: prefs.js:80
+msgid "Show notification on copy"
+msgstr "Pokaż powiadomienie po skopiowaniu"
+
+#: prefs.js:84
+msgid "Show notification on cycle"
+msgstr "Pokaż powiadomienie po przełączeniu"
+
+#: prefs.js:88
+msgid "Show confirmation on Clear History"
+msgstr "Pokaż powiadomienie po wyczyszczeniu historii"
+
+#: prefs.js:92
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:122
+msgid "Remove whitespace around text"
+msgstr "Usuń białe znaki przed/po tekście"
+
+#: prefs.js:96
+msgid "Move item to the top after selection"
+msgstr "Przenieś na początek po wybraniu"
+
+#: prefs.js:100
+msgid "Keep selected entry after Clear History"
+msgstr "Zachowaj wybraną pozycję po wyczyszczeniu historii"
+
+#: prefs.js:104
+msgid "Show paste buttons"
+msgstr "Pokaż przyciski wklejania"
+
+#: prefs.js:105
+msgid "Adds a paste button to each entry that lets you paste it directly"
+msgstr ""
+"Dodaje przycisk wklejania przy każdym wpisie, który pozwala wkleić go "
+"bezpośrednio"
+
+#: prefs.js:109
+msgid "Place the pinned section on the bottom"
+msgstr "Umieść sekcje z przypiętymi pozycjami na dole"
+
+#: prefs.js:110
+msgid "Requires restarting the extension"
+msgstr "Wymaga ponownego uruchomienia rozszerzenia"
+
+#: prefs.js:114
+msgid "Clear clipboard history on system reboot"
+msgstr "Wyczyść historię przy uruchamianiu systemu"
+
+#: prefs.js:118
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:54
+msgid "Paste on select"
+msgstr "Wklej po wybraniu"
+
+#: prefs.js:122
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:184
+msgid "Cache images"
+msgstr "Bufor obrazów"
+
+#: prefs.js:127
+msgid "Excluded Apps"
+msgstr "Wykluczone aplikacje"
+
+#: prefs.js:128
+msgid "Content copied will not be saved while these apps are in focus"
+msgstr ""
+"Kopiowana treść nie zostanie zapisana, gdy te aplikacje są na pierwszym "
+"planie"
+
+#: prefs.js:139
+msgid "Case-sensitive search"
+msgstr "Uwzględnianie wielkość znaków w wyszukiwaniu"
+
+#: prefs.js:143
+msgid "Regular expression matching in search"
+msgstr "Dopasowywanie wyrażeń regularnych w wyszukiwaniu"
+
+#: prefs.js:156
+msgid "Clear clipboard history on interval"
+msgstr "Odstęp czasu czyszczenia historii schowka"
+
+#: prefs.js:160
+msgid "History clear interval (in minutes)"
+msgstr "Odstęp czasu czyszczenia historii (w minutach)"
+
+#: prefs.js:172
+msgid "UI"
+msgstr "Interfejs użytkownika"
+
+#: prefs.js:173
+msgid "Behavior"
+msgstr "Zachowanie"
+
+#: prefs.js:174
+msgid "Exclusion"
+msgstr "Wykluczanie"
+
+#: prefs.js:175
+msgid "Limits"
+msgstr "Limity"
+
+#: prefs.js:176
+msgid "Topbar"
+msgstr "Panel systemowy"
+
+#: prefs.js:177
+msgid "Notifications"
+msgstr "Powiadomienia"
+
+#: prefs.js:178
+msgid "Shortcuts"
+msgstr "Skróty klawiszowe"
+
+#: prefs.js:179
+msgid "Search"
+msgstr "Wyszukaj"
+
+#: prefs.js:244
+msgid "Icon"
+msgstr "Ikona"
+
+#: prefs.js:245
+msgid "Clipboard Content"
+msgstr "Zawartość schowka"
+
+#: prefs.js:246
+msgid "Both"
+msgstr "Oba"
+
+#: prefs.js:247
+msgid "Neither"
+msgstr "Żaden"
+
+#: prefs.js:258
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:170
+msgid "Toggle the menu"
+msgstr "Pokaż zawartość schowka"
+
+#: prefs.js:260
+msgid "Previous entry"
+msgstr "Poprzednia pozycja"
+
+#: prefs.js:261
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:163
+msgid "Next entry"
+msgstr "Następna pozycja"
+
+#: prefs.js:266
+msgid "Enable shortcuts"
+msgstr "Włącz skróty klawiszowe"
+
+#: prefs.js:291
+msgid "Disabled"
+msgstr "Wyłączony"
+
+#: prefs.js:300
+msgid "Enter shortcut"
+msgstr "Wprowadź skrót klawiszowy"
+
+#: prefs.js:387
+msgid "Window class name, e.g. \"KeePassXC\""
+msgstr "Nazwa klasy okna, np. \"KeePassXC\""
+
+#: prefs.js:399
+msgid "Choose from installed applications"
+msgstr "Wybierz spośród zainstalowanych aplikacji"
+
+#: prefs.js:416
+msgid "Search applications..."
+msgstr "Wyszukaj aplikacje..."
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:7
+msgid "Add button to paste an entry"
+msgstr "Dodaj przycisk, aby wkleić wpis"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:8
+msgid ""
+"If true, adds another button to each menu entry that lets you immediately "
+"paste it"
+msgstr ""
+"Jeśli włączone, dodaje przycisk do każdego wpisu menu, który pozwala na "
+"natychmiastowe wklejenie"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:15
+msgid "Display the pinned section on the bottom"
+msgstr "Wyświetlaj przypiętą sekcję na dole"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:16
+msgid "If true, places the \"pinned\" section on the bottom"
+msgstr "Jeśli włączone, umieszcza sekcję „przypięte” na dole"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:23
+msgid "Enable the deletion of clipboard items from your history"
+msgstr "Włącz usuwanie elementów schowka z historii"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:24
+msgid ""
+"If true, displays 'delete' buttons on each item, and a 'Clear History' option"
+msgstr ""
+"Po włączniu, wyświetla przyciski „Usuń” przy każdym elemencie oraz opcję "
+"„Wyczyść historię”"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:31
+msgid "The number of items to save in history"
+msgstr "Liczba elementów do zapisania w historii"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:38
+msgid "What to display in top bar"
+msgstr "Wyświetlanie na panelu"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:49
+msgid "Clear clipboard history on every system reboot."
+msgstr "Wyczyść historię schowka przy każdym ponownym uruchomieniu systemu."
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:59
+msgid "Amount of visible characters for clipboard items"
+msgstr "Liczba widocznych znaków dla elementów schowka"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:60
+msgid ""
+"The number of characters to display for every clipboard item in the history "
+"menu"
+msgstr ""
+"Liczba znaków do wyświetlenia dla każdego elementu schowka w menu historii"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:69
+msgid "Amount of visible characters in topbar"
+msgstr "Liczba widocznych znaków na panelu"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:70
+msgid ""
+"The number of characters to display for current clipboard item in the topbar"
+msgstr ""
+"Liczba znaków do wyświetlenia dla bieżącego elementu schowka na górnym pasku"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:78
+msgid "The allowed size for the registry cache file in MB"
+msgstr "Dozwolony rozmiar pliku pamięci podręcznej rejestru w MB"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:79
+msgid ""
+"If the cache overflows this limit, the file will be overriden. High limit "
+"might cause slowness of shell startup."
+msgstr ""
+"Jeśli pamięć podręczna przekroczy ten limit, plik zostanie nadpisany. Wysoki "
+"limit może spowodować spowolnienie uruchamiania powłoki GNOME."
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:88
+msgid "Disable the registry cache file for favorites and use memory only"
+msgstr ""
+"Wyłącz plik pamięci podręcznej rejestru dla ulubionych i używaj tylko pamięci"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:89
+msgid ""
+"Contents which are not favorites are not stored and retrieved from a cache "
+"(registry.txt) file. This can avoid writing passwords to a plaintext file, "
+"but at the cost of persistant history. Your clipboard history, except "
+"favorite items, is lost after a gnome-shell session ends or the extension is "
+"reloaded."
+msgstr ""
+"Zawartość, która nie jest oznaczona jako ulubiona, nie jest przechowywana i "
+"pobierana z pliku pamięci podręcznej (registry.txt). Może to zapobiec "
+"zapisywaniu haseł do pliku w postaci zwykłego tekstu, ale kosztem trwałej "
+"historii. Historia schowka, z wyjątkiem ulubionych elementów, jest tracona "
+"po zakończeniu sesji powłoki GNOME lub ponownym załadowaniu rozszerzenia."
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:98
+msgid "Show notification on copy to clipboard"
+msgstr "Pokaż powiadomienie po skopiowaniu do schowka"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:99
+msgid "If true, a notification is shown when content is copied to clipboard."
+msgstr ""
+"Jeśli włączone, wyświetlane jest powiadomienie, gdy zawartość zostanie "
+"skopiowana do schowka."
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:106
+msgid "Show notification when cycling through the entries with hotkeys"
+msgstr "Pokaż powiadomienie przy wykorzystaniu skrótu klawiszowego"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:107
+msgid ""
+"If true, a notification is shown when cycling through the clipboard entries "
+"using hotkeys."
+msgstr ""
+"Jeśli włączone, powiadomienie jest pokazane po wykorzystaniu skrótów "
+"klawiszowych wpisów schowka."
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:114
+msgid "Show confirmation dialog on Clear History"
+msgstr "Pokaż okno dialogowe z potwierdzeniem po kliknięciu Wyczyść historię"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:115
+msgid ""
+"If true, a confirmation dialog is shown when attempting to Clear History."
+msgstr ""
+"Jeśli włączone, wyświetlane jest okno dialogowe z potwierdzeniem podczas "
+"próby wyczyszczenia historii."
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:123
+msgid "If true, white spaces around text will be removed."
+msgstr "Jeśli włączone, białe znaki wokół tekstu zostaną usunięte."
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:129
+msgid "Move items to the top of the list when selected."
+msgstr "Przenieś wybrane elementy na początek listy."
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:130
+msgid "If true, move items to the top of the list when it is selected."
+msgstr "Jeśli włączone, przenosi wybrane elementy na początek listy."
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:136
+msgid "Keep selected item on clear"
+msgstr "Zachowaj wybrany element przy czyszczeniu"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:137
+msgid ""
+"Whether to keep the currently selected entry in the clipboard after clearing "
+"the history"
+msgstr ""
+"Zachowanie aktualnie wybranego wpisu w schowku po wyczyszczeniu historii"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:144
+msgid "Enable the keyboard shortcuts"
+msgstr "Włącz skróty klawiszowe"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:145
+msgid ""
+"If true, user can delete and cycle through the history with keyboard "
+"shortcuts"
+msgstr ""
+"Jeśli włączone, użytkownik może usuwać i przeglądać historię za pomocą "
+"skrótów klawiaturowych"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:151
+msgid "Key to clear the history"
+msgstr "Klawisz do czyszczenia historii"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:157
+msgid "Key to cycle to the previous entry in the clipboard"
+msgstr "Skrót do przechodzenia do poprzedniego wpisu w schowku"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:164
+msgid "Key to cycle to the next entry in the clipboard"
+msgstr "Skrót do przechodzenia do następnego wpisu w schowku"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:171
+msgid "Key to toggle the clipboard menu"
+msgstr "Skrót do wyświetlania schowka"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:177
+msgid "Toggle \"Private Mode\""
+msgstr "Przełącz \"Tryb prywatny\""
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:178
+msgid "Key to toggle the private mode"
+msgstr "Skrót do włączania trybu prywatnego"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:185
+msgid "Allow caching images to disk"
+msgstr "Zezwalaj na buforowanie obrazów na dysku"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:191
+msgid "List of excluded applications"
+msgstr "Lista wykluczonych aplikacji"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:192
+msgid "A list of applications that are excluded from clipboard history."
+msgstr "Lista aplikacji, które są wykluczone z historii schowka."
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:198
+msgid "Enable clearing history on interval"
+msgstr "Włącz czyszczenie historii według odstępu czasu"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:199
+msgid "If true, clipboard history will be cleared at regular intervals."
+msgstr ""
+"Po włączaniu, historia będzie czyszczona w regularnych odstępach czasu."
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:205
+msgid "Interval for clearing history in minutes"
+msgstr "Odstęp czasu w minutach dla czyszczenia historii"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:206
+msgid "The interval in minutes at which the clipboard history will be cleared."
+msgstr "Odstęp czasu w minutach dla czyszczenia historii schowka."
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:213
+msgid "Next scheduled history clear time"
+msgstr "Następny harmonogram czyszczenia historii"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:214
+msgid "The timestamp for the next scheduled history clear."
+msgstr "Znak czasu dla następnego harmonogramu czyszczenia historii."
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:220
+msgid "Case sensitive search"
+msgstr "Uwzględnianie wielkość znaków w wyszukiwaniu"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:221
+msgid "Make search case sensitive"
+msgstr "Uwzględniaj wielkość znaków w wyszukiwaniu"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:225
+msgid "Regex-based search"
+msgstr "Wyszukiwanie oparte na wyrażeniach regularnych"
+
+#: schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml:226
+msgid "Allow regex in search"
+msgstr "Zezwól na wyrażenia regularne w wyszukiwaniu"#: extension.js:575 extension.js:740
 msgid "Cancel"
 msgstr "Anuluj"
 
