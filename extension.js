@@ -197,23 +197,22 @@ const ClipboardIndicator = GObject.registerClass({
         that._entryItem.add_child(that.searchEntry);
 
         that.menu.connect('open-state-changed', (self, open) => {
+            if (this._setFocusOnOpenTimeout)
+                clearTimeout(this._setFocusOnOpenTimeout);
+
             this._setFocusOnOpenTimeout = setTimeout(() => {
-              if (open) {
-                if (SHOW_SEARCH_BAR && this.clipItemsRadioGroup.length > 0) {
-                  that.searchEntry.set_text('');
-                  global.stage.set_key_focus(that.searchEntry);
-                } else if (this.clipItemsRadioGroup.length > 0) {
-                  // If the search bar is off, focus the currently selected menu item.
-                  let currentItem = this._getCurrentlySelectedItem();
-                  if (currentItem) {
-                    global.stage.set_key_focus(currentItem.actor);
-                  }
-                } else {
-                  // If no items at all, focus the private mode button (if it exists)
-                  if (SHOW_PRIVATE_MODE && that.privateModeMenuItem)
-                    global.stage.set_key_focus(that.privateModeMenuItem.actor);
+                if (open) {
+                    if (SHOW_SEARCH_BAR && this.clipItemsRadioGroup.length > 0) {
+                        that.searchEntry.set_text('');
+                        global.stage.set_key_focus(that.searchEntry);
+                    } else if (this.clipItemsRadioGroup.length > 0) {
+                        const currentItem = this._getCurrentlySelectedItem();
+                        if (currentItem)
+                            global.stage.set_key_focus(currentItem.actor);
+                    } else if (SHOW_PRIVATE_MODE && that.privateModeMenuItem) {
+                        global.stage.set_key_focus(that.privateModeMenuItem.actor);
+                    }
                 }
-              }
             }, 50);
         });
 
@@ -488,7 +487,7 @@ const ClipboardIndicator = GObject.registerClass({
           this._onMenuItemSelectedAndMenuClose(menuItem, autoSet);
         });
 
-
+        
         menuItem.connect('key-focus-in', () => {
             const viewToScroll = menuItem.entry.isFavorite() ?
                 this.favoritesScrollView : this.historyScrollView;
@@ -509,9 +508,9 @@ const ClipboardIndicator = GObject.registerClass({
                     break;
                 case Clutter.KEY_KP_Enter:
                 case Clutter.KEY_Return:
-                    // Let the 'activate' event handle the paste (to prevent double pasting)
-                    this._onMenuItemSelectedAndMenuClose(menuItem, true);
-                    break;
+                    // Route through the single activation path so click and Enter behave identically.
+                    menuItem.activate(event);
+                    return Clutter.EVENT_STOP;
             }
         })
 
@@ -1074,15 +1073,16 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     _disconnectSelectionListener () {
-        if (!this._selectionOwnerChangedId)
-            return;
-
-        this.selection.disconnect(this._selectionOwnerChangedId);
+        if (this._selectionOwnerChangedId && this.selection) {
+            this.selection.disconnect(this._selectionOwnerChangedId);
+        }
+        this._selectionOwnerChangedId = null;
     }
 
     _clearDelayedSelectionTimeout () {
         if (this._delayedSelectionTimeoutId) {
-            clearInterval(this._delayedSelectionTimeoutId);
+            clearTimeout(this._delayedSelectionTimeoutId);
+            this._delayedSelectionTimeoutId = null;
         }
     }
 
