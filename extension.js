@@ -347,6 +347,12 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     #showElements() {
+      // --- If we now have items, make sure the empty state is gone ---
+      if (this.clipItemsRadioGroup.length > 0 &&
+          this.menu.box.contains(this.emptyStateSection)) {
+        this.menu.box.remove_child(this.emptyStateSection);
+      }
+
       // --- Handle the Search Bar ---
       if (SHOW_SEARCH_BAR) {
         if (!this.menu.box.contains(this._entryItem))
@@ -355,7 +361,7 @@ const ClipboardIndicator = GObject.registerClass({
         if (this.menu.box.contains(this._entryItem))
           this.menu.box.remove_child(this._entryItem);
       }
-  
+
       // --- Handle Favorites Separator ---
       if (this.clipItemsRadioGroup.length > 0) {
         if (this.favoritesSection._getMenuItems().length > 0) {
@@ -365,46 +371,42 @@ const ClipboardIndicator = GObject.registerClass({
           this.menu.box.remove_child(this.favoritesSeparator);
         }
       }
-  
+
       // --- Handle the History Separator (between history and toggled buttons) ---
-      // Show the history separator only if there are history items and at least one toggle button is enabled.
       if (this.clipItemsRadioGroup.length > 0 &&
-        this.historySection._getMenuItems().length > 0 &&
-        (SHOW_PRIVATE_MODE || SHOW_SETTINGS_BUTTON || SHOW_CLEAR_HISTORY_BUTTON)) {
+          this.historySection._getMenuItems().length > 0 &&
+          (SHOW_PRIVATE_MODE || SHOW_SETTINGS_BUTTON || SHOW_CLEAR_HISTORY_BUTTON)) {
         if (!this.menu.box.contains(this.historySeparator))
           this.menu.box.insert_child_above(this.historySeparator, this.scrollViewMenuSection.actor);
       } else {
         if (this.menu.box.contains(this.historySeparator))
           this.menu.box.remove_child(this.historySeparator);
       }
-  
-      // --- Handle Empty State ---
-      if (this.clipItemsRadioGroup.length === 0 && !this.menu.box.contains(this.emptyStateSection)) {
+
+      // --- Handle Empty State (add only if truly empty) ---
+      if (this.clipItemsRadioGroup.length === 0 &&
+          !this.menu.box.contains(this.emptyStateSection)) {
         this.#renderEmptyState();
+        return; // when empty, we're done—don’t append toggles below the empty state
       }
-  
+
       // --- Handle the Toggled Buttons in Fixed Order ---
-      // First, remove all toggled button actors.
       if (this.menu.box.contains(this.privateModeMenuItem.actor))
         this.menu.box.remove_child(this.privateModeMenuItem.actor);
       if (this.menu.box.contains(this.settingsMenuItem.actor))
         this.menu.box.remove_child(this.settingsMenuItem.actor);
       if (this.menu.box.contains(this.clearMenuItem.actor))
         this.menu.box.remove_child(this.clearMenuItem.actor);
-  
-      // Append toggled buttons in the fixed order at the end of the container.
+
       let index = this.menu.box.get_n_children(); // Append at the end.
       if (SHOW_PRIVATE_MODE) {
-        this.menu.box.insert_child_at_index(this.privateModeMenuItem.actor, index);
-        index++;
+        this.menu.box.insert_child_at_index(this.privateModeMenuItem.actor, index++);
       }
       if (SHOW_SETTINGS_BUTTON) {
-        this.menu.box.insert_child_at_index(this.settingsMenuItem.actor, index);
-        index++;
+        this.menu.box.insert_child_at_index(this.settingsMenuItem.actor, index++);
       }
       if (SHOW_CLEAR_HISTORY_BUTTON) {
-        this.menu.box.insert_child_at_index(this.clearMenuItem.actor, index);
-        index++;
+        this.menu.box.insert_child_at_index(this.clearMenuItem.actor, index++);
       }
     }
 
