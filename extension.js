@@ -178,7 +178,10 @@ const ClipboardIndicator = GObject.registerClass({
         let lastIdx = clipHistory.length - 1;
         let clipItemsArr = that.clipItemsRadioGroup;
 
-        // Search entry container (visibility controlled in #showElements)
+        /* This create the search entry, which is add to a menuItem.
+        The searchEntry is connected to the function for research.
+        The menu itself is connected to some shitty hack in order to
+        grab the focus of the keyboard. */
         that._entryItem = new PopupMenu.PopupBaseMenuItem({
             reactive: false,
             can_focus: false
@@ -321,7 +324,7 @@ const ClipboardIndicator = GObject.registerClass({
         );
         this.settingsMenuItem.connect('activate', that._openSettings.bind(that));
 
-        // Empty state
+        // Empty state section
         this.emptyStateSection = new St.BoxLayout({
             style_class: 'clipboard-indicator-empty-state',
             vertical: true
@@ -424,12 +427,17 @@ const ClipboardIndicator = GObject.registerClass({
         this.menu.box.insert_child_at_index(this.emptyStateSection, 0);
     }
 
+    /* When text change, this function will check, for each item of the
+    historySection and favoritesSestion, if it should be visible or not (based on words contained
+    in the clipContents attribute of the item). It doesn't destroy or create
+    items. It the entry is empty, the section is restored with all items
+    set as visible. */
     _onSearchTextChanged () {
         // Text to be searched converted to lowercase if search is case insensitive
         let searchedText = this.searchEntry.get_text();
         if (!CASE_SENSITIVE_SEARCH) searchedText = searchedText.toLowerCase();
 
-        if (searchedText === '') {
+        if(searchedText === '') {
             this._getAllIMenuItems().forEach(function(mItem){
                 mItem.actor.visible = true;
             });
@@ -442,10 +450,13 @@ const ClipboardIndicator = GObject.registerClass({
 
                 let isMatching = false;
                 if (REGEX_SEARCH){
-                    // 'm' multiline; add 'i' when not case sensitive
+                    /* Regex flags:
+                       - 'm' for multiline matching (when multiline content is copied)
+                       - 'i' for case insensitive matching when search is not set to case sensitive
+                    */
                     let text_regex = new RegExp(searchedText, 'm' + (CASE_SENSITIVE_SEARCH ? '' : 'i'));
                     isMatching = text_regex.test(text);
-                } else {
+                }else{
                     isMatching = text.indexOf(searchedText) >= 0;
                 }
                 mItem.actor.visible = isMatching;
@@ -612,7 +623,7 @@ const ClipboardIndicator = GObject.registerClass({
 
         // Delete button
         let icon = new St.Icon({
-            icon_name: 'edit-delete-symbolic',
+            icon_name: 'edit-delete-symbolic', //'mail-attachment-symbolic',
             style_class: 'system-status-icon'
         });
 
@@ -914,14 +925,14 @@ const ClipboardIndicator = GObject.registerClass({
 
         const currentTime = Math.ceil(new Date().getTime() / 1000);
 
-        if (NEXT_HISTORY_CLEAR === -1) { // new timer
+        if (NEXT_HISTORY_CLEAR === -1) { //new timer
             this._scheduleNextHistoryClear();
         }
         else if (NEXT_HISTORY_CLEAR < currentTime) { // timer expired
             this._clearHistory(true);
             this._scheduleNextHistoryClear();
         }
-        else { // timer already set, but not expired
+        else { //timer already set, but not expired
             const timeoutMs = (NEXT_HISTORY_CLEAR - currentTime) * 1000;
             this._historyClearTimeoutId = setTimeout(() => {
                 this._clearHistory(true);
@@ -1321,9 +1332,9 @@ const ClipboardIndicator = GObject.registerClass({
 
         this._getAllIMenuItems().some(function (mItem, i, menuItems){
             if (mItem.currentlySelected) {
-                i--;                                 // previous
-                if (i < 0) i = menuItems.length - 1; // wrap
-                let index = i + 1;                   // display index
+                i--;                                 //get the previous index
+                if (i < 0) i = menuItems.length - 1; //cycle if out of bound
+                let index = i + 1;                   //index to be displayed
                 
                 if(NOTIFY_ON_CYCLE) {
                     that._showNotification(index + ' / ' + menuItems.length + ': ' + menuItems[i].entry.getStringValue());
@@ -1348,9 +1359,9 @@ const ClipboardIndicator = GObject.registerClass({
 
         this._getAllIMenuItems().some(function (mItem, i, menuItems){
             if (mItem.currentlySelected) {
-                i++;                                 // next
-                if (i === menuItems.length) i = 0;   // wrap
-                let index = i + 1;                   // display index
+                i++;                                 //get the next index
+                if (i === menuItems.length) i = 0;   //cycle if out of bound
+                let index = i + 1;                     //index to be displayed
 
                 if(NOTIFY_ON_CYCLE) {
                     that._showNotification(index + ' / ' + menuItems.length + ': ' + menuItems[i].entry.getStringValue());
@@ -1441,7 +1452,8 @@ const ClipboardIndicator = GObject.registerClass({
                     return;
                 }
 
-                // HACK: workaround for GNOME 2nd+ copy mangling mimetypes
+                // HACK: workaround for GNOME 2nd+ copy mangling mimetypes https://gitlab.gnome.org/GNOME/gnome-shell/-/issues/8233
+                // In theory GNOME or XWayland should auto-convert this back to UTF8_STRING for legacy apps when it's needed https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/5300
                 if (type === "UTF8_STRING") {
                     type = "text/plain;charset=utf-8";
                 }
