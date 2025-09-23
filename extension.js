@@ -341,8 +341,8 @@ const ClipboardIndicator = GObject.registerClass({
         if (this.menu.box.contains(this._entryItem)) this.menu.box.remove_child(this._entryItem);
         if (this.menu.box.contains(this.favoritesSeparator)) this.menu.box.remove_child(this.favoritesSeparator);
         if (this.menu.box.contains(this.historySeparator)) this.menu.box.remove_child(this.historySeparator);
-        if (this.clearMenuItem?.actor && this.menu.box.contains(this.clearMenuItem.actor)) // <-- guard both
-          this.menu.box.remove_child(this.clearMenuItem.actor);
+        if (this.menu.box.contains(this.clearMenuItem.actor) && this.clearMenuItem?.actor)
+                                                        this.menu.box.remove_child(this.clearMenuItem.actor);
         if (this.menu.box.contains(this.emptyStateSection)) this.menu.box.remove_child(this.emptyStateSection);
     }
 
@@ -879,6 +879,7 @@ const ClipboardIndicator = GObject.registerClass({
             let previousClip = this.clipItemsRadioGroup[clipSecond];
             this.#updateClipboard(previousClip.entry);
             previousClip.setOrnament(PopupMenu.Ornament.DOT);
+            previousClip.icoBtn.visible = false;
             previousClip.currentlySelected = true;
         } else {
             this.#clearClipboard();
@@ -1170,7 +1171,7 @@ const ClipboardIndicator = GObject.registerClass({
             return true;
         });
     }
-  
+
     _toggleMenu () {
         this.menu.toggle();
     }
