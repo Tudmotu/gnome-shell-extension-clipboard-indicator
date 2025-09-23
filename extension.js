@@ -397,10 +397,21 @@ const ClipboardIndicator = GObject.registerClass({
             this.menu.box.remove_child(this.historySeparator);
         }
 
-        // If no items, render empty state and stop; no toggles under empty state
+        // If no items, render empty state and (if toggled on) only show Private/Settings
         if (this.clipItemsRadioGroup.length === 0) {
             if (!this.menu.box.contains(this.emptyStateSection))
                 this.#renderEmptyState();
+            // Re-append toggled buttons after the empty state
+            if (this.menu.box.contains(this.privateModeMenuItem?.actor))
+                this.menu.box.remove_child(this.privateModeMenuItem.actor);
+            if (this.menu.box.contains(this.settingsMenuItem?.actor))
+                this.menu.box.remove_child(this.settingsMenuItem.actor);
+
+            let index = this.menu.box.get_n_children(); // append after empty state
+            if (SHOW_PRIVATE_MODE && this.privateModeMenuItem)
+                this.menu.box.insert_child_at_index(this.privateModeMenuItem.actor, index++);
+            if (SHOW_SETTINGS_BUTTON && this.settingsMenuItem)
+                this.menu.box.insert_child_at_index(this.settingsMenuItem.actor, index++);
             return;
         }
 
