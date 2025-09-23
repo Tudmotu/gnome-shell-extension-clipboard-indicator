@@ -13,11 +13,9 @@ export default class ClipboardIndicatorPreferences extends ExtensionPreferences 
         const page = new Adw.PreferencesPage();
         page.add(settingsUI.ui);
         page.add(settingsUI.behavior);
-        page.add(settingsUI.limits);
-        page.add(settingsUI.exclusion); 
-        page.add(settingsUI.topbar);
-        page.add(settingsUI.notifications);
+        page.add(settingsUI.search);
         page.add(settingsUI.shortcuts);
+        page.add(settingsUI.about);
         window.add(page);
     }
 }
@@ -26,20 +24,40 @@ class Settings {
     constructor (schema) {
         this.schema = schema;
 
-        this.field_size = new Adw.SpinRow({
-            title: _("History Size"),
+        this.ui = new Adw.PreferencesGroup({
+            title: _("User Interface")
+        });
+
+        this.behavior = new Adw.PreferencesGroup({
+            title: _("Behavior")
+        });
+
+        this.search = new Adw.PreferencesGroup({
+            title: _("Search")
+        });
+
+        this.shortcuts = new Adw.PreferencesGroup({
+            title: _("Keyboard shortcuts")
+        });
+
+        this.about = new Adw.PreferencesGroup({
+            title: _("About")
+        });
+
+        this.field_preview_size = new Adw.SpinRow({
+            title: _("Max number of characters in history"),
             adjustment: new Gtk.Adjustment({
                 lower: 1,
-                upper: 10000,
+                upper: 1000,
                 step_increment: 1
             })
         });
 
-        this.field_preview_size = new Adw.SpinRow({
-            title: _("Preview Size (characters)"),
+        this.field_history_size = new Adw.SpinRow({
+            title: _("History size"),
             adjustment: new Gtk.Adjustment({
-                lower: 10,
-                upper: 100,
+                lower: 1,
+                upper: 1000,
                 step_increment: 1
             })
         });
@@ -62,51 +80,36 @@ class Settings {
             })
         });
 
-        this.field_display_mode = new Adw.ComboRow({
-            title: _("What to show in top bar"),
-            model: this.#createDisplayModeOptions()
+        this.field_topbar_display_mode = new Adw.ComboRow({
+            title: _("Top bar indicator style"),
+            model: new Gtk.StringList({
+                strings: [
+                    _("Show only icon"),
+                    _("Show only clipboard content"),
+                    _("Show both"),
+                    _("Show neither")
+                ]
+            })
         });
 
-        this.field_disable_down_arrow = new Adw.SwitchRow({
-            title: _("Remove down arrow in top bar")
+        this.field_delete = new Adw.SwitchRow({
+            title: _("Show delete button")
         });
 
-        this.field_cache_disable = new Adw.SwitchRow({
-            title: _("Cache only pinned items")
+        this.field_move_first = new Adw.SwitchRow({
+            title: _("Move item to top on re-select")
         });
 
-        this.field_clear_notification_toggle = new Adw.SwitchRow({
+        this.field_notify_on_copy = new Adw.SwitchRow({
             title: _("Show notification on copy")
         });
 
-        this.field_cycle_notification_toggle = new Adw.SwitchRow({
-            title: _("Show notification on cycle")
+        this.field_notify_on_cycle = new Adw.SwitchRow({
+            title: _("Show notification on selection change via shortcut")
         });
 
-        this.field_confirm_clear_toggle = new Adw.SwitchRow({
-            title: _("Show confirmation on Clear History")
-        });
-
-        this.field_strip_text = new Adw.SwitchRow({
-            title: _("Remove whitespace around text")
-        });
-
-        this.field_move_item_first = new Adw.SwitchRow({
-            title: _("Move item to the top after selection")
-        });
-
-        this.field_keep_selected_on_clear = new Adw.SwitchRow({
-            title: _("Keep selected entry after Clear History")
-        });
-
-        this.field_paste_button = new Adw.SwitchRow({
-            title: _("Show paste buttons"),
-            subtitle: _("Adds a paste button to each entry that lets you paste it directly")
-        });
-
-        this.field_pinned_on_bottom = new Adw.SwitchRow({
-            title: _("Place the pinned section on the bottom"),
-            subtitle: _("Requires restarting the extension")
+        this.field_enable_keybinding = new Adw.SwitchRow({
+            title: _("Enable shortcuts")
         });
 
         this.field_clear_on_boot = new Adw.SwitchRow({
@@ -114,51 +117,30 @@ class Settings {
         });
 
         this.field_paste_on_select = new Adw.SwitchRow({
-            title: _("Paste on select")
+            title: _("Paste on select (Enter/Click)")
         });
 
-        this.field_cache_images = new Adw.SwitchRow({
-            title: _("Cache images"),
-            active: true
+        this.field_disable_down_arrow = new Adw.SwitchRow({
+            title: _("Show dropdown arrow")
         });
 
-        this.field_exclusion_row = new Adw.ExpanderRow({
-            title: _('Excluded Apps'),
-            subtitle: _('Content copied will not be saved while these apps are in focus'),
+        this.field_strip_text = new Adw.SwitchRow({
+            title: _("Strip non-printable characters")
         });
 
-        this.field_exclusion_row_add_button = new Gtk.Button({
-            iconName: 'list-add-symbolic',
-            cssClasses: ['flat'],
-            valign: Gtk.Align.CENTER,
-            halign: Gtk.Align.CENTER,
+        this.field_keep_selected = new Adw.SwitchRow({
+            title: _("Keep selected item when clearing history")
         });
 
-        this.field_exclusion_row_add_button.connect('clicked', () => {
-            this.field_exclusion_row_add_button.set_sensitive(false);
-            this.excluded_row_counter++;
-            this.field_exclusion_row.set_expanded(true);
-            this.field_exclusion_row.add_row(this.#createExcludedAppInputRow());
+        this.field_paste_button = new Adw.SwitchRow({
+            title: _("Show paste button")
         });
 
-        this.field_exclusion_row.add_suffix(this.field_exclusion_row_add_button);
+        this.field_pinned_on_bottom = new Adw.SwitchRow({
+            title: _("Show favorites at bottom")
+        });
 
-        this.ui =  new Adw.PreferencesGroup({ title: _('UI') });
-        this.behavior = new Adw.PreferencesGroup({title: _('Behavior')});
-        this.exclusion = new Adw.PreferencesGroup({ title: _('Exclusion') });
-        this.limits =  new Adw.PreferencesGroup({ title: _('Limits') });
-        this.topbar =  new Adw.PreferencesGroup({ title: _('Topbar') });
-        this.notifications =  new Adw.PreferencesGroup({ title: _('Notifications') });
-        this.shortcuts =  new Adw.PreferencesGroup({ title: _('Shortcuts') });
-
-        this.ui.add(this.field_preview_size);
-        this.ui.add(this.field_move_item_first);
-        this.ui.add(this.field_strip_text);
-        this.ui.add(this.field_keep_selected_on_clear);
-        this.ui.add(this.field_paste_button);
-        this.ui.add(this.field_pinned_on_bottom);
-
-        
+        // NEW: toggleable UI switches (add once)
         this.field_show_search_bar = new Adw.SwitchRow({
           title: _("Show Search Bar")
         });
@@ -183,263 +165,230 @@ class Settings {
         this.schema.bind(PrefsFields.SHOW_CLEAR_HISTORY_BUTTON, this.field_show_clear_history_button, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.ui.add(this.field_show_clear_history_button);
 
+        this.field_cache_images = new Adw.SwitchRow({
+            title: _("Cache images to disk")
+        });
+
+        this.ui.add(this.field_preview_size);
+        this.ui.add(this.field_history_size);
+        this.ui.add(this.field_cache_size);
+        this.ui.add(this.field_topbar_preview_size);
+        this.ui.add(this.field_topbar_display_mode);
+        this.ui.add(this.field_delete);
+        this.ui.add(this.field_move_first);
+        this.ui.add(this.field_notify_on_copy);
+        this.ui.add(this.field_notify_on_cycle);
+        this.ui.add(this.field_enable_keybinding);
+        this.ui.add(this.field_paste_button);
+        this.ui.add(this.field_pinned_on_bottom);
 
         this.behavior.add(this.field_clear_on_boot);
         this.behavior.add(this.field_paste_on_select);
         this.behavior.add(this.field_cache_images);
+        this.behavior.add(this.field_clear_history_on_interval);
+        this.behavior.add(this.field_clear_history_interval);
 
-        this.exclusion.add(this.field_exclusion_row);
-        this.exclusion.add(this.field_exclusion_row_add_button);
+        this.field_clear_history_on_interval = new Adw.SwitchRow({
+            title: _("Clear clipboard history on interval")
+        });
 
-        this.limits.add(this.field_size);
-        this.limits.add(this.field_cache_size);
-        this.limits.add(this.field_cache_disable);
+        this.field_clear_history_interval = new Adw.SpinRow({
+            title: _("Interval (minutes)"),
+            adjustment: new Gtk.Adjustment({
+                lower: 1,
+                upper: 1440,
+                step_increment: 1
+            })
+        });
 
-        this.topbar.add(this.field_display_mode);
-        this.topbar.add(this.field_topbar_preview_size);
-        this.topbar.add(this.field_disable_down_arrow);
+        this.schema.bind(PrefsFields.CLEAR_HISTORY_ON_INTERVAL, this.field_clear_history_on_interval, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.CLEAR_HISTORY_INTERVAL, this.field_clear_history_interval, 'value', Gio.SettingsBindFlags.DEFAULT);
 
-        this.notifications.add(this.field_clear_notification_toggle);
-        this.notifications.add(this.field_cycle_notification_toggle)
-        this.notifications.add(this.field_confirm_clear_toggle);
+        // Search options
+        this.field_case_sensitive_search = new Adw.SwitchRow({
+            title: _("Case-sensitive search")
+        });
+        this.field_regex_search = new Adw.SwitchRow({
+            title: _("Regular expression matching in search")
+        });
 
-        this.#buildShorcuts(this.shortcuts);
+        this.search.add(this.field_case_sensitive_search);
+        this.search.add(this.field_regex_search);
 
-        this.schema.bind(PrefsFields.HISTORY_SIZE, this.field_size, 'value', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.CASE_SENSITIVE_SEARCH, this.field_case_sensitive_search, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.REGEX_SEARCH, this.field_regex_search, 'active', Gio.SettingsBindFlags.DEFAULT);
+
+        // Excluded apps UI
+        this.field_exclusion_row = new Adw.ExpanderRow({
+            title: _("Exclude Apps (wm_class names)"),
+            subtitle: _("Clipboard history disabled for these apps")
+        });
+        this.field_exclusion_row.set_enable_expansion(false);
+        this.field_exclusion_row.set_expanded(false);
+
+        this.field_exclusion_row_add_button = new Gtk.Button({
+            icon_name: 'list-add-symbolic'
+        });
+
+        this.field_exclusion_row_add_button.connect('clicked', () => {
+            this.field_exclusion_row_add_button.set_sensitive(false);
+            this.excluded_row_counter++;
+            this.field_exclusion_row.set_expanded(true);
+            this.field_exclusion_row.add_row(this.#createExcludedAppInputRow());
+        });
+
+        this.field_exclusion_row.add_suffix(this.field_exclusion_row_add_button);
+
+        this.field_clear_history_on_interval = new Adw.SwitchRow({
+            title: _("Clear clipboard history on interval")
+        });
+
+        this.field_clear_history_interval = new Adw.SpinRow({
+            title: _("Interval (minutes)"),
+            adjustment: new Gtk.Adjustment({
+                lower: 1,
+                upper: 1440,
+                step_increment: 1
+            })
+        });
+
+        this.schema.bind(PrefsFields.CLEAR_HISTORY_ON_INTERVAL, this.field_clear_history_on_interval, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.CLEAR_HISTORY_INTERVAL, this.field_clear_history_interval, 'value', Gio.SettingsBindFlags.DEFAULT);
+
+        this.behavior.add(this.field_exclusion_row);
+
+        this.shortcuts.add(this._createShortcutRow(_('Toggle menu'), PrefsFields.BINDING_TOGGLE_MENU));
+        this.shortcuts.add(this._createShortcutRow(_('Previous entry'), PrefsFields.BINDING_PREV_ENTRY));
+        this.shortcuts.add(this._createShortcutRow(_('Next entry'), PrefsFields.BINDING_NEXT_ENTRY));
+        this.shortcuts.add(this._createShortcutRow(_('Clear history'), PrefsFields.BINDING_CLEAR_HISTORY));
+        this.shortcuts.add(this._createShortcutRow(_('Toggle private mode'), PrefsFields.BINDING_PRIVATE_MODE));
+
+        this.about.add(this._createLinkRow(_('Source code'), 'https://github.com/Tudmotu/gnome-shell-extension-clipboard-indicator'));
+        this.about.add(this._createLinkRow(_('Report an issue'), 'https://github.com/Tudmotu/gnome-shell-extension-clipboard-indicator/issues'));
+
+        // Bindings
         this.schema.bind(PrefsFields.PREVIEW_SIZE, this.field_preview_size, 'value', Gio.SettingsBindFlags.DEFAULT);
-        this.schema.bind(PrefsFields.CACHE_FILE_SIZE, this.field_cache_size, 'value', Gio.SettingsBindFlags.DEFAULT);
-        this.schema.bind(PrefsFields.CACHE_ONLY_FAVORITE, this.field_cache_disable, 'active', Gio.SettingsBindFlags.DEFAULT);
-        this.schema.bind(PrefsFields.NOTIFY_ON_COPY, this.field_clear_notification_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
-        this.schema.bind(PrefsFields.NOTIFY_ON_CYCLE, this.field_cycle_notification_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
-        this.schema.bind(PrefsFields.CONFIRM_ON_CLEAR, this.field_confirm_clear_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
-        this.schema.bind(PrefsFields.MOVE_ITEM_FIRST, this.field_move_item_first, 'active', Gio.SettingsBindFlags.DEFAULT);
-        this.schema.bind(PrefsFields.KEEP_SELECTED_ON_CLEAR, this.field_keep_selected_on_clear, 'active', Gio.SettingsBindFlags.DEFAULT);
-        this.schema.bind(PrefsFields.TOPBAR_DISPLAY_MODE_ID, this.field_display_mode, 'selected', Gio.SettingsBindFlags.DEFAULT);
-        this.schema.bind(PrefsFields.DISABLE_DOWN_ARROW, this.field_disable_down_arrow, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.HISTORY_SIZE, this.field_history_size, 'value', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.CACHE_SIZE, this.field_cache_size, 'value', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.TOPBAR_PREVIEW_SIZE, this.field_topbar_preview_size, 'value', Gio.SettingsBindFlags.DEFAULT);
-        this.schema.bind(PrefsFields.STRIP_TEXT, this.field_strip_text, 'active', Gio.SettingsBindFlags.DEFAULT);
-        this.schema.bind(PrefsFields.PASTE_BUTTON, this.field_paste_button, 'active', Gio.SettingsBindFlags.DEFAULT);
-        this.schema.bind(PrefsFields.PINNED_ON_BOTTOM, this.field_pinned_on_bottom, 'active', Gio.SettingsBindFlags.DEFAULT);
-        this.schema.bind(PrefsFields.ENABLE_KEYBINDING, this.field_keybinding_activation, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.TOPBAR_DISPLAY_MODE_ID, this.field_topbar_display_mode, 'selected', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.DELETE, this.field_delete, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.MOVE_ITEM_FIRST, this.field_move_first, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.NOTIFY_ON_COPY, this.field_notify_on_copy, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.NOTIFY_ON_CYCLE, this.field_notify_on_cycle, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.ENABLE_KEYBINDING, this.field_enable_keybinding, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.CLEAR_ON_BOOT, this.field_clear_on_boot, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.PASTE_ON_SELECT, this.field_paste_on_select, 'active', Gio.SettingsBindFlags.DEFAULT);
-        this.schema.bind(PrefsFields.CACHE_IMAGES, this.field_cache_images, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.DISABLE_DOWN_ARROW, this.field_disable_down_arrow, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.STRIP_TEXT, this.field_strip_text, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.KEEP_SELECTED_ON_CLEAR, this.field_keep_selected, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.PASTE_BUTTON, this.field_paste_button, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.PINNED_ON_BOTTOM, this.field_pinned_on_bottom, 'active', Gio.SettingsBindFlags.DEFAULT);
 
         this.#fetchExludedAppsList();
-    }
-
-    #createDisplayModeOptions () {
-        let options = [
-            _("Icon"),
-            _("Clipboard Content"),
-            _("Both"),
-            _("Neither")
-        ];
-        let liststore = new Gtk.StringList();
-        for (let option of options) {
-            liststore.append(option)
-        }
-        return liststore;
-    }
-
-    #shortcuts = {
-        [PrefsFields.BINDING_PRIVATE_MODE]: _("Private mode"),
-        [PrefsFields.BINDING_TOGGLE_MENU]: _("Toggle the menu"),
-        [PrefsFields.BINDING_CLEAR_HISTORY]: _("Clear history"),
-        [PrefsFields.BINDING_PREV_ENTRY]: _("Previous entry"),
-        [PrefsFields.BINDING_NEXT_ENTRY]: _("Next entry")
-    };
-
-    #buildShorcuts (group) {
-        this.field_keybinding_activation = new Adw.SwitchRow({
-            title: _("Enable shortcuts")
-        });
-
-        group.add(this.field_keybinding_activation);
-
-        for (const [pref, title] of Object.entries(this.#shortcuts)) {
-            const row = new Adw.ActionRow({
-                title
-            });
-
-            row.add_suffix(this.#createShortcutButton(pref));
-
-            group.add(row);
-        }
-    }
-
-    #createShortcutButton (pref) {
-        const button = new Gtk.Button({
-            has_frame: false
-        });
-
-        const setLabelFromSettings = () => {
-            const originalValue = this.schema.get_strv(pref)[0];
-
-            if (!originalValue) {
-                button.set_label(_('Disabled'));
-            }
-            else {
-                button.set_label(originalValue);
-            }
-        };
-
-        const startEditing = () => {
-            button.isEditing = button.label;
-            button.set_label(_('Enter shortcut'));
-        };
-
-        const revertEditing = () => {
-            button.set_label(button.isEditing);
-            button.isEditing = null;
-        };
-
-        const stopEditing = () => {
-            setLabelFromSettings();
-            button.isEditing = null;
-        };
-
-        setLabelFromSettings();
-
-        button.connect('clicked', () => {
-            if (button.isEditing) {
-                revertEditing();
-                return;
-            }
-
-            startEditing();
-
-            const eventController = new Gtk.EventControllerKey();
-            button.add_controller(eventController);
-
-            let debounceTimeoutId = null;
-            const connectId = eventController.connect('key-pressed', (_ec, keyval, keycode, mask) => {
-                if (debounceTimeoutId) clearTimeout(debounceTimeoutId);
-
-                mask = mask & Gtk.accelerator_get_default_mod_mask();
-
-                if (mask === 0) {
-                    switch (keyval) {
-                        case Gdk.KEY_Escape:
-                            revertEditing();
-                            return Gdk.EVENT_STOP;
-                        case Gdk.KEY_BackSpace:
-                            this.schema.set_strv(pref, []);
-                            setLabelFromSettings();
-                            stopEditing();
-                            eventController.disconnect(connectId);
-                            return Gdk.EVENT_STOP;
-                    }
-                }
-
-                const selectedShortcut = Gtk.accelerator_name_with_keycode(
-                    null,
-                    keyval,
-                    keycode,
-                    mask
-                );
-
-                debounceTimeoutId = setTimeout(() => {
-                    eventController.disconnect(connectId);
-                    this.schema.set_strv(pref, [selectedShortcut]);
-                    stopEditing();
-                }, 400);
-
-                return Gdk.EVENT_STOP;
-            });
-
-            button.show();
-        });
-
-        return button;
-    }
-
-    #excluded_row_counter = 0;
-
-    set excluded_row_counter(value) {
-        this.#excluded_row_counter = value;
         this.#updateExcludedAppRow();
     }
 
-    get excluded_row_counter() {
-        return this.#excluded_row_counter;
+    _createShortcutRow (title, settingName) {
+        const row = new Adw.ActionRow({ title });
+        const btn = new Gtk.Button({
+            has_frame: true,
+            child: new Gtk.ShortcutLabel({
+                disabled_text: _("Disabled"),
+                accelerator: this.schema.get_strv(settingName)[0] || ''
+            })
+        });
+
+        btn.connect('clicked', () => {
+            const dlg = new Gtk.Dialog({
+                modal: true,
+                transient_for: row.get_root()
+            });
+
+            const content = dlg.get_content_area();
+            const ctrl = new Gtk.ShortcutsEditor({
+                accelerator: btn.child.accelerator,
+                can_clear: true
+            });
+
+            content.append(ctrl);
+
+            dlg.connect('response', () => {
+                const accels = ctrl.get_accelerator() ? [ctrl.get_accelerator()] : [];
+                this.schema.set_strv(settingName, accels);
+                btn.child.set_accelerator(ctrl.get_accelerator() || '');
+                dlg.destroy();
+            });
+
+            dlg.add_button(_('Cancel'), Gtk.ResponseType.CANCEL);
+            dlg.add_button(_('OK'), Gtk.ResponseType.OK);
+            dlg.show();
+        });
+
+        row.add_suffix(btn);
+        return row;
     }
 
-    #createExcludedAppInputRow() {
-        const entry_row = new Adw.ActionRow();
-        const entry = new Gtk.Entry({
-            placeholderText: _('Window class name, e.g. "KeePassXC"'),
-            halign: Gtk.Align.FILL,
-            valign: Gtk.Align.CENTER,
-            hexpand: true,
+    _createLinkRow (title, url) {
+        const row = new Adw.ActionRow({ title });
+        const btn = new Gtk.Button({
+            has_frame: true,
+            child: new Gtk.Image({
+                icon_name: 'emblem-system-symbolic'
+            })
         });
 
-        entry.connect('map', () => {
-            entry.grab_focus();
+        btn.connect('clicked', () => {
+            Gtk.show_uri(null, url, Gdk.CURRENT_TIME);
         });
 
-        const ok_button = new Gtk.Button({
-            cssClasses: ['flat'],
-            iconName: 'emblem-ok-symbolic',
-            valign: Gtk.Align.CENTER,
-            halign: Gtk.Align.CENTER,
-        });
-
-        ok_button.connect('clicked', () => {
-            const text = entry.get_text();
-            if (text !== null && text.trim() !== '') {
-                this.field_exclusion_row.remove(entry_row);
-                this.field_exclusion_row.add_row(this.#createExludedAppRow(text.trim()));
-                this.field_exclusion_row_add_button.set_sensitive(true);
-                this.schema.set_strv('excluded-apps', [...this.schema.get_strv('excluded-apps'), text.trim()]);
-            }
-        });
-
-        entry.connect('activate', () => {
-            ok_button.emit('clicked');
-        });
-
-        const cancel_button = new Gtk.Button({
-            cssClasses: ['flat'],
-            iconName: 'window-close-symbolic',
-            valign: Gtk.Align.CENTER,
-            halign: Gtk.Align.CENTER,
-        });
-
-        cancel_button.connect('clicked', () => {
-            this.field_exclusion_row.remove(entry_row);
-            this.field_exclusion_row_add_button.set_sensitive(true);
-            this.excluded_row_counter--;
-            this.field_exclusion_row_add_button.set_sensitive(true);
-        });
-
-        entry_row.add_prefix(entry);
-        entry_row.add_suffix(ok_button);
-        entry_row.add_suffix(cancel_button);
-
-        return entry_row;
+        row.add_suffix(btn);
+        return row;
     }
 
-    #createExludedAppRow(app_class_name) {
-        const excluded_row = new Adw.ActionRow({
-            title: app_class_name,
+    #createExcludedAppInputRow () {
+        const row = new Adw.EntryRow({
+            title: _("Add wm_class to exclude"),
+            show_apply_button: true
         });
 
-        const remove_button = new Gtk.Button({
-            cssClasses: ['destructive-action'],
-            iconName: 'edit-delete-symbolic',
-            valign: Gtk.Align.CENTER,
-            halign: Gtk.Align.CENTER,
+        row.connect('apply', () => {
+            const value = row.text.trim();
+            if (!value) return;
+
+            row.set_title(value);
+            row.set_show_apply_button(false);
+            row.set_activatable_widget(null);
+            row.set_activatable(false);
+            row.set_sensitive(false);
+            this.schema.set_strv('excluded-apps', [...this.schema.get_strv('excluded-apps'), value]);
+
+            this.field_exclusion_row_add_button.set_sensitive(true);
         });
-        remove_button.connect('clicked', () => {
-            this.field_exclusion_row.remove(excluded_row);
-            const updated_list = this.schema.get_strv('excluded-apps').filter(app => app !== app_class_name);
-            this.schema.set_strv('excluded-apps', updated_list);
+
+        return row;
+    }
+
+    #createExludedAppRow (value) {
+        const row = new Adw.ActionRow({
+            title: value
+        });
+
+        const del = new Gtk.Button({
+            has_frame: true,
+            icon_name: 'user-trash-symbolic'
+        });
+
+        del.connect('clicked', () => {
+            const list = this.schema.get_strv('excluded-apps').filter(x => x !== value);
+            this.schema.set_strv('excluded-apps', list);
+            this.field_exclusion_row.remove(row);
             this.excluded_row_counter--;
+            this.#updateExcludedAppRow();
         });
-        excluded_row.add_suffix(remove_button);
 
-        return excluded_row;
+        row.add_suffix(del);
+        return row;
     }
 
     #fetchExludedAppsList() {

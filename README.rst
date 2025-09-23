@@ -85,4 +85,9 @@ Please follow these guidelines when contributing:
 - Look at the list of previous PRs before you open a PR, if your PR conflicts with another, it will be rejected
 - If you have a feature idea, open an issue and discuss it there before implementing. DO NOT open a PR as a platform for discussion
 
-Note: I have very little time to maintain this project, so expect long (months) of response time. Apologies in advance.
+Release Cycle
+^^^^^^^^^^^^^
+This project loosely follows the release cycle of GNOME. That means it will
+usually receive 2 updates a year, close to the release of a new major GNOME
+version. If there are features you'd like to implement or suggest, it is advised
+to start the discussion a month or two before a GNOME release.
