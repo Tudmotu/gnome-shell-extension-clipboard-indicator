@@ -928,7 +928,7 @@ const ClipboardIndicator = GObject.registerClass({
         if (NEXT_HISTORY_CLEAR === -1) { //new timer
             this._scheduleNextHistoryClear();
         }
-        else if (NEXT_HISTORY_CLEAR < currentTime) { // timer expired
+        else if (NEXT_HISTORY_CLEAR < currentTime) { //timer expired
             this._clearHistory(true);
             this._scheduleNextHistoryClear();
         }
@@ -1020,8 +1020,12 @@ const ClipboardIndicator = GObject.registerClass({
         let seconds = Math.floor(timeLeft % 60);
 
         let formattedTime = '';
-        if (hours > 0) formattedTime += `${hours}h `;
-        if (minutes > 0) formattedTime += `${minutes}m `;
+        if (hours > 0) {
+            formattedTime += `${hours}h `;
+        }
+        if (minutes > 0) {
+            formattedTime += `${minutes}m `;
+        }
         formattedTime += `${seconds}s`;
         this.timerLabel.set_text(formattedTime);
     }
@@ -1111,17 +1115,17 @@ const ClipboardIndicator = GObject.registerClass({
     _onPrivateModeSwitch () {
         let that = this;
         PRIVATEMODE = this.privateModeMenuItem.state;
-        // Hide history lists in private mode
+        // We hide the history in private ModeTypee because it will be out of sync (selected item will not reflect clipboard)
         this.scrollViewMenuSection.actor.visible = !PRIVATEMODE;
         this.scrollViewFavoritesMenuSection.actor.visible = !PRIVATEMODE;
-
+        // If we get out of private mode then we restore the clipboard to old state
         if (!PRIVATEMODE) {
             let selectList = this.clipItemsRadioGroup.filter((item) => !!item.currentlySelected);
 
             if (selectList.length) {
                 this._selectMenuItem(selectList[0]);
             } else {
-                // Nothing to return to, clear clipboard
+                // Nothing to return to, let's empty it instead
                 this.#clearClipboard();
             }
 
@@ -1201,7 +1205,7 @@ const ClipboardIndicator = GObject.registerClass({
                 if (mItem.icoBtn) mItem.icoBtn.visible = DELETE_ENABLED;
             });
 
-            // update topbar & content
+            //update topbar
             this._updateTopbarLayout();
             that.#updateIndicatorContent(await this.#getClipboardContent());
 
