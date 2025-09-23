@@ -338,12 +338,12 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     #hideElements() {
-      if (this.menu.box.contains(this._entryItem)) this.menu.box.remove_child(this._entryItem);
-      if (this.menu.box.contains(this.favoritesSeparator)) this.menu.box.remove_child(this.favoritesSeparator);
-      if (this.menu.box.contains(this.historySeparator)) this.menu.box.remove_child(this.historySeparator);
-      if (this.clearMenuItem?.actor && this.menu.box.contains(this.clearMenuItem.actor)) // <-- guard both
-        this.menu.box.remove_child(this.clearMenuItem.actor);
-      if (this.menu.box.contains(this.emptyStateSection)) this.menu.box.remove_child(this.emptyStateSection);
+        if (this.menu.box.contains(this._entryItem)) this.menu.box.remove_child(this._entryItem);
+        if (this.menu.box.contains(this.favoritesSeparator)) this.menu.box.remove_child(this.favoritesSeparator);
+        if (this.menu.box.contains(this.historySeparator)) this.menu.box.remove_child(this.historySeparator);
+        if (this.clearMenuItem?.actor && this.menu.box.contains(this.clearMenuItem.actor)) // <-- guard both
+          this.menu.box.remove_child(this.clearMenuItem.actor);
+        if (this.menu.box.contains(this.emptyStateSection)) this.menu.box.remove_child(this.emptyStateSection);
     }
 
     #showElements() {
@@ -982,26 +982,26 @@ const ClipboardIndicator = GObject.registerClass({
         SHOW_PRIVATE_MODE         = settings.get_boolean(PrefsFields.SHOW_PRIVATE_MODE);
         SHOW_SETTINGS_BUTTON      = settings.get_boolean(PrefsFields.SHOW_SETTINGS_BUTTON);
         SHOW_CLEAR_HISTORY_BUTTON = settings.get_boolean(PrefsFields.SHOW_CLEAR_HISTORY_BUTTON);
-        MAX_REGISTRY_LENGTH       = settings.get_int(PrefsFields.HISTORY_SIZE);
-        MAX_ENTRY_LENGTH          = settings.get_int(PrefsFields.PREVIEW_SIZE);
-        CACHE_ONLY_FAVORITE       = settings.get_boolean(PrefsFields.CACHE_ONLY_FAVORITE);
-        DELETE_ENABLED            = settings.get_boolean(PrefsFields.DELETE);
-        MOVE_ITEM_FIRST           = settings.get_boolean(PrefsFields.MOVE_ITEM_FIRST);
-        NOTIFY_ON_COPY            = settings.get_boolean(PrefsFields.NOTIFY_ON_COPY);
-        NOTIFY_ON_CYCLE           = settings.get_boolean(PrefsFields.NOTIFY_ON_CYCLE);
-        CONFIRM_ON_CLEAR          = settings.get_boolean(PrefsFields.CONFIRM_ON_CLEAR);
-        ENABLE_KEYBINDING         = settings.get_boolean(PrefsFields.ENABLE_KEYBINDING);
-        MAX_TOPBAR_LENGTH         = settings.get_int(PrefsFields.TOPBAR_PREVIEW_SIZE);
-        TOPBAR_DISPLAY_MODE       = settings.get_int(PrefsFields.TOPBAR_DISPLAY_MODE_ID);
-        CLEAR_ON_BOOT             = settings.get_boolean(PrefsFields.CLEAR_ON_BOOT);
-        PASTE_ON_SELECT           = settings.get_boolean(PrefsFields.PASTE_ON_SELECT);
-        DISABLE_DOWN_ARROW        = settings.get_boolean(PrefsFields.DISABLE_DOWN_ARROW);
-        STRIP_TEXT                = settings.get_boolean(PrefsFields.STRIP_TEXT);
-        KEEP_SELECTED_ON_CLEAR    = settings.get_boolean(PrefsFields.KEEP_SELECTED_ON_CLEAR);
-        PASTE_BUTTON              = settings.get_boolean(PrefsFields.PASTE_BUTTON);
-        PINNED_ON_BOTTOM          = settings.get_boolean(PrefsFields.PINNED_ON_BOTTOM);
-        CACHE_IMAGES              = settings.get_boolean(PrefsFields.CACHE_IMAGES);
-        EXCLUDED_APPS             = settings.get_strv(PrefsFields.EXCLUDED_APPS);
+        MAX_REGISTRY_LENGTH    = settings.get_int(PrefsFields.HISTORY_SIZE);
+        MAX_ENTRY_LENGTH       = settings.get_int(PrefsFields.PREVIEW_SIZE);
+        CACHE_ONLY_FAVORITE    = settings.get_boolean(PrefsFields.CACHE_ONLY_FAVORITE);
+        DELETE_ENABLED         = settings.get_boolean(PrefsFields.DELETE);
+        MOVE_ITEM_FIRST        = settings.get_boolean(PrefsFields.MOVE_ITEM_FIRST);
+        NOTIFY_ON_COPY         = settings.get_boolean(PrefsFields.NOTIFY_ON_COPY);
+        NOTIFY_ON_CYCLE        = settings.get_boolean(PrefsFields.NOTIFY_ON_CYCLE);
+        CONFIRM_ON_CLEAR       = settings.get_boolean(PrefsFields.CONFIRM_ON_CLEAR);
+        ENABLE_KEYBINDING      = settings.get_boolean(PrefsFields.ENABLE_KEYBINDING);
+        MAX_TOPBAR_LENGTH      = settings.get_int(PrefsFields.TOPBAR_PREVIEW_SIZE);
+        TOPBAR_DISPLAY_MODE    = settings.get_int(PrefsFields.TOPBAR_DISPLAY_MODE_ID);
+        CLEAR_ON_BOOT          = settings.get_boolean(PrefsFields.CLEAR_ON_BOOT);
+        PASTE_ON_SELECT        = settings.get_boolean(PrefsFields.PASTE_ON_SELECT);
+        DISABLE_DOWN_ARROW     = settings.get_boolean(PrefsFields.DISABLE_DOWN_ARROW);
+        STRIP_TEXT             = settings.get_boolean(PrefsFields.STRIP_TEXT);
+        KEEP_SELECTED_ON_CLEAR = settings.get_boolean(PrefsFields.KEEP_SELECTED_ON_CLEAR);
+        PASTE_BUTTON           = settings.get_boolean(PrefsFields.PASTE_BUTTON);
+        PINNED_ON_BOTTOM       = settings.get_boolean(PrefsFields.PINNED_ON_BOTTOM);
+        CACHE_IMAGES           = settings.get_boolean(PrefsFields.CACHE_IMAGES);
+        EXCLUDED_APPS          = settings.get_strv(PrefsFields.EXCLUDED_APPS);
     }
 
     async _onSettingsChange () {
