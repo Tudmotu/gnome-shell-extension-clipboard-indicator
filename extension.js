@@ -489,10 +489,14 @@ const ClipboardIndicator = GObject.registerClass({
         return null;
     }
 
-    #selectNextMenuItem(menuItem) {
-      const next = this._findNextMenuItem(menuItem);
-      if (next) next.actor.grab_key_focus();
-      else this.privateModeMenuItem?.actor?.grab_key_focus();
+    #selectNextMenuItem (menuItem) {
+        let nextMenuItem = this._findNextMenuItem(menuItem);
+
+        if (nextMenuItem) {
+            nextMenuItem.actor.grab_key_focus();
+        } else {
+            this.privateModeMenuItem?.actor?.grab_key_focus();
+        }
     }
 
     _addEntry (entry, autoSelect, autoSetClip) {
