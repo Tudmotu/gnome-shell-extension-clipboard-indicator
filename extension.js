@@ -277,7 +277,6 @@ const ClipboardIndicator = GObject.registerClass({
             0
         );
 
-        // Interval countdown adornments remain intact
         let timerBox = new St.BoxLayout({
             x_align: Clutter.ActorAlign.END,
             x_expand: true
@@ -991,6 +990,7 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     _resetHistoryClearTimer() {
+        //basically just reset and stop the timer
         if (this._historyClearTimeoutId) {
             clearTimeout(this._historyClearTimeoutId);
             this._historyClearTimeoutId = null;
@@ -1192,13 +1192,13 @@ const ClipboardIndicator = GObject.registerClass({
         try {
             var that = this;
 
-            // Load settings into vars
+            // Load the settings into variables
             that._fetchSettings();
 
-            // Trim if history size shrank
+            // Remove old entries in case the registry size changed
             that._removeOldestEntries();
 
-            // Re-label items (preview size), and update button visibilities
+            // Re-set menu-items lables in case preview size changed
             this._getAllIMenuItems().forEach(function (mItem) {
                 that._setEntryLabel(mItem);
                 mItem.pasteBtn.visible = PASTE_BUTTON;
