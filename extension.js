@@ -742,6 +742,11 @@ const ClipboardIndicator = GObject.registerClass({
             }
         }
 
+        // Ensure MOVE_ITEM_FIRST still happens when PASTE_ON_SELECT fast-path skips _refreshIndicator()
+        if (PASTE_ON_SELECT && MOVE_ITEM_FIRST && !menuItem.entry.isFavorite()) {
+            this._moveItemFirst(menuItem);
+        }
+
         menuItem.menu.close();
     }
 
