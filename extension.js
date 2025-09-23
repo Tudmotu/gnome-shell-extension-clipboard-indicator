@@ -1155,10 +1155,8 @@ const ClipboardIndicator = GObject.registerClass({
             const index = i + 1; // 1-based for display
 
             if (NOTIFY_ON_CYCLE) {
-                that._showNotification(index + ' / ' + menuItems.length + ': ' +
-                                      nextItem.entry.getStringValue());
+                that._showNotification(index + ' / ' + menuItems.length + ': ' + nextItem.entry.getStringValue());
             }
-
             if (MOVE_ITEM_FIRST) {
                 // Reorder first, then select on idle so we pick up the new actor
                 that._moveItemFirst(nextItem);
@@ -1180,27 +1178,25 @@ const ClipboardIndicator = GObject.registerClass({
         this.menu.toggle();
     }
 
-    #pasteItem(menuItem) {
-      this.menu.close();
-      this.#pastePending = true;
-      this.#preventIndicatorUpdate = true;
-
-      // fail-safe: clear in case owner-changed never comes
-      if (this._preventResetId) {
-        GLib.source_remove(this._preventResetId);
-        this._preventResetId = 0;
-      }
-      this._preventResetId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 500, () => {
-        this.#preventIndicatorUpdate = false;
-        this.#pastePending = false;                  // <-- also clear pending
-        this._preventResetId = 0;
-        return GLib.SOURCE_REMOVE;
-      });
-
-      this.#updateClipboard(menuItem.entry);
+    #pasteItem (menuItem) {
+        this.menu.close();
+        this.#pastePending = true;
+        this.#preventIndicatorUpdate = true;
+        // fail-safe: clear in case owner-changed never comes
+        if (this._preventResetId) {
+          GLib.source_remove(this._preventResetId);
+          this._preventResetId = 0;
+        }
+        this._preventResetId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 500, () => {
+          this.#preventIndicatorUpdate = false;
+          this.#pastePending = false;
+          this._preventResetId = 0;
+          return GLib.SOURCE_REMOVE;
+        });
+        this.#updateClipboard(menuItem.entry);
     }
 
-    _keyboardPaste () {             // helper: paste via Shift+Insert
+    _keyboardPaste () {
         if (this.keyboard.purpose === Clutter.InputContentPurpose.TERMINAL) {
             this.keyboard.press(Clutter.KEY_Control_L);
             this.keyboard.press(Clutter.KEY_Shift_L);
@@ -1217,20 +1213,20 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     #clearTimeouts () {
-      if (this._setFocusOnOpenIdleId) {
-        GLib.source_remove(this._setFocusOnOpenIdleId);
-        this._setFocusOnOpenIdleId = 0;
-      }
-      if (this.#previewIdleId) {
-        GLib.source_remove(this.#previewIdleId);
-        this.#previewIdleId = 0;
-      }
-      if (this._preventResetId) {                    // <-- new
-        GLib.source_remove(this._preventResetId);
-        this._preventResetId = 0;
-      }
+        if (this._setFocusOnOpenIdleId) {
+          GLib.source_remove(this._setFocusOnOpenIdleId);
+          this._setFocusOnOpenIdleId = 0;
+        }
+        if (this.#previewIdleId) {
+          GLib.source_remove(this.#previewIdleId);
+          this.#previewIdleId = 0;
+        }
+        if (this._preventResetId) {
+          GLib.source_remove(this._preventResetId);
+          this._preventResetId = 0;
+        }
     }
-    
+
     #clearClipboard () {
         this.extension.clipboard.set_text(CLIPBOARD_TYPE, "");
         this.#updateIndicatorContent(null);
