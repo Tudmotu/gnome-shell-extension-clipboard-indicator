@@ -525,21 +525,21 @@ const ClipboardIndicator = GObject.registerClass({
             AnimationUtils.ensureActorVisibleInScrollView(viewToScroll, menuItem);
         });
         menuItem.actor.connect('key-press-event', (actor, event) => {
-          switch (event.get_key_symbol()) {
-            case Clutter.KEY_Delete:
-              if (!DELETE_ENABLED) return Clutter.EVENT_STOP;
-              this.#selectNextMenuItem(menuItem);
-              this._removeEntry(menuItem, 'delete');
-              return Clutter.EVENT_STOP;
-            case Clutter.KEY_p:
-              this.#selectNextMenuItem(menuItem);
-              this._favoriteToggle(menuItem);
-              return Clutter.EVENT_STOP;
-            case Clutter.KEY_v:
-              this.#pasteItem(menuItem);
-              return Clutter.EVENT_STOP;
-          }
-          return Clutter.EVENT_PROPAGATE;
+            switch (event.get_key_symbol()) {
+              case Clutter.KEY_Delete:
+                if (!DELETE_ENABLED) return Clutter.EVENT_STOP;
+                this.#selectNextMenuItem(menuItem);
+                this._removeEntry(menuItem, 'delete');
+                return Clutter.EVENT_STOP;
+              case Clutter.KEY_p:
+                this.#selectNextMenuItem(menuItem);
+                this._favoriteToggle(menuItem);
+                return Clutter.EVENT_STOP;
+              case Clutter.KEY_v:
+                this.#pasteItem(menuItem);
+                return Clutter.EVENT_STOP;
+            }
+            return Clutter.EVENT_PROPAGATE;
         });
 
         this._setEntryLabel(menuItem);
@@ -605,8 +605,8 @@ const ClipboardIndicator = GObject.registerClass({
         menuItem.icoBtn = icoBtn;
         menuItem.icoBtn.visible = DELETE_ENABLED;
         menuItem.deletePressId = icoBtn.connect('clicked', () => {
-          if (!DELETE_ENABLED) return;
-          this._removeEntry(menuItem, 'delete');
+            if (!DELETE_ENABLED) return;
+            this._removeEntry(menuItem, 'delete');
         });
 
         if (entry.isFavorite()) {
@@ -765,19 +765,19 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     async _onSelectionChange (selection, selectionType, selectionSource) {
-      if (selectionType !== Meta.SelectionType.SELECTION_CLIPBOARD) return;
+        if (selectionType !== Meta.SelectionType.SELECTION_CLIPBOARD) return;
 
-      if (this.#pastePending) {
-        this.#pastePending = null;
-        if (this._preventResetId) {
-          GLib.source_remove(this._preventResetId);
-          this._preventResetId = 0;
+        if (this.#pastePending) {
+          this.#pastePending = null;
+          if (this._preventResetId) {
+            GLib.source_remove(this._preventResetId);
+            this._preventResetId = 0;
+          }
+          this._keyboardPaste();
+          this.#preventIndicatorUpdate = false;
+          return;
         }
-        this._keyboardPaste();
-        this.#preventIndicatorUpdate = false;
-        return;
-      }
-      this._refreshIndicator();
+        this._refreshIndicator();
     }
 
     async _refreshIndicator () {
