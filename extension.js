@@ -206,6 +206,12 @@ const ClipboardIndicator = GObject.registerClass({
             this._setFocusOnOpenTimeout = setTimeout(() => {
                 if (!open) return;
 
+                // If private mode is on but the toggle is hidden, programmatically turn it off
+                if (PRIVATEMODE && !SHOW_PRIVATE_MODE) {
+                    this.privateModeMenuItem.setToggleState(false);
+                    this._onPrivateModeSwitch();
+                }
+
                 if (SHOW_SEARCH_BAR && this.clipItemsRadioGroup.length > 0) {
                     that.searchEntry.set_text('');
                     global.stage.set_key_focus(that.searchEntry);
@@ -374,7 +380,7 @@ const ClipboardIndicator = GObject.registerClass({
         }
 
         // Search bar
-        if (SHOW_SEARCH_BAR) {
+        if (SHOW_SEARCH_BAR && !PRIVATEMODE) {
             if (!this.menu.box.contains(this._entryItem))
                 this.menu.box.insert_child_at_index(this._entryItem, 0);
         } else {
@@ -384,7 +390,7 @@ const ClipboardIndicator = GObject.registerClass({
 
         // Favorites separator (only when there are favorites and any items at all)
         if (this.clipItemsRadioGroup.length > 0) {
-            if (this.favoritesSection._getMenuItems().length > 0) {
+            if (this.favoritesSection._getMenuItems().length > 0 && !PRIVATEMODE) {
                 if (this.menu.box.contains(this.favoritesSeparator) === false) {
                     this.menu.box.insert_child_above(this.favoritesSeparator, this.scrollViewFavoritesMenuSection.actor);
                 }
@@ -396,7 +402,7 @@ const ClipboardIndicator = GObject.registerClass({
 
         // History separator (between history and toggled buttons)
         if (this.clipItemsRadioGroup.length > 0 &&
-            this.historySection._getMenuItems().length > 0 &&
+            this.historySection._getMenuItems().length > 0 && !PRIVATEMODE &&
             (SHOW_PRIVATE_MODE || SHOW_SETTINGS_BUTTON || SHOW_CLEAR_HISTORY_BUTTON)) {
             if (!this.menu.box.contains(this.historySeparator))
                 this.menu.box.insert_child_above(this.historySeparator, this.scrollViewMenuSection.actor);
@@ -435,7 +441,7 @@ const ClipboardIndicator = GObject.registerClass({
             this.menu.box.insert_child_at_index(this.privateModeMenuItem.actor, index++);
         if (SHOW_SETTINGS_BUTTON && this.settingsMenuItem)
             this.menu.box.insert_child_at_index(this.settingsMenuItem.actor, index++);
-        if (SHOW_CLEAR_HISTORY_BUTTON && this.clearMenuItem)
+        if (SHOW_CLEAR_HISTORY_BUTTON && this.clearMenuItem && !PRIVATEMODE)
             this.menu.box.insert_child_at_index(this.clearMenuItem.actor, index++);
     }
 
@@ -1158,7 +1164,7 @@ const ClipboardIndicator = GObject.registerClass({
         } else {
             this.hbox.add_style_class_name('private-mode');
             this.#updateIndicatorContent(null);
-            this.#hideElements();
+            this.#showElements();
         }
     }
 
