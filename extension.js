@@ -218,18 +218,21 @@ const ClipboardIndicator = GObject.registerClass({
             }, 50);
         });
 
-        // Favorites section
+        // Create menu sections for items
+        // Favorites
         that.favoritesSection = new PopupMenu.PopupMenuSection();
+
         that.scrollViewFavoritesMenuSection = new PopupMenu.PopupMenuSection();
         this.favoritesScrollView = new St.ScrollView({
             style_class: 'ci-history-menu-section',
             overlay_scrollbars: true
         });
         this.favoritesScrollView.add_child(that.favoritesSection.actor);
+
         that.scrollViewFavoritesMenuSection.actor.add_child(this.favoritesScrollView);
         this.favoritesSeparator = new PopupMenu.PopupSeparatorMenuItem();
 
-        // History section
+        // History
         that.historySection = new PopupMenu.PopupMenuSection();
         that.scrollViewMenuSection = new PopupMenu.PopupMenuSection();
         this.historyScrollView = new St.ScrollView({
@@ -237,7 +240,10 @@ const ClipboardIndicator = GObject.registerClass({
             overlay_scrollbars: true
         });
         this.historyScrollView.add_child(that.historySection.actor);
+
         that.scrollViewMenuSection.actor.add_child(this.historyScrollView);
+
+        // Add separator
         this.historySeparator = new PopupMenu.PopupSeparatorMenuItem();
 
         // Add sections ordered according to settings
@@ -250,7 +256,7 @@ const ClipboardIndicator = GObject.registerClass({
             that.menu.addMenuItem(that.scrollViewMenuSection);
         }
 
-        // Private mode switch (added/removed in #showElements)
+        // Private mode switch
         that.privateModeMenuItem = new PopupMenu.PopupSwitchMenuItem(
             _("Private mode"), PRIVATEMODE, { reactive: true });
         that.privateModeMenuItem.connect('toggled',
@@ -264,7 +270,7 @@ const ClipboardIndicator = GObject.registerClass({
             0
         );
 
-        // Clear history (added/removed in #showElements)
+        // Add 'Clear' button which removes all items from cache
         this.clearMenuItem = new PopupMenu.PopupMenuItem(_('Clear history'));
         this.clearMenuItem.insert_child_at_index(
             new St.Icon({
@@ -309,7 +315,7 @@ const ClipboardIndicator = GObject.registerClass({
 
         this.clearMenuItem.connect('activate', that._removeAll.bind(that));
 
-        // Settings (added/removed in #showElements)
+        // Add 'Settings' menu item to open settings
         this.settingsMenuItem = new PopupMenu.PopupMenuItem(_('Settings'));
         this.settingsMenuItem.insert_child_at_index(
             new St.Icon({
@@ -336,7 +342,7 @@ const ClipboardIndicator = GObject.registerClass({
             x_align: Clutter.ActorAlign.CENTER
         }));
 
-        // Load cached items
+        // Add cached items
         clipHistory.forEach(entry => this._addEntry(entry));
 
         if (lastIdx >= 0) {
@@ -441,6 +447,7 @@ const ClipboardIndicator = GObject.registerClass({
     items. It the entry is empty, the section is restored with all items
     set as visible. */
     _onSearchTextChanged () {
+
         // Text to be searched converted to lowercase if search is case insensitive
         let searchedText = this.searchEntry.get_text();
         if (!CASE_SENSITIVE_SEARCH) searchedText = searchedText.toLowerCase();
@@ -829,6 +836,7 @@ const ClipboardIndicator = GObject.registerClass({
 
         const focussedWindow = Shell.Global.get().display.focusWindow;
         const wmClass = focussedWindow?.get_wm_class();
+
         if (wmClass && EXCLUDED_APPS.includes(wmClass)) return; // Excluded app, do not.
 
         if (this.#refreshInProgress) return;
@@ -926,6 +934,8 @@ const ClipboardIndicator = GObject.registerClass({
             this._onHistoryIntervalClearSettingsChanged.bind(this)
         );
 
+
+
         if (!CLEAR_HISTORY_ON_INTERVAL) {
             this._updateIntervalTimer();
             return;
@@ -1015,6 +1025,7 @@ const ClipboardIndicator = GObject.registerClass({
         this.resetTimerButton.visible = CLEAR_HISTORY_ON_INTERVAL;
         this.timerLabel.visible = CLEAR_HISTORY_ON_INTERVAL;
         if (!CLEAR_HISTORY_ON_INTERVAL) return;
+
 
         let currentTime = Math.ceil(new Date().getTime() / 1000);
         let timeLeft = NEXT_HISTORY_CLEAR - currentTime;
@@ -1217,8 +1228,10 @@ const ClipboardIndicator = GObject.registerClass({
             that.#updateIndicatorContent(await this.#getClipboardContent());
 
             // Bind or unbind shortcuts
-            if (ENABLE_KEYBINDING) that._bindShortcuts();
-            else that._unbindShortcuts();
+            if (ENABLE_KEYBINDING) 
+                that._bindShortcuts();
+            else 
+                that._unbindShortcuts();
 
             // Respect UI toggles
             that.#showElements();
