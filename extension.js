@@ -389,7 +389,7 @@ const ClipboardIndicator = GObject.registerClass({
                     this.menu.box.insert_child_above(this.favoritesSeparator, this.scrollViewFavoritesMenuSection.actor);
                 }
             }
-            else if (this.menu.box.contains(this.favoritesSeparator)) {
+            else if (this.menu.box.contains(this.favoritesSeparator) === true) {
                 this.menu.box.remove_child(this.favoritesSeparator);
             }
         }
@@ -567,7 +567,6 @@ const ClipboardIndicator = GObject.registerClass({
                 this.favoritesScrollView : this.historyScrollView;
             AnimationUtils.ensureActorVisibleInScrollView(viewToScroll, menuItem);
         });
-
         menuItem.actor.connect('key-press-event', (actor, event) => {
             switch (event.get_key_symbol()) {
                 case Clutter.KEY_Delete:
@@ -1231,9 +1230,9 @@ const ClipboardIndicator = GObject.registerClass({
             that.#updateIndicatorContent(await this.#getClipboardContent());
 
             // Bind or unbind shortcuts
-            if (ENABLE_KEYBINDING) 
+            if (ENABLE_KEYBINDING)
                 that._bindShortcuts();
-            else 
+            else
                 that._unbindShortcuts();
 
             // Respect UI toggles
