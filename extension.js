@@ -838,7 +838,7 @@ const ClipboardIndicator = GObject.registerClass({
 
         const focussedWindow = Shell.Global.get().display.focusWindow;
         const wmClass = focussedWindow?.get_wm_class();
-
+        
         if (wmClass && EXCLUDED_APPS.includes(wmClass)) return; // Excluded app, do not.
 
         if (this.#refreshInProgress) return;
