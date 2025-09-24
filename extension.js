@@ -654,7 +654,7 @@ const ClipboardIndicator = GObject.registerClass({
 
         menuItem.actor.add_child(icoBtn);
         menuItem.icoBtn = icoBtn;
-        menuItem.deletePressId = icoBtn.connect('clicked', 
+        menuItem.deletePressId = icoBtn.connect('clicked',
             () => this._removeEntry(menuItem, 'delete')
         );
 
