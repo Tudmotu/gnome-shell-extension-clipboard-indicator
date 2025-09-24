@@ -110,6 +110,11 @@ class Settings {
             subtitle: _("Requires restarting the extension")
         });
 
+        this.field_show_search_bar = new Adw.SwitchRow({title: _("Show Search Bar")});
+        this.field_show_private_mode = new Adw.SwitchRow({title: _("Show Private Mode")});
+        this.field_show_settings_button = new Adw.SwitchRow({title: _("Show Settings Button")});
+        this.field_show_clear_history_button = new Adw.SwitchRow({title: _("Show Clear History Button")});
+
         this.field_clear_on_boot = new Adw.SwitchRow({
             title: _("Clear clipboard history on system reboot")
         });
@@ -184,15 +189,9 @@ class Settings {
         this.ui.add(this.field_keep_selected_on_clear);
         this.ui.add(this.field_paste_button);
         this.ui.add(this.field_pinned_on_bottom);
-
-        // Toggleable UI rows
-        this.field_show_search_bar = new Adw.SwitchRow({title: _("Show Search Bar")});
         this.ui.add(this.field_show_search_bar);
-        this.field_show_private_mode = new Adw.SwitchRow({title: _("Show Private Mode")});
         this.ui.add(this.field_show_private_mode);
-        this.field_show_settings_button = new Adw.SwitchRow({title: _("Show Settings Button")});
         this.ui.add(this.field_show_settings_button);
-        this.field_show_clear_history_button = new Adw.SwitchRow({title: _("Show Clear History Button")});
         this.ui.add(this.field_show_clear_history_button);
 
         this.behavior.add(this.field_paste_on_select);
