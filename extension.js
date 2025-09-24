@@ -570,7 +570,6 @@ const ClipboardIndicator = GObject.registerClass({
         menuItem.actor.connect('key-press-event', (actor, event) => {
             switch (event.get_key_symbol()) {
                 case Clutter.KEY_Delete:
-                    if (!DELETE_ENABLED) return Clutter.EVENT_STOP;
                     this.#selectNextMenuItem(menuItem);
                     this._removeEntry(menuItem, 'delete');
                     return Clutter.EVENT_STOP;
@@ -655,11 +654,9 @@ const ClipboardIndicator = GObject.registerClass({
 
         menuItem.actor.add_child(icoBtn);
         menuItem.icoBtn = icoBtn;
-        menuItem.icoBtn.visible = DELETE_ENABLED;
-        menuItem.deletePressId = icoBtn.connect('clicked', () => {
-            if (!DELETE_ENABLED) return;
-            this._removeEntry(menuItem, 'delete');
-        });
+        menuItem.deletePressId = icoBtn.connect('clicked', 
+            () => this._removeEntry(menuItem, 'delete')
+        );
 
         if (entry.isFavorite()) {
             this.favoritesSection.addMenuItem(menuItem, 0);
@@ -838,7 +835,7 @@ const ClipboardIndicator = GObject.registerClass({
 
         const focussedWindow = Shell.Global.get().display.focusWindow;
         const wmClass = focussedWindow?.get_wm_class();
-        
+
         if (wmClass && EXCLUDED_APPS.includes(wmClass)) return; // Excluded app, do not.
 
         if (this.#refreshInProgress) return;
@@ -1222,7 +1219,6 @@ const ClipboardIndicator = GObject.registerClass({
             this._getAllIMenuItems().forEach(function (mItem) {
                 that._setEntryLabel(mItem);
                 mItem.pasteBtn.visible = PASTE_BUTTON;
-                if (mItem.icoBtn) mItem.icoBtn.visible = DELETE_ENABLED;
             });
 
             //update topbar
