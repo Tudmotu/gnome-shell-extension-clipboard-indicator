@@ -206,7 +206,7 @@ const ClipboardIndicator = GObject.registerClass({
             this._setFocusOnOpenTimeout = setTimeout(() => {
                 if (!open) return;
 
-                // If private mode is on but the toggle is hidden, programmatically turn it off
+                // If private mode is on but the toggle is hidden, turn it off
                 if (PRIVATEMODE && !SHOW_PRIVATE_MODE) {
                     this.privateModeMenuItem.setToggleState(false);
                     this._onPrivateModeSwitch();
@@ -276,6 +276,9 @@ const ClipboardIndicator = GObject.registerClass({
             }),
             0
         );
+
+        // Add the switch once; don't reparent later
+        that.menu.addMenuItem(that.privateModeMenuItem);
 
         // Add 'Clear' button which removes all items from cache
         this.clearMenuItem = new PopupMenu.PopupMenuItem(_('Clear history'));
@@ -367,8 +370,6 @@ const ClipboardIndicator = GObject.registerClass({
             this.menu.box.remove_child(this.clearMenuItem.actor);
         if (this.settingsMenuItem?.actor && this.menu.box.contains(this.settingsMenuItem.actor))
             this.menu.box.remove_child(this.settingsMenuItem.actor);
-        if (this.privateModeMenuItem?.actor && this.menu.box.contains(this.privateModeMenuItem.actor))
-            this.menu.box.remove_child(this.privateModeMenuItem.actor);
         if (this.menu.box.contains(this.emptyStateSection)) this.menu.box.remove_child(this.emptyStateSection);
     }
 
@@ -386,6 +387,11 @@ const ClipboardIndicator = GObject.registerClass({
         } else {
             if (this.menu.box.contains(this._entryItem))
                 this.menu.box.remove_child(this._entryItem);
+        }
+
+        // Keep the private-mode switch in place; only gate its visibility
+        if (this.privateModeMenuItem?.actor) {
+            this.privateModeMenuItem.actor.visible = SHOW_PRIVATE_MODE;
         }
 
         // Favorites separator (only when there are favorites and any items at all)
@@ -415,30 +421,22 @@ const ClipboardIndicator = GObject.registerClass({
             if (!this.menu.box.contains(this.emptyStateSection))
                 this.#renderEmptyState();
             // Re-append toggled buttons after the empty state
-            if (this.menu.box.contains(this.privateModeMenuItem?.actor))
-                this.menu.box.remove_child(this.privateModeMenuItem.actor);
             if (this.menu.box.contains(this.settingsMenuItem?.actor))
                 this.menu.box.remove_child(this.settingsMenuItem.actor);
 
             let index = this.menu.box.get_n_children(); // append after empty state
-            if (SHOW_PRIVATE_MODE && this.privateModeMenuItem)
-                this.menu.box.insert_child_at_index(this.privateModeMenuItem.actor, index++);
             if (SHOW_SETTINGS_BUTTON && this.settingsMenuItem)
                 this.menu.box.insert_child_at_index(this.settingsMenuItem.actor, index++);
             return;
         }
 
         // Re-append toggled buttons at end in fixed order
-        if (this.menu.box.contains(this.privateModeMenuItem?.actor))
-            this.menu.box.remove_child(this.privateModeMenuItem.actor);
         if (this.menu.box.contains(this.settingsMenuItem?.actor))
             this.menu.box.remove_child(this.settingsMenuItem.actor);
         if (this.menu.box.contains(this.clearMenuItem?.actor))
             this.menu.box.remove_child(this.clearMenuItem.actor);
 
         let index = this.menu.box.get_n_children(); // append
-        if (SHOW_PRIVATE_MODE && this.privateModeMenuItem)
-            this.menu.box.insert_child_at_index(this.privateModeMenuItem.actor, index++);
         if (SHOW_SETTINGS_BUTTON && this.settingsMenuItem)
             this.menu.box.insert_child_at_index(this.settingsMenuItem.actor, index++);
         if (SHOW_CLEAR_HISTORY_BUTTON && this.clearMenuItem && !PRIVATEMODE)
