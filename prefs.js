@@ -110,6 +110,11 @@ class Settings {
             subtitle: _("Requires restarting the extension")
         });
 
+        this.field_show_search_bar = new Adw.SwitchRow({title: _("Show Search Bar")});
+        this.field_show_private_mode = new Adw.SwitchRow({title: _("Show Private Mode")});
+        this.field_show_settings_button = new Adw.SwitchRow({title: _("Show Settings Button")});
+        this.field_show_clear_history_button = new Adw.SwitchRow({title: _("Show Clear History Button")});
+
         this.field_clear_on_boot = new Adw.SwitchRow({
             title: _("Clear clipboard history on system reboot")
         });
@@ -184,6 +189,10 @@ class Settings {
         this.ui.add(this.field_keep_selected_on_clear);
         this.ui.add(this.field_paste_button);
         this.ui.add(this.field_pinned_on_bottom);
+        this.ui.add(this.field_show_search_bar);
+        this.ui.add(this.field_show_private_mode);
+        this.ui.add(this.field_show_settings_button);
+        this.ui.add(this.field_show_clear_history_button);
 
         this.behavior.add(this.field_paste_on_select);
         this.behavior.add(this.field_cache_images);
@@ -226,6 +235,10 @@ class Settings {
         this.schema.bind(PrefsFields.STRIP_TEXT, this.field_strip_text, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.PASTE_BUTTON, this.field_paste_button, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.PINNED_ON_BOTTOM, this.field_pinned_on_bottom, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.SHOW_SEARCH_BAR, this.field_show_search_bar, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.SHOW_PRIVATE_MODE, this.field_show_private_mode, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.SHOW_SETTINGS_BUTTON, this.field_show_settings_button, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.SHOW_CLEAR_HISTORY_BUTTON, this.field_show_clear_history_button, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.ENABLE_KEYBINDING, this.field_keybinding_activation, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.CLEAR_ON_BOOT, this.field_clear_on_boot, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.PASTE_ON_SELECT, this.field_paste_on_select, 'active', Gio.SettingsBindFlags.DEFAULT);

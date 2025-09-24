@@ -18,7 +18,7 @@ update-po-files:
 install: all
 	rm -rf $(INSTALLPATH)
 	mkdir -p $(INSTALLPATH)
-	cp -r $(MODULES) $(INSTALLPATH)/
+	cp -ru $(MODULES) $(INSTALLPATH)/
 
 nested-session:
 	dbus-run-session -- env MUTTER_DEBUG_NUM_DUMMY_MONITORS=1 \
