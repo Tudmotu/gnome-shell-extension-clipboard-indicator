@@ -270,8 +270,6 @@ const ClipboardIndicator = GObject.registerClass({
             }),
             0
         );
-
-        // Add the switch once; don't reparent later
         that.menu.addMenuItem(that.privateModeMenuItem);
 
         // Add 'Clear' button which removes all items from cache
