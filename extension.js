@@ -234,6 +234,7 @@ const ClipboardIndicator = GObject.registerClass({
 
         // History
         that.historySection = new PopupMenu.PopupMenuSection();
+
         that.scrollViewMenuSection = new PopupMenu.PopupMenuSection();
         this.historyScrollView = new St.ScrollView({
             style_class: 'ci-main-menu-section ci-history-menu-section',
@@ -312,7 +313,7 @@ const ClipboardIndicator = GObject.registerClass({
         timerBox.add_child(this.timerLabel);
         timerBox.add_child(this.resetTimerButton);
         this.clearMenuItem.add_child(timerBox);
-
+        
         this.clearMenuItem.connect('activate', that._removeAll.bind(that));
 
         // Add 'Settings' menu item to open settings
@@ -384,9 +385,11 @@ const ClipboardIndicator = GObject.registerClass({
         // Favorites separator (only when there are favorites and any items at all)
         if (this.clipItemsRadioGroup.length > 0) {
             if (this.favoritesSection._getMenuItems().length > 0) {
-                if (!this.menu.box.contains(this.favoritesSeparator))
+                if (this.menu.box.contains(this.favoritesSeparator) === false) {
                     this.menu.box.insert_child_above(this.favoritesSeparator, this.scrollViewFavoritesMenuSection.actor);
-            } else if (this.menu.box.contains(this.favoritesSeparator)) {
+                }
+            }
+            else if (this.menu.box.contains(this.favoritesSeparator)) {
                 this.menu.box.remove_child(this.favoritesSeparator);
             }
         }
