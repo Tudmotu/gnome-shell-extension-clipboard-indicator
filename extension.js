@@ -937,7 +937,7 @@ const ClipboardIndicator = GObject.registerClass({
         );
 
 
-
+        
         if (!CLEAR_HISTORY_ON_INTERVAL) {
             this._updateIntervalTimer();
             return;
