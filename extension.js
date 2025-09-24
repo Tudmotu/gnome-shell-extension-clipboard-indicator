@@ -206,12 +206,6 @@ const ClipboardIndicator = GObject.registerClass({
             this._setFocusOnOpenTimeout = setTimeout(() => {
                 if (!open) return;
 
-                // If private mode is on but the toggle is hidden, turn it off
-                if (PRIVATEMODE && !SHOW_PRIVATE_MODE) {
-                    this.privateModeMenuItem.setToggleState(false);
-                    this._onPrivateModeSwitch();
-                }
-
                 if (SHOW_SEARCH_BAR && this.clipItemsRadioGroup.length > 0) {
                     that.searchEntry.set_text('');
                     global.stage.set_key_focus(that.searchEntry);
@@ -1215,6 +1209,12 @@ const ClipboardIndicator = GObject.registerClass({
 
             // Load the settings into variables
             that._fetchSettings();
+
+            // If the toggle is hidden but private mode is on, force it off now
+            if (!SHOW_PRIVATE_MODE && PRIVATEMODE && this.privateModeMenuItem) {
+                this.privateModeMenuItem.setToggleState(false);
+                this._onPrivateModeSwitch();
+            }
 
             // Remove old entries in case the registry size changed
             that._removeOldestEntries();
