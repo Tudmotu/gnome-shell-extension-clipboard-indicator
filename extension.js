@@ -308,7 +308,7 @@ const ClipboardIndicator = GObject.registerClass({
         timerBox.add_child(this.timerLabel);
         timerBox.add_child(this.resetTimerButton);
         this.clearMenuItem.add_child(timerBox);
-        
+
         this.clearMenuItem.connect('activate', that._removeAll.bind(that));
 
         // Add 'Settings' menu item to open settings
@@ -481,7 +481,7 @@ const ClipboardIndicator = GObject.registerClass({
         // when focus is at the last element of the displayed list
         let beforeMenuItem = this.clipItemsRadioGroup[currentIndex + 1];
         if(beforeMenuItem.actor.visible){
-          return beforeMenuItem; 
+          return beforeMenuItem;
         }
 
         return null;
@@ -635,11 +635,23 @@ const ClipboardIndicator = GObject.registerClass({
 
     _clearHistory (invokedAutomatically = false) {
         // Don't remove pinned items
-        this.historySection._getMenuItems().forEach(mItem => {
-            if (KEEP_SELECTED_ON_CLEAR === false || !mItem.currentlySelected) {
-                this._removeEntry(mItem, 'delete');
+        const itemsToRemove = this.historySection._getMenuItems().filter(mItem => {
+            return KEEP_SELECTED_ON_CLEAR === false || !mItem.currentlySelected;
+        });
+
+        itemsToRemove.forEach(mItem => {
+            mItem.destroy();
+            const idx = this.clipItemsRadioGroup.indexOf(mItem);
+            if (idx !== -1) {
+                this.clipItemsRadioGroup.splice(idx, 1);
+            }
+            if (mItem.entry.isImage()) {
+                this.registry.deleteEntryFile(mItem.entry);
             }
         });
+
+        this._updateCache();
+        this.#showElements();
 
         if (!invokedAutomatically) {
             this._showNotification(_("Clipboard history cleared"));
@@ -771,7 +783,7 @@ const ClipboardIndicator = GObject.registerClass({
 
         const focussedWindow = Shell.Global.get().display.focusWindow;
         const wmClass = focussedWindow?.get_wm_class();
-        
+
         if (wmClass && EXCLUDED_APPS.includes(wmClass)) return; // Excluded app, do not.
 
         if (this.#refreshInProgress) return;
@@ -870,7 +882,7 @@ const ClipboardIndicator = GObject.registerClass({
         );
 
 
-        
+
         if (!CLEAR_HISTORY_ON_INTERVAL) {
             this._updateIntervalTimer();
             return;
@@ -931,7 +943,7 @@ const ClipboardIndicator = GObject.registerClass({
         const timeoutMs = (NEXT_HISTORY_CLEAR - currentTime) * 1000;
 
         this.extension.settings.set_int(PrefsFields.NEXT_HISTORY_CLEAR, NEXT_HISTORY_CLEAR);
-        
+
         this._updateIntervalTimer();
         this._timerIntervalId = setInterval(() => {
             this._updateIntervalTimer();
@@ -1235,7 +1247,7 @@ const ClipboardIndicator = GObject.registerClass({
 
         this.extension.settings.disconnect(this._settingsChangedId);
         this._settingsChangedId = null;
-        
+
         if (this._intervalSettingChangedId) {
             this.extension.settings.disconnect(this._intervalSettingChangedId);
             this._intervalSettingChangedId = null;
@@ -1245,7 +1257,7 @@ const ClipboardIndicator = GObject.registerClass({
             this.extension.settings.disconnect(this._intervalToggleChangedId);
             this._intervalToggleChangedId = null;
         }
-        
+
         if (this._historyClearTimeoutId) {
             clearTimeout(this._historyClearTimeoutId);
             this._historyClearTimeoutId = null;
@@ -1286,7 +1298,7 @@ const ClipboardIndicator = GObject.registerClass({
                 i--;                                 //get the previous index
                 if (i < 0) i = menuItems.length - 1; //cycle if out of bound
                 let index = i + 1;                   //index to be displayed
-                
+
                 if(NOTIFY_ON_CYCLE) {
                     that._showNotification(index + ' / ' + menuItems.length + ': ' + menuItems[i].entry.getStringValue());
                 }
@@ -1407,7 +1419,7 @@ const ClipboardIndicator = GObject.registerClass({
                 if (type === "UTF8_STRING") {
                     type = "text/plain;charset=utf-8";
                 }
-                
+
                 const entry = new ClipboardEntry(type, bytes.get_data(), false);
                 if (CACHE_IMAGES && entry.isImage()) {
                     this.registry.writeEntryFile(entry);
