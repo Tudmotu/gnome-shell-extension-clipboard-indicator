@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-21 16:41+0300\n"
 "PO-Revision-Date: 2017-11-09 03:01-0300\n"
-"Last-Translator: Diego R Lima <contact@diegoribeiro.net>\n"
+"Last-Translator: Rafael A Frota\n"
 "Language-Team: \n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr ""
 
 #: extension.js:108
 msgid "Text will be here"
-msgstr "O texto estará aqui"
+msgstr "Texto estará aqui"
 
 #: extension.js:181
 msgid "Type here to search..."
@@ -42,9 +42,8 @@ msgid "Settings"
 msgstr "Configurações"
 
 #: extension.js:299
-#, fuzzy
 msgid "Clipboard is empty"
-msgstr "Conteúdo da área de transferência"
+msgstr "Área de transferência está vazia"
 
 #: extension.js:571
 msgid "Clear all?"
@@ -53,7 +52,7 @@ msgstr "Deseja limpar tudo?"
 #: extension.js:572
 msgid "Are you sure you want to delete all clipboard items?"
 msgstr ""
-"Tem certeza de que deseja excluir todos os itens da área de transferência?"
+"Tem certeza de que deseja excluir todos os itens \nda área de transferência?"
 
 #: extension.js:573
 msgid "This operation cannot be undone."
@@ -84,9 +83,8 @@ msgid "Preview Size (characters)"
 msgstr "Tamanho da visualização (caracteres)"
 
 #: prefs.js:48
-#, fuzzy
 msgid "Max cache file size (MB)"
-msgstr "Tamanho máximo do arquivo de cache (kb)"
+msgstr "Tamanho máximo do arquivo de cache (MB)"
 
 #: prefs.js:57
 msgid "Number of characters in top bar"
@@ -97,28 +95,24 @@ msgid "What to show in top bar"
 msgstr "O que mostrar na barra superior"
 
 #: prefs.js:71
-#, fuzzy
 msgid "Remove down arrow in top bar"
-msgstr "Número de caracteres na barra superior"
+msgstr "Remover seta na barra superior"
 
 #: prefs.js:75
-#, fuzzy
 msgid "Cache only pinned items"
-msgstr "Manter cache apenas de favoritos"
+msgstr "Manter cache apenas de itens fixados"
 
 #: prefs.js:79
 msgid "Show notification on copy"
 msgstr "Mostrar notificação sobre cópia"
 
 #: prefs.js:83
-#, fuzzy
 msgid "Show notification on cycle"
-msgstr "Mostrar notificação sobre cópia"
+msgstr "Mostrar notificação ao alternar itens"
 
 #: prefs.js:87
-#, fuzzy
 msgid "Show confirmation on Clear History"
-msgstr "Mostrar notificação sobre cópia"
+msgstr "Mostrar notificação ao limpar histórico"
 
 #: prefs.js:91
 msgid "Remove whitespace around text"
@@ -130,72 +124,71 @@ msgstr "Mover o item para o topo após a seleção"
 
 #: prefs.js:99
 msgid "Keep selected entry after Clear History"
-msgstr ""
+msgstr "Manter item selecionado após limpar histórico"
 
 #: prefs.js:103
 msgid "Show paste buttons"
-msgstr ""
+msgstr "Mostrar botão de colar"
 
 #: prefs.js:104
 msgid "Adds a paste button to each entry that lets you paste it directly"
-msgstr ""
+msgstr "Adiciona um botão para cada item permitindo colá-lo diretamente"
 
 #: prefs.js:108
 msgid "Place the pinned section on the bottom"
-msgstr ""
+msgstr "Colocar o item fixado no fundo"
 
 #: prefs.js:109
 msgid "Requires restarting the extension"
-msgstr ""
+msgstr "Requer reiniciar a extensão"
 
 #: prefs.js:113
-#, fuzzy
 msgid "Clear clipboard history on system reboot"
-msgstr "Histórico da área de transferência apagado"
+msgstr "Limpar histórico ao reiniciar o sistema"
 
 #: prefs.js:117
 msgid "Paste on select"
-msgstr ""
+msgstr "Colar ao selecionar"
 
 #: prefs.js:121
 msgid "Cache images"
-msgstr ""
+msgstr "Guardar imagens em Cache"
 
 #: prefs.js:126
 msgid "Excluded Apps"
-msgstr ""
+msgstr "Apps Excluídos"
 
 #: prefs.js:127
 msgid "Content copied will not be saved while these apps are in focus"
-msgstr ""
+msgstr "Conteúdo colado não será salvo enquanto esses aplicativos estiverem em foco"
 
 #: prefs.js:146
 msgid "UI"
-msgstr ""
+msgstr "Interface"
 
 #: prefs.js:147
 msgid "Behavior"
-msgstr ""
+msgstr "Comportamento"
 
 #: prefs.js:148
 msgid "Exclusion"
-msgstr ""
+msgstr "Exclusão"
 
 #: prefs.js:149
 msgid "Limits"
-msgstr ""
+msgstr "Limites"
 
 #: prefs.js:150
 msgid "Topbar"
-msgstr ""
+msgstr "Barra Superior"
 
 #: prefs.js:151
 msgid "Notifications"
-msgstr ""
+msgstr "Notificações"
 
 #: prefs.js:152
 msgid "Shortcuts"
-msgstr ""
+msgstr "Atalhos"
 
 #: prefs.js:207
 msgid "Icon"
@@ -211,7 +204,7 @@ msgstr "Ambos"
 
 #: prefs.js:210
 msgid "Neither"
-msgstr ""
+msgstr "Nenhum"
 
 #: prefs.js:221
 msgid "Toggle the menu"
@@ -226,22 +219,20 @@ msgid "Next entry"
 msgstr "Próxima entrada"
 
 #: prefs.js:229
-#, fuzzy
 msgid "Enable shortcuts"
-msgstr "Atalhos do teclado"
+msgstr "Ativar atalhos"
 
 #: prefs.js:254
 msgid "Disabled"
-msgstr ""
+msgstr "Desabilitado"
 
 #: prefs.js:263
-#, fuzzy
 msgid "Enter shortcut"
-msgstr "Atalhos do teclado"
+msgstr "Insira o atalho"
 
 #: prefs.js:345
 msgid "Window class name, e.g. \"KeePassXC\""
-msgstr ""
+msgstr "Nome da classe da Janela, exemplo: \"KeePassXC\""
 
 #~ msgid "Refresh Interval (ms)"
 #~ msgstr "Intervalo de atualização (ms)"
