@@ -193,5 +193,37 @@
                 A list of applications that are excluded from clipboard history.
             </description>
         </key>
+        <key name="clear-history-on-interval" type="b">
+            <default>false</default>
+            <summary>Enable clearing history on interval</summary>
+            <description>
+                If true, clipboard history will be cleared at regular intervals.
+            </description>
+        </key>
+        <key name="clear-history-interval" type="i">
+            <default>60</default>
+            <summary>Interval for clearing history in minutes</summary>
+            <description>
+                The interval in minutes at which the clipboard history will be cleared.
+            </description>
+            <range min="1"/>
+        </key>
+        <key name="next-history-clear" type="i">
+            <default>-1</default>
+            <summary>Next scheduled history clear time</summary>
+            <description>
+                The timestamp for the next scheduled history clear.
+            </description>
+        </key>
+        <key name="case-sensitive-search" type="b">
+            <default>false</default>
+            <summary>Case sensitive search</summary>
+            <description>Make search case sensitive</description>
+        </key>
+        <key name="regex-search" type="b">
+            <default>false</default>
+            <summary>Regex-based search</summary>
+            <description>Allow regex in search</description>
+        </key>
     </schema>
 </schemalist>

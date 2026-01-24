@@ -13,8 +13,9 @@ export default class ClipboardIndicatorPreferences extends ExtensionPreferences 
         const page = new Adw.PreferencesPage();
         page.add(settingsUI.ui);
         page.add(settingsUI.behavior);
+        page.add(settingsUI.search);
         page.add(settingsUI.limits);
-        page.add(settingsUI.exclusion); 
+        page.add(settingsUI.exclusion);
         page.add(settingsUI.topbar);
         page.add(settingsUI.notifications);
         page.add(settingsUI.shortcuts);
@@ -134,6 +135,14 @@ class Settings {
             halign: Gtk.Align.CENTER,
         });
 
+        this.case_sensitive_search = new Adw.SwitchRow({
+            title: _("Case-sensitive search")
+        });
+
+        this.regex_search = new Adw.SwitchRow({
+            title: _("Regular expression matching in search")
+        });
+
         this.field_exclusion_row_add_button.connect('clicked', () => {
             this.field_exclusion_row_add_button.set_sensitive(false);
             this.excluded_row_counter++;
@@ -143,6 +152,23 @@ class Settings {
 
         this.field_exclusion_row.add_suffix(this.field_exclusion_row_add_button);
 
+        this.field_clear_history_on_interval = new Adw.SwitchRow({
+            title: _("Clear clipboard history on interval")
+        });
+
+        this.field_clear_history_interval = new Adw.SpinRow({
+            title: _("History clear interval (in minutes)"),
+            adjustment: new Gtk.Adjustment({
+            lower: 1,
+            upper: 1440,
+            step_increment: 10
+            })
+        });
+
+        this.field_clear_history_on_interval.connect('notify::active', (widget) => {
+            this.field_clear_history_interval.set_sensitive(widget.active);
+        });
+
         this.ui =  new Adw.PreferencesGroup({ title: _('UI') });
         this.behavior = new Adw.PreferencesGroup({title: _('Behavior')});
         this.exclusion = new Adw.PreferencesGroup({ title: _('Exclusion') });
@@ -150,6 +176,7 @@ class Settings {
         this.topbar =  new Adw.PreferencesGroup({ title: _('Topbar') });
         this.notifications =  new Adw.PreferencesGroup({ title: _('Notifications') });
         this.shortcuts =  new Adw.PreferencesGroup({ title: _('Shortcuts') });
+        this.search = new Adw.PreferencesGroup({title: _('Search')});
 
         this.ui.add(this.field_preview_size);
         this.ui.add(this.field_move_item_first);
@@ -158,9 +185,11 @@ class Settings {
         this.ui.add(this.field_paste_button);
         this.ui.add(this.field_pinned_on_bottom);
 
-        this.behavior.add(this.field_clear_on_boot);
         this.behavior.add(this.field_paste_on_select);
         this.behavior.add(this.field_cache_images);
+        this.behavior.add(this.field_clear_on_boot);
+        this.behavior.add(this.field_clear_history_on_interval);
+        this.behavior.add(this.field_clear_history_interval);
 
         this.exclusion.add(this.field_exclusion_row);
         this.exclusion.add(this.field_exclusion_row_add_button);
@@ -176,6 +205,9 @@ class Settings {
         this.notifications.add(this.field_clear_notification_toggle);
         this.notifications.add(this.field_cycle_notification_toggle)
         this.notifications.add(this.field_confirm_clear_toggle);
+
+        this.search.add(this.case_sensitive_search);
+        this.search.add(this.regex_search);
 
         this.#buildShorcuts(this.shortcuts);
 
@@ -198,7 +230,12 @@ class Settings {
         this.schema.bind(PrefsFields.CLEAR_ON_BOOT, this.field_clear_on_boot, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.PASTE_ON_SELECT, this.field_paste_on_select, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.CACHE_IMAGES, this.field_cache_images, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.CLEAR_HISTORY_ON_INTERVAL, this.field_clear_history_on_interval, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.CLEAR_HISTORY_INTERVAL, this.field_clear_history_interval, 'value', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.CASE_SENSITIVE_SEARCH, this.case_sensitive_search, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.REGEX_SEARCH, this.regex_search, 'active', Gio.SettingsBindFlags.DEFAULT);
 
+        this.field_clear_history_interval.set_sensitive(this.field_clear_history_on_interval.active);
         this.#fetchExludedAppsList();
     }
 
@@ -340,7 +377,12 @@ class Settings {
     }
 
     #createExcludedAppInputRow() {
-        const entry_row = new Adw.ActionRow();
+        //The entry row for adding new excluded apps
+        const entry_row = new Adw.ActionRow({
+            hexpand: false,
+        });
+
+        //The input field for the app wm class name
         const entry = new Gtk.Entry({
             placeholderText: _('Window class name, e.g. "KeePassXC"'),
             halign: Gtk.Align.FILL,
@@ -348,15 +390,129 @@ class Settings {
             hexpand: true,
         });
 
-        entry.connect('map', () => {
+        //The button to open the popover with the list of installed applications
+        const appButton = new Gtk.MenuButton({
+            iconName: 'view-list-symbolic',
+            cssClasses: ['flat'],
+            valign: Gtk.Align.CENTER,
+            halign: Gtk.Align.CENTER,
+            tooltip_text: _('Choose from installed applications'),
+        });
+
+        //The popover
+        const popover = new Gtk.Popover();
+
+        //The popover box
+        const popoverBox = new Gtk.Box({
+            orientation: Gtk.Orientation.VERTICAL,
+            margin_top: 6,
+            margin_bottom: 6,
+            margin_start: 6,
+            margin_end: 6,
+        });
+
+        //The search entry in the popover list for searching applications
+        const searchEntry = new Gtk.SearchEntry({
+            placeholder_text: _('Search applications...'),
+            margin_bottom: 6,
+        });
+
+        //The scrolled window for the list of applications
+        const scrolledWindow = new Gtk.ScrolledWindow({
+            hscrollbar_policy: Gtk.PolicyType.NEVER,
+            vscrollbar_policy: Gtk.PolicyType.AUTOMATIC,
+            height_request: 300,
+            width_request: 300,
+        });
+
+        const listBox = new Gtk.ListBox();
+
+        entry.connect('activate', () => {
+            ok_button.emit('clicked');
+        });
+
+        popoverBox.append(searchEntry);
+
+        popoverBox.append(scrolledWindow);
+
+        scrolledWindow.set_child(listBox);
+
+        popover.set_child(popoverBox);
+        appButton.set_popover(popover);
+
+        const appInfoList = Gio.AppInfo.get_all();
+        const appRows = [];
+
+        appInfoList.sort((a, b) => {
+            return a.get_display_name().localeCompare(b.get_display_name());
+        }).forEach(appInfo => {
+            if (appInfo.should_show()) {
+                const row = new Gtk.ListBoxRow();
+                const box = new Gtk.Box({
+                    orientation: Gtk.Orientation.HORIZONTAL,
+                    spacing: 10,
+                    margin_top: 6,
+                    margin_bottom: 6,
+                    margin_start: 6,
+                    margin_end: 6,
+                });
+
+                const icon = appInfo.get_icon();
+                if (icon) {
+                    const image = new Gtk.Image({
+                        gicon: icon,
+                        pixel_size: 24,
+                    });
+                    box.append(image);
+                }
+
+                const label = new Gtk.Label({
+                    label: appInfo.get_display_name(),
+                    halign: Gtk.Align.START,
+                    hexpand: true,
+                });
+                box.append(label);
+
+                row.set_child(box);
+                row.appInfo = appInfo;
+                listBox.append(row);
+                appRows.push({ row, appInfo });
+            }
+        });
+
+        //for searching the list of applications
+        searchEntry.connect('search-changed', () => {
+            const text = searchEntry.get_text().toLowerCase();
+            for (const { row, appInfo } of appRows) {
+                const appName = appInfo.get_display_name().toLowerCase();
+                row.set_visible(appName.includes(text));
+            }
+        });
+
+        //when using enter on the search entry, select the first row and focus the entry
+        searchEntry.connect('activate', () => {
+            const firstVisibleRow = appRows.find(({ row }) => row.visible);
+            if (firstVisibleRow) {
+                listBox.emit('row-activated', firstVisibleRow.row);
+            }
             entry.grab_focus();
         });
 
+        //when selecting an application, set the entry text to the app class name and close the popover
+        listBox.connect('row-activated', (list, row) => {
+            if (row && row.appInfo) {
+                const appClassName = row.appInfo.get_id().replace(/\.desktop$/, '');
+                entry.set_text(appClassName);
+                popover.popdown();
+            }
+        });
+
+        //The suffix buttons
         const ok_button = new Gtk.Button({
-            cssClasses: ['flat'],
-            iconName: 'emblem-ok-symbolic',
+            iconName: 'object-select-symbolic',
             valign: Gtk.Align.CENTER,
             halign: Gtk.Align.CENTER,
+            cssClasses: ['flat'],
         });
 
         ok_button.connect('clicked', () => {
@@ -369,25 +525,28 @@ class Settings {
             }
         });
 
-        entry.connect('activate', () => {
-            ok_button.emit('clicked');
-        });
-
         const cancel_button = new Gtk.Button({
-            cssClasses: ['flat'],
             iconName: 'window-close-symbolic',
             valign: Gtk.Align.CENTER,
             halign: Gtk.Align.CENTER,
+            cssClasses: ['flat'],
         });
 
         cancel_button.connect('clicked', () => {
             this.field_exclusion_row.remove(entry_row);
             this.field_exclusion_row_add_button.set_sensitive(true);
             this.excluded_row_counter--;
-            this.field_exclusion_row_add_button.set_sensitive(true);
         });
 
+        // Hide the title/subtitle/icon children of the ActionRow
+        let child = entry_row.child.get_first_child();
+        while (child) {
+            child.visible = false;
+            child = child.get_next_sibling();
+        }
+
         entry_row.add_prefix(entry);
+        entry_row.add_suffix(appButton);
         entry_row.add_suffix(ok_button);
         entry_row.add_suffix(cancel_button);
 

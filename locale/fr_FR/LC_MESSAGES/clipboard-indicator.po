@@ -1,17 +1,20 @@
+# French translations for PACKAGE package.
+# Copyright (C) 2026 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Il Craccatore 2011, 2026.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: unnamed project\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 17:07+0200\n"
-"PO-Revision-Date: 2025-05-23 17:15+0200\n"
-"Last-Translator: p-sage <>\n"
-"Language-Team: French\n"
+"POT-Creation-Date: 2026-01-23 20:53+0100\n"
+"PO-Revision-Date: 2026-01-24 15:22+0100\n"
+"Last-Translator: IlCraccatore2011\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.6\n"
 
 #: extension.js:108
 msgid "Text will be here"
@@ -60,6 +63,10 @@ msgstr "Annuler"
 #: extension.js:588
 msgid "Clipboard history cleared"
 msgstr "L'historique du presse-papiers a été effacé"
+
+#: extension.js:648
+msgid "Clipboard history cleared automatically"
+msgstr "L'historique du presse-papiers a été effacé automatiquement"
 
 #: extension.js:739
 msgid "Copied to clipboard"
@@ -157,6 +164,22 @@ msgstr ""
 "Le contenu copié ne sera pas enregistré tant que ces applications sont "
 "actives"
 
+#: prefs.js:139
+msgid "Case-sensitive search"
+msgstr "Recherche sensible à la casse"
+
+#: prefs.js:143
+msgid "Regular expression matching in search"
+msgstr "Recherche avec expressions régulières"
+
+#: prefs.js:156
+msgid "Clear clipboard history on interval"
+msgstr "Effacer l'historique du presse-papiers à intervalles réguliers"
+
+#: prefs.js:160
+msgid "History clear interval (in minutes)"
+msgstr "Intervalle d'effacement de l'historique (en minutes)"
+
 #: prefs.js:146
 msgid "UI"
 msgstr "Interface"
@@ -184,6 +207,10 @@ msgstr "Notifications"
 #: prefs.js:152
 msgid "Shortcuts"
 msgstr "Raccourcis"
+
+#: prefs.js:179
+msgid "Search"
+msgstr "Recherche"
 
 #: prefs.js:207
 msgid "Icon"
@@ -228,3 +255,11 @@ msgstr "Entrer un raccourci"
 #: prefs.js:345
 msgid "Window class name, e.g. \"KeePassXC\""
 msgstr "Classe de fenêtre (ex. : « KeePassXC »)"
+
+#: prefs.js:399
+msgid "Choose from installed applications"
+msgstr "Choisir parmi les applications installées"
+
+#: prefs.js:416
+msgid "Search applications..."
+msgstr "Rechercher des applications…"
