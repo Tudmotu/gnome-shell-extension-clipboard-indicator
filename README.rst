@@ -8,7 +8,7 @@
    :alt: Get it on GNOME Extensions
 
 The most popular, reliable and feature-rich clipboard manager for GNOME with
-over **1M** downloads.
+over **2M** downloads.
 
 |Screenshot|
 

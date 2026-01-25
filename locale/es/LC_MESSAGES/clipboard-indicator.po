@@ -1,240 +1,261 @@
-# Spanish translation for gnome-shell-extension-clipboard-indicator.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the gnome-shell-extension-clipboard-indicator package.
-# Javier Junquera <javier.junquera.sanchez@gmail.com>, 2016.
+# Spanish translations for PACKAGE package.
+# Copyright (C) 2026 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Il Craccatore 2011, 2026.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gnome-shell-extension-clipboard-indicator\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-21 16:41+0300\n"
-"PO-Revision-Date: 2018-03-10 09:43-0600\n"
-"Last-Translator: Adolfo Jayme Barrientos <fitojb@ubuntu.com>\n"
-"Language-Team: \n"
+"POT-Creation-Date: 2026-01-23 20:53+0100\n"
+"PO-Revision-Date: 2026-01-24 15:28+0100\n"
+"Last-Translator: IlCraccatore2011\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.6\n"
 
-#: extension.js:108
+#: extension.js:113
 msgid "Text will be here"
 msgstr "El texto aparecerá aquí"
 
-#: extension.js:181
+#: extension.js:187
 msgid "Type here to search..."
-msgstr "Escriba aquí para buscar..."
+msgstr "Escribe aquí para buscar..."
 
-#: extension.js:250 prefs.js:220
+#: extension.js:256 prefs.js:257
 msgid "Private mode"
 msgstr "Modo privado"
 
-#: extension.js:264 prefs.js:222
+#: extension.js:270 prefs.js:259
 msgid "Clear history"
-msgstr "Vaciar historial"
+msgstr "Borrar historial"
 
-#: extension.js:276
+#: extension.js:315
 msgid "Settings"
 msgstr "Configuración"
 
-#: extension.js:299
+#: extension.js:338
 msgid "Clipboard is empty"
 msgstr "El portapapeles está vacío"
 
-#: extension.js:571
+#: extension.js:626
 msgid "Clear all?"
 msgstr "¿Borrar todo?"
 
-#: extension.js:572
+#: extension.js:627
 msgid "Are you sure you want to delete all clipboard items?"
-msgstr "¿Está seguro de que quiere borrar todos los ítems del portapapeles?"
+msgstr "¿Seguro que quieres eliminar todos los elementos del portapapeles?"
 
-#: extension.js:573
+#: extension.js:628
 msgid "This operation cannot be undone."
-msgstr "Esta operación no puede ser deshecha"
+msgstr "Esta operación no se puede deshacer."
 
-#: extension.js:575
+#: extension.js:630
 msgid "Clear"
 msgstr "Borrar"
 
-#: extension.js:575 extension.js:740
+#: extension.js:630 extension.js:801
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: extension.js:588
+#: extension.js:645
 msgid "Clipboard history cleared"
-msgstr "Historial del portapapeles vaciado"
+msgstr "El historial del portapapeles se ha borrado"
 
-#: extension.js:739
+#: extension.js:648
+msgid "Clipboard history cleared automatically"
+msgstr "El historial del portapapeles se ha borrado automáticamente"
+
+#: extension.js:800
 msgid "Copied to clipboard"
-msgstr "Copiado en el portapapeles"
+msgstr "Copiado al portapapeles"
 
-#: prefs.js:30
+#: prefs.js:31
 msgid "History Size"
 msgstr "Tamaño del historial"
 
-#: prefs.js:39
+#: prefs.js:40
 msgid "Preview Size (characters)"
-msgstr "Tamaño de previsualización (caracteres)"
+msgstr "Tamaño de la vista previa (caracteres)"
 
-#: prefs.js:48
+#: prefs.js:49
 msgid "Max cache file size (MB)"
-msgstr "Tamaño máximo de cache (MB)"
+msgstr "Tamaño máximo del archivo de caché (MB)"
 
-#: prefs.js:57
+#: prefs.js:58
 msgid "Number of characters in top bar"
 msgstr "Número de caracteres en la barra superior"
 
-#: prefs.js:66
+#: prefs.js:67
 msgid "What to show in top bar"
 msgstr "Qué mostrar en la barra superior"
 
-#: prefs.js:71
+#: prefs.js:72
 msgid "Remove down arrow in top bar"
-msgstr "Quitar la flecha hacia abajo de la barra de arriba"
+msgstr "Quitar la flecha hacia abajo de la barra superior"
 
-#: prefs.js:75
+#: prefs.js:76
 msgid "Cache only pinned items"
-msgstr "Cachear sólo los items anclados"
+msgstr "Guardar en caché solo los elementos fijados"
 
-#: prefs.js:79
+#: prefs.js:80
 msgid "Show notification on copy"
-msgstr "Mostrar una notificación al copiar"
+msgstr "Mostrar notificación al copiar"
 
-#: prefs.js:83
-#, fuzzy
+#: prefs.js:84
 msgid "Show notification on cycle"
-msgstr "Mostrar una notificación al copiar"
+msgstr "Mostrar notificación al recorrer el historial"
 
-#: prefs.js:87
+#: prefs.js:88
 msgid "Show confirmation on Clear History"
-msgstr "Mostrar una confirmación al borrar el historial"
+msgstr "Mostrar confirmación al borrar el historial"
 
-#: prefs.js:91
+#: prefs.js:92
 msgid "Remove whitespace around text"
 msgstr "Eliminar espacios en blanco alrededor del texto"
 
-#: prefs.js:95
+#: prefs.js:96
 msgid "Move item to the top after selection"
-msgstr "Mover el ítem hacia arriba despues de seleccionarlo"
+msgstr "Mover el elemento arriba después de seleccionarlo"
 
-#: prefs.js:99
+#: prefs.js:100
 msgid "Keep selected entry after Clear History"
-msgstr "Mantener la entrada seleccionada después de limpiar el historial"
-
-#: prefs.js:103
-msgid "Show paste buttons"
-msgstr "Mostrar botones de pegar"
+msgstr "Mantener la entrada seleccionada tras borrar el historial"
 
 #: prefs.js:104
-msgid "Adds a paste button to each entry that lets you paste it directly"
-msgstr ""
-"Añade un botón de pegar a cada entrada, que te permite pegarlo directamente"
+msgid "Show paste buttons"
+msgstr "Mostrar botones de pegado"
 
-#: prefs.js:108
-msgid "Place the pinned section on the bottom"
-msgstr "Situar la sección anclada abajo"
+#: prefs.js:105
+msgid "Adds a paste button to each entry that lets you paste it directly"
+msgstr "Añade un botón de pegado a cada entrada que permite pegarla directamente"
 
 #: prefs.js:109
+msgid "Place the pinned section on the bottom"
+msgstr "Colocar la sección fijada en la parte inferior"
+
+#: prefs.js:110
 msgid "Requires restarting the extension"
 msgstr "Requiere reiniciar la extensión"
 
-#: prefs.js:113
-#, fuzzy
+#: prefs.js:114
 msgid "Clear clipboard history on system reboot"
-msgstr "Historial del portapapeles vaciado"
+msgstr "Borrar el historial del portapapeles al reiniciar el sistema"
 
-#: prefs.js:117
+#: prefs.js:118
 msgid "Paste on select"
-msgstr ""
+msgstr "Pegar al seleccionar"
 
-#: prefs.js:121
+#: prefs.js:122
 msgid "Cache images"
-msgstr ""
-
-#: prefs.js:126
-msgid "Excluded Apps"
-msgstr ""
+msgstr "Guardar imágenes en el historial"
 
 #: prefs.js:127
+msgid "Excluded Apps"
+msgstr "Aplicaciones excluidas"
+
+#: prefs.js:128
 msgid "Content copied will not be saved while these apps are in focus"
-msgstr ""
+msgstr "El contenido copiado no se guardará mientras estas aplicaciones estén activas"
 
-#: prefs.js:146
+#: prefs.js:139
+msgid "Case-sensitive search"
+msgstr "Búsqueda sensible a mayúsculas y minúsculas"
+
+#: prefs.js:143
+msgid "Regular expression matching in search"
+msgstr "Búsqueda con expresiones regulares"
+
+#: prefs.js:156
+msgid "Clear clipboard history on interval"
+msgstr "Borrar el historial del portapapeles periódicamente"
+
+#: prefs.js:160
+msgid "History clear interval (in minutes)"
+msgstr "Intervalo de borrado del historial (en minutos)"
+
+#: prefs.js:172
 msgid "UI"
-msgstr "Interfaz de Usuario"
+msgstr "Interfaz"
 
-#: prefs.js:147
+#: prefs.js:173
 msgid "Behavior"
-msgstr ""
+msgstr "Comportamiento"
 
-#: prefs.js:148
+#: prefs.js:174
 msgid "Exclusion"
-msgstr ""
+msgstr "Exclusión"
 
-#: prefs.js:149
+#: prefs.js:175
 msgid "Limits"
-msgstr "Limites"
+msgstr "Límites"
 
-#: prefs.js:150
+#: prefs.js:176
 msgid "Topbar"
 msgstr "Barra superior"
 
-#: prefs.js:151
+#: prefs.js:177
 msgid "Notifications"
 msgstr "Notificaciones"
 
-#: prefs.js:152
+#: prefs.js:178
 msgid "Shortcuts"
-msgstr "Atajos de teclado"
+msgstr "Atajos"
 
-#: prefs.js:207
+#: prefs.js:179
+msgid "Search"
+msgstr "Búsqueda"
+
+#: prefs.js:244
 msgid "Icon"
 msgstr "Icono"
 
-#: prefs.js:208
+#: prefs.js:245
 msgid "Clipboard Content"
 msgstr "Contenido del portapapeles"
 
-#: prefs.js:209
+#: prefs.js:246
 msgid "Both"
 msgstr "Ambos"
 
-#: prefs.js:210
+#: prefs.js:247
 msgid "Neither"
-msgstr ""
+msgstr "Ninguno"
 
-#: prefs.js:221
+#: prefs.js:258
 msgid "Toggle the menu"
-msgstr "Alternar menú"
+msgstr "Mostrar/ocultar el menú"
 
-#: prefs.js:223
+#: prefs.js:260
 msgid "Previous entry"
 msgstr "Entrada anterior"
 
-#: prefs.js:224
+#: prefs.js:261
 msgid "Next entry"
-msgstr "Entrada siguiente"
+msgstr "Siguiente entrada"
 
-#: prefs.js:229
+#: prefs.js:266
 msgid "Enable shortcuts"
-msgstr "Habilitar atajos de teclado"
+msgstr "Habilitar atajos"
 
-#: prefs.js:254
+#: prefs.js:291
 msgid "Disabled"
-msgstr "Deshabilitado"
+msgstr "Desactivado"
 
-#: prefs.js:263
+#: prefs.js:300
 msgid "Enter shortcut"
-msgstr "Introduce atajo de teclado"
+msgstr "Introducir atajo"
 
-#: prefs.js:345
+#: prefs.js:387
 msgid "Window class name, e.g. \"KeePassXC\""
-msgstr ""
+msgstr "Nombre de la clase de ventana, p. ej. \"KeePassXC\""
 
-#~ msgid "Refresh Interval (ms)"
-#~ msgstr "Intervalo de actualización (ms)"
+#: prefs.js:399
+msgid "Choose from installed applications"
+msgstr "Elegir entre las aplicaciones instaladas"
 
-#~ msgid "Disable cache file"
-#~ msgstr "Desactivar archivo de antememoria"
+#: prefs.js:416
+msgid "Search applications..."
+msgstr "Buscar aplicaciones..."
