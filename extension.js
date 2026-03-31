@@ -1210,6 +1210,7 @@ const ClipboardIndicator = GObject.registerClass({
 
     _openSettings () {
         this.extension.openSettings();
+        this.menu.close();
     }
 
     _initNotifSource () {
