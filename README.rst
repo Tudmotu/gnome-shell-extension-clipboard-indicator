@@ -22,12 +22,16 @@ This extension is also packaged by the community for many popular Linux distros
 🧰 Features:
 ----------------
 
-- Highly customizable
-- Supports both text and images
-- Allows pinning items to top
-- Includes a "private" mode
-- Has configurable shortcuts
-- Keyboard control
+- **Image support** — Copy and paste images in addition to text
+- **Pin items** — Keep important clipboard entries at the top of the menu
+- **Search** — Find clipboard entries with text search, including regex
+- **Edit entries** — Modify existing text entries
+- **Tag entries** — Add custom labels to organize your clipboard
+- **Keyboard shortcuts** — Open/close menu, cycle through entries and activate actions without touching the mouse
+- **Auto-clear history** — Schedule automatic clipboard cleanup at regular intervals or at boot time
+- **Private mode** — Temporarily pause clipboard history when working with sensitive data
+- **Exclude apps** — Prevent clipboard tracking when specific applications are in focus (e.g., password managers)
+- **Highly configurable** — Many more settings to control UI & behavior
 
 In-Menu Keyboard Controls
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
