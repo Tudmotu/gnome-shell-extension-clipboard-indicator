@@ -233,7 +233,7 @@ const ClipboardIndicator = GObject.registerClass({
             reactive: false,
             can_focus: false
         });
-        that.searchEntry = new St.Entry({
+        this.searchEntry = new St.Entry({
             name: 'searchEntry',
             style_class: 'search-entry',
             can_focus: true,
@@ -244,14 +244,14 @@ const ClipboardIndicator = GObject.registerClass({
             primary_icon: new St.Icon({ icon_name: 'edit-find-symbolic' })
         });
 
-        that.searchEntry.get_clutter_text().connect(
+        this.searchEntry.get_clutter_text().connect(
             'text-changed',
-            that._onSearchTextChanged.bind(that)
+            this._onSearchTextChanged.bind(this)
         );
 
-        that._entryItem.add_child(that.searchEntry);
+        this._entryItem.add_child(this.searchEntry);
 
-        that.menu.connect('open-state-changed', (self, open) => {
+        this.menu.connect('open-state-changed', (self, open) => {
             this._setFocusOnOpenTimeout = setTimeout(() => {
                 if (!open) return;
 
@@ -260,62 +260,62 @@ const ClipboardIndicator = GObject.registerClass({
                     this._focusItemOnOpen = null;
                     global.stage.set_key_focus(item.actor);
                 } else if (SHOW_SEARCH_BAR && this.clipItemsRadioGroup.length > 0) {
-                    that.searchEntry.set_text('');
-                    global.stage.set_key_focus(that.searchEntry);
+                    this.searchEntry.set_text('');
+                    global.stage.set_key_focus(this.searchEntry);
                 } else if (this.clipItemsRadioGroup.length > 0) {
                     const currentItem = this._getCurrentlySelectedItem();
                     if (currentItem) global.stage.set_key_focus(currentItem.actor);
-                } else if (SHOW_PRIVATE_MODE && that.privateModeMenuItem) {
-                    global.stage.set_key_focus(that.privateModeMenuItem.actor);
+                } else if (SHOW_PRIVATE_MODE && this.privateModeMenuItem) {
+                    global.stage.set_key_focus(this.privateModeMenuItem.actor);
                 }
             }, 50);
         });
 
         // Create menu sections for items
         // Favorites
-        that.favoritesSection = new PopupMenu.PopupMenuSection();
+        this.favoritesSection = new PopupMenu.PopupMenuSection();
 
-        that.scrollViewFavoritesMenuSection = new PopupMenu.PopupMenuSection();
+        this.scrollViewFavoritesMenuSection = new PopupMenu.PopupMenuSection();
         this.favoritesScrollView = new St.ScrollView({
             style_class: 'ci-history-menu-section',
             overlay_scrollbars: true
         });
-        this.favoritesScrollView.add_child(that.favoritesSection.actor);
+        this.favoritesScrollView.add_child(this.favoritesSection.actor);
 
-        that.scrollViewFavoritesMenuSection.actor.add_child(this.favoritesScrollView);
+        this.scrollViewFavoritesMenuSection.actor.add_child(this.favoritesScrollView);
         this.favoritesSeparator = new PopupMenu.PopupSeparatorMenuItem();
 
         // History
-        that.historySection = new PopupMenu.PopupMenuSection();
+        this.historySection = new PopupMenu.PopupMenuSection();
 
-        that.scrollViewMenuSection = new PopupMenu.PopupMenuSection();
+        this.scrollViewMenuSection = new PopupMenu.PopupMenuSection();
         this.historyScrollView = new St.ScrollView({
             style_class: 'ci-main-menu-section ci-history-menu-section',
             overlay_scrollbars: true
         });
-        this.historyScrollView.add_child(that.historySection.actor);
+        this.historyScrollView.add_child(this.historySection.actor);
 
-        that.scrollViewMenuSection.actor.add_child(this.historyScrollView);
+        this.scrollViewMenuSection.actor.add_child(this.historyScrollView);
 
         // Add separator
         this.historySeparator = new PopupMenu.PopupSeparatorMenuItem();
 
         // Add sections ordered according to settings
         if (PINNED_ON_BOTTOM) {
-            that.menu.addMenuItem(that.scrollViewMenuSection);
-            that.menu.addMenuItem(that.scrollViewFavoritesMenuSection);
+            this.menu.addMenuItem(this.scrollViewMenuSection);
+            this.menu.addMenuItem(this.scrollViewFavoritesMenuSection);
         }
         else {
-            that.menu.addMenuItem(that.scrollViewFavoritesMenuSection);
-            that.menu.addMenuItem(that.scrollViewMenuSection);
+            this.menu.addMenuItem(this.scrollViewFavoritesMenuSection);
+            this.menu.addMenuItem(this.scrollViewMenuSection);
         }
 
         // Private mode switch
-        that.privateModeMenuItem = new PopupMenu.PopupSwitchMenuItem(
+        this.privateModeMenuItem = new PopupMenu.PopupSwitchMenuItem(
             _("Private mode"), PRIVATEMODE, { reactive: true });
-        that.privateModeMenuItem.connect('toggled',
-            that._onPrivateModeSwitch.bind(that));
-        that.privateModeMenuItem.insert_child_at_index(
+        this.privateModeMenuItem.connect('toggled',
+            this._onPrivateModeSwitch.bind(this));
+        this.privateModeMenuItem.insert_child_at_index(
             new St.Icon({
                 icon_name: 'security-medium-symbolic',
                 style_class: 'clipboard-menu-icon',
@@ -323,7 +323,7 @@ const ClipboardIndicator = GObject.registerClass({
             }),
             0
         );
-        that.menu.addMenuItem(that.privateModeMenuItem);
+        this.menu.addMenuItem(this.privateModeMenuItem);
 
         // Add 'Clear' button which removes all items from cache
         this.clearMenuItem = new PopupMenu.PopupMenuItem(_('Clear history'));
@@ -369,7 +369,7 @@ const ClipboardIndicator = GObject.registerClass({
         timerBox.add_child(this.resetTimerButton);
         this.clearMenuItem.add_child(timerBox);
 
-        this.clearMenuItem.connect('activate', that._removeAll.bind(that));
+        this.clearMenuItem.connect('activate', this._removeAll.bind(this));
 
         // Add 'Settings' menu item to open settings
         this.settingsMenuItem = new PopupMenu.PopupMenuItem(_('Settings'));
@@ -381,7 +381,7 @@ const ClipboardIndicator = GObject.registerClass({
             }),
             0
         );
-        this.settingsMenuItem.connect('activate', that._openSettings.bind(that));
+        this.settingsMenuItem.connect('activate', this._openSettings.bind(this));
 
         // Empty state section
         this.emptyStateSection = new St.BoxLayout({
@@ -402,7 +402,7 @@ const ClipboardIndicator = GObject.registerClass({
         clipHistory.forEach(entry => this._addEntry(entry));
 
         if (lastIdx >= 0) {
-            that._selectMenuItem(clipItemsArr[lastIdx]);
+            this._selectMenuItem(clipItemsArr[lastIdx]);
         }
 
         this.#showElements();
@@ -683,6 +683,11 @@ const ClipboardIndicator = GObject.registerClass({
             menuItem.actor.add_child(menuItem.tagLabel);
         }
 
+        menuItem.actionsSpacer = new St.Widget({
+            x_expand: true,
+        });
+        menuItem.actor.add_child(menuItem.actionsSpacer);
+
         // Image preview button
         if (entry.isImage()) {
             menuItem.imagePreviewBtn = new St.Button({
@@ -694,8 +699,7 @@ const ClipboardIndicator = GObject.registerClass({
                     style_class: 'system-status-icon'
                 }),
                 visible: SHOW_PREVIEW_BUTTON,
-                x_align: Clutter.ActorAlign.END,
-                x_expand: true,
+                x_expand: false,
                 y_expand: true,
             });
             menuItem.imagePreviewBtn.connect('clicked', () => this.#showImagePreview(entry));
@@ -713,8 +717,7 @@ const ClipboardIndicator = GObject.registerClass({
                     style_class: 'system-status-icon',
                 }),
                 visible: SHOW_EDIT_BUTTON,
-                x_align: Clutter.ActorAlign.END,
-                x_expand: true,
+                x_expand: false,
                 y_expand: true,
             });
             menuItem.editBtn.connect('clicked', () => this.#showEditDialog(menuItem));
@@ -732,8 +735,7 @@ const ClipboardIndicator = GObject.registerClass({
             can_focus: true,
             child: iconfav,
             visible: SHOW_PIN_BUTTON,
-            x_align: Clutter.ActorAlign.END,
-            x_expand: !entry.isImage() && !entry.isText(),
+            x_expand: false,
             y_expand: true
         });
 
@@ -752,7 +754,6 @@ const ClipboardIndicator = GObject.registerClass({
                 icon_name: 'edit-paste-symbolic',
                 style_class: 'system-status-icon'
             }),
-            x_align: Clutter.ActorAlign.END,
             x_expand: false,
             y_expand: true,
             visible: PASTE_BUTTON
@@ -775,7 +776,6 @@ const ClipboardIndicator = GObject.registerClass({
             can_focus: true,
             child: tagIcon,
             visible: SHOW_TAG_BUTTON,
-            x_align: Clutter.ActorAlign.END,
             x_expand: false,
             y_expand: true,
         });
@@ -793,7 +793,6 @@ const ClipboardIndicator = GObject.registerClass({
             can_focus: true,
             child: icon,
             visible: SHOW_DELETE_BUTTON,
-            x_align: Clutter.ActorAlign.END,
             x_expand: false,
             y_expand: true
         });
