@@ -683,6 +683,11 @@ const ClipboardIndicator = GObject.registerClass({
             menuItem.actor.add_child(menuItem.tagLabel);
         }
 
+        menuItem.actionsSpacer = new St.Widget({
+            x_expand: true,
+        });
+        menuItem.actor.add_child(menuItem.actionsSpacer);
+
         // Image preview button
         if (entry.isImage()) {
             menuItem.imagePreviewBtn = new St.Button({
@@ -694,8 +699,7 @@ const ClipboardIndicator = GObject.registerClass({
                     style_class: 'system-status-icon'
                 }),
                 visible: SHOW_PREVIEW_BUTTON,
-                x_align: Clutter.ActorAlign.END,
-                x_expand: true,
+                x_expand: false,
                 y_expand: true,
             });
             menuItem.imagePreviewBtn.connect('clicked', () => this.#showImagePreview(entry));
@@ -713,8 +717,7 @@ const ClipboardIndicator = GObject.registerClass({
                     style_class: 'system-status-icon',
                 }),
                 visible: SHOW_EDIT_BUTTON,
-                x_align: Clutter.ActorAlign.END,
-                x_expand: true,
+                x_expand: false,
                 y_expand: true,
             });
             menuItem.editBtn.connect('clicked', () => this.#showEditDialog(menuItem));
@@ -732,8 +735,7 @@ const ClipboardIndicator = GObject.registerClass({
             can_focus: true,
             child: iconfav,
             visible: SHOW_PIN_BUTTON,
-            x_align: Clutter.ActorAlign.END,
-            x_expand: !entry.isImage() && !entry.isText(),
+            x_expand: false,
             y_expand: true
         });
 
@@ -752,7 +754,6 @@ const ClipboardIndicator = GObject.registerClass({
                 icon_name: 'edit-paste-symbolic',
                 style_class: 'system-status-icon'
             }),
-            x_align: Clutter.ActorAlign.END,
             x_expand: false,
             y_expand: true,
             visible: PASTE_BUTTON
@@ -775,7 +776,6 @@ const ClipboardIndicator = GObject.registerClass({
             can_focus: true,
             child: tagIcon,
             visible: SHOW_TAG_BUTTON,
-            x_align: Clutter.ActorAlign.END,
             x_expand: false,
             y_expand: true,
         });
@@ -793,7 +793,6 @@ const ClipboardIndicator = GObject.registerClass({
             can_focus: true,
             child: icon,
             visible: SHOW_DELETE_BUTTON,
-            x_align: Clutter.ActorAlign.END,
             x_expand: false,
             y_expand: true
         });
