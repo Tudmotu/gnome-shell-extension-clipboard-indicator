@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-01 23:48+0300\n"
+"POT-Creation-Date: 2026-04-02 01:05+0300\n"
 "PO-Revision-Date: 2026-05-06 11:57+0200\n"
 "Last-Translator: Norman Henges <normanhenges@proton.me>\n"
 "Language-Team: Deutsch <openweather@jenslody.de>\n"
@@ -18,119 +18,133 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.4.2\n"
 
-#: extension.js:144
+#: extension.js:145
 msgid "Text will be here"
 msgstr "Text wird hier angezeigt"
 
-#: extension.js:240
+#: extension.js:241
 msgid "Type here to search..."
 msgstr "Text eingeben, um zu suchen…"
 
-#: extension.js:315 prefs.js:367
+#: extension.js:316 prefs.js:374
 msgid "Private mode"
 msgstr "Privater Modus"
 
-#: extension.js:329 prefs.js:369
+#: extension.js:330 prefs.js:376
 msgid "Clear history"
 msgstr "Verlauf löschen"
 
-#: extension.js:354
+#: extension.js:355
 msgid "Reset Timer"
 msgstr "Timer zurücksetzen"
 
-#: extension.js:375
+#: extension.js:376
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: extension.js:397
+#: extension.js:398
 msgid "Clipboard is empty"
 msgstr "Zwischenablage ist leer"
 
-#: extension.js:696
+#: extension.js:706
 msgid "Preview Image"
 msgstr "Vorschaubild"
 
-#: extension.js:714 prefs.js:192
+#: extension.js:724 prefs.js:197
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: extension.js:752 prefs.js:182
+#: extension.js:762 prefs.js:187
 msgid "Paste"
 msgstr "Einfügen"
 
-#: extension.js:831
-msgid "Clear all?"
-msgstr "Alles löschen?"
+#: extension.js:845
+#, fuzzy
+msgid "Delete pinned item?"
+msgstr "Nur Favoriten im Cache behalten"
 
-#: extension.js:832
-msgid "Are you sure you want to delete all clipboard items?"
+#: extension.js:846
+#, fuzzy
+msgid "Are you sure you want to delete this pinned item?"
 msgstr "Soll die Zwischenablage wirklich geleert werden?"
 
-#: extension.js:833
+#: extension.js:847 extension.js:858
 msgid "This operation cannot be undone."
 msgstr "Diese Aktion kann nicht rückgängig gemacht werden."
 
-#: extension.js:835
-msgid "Clear"
+#: extension.js:849 prefs.js:177
+msgid "Delete"
 msgstr "Löschen"
 
-#: extension.js:835 extension.js:1015
+#: extension.js:849 extension.js:860 extension.js:1040
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: extension.js:851
+#: extension.js:856
+msgid "Clear all?"
+msgstr "Alles löschen?"
+
+#: extension.js:857
+msgid "Are you sure you want to delete all clipboard items?"
+msgstr "Soll die Zwischenablage wirklich geleert werden?"
+
+#: extension.js:860
+msgid "Clear"
+msgstr "Löschen"
+
+#: extension.js:876
 msgid "Clipboard history cleared automatically"
 msgstr "Verlauf der Zwischenablage automatisch gelöscht"
 
-#: extension.js:852
+#: extension.js:877
 msgid "Clipboard history cleared"
 msgstr "Verlauf der Zwischenablage gelöscht"
 
-#: extension.js:1014
+#: extension.js:1039
 msgid "Copied to clipboard"
 msgstr "In Zwischenablage kopiert"
 
-#: extension.js:1730
+#: extension.js:1756
 msgid "Enter tag…"
 msgstr "Schlagwort eingeben…"
 
-#: extension.js:1739 extension.js:1831
+#: extension.js:1765 extension.js:1857
 msgid "Discard"
 msgstr "Verwerfen"
 
-#: extension.js:1748 extension.js:1840
+#: extension.js:1774 extension.js:1866
 msgid "Save"
 msgstr "Speichern"
 
-#: prefs.js:15 prefs.js:256
+#: prefs.js:15 prefs.js:261
 msgid "UI"
 msgstr "Oberfläche"
 
-#: prefs.js:16 prefs.js:257
+#: prefs.js:16 prefs.js:262
 msgid "Behavior"
 msgstr "Verhalten"
 
-#: prefs.js:17 prefs.js:263
+#: prefs.js:17 prefs.js:268
 msgid "Search"
 msgstr "Suche"
 
-#: prefs.js:18 prefs.js:259
+#: prefs.js:18 prefs.js:264
 msgid "Limits"
 msgstr "Grenzwerte"
 
-#: prefs.js:19 prefs.js:258
+#: prefs.js:19 prefs.js:263
 msgid "Exclusion"
 msgstr "Ausnahmen"
 
-#: prefs.js:20 prefs.js:260
+#: prefs.js:20 prefs.js:265
 msgid "Topbar"
 msgstr "Obere Leiste"
 
-#: prefs.js:21 prefs.js:261
+#: prefs.js:21 prefs.js:266
 msgid "Notifications"
 msgstr "Benachrichtigungen"
 
-#: prefs.js:22 prefs.js:262
+#: prefs.js:22 prefs.js:267
 msgid "Shortcuts"
 msgstr "Tastenkombinationen"
 
@@ -233,26 +247,34 @@ msgid "Ask before deleting all clipboard entries"
 msgstr "Nachfragen, bevor alle Einträge gelöscht werden"
 
 #: prefs.js:120
+msgid "Prompt before deleting pinned item"
+msgstr ""
+
+#: prefs.js:121
+msgid "Ask for confirmation before deleting a pinned item"
+msgstr ""
+
+#: prefs.js:125
 msgid "Remove whitespace around text"
 msgstr "Leerzeichen vor und nach dem Text entfernen"
 
-#: prefs.js:121
+#: prefs.js:126
 msgid "Strip leading and trailing whitespace from text entries on copy"
 msgstr "Beim Kopieren Leerzeichen vor und nach dem Text entfernen"
 
-#: prefs.js:125
+#: prefs.js:130
 msgid "Move item to the top after selection"
 msgstr "Eintrag bei Auswahl nach oben verschieben"
 
-#: prefs.js:126
+#: prefs.js:131
 msgid "When selecting an entry, bring it to the top of the history"
 msgstr "Eintrag bei Auswahl an den Anfang der Verlaufsliste verschieben"
 
-#: prefs.js:130
+#: prefs.js:135
 msgid "Keep selected entry after Clear History"
 msgstr "Aktiven Eintrag beim Löschen des Verlaufs beibehalten"
 
-#: prefs.js:131
+#: prefs.js:136
 msgid ""
 "The currently active clipboard entry will not be removed when clearing "
 "history"
@@ -260,221 +282,217 @@ msgstr ""
 "Den derzeit ausgewählten Eintrag nicht löschen, wenn der Verlauf gelöscht "
 "wird"
 
-#: prefs.js:135
+#: prefs.js:140
 msgid "Place the pinned section on the bottom"
 msgstr "Favoriten am Ende der Liste anzeigen"
 
-#: prefs.js:136
+#: prefs.js:141
 msgid "Move the pinned section to the bottom of the menu. Requires re-login"
 msgstr ""
 "Den Bereich mit angehefteten Einträgen ans Ende der Liste verschieben "
 "(erfordert Neuanmeldung)"
 
-#: prefs.js:140
+#: prefs.js:145
 msgid "Show Search Bar"
 msgstr "Suchleiste anzeigen"
 
-#: prefs.js:141
+#: prefs.js:146
 msgid "Display a search field at the top of the clipboard menu"
 msgstr "Ein Suchfeld oben im Menü anzeigen"
 
-#: prefs.js:144
+#: prefs.js:149
 msgid "Show Private Mode"
 msgstr "Schaltfläche „Privater Modus“ anzeigen"
 
-#: prefs.js:145
+#: prefs.js:150
 msgid "Display the private mode toggle in the clipboard menu"
 msgstr "Den Schalter zum Aktivieren des privaten Modus' im Menü anzeigen"
 
-#: prefs.js:148
+#: prefs.js:153
 msgid "Show Settings Button"
 msgstr "Schaltfläche „Einstellungen“ anzeigen"
 
-#: prefs.js:149
+#: prefs.js:154
 msgid "Display a shortcut to these settings in the clipboard menu"
 msgstr ""
 "Die Schaltfläche für den schnellen Zugriff auf diese Einstellungen im Menü "
 "anzeigen"
 
-#: prefs.js:152
+#: prefs.js:157
 msgid "Show Clear History Button"
 msgstr "Schaltfläche „Verlauf löschen“ anzeigen"
 
-#: prefs.js:153
+#: prefs.js:158
 msgid "Display the clear history button in the clipboard menu"
 msgstr "Die Schaltfläche zum Löschen des Verlaufs im Menü anzeigen"
 
-#: prefs.js:157
+#: prefs.js:162
 msgid "Clear clipboard history on system reboot"
 msgstr "Verlauf bei Neustart löschen"
 
-#: prefs.js:158
+#: prefs.js:163
 msgid "Delete all cached clipboard entries when the system starts"
 msgstr ""
 "Alle zwischengespeicherten Einträge im Verlauf beim Neustart des Systems "
 "löschen"
 
-#: prefs.js:162
+#: prefs.js:167
 msgid "Paste on select"
 msgstr "Bei Auswahl einfügen"
 
-#: prefs.js:163
+#: prefs.js:168
 msgid "Automatically paste the entry into the active window when selected"
 msgstr ""
 "Den jeweiligen Eintrag automatisch im aktiven Fenster einfügen, wenn dieser "
 "ausgewählt wird"
 
-#: prefs.js:167
+#: prefs.js:172
 msgid "Open menu at cursor"
 msgstr "Menü an Zeigerposition öffnen"
 
-#: prefs.js:168
+#: prefs.js:173
 msgid "When using the keyboard shortcut, open the menu at the cursor position"
 msgstr ""
 "Bei Nutzung der Tastenkombination das Menü an der aktuellen Position des "
 "Mauszeigers öffnen"
 
-#: prefs.js:172
-msgid "Delete"
-msgstr "Löschen"
-
-#: prefs.js:173
+#: prefs.js:178
 msgid "Show the delete button on each item"
 msgstr "Die Schaltfläche zum Löschen an jedem Eintrag anzeigen"
 
-#: prefs.js:177
+#: prefs.js:182
 msgid "Tag"
 msgstr "Schlagwort hinzufügen"
 
-#: prefs.js:178
+#: prefs.js:183
 msgid "Show the tag button on each item"
 msgstr ""
 "Die Schaltfläche zum Hinzufügen eines Schlagwortes an jedem Eintrag anzeigen"
 
-#: prefs.js:183
+#: prefs.js:188
 msgid "Show the paste button on each item"
 msgstr "Die Schaltfläche zum Einfügen an jedem Eintrag anzeigen"
 
-#: prefs.js:187
+#: prefs.js:192
 msgid "Pin"
 msgstr "Anheften"
 
-#: prefs.js:188
+#: prefs.js:193
 msgid "Show the pin/favorite button on each item"
 msgstr "Die Schaltfläche zum Anheften an jedem Eintrag anzeigen"
 
-#: prefs.js:193
+#: prefs.js:198
 msgid "Show the edit button on each text item"
 msgstr "Die Schaltfläche zum Bearbeiten an jedem Texteintrag anzeigen"
 
-#: prefs.js:197
+#: prefs.js:202
 msgid "Preview"
 msgstr "Vorschau"
 
-#: prefs.js:198
+#: prefs.js:203
 msgid "Show the preview button on each image item"
 msgstr "Die Schaltfläche für die Vorschau an jedem Bildeintrag anzeigen"
 
-#: prefs.js:202
+#: prefs.js:207
 msgid "Cache images"
 msgstr "Bilder zwischenspeichern"
 
-#: prefs.js:203
+#: prefs.js:208
 msgid "Save copied images to clipboard history"
 msgstr "Kopierte Bilder in Verlauf aufnehmen"
 
-#: prefs.js:208
+#: prefs.js:213
 msgid "Excluded Apps"
 msgstr "Ausgeschlossene Anwendungen"
 
-#: prefs.js:209
+#: prefs.js:214
 msgid "Content copied will not be saved while these apps are in focus"
 msgstr ""
 "Kopierte Inhalte werden nicht gespeichert, während diese Anwendungen "
 "fokussiert sind"
 
-#: prefs.js:220
+#: prefs.js:225
 msgid "Case-sensitive"
 msgstr "Groß- und Kleinschreibung beachten"
 
-#: prefs.js:221
+#: prefs.js:226
 msgid "Match uppercase and lowercase letters exactly when searching"
 msgstr "Bei der Suche Groß- und Kleinbuchstaben exakt prüfen"
 
-#: prefs.js:225
+#: prefs.js:230
 msgid "Regular expressions"
 msgstr "Reguläre Ausdrücke"
 
-#: prefs.js:226
+#: prefs.js:231
 msgid "Allow regular expressions to filter clipboard entries"
 msgstr ""
 "Verwendung von regulären Ausdrücken beim Filtern von Einträgen zulassen"
 
-#: prefs.js:239
+#: prefs.js:244
 msgid "Clear clipboard history on interval"
 msgstr "Verlauf nach einiger Zeit löschen"
 
-#: prefs.js:240
+#: prefs.js:245
 msgid "Automatically clear clipboard history at a recurring interval"
 msgstr "Verlauf nach einem wiederkehrenden Zeitintervall automatisch löschen"
 
-#: prefs.js:244
+#: prefs.js:249
 msgid "History clear interval (in minutes)"
 msgstr "Löschintervall (in Minuten)"
 
-#: prefs.js:264
+#: prefs.js:269
 msgid "Item Actions"
 msgstr "Aktionen je Eintrag"
 
-#: prefs.js:354
+#: prefs.js:361
 msgid "Icon"
 msgstr "Symbol"
 
-#: prefs.js:355
+#: prefs.js:362
 msgid "Clipboard Content"
 msgstr "Inhalt der Zwischenablage"
 
-#: prefs.js:356
+#: prefs.js:363
 msgid "Both"
 msgstr "Beides"
 
-#: prefs.js:357
+#: prefs.js:364
 msgid "Neither"
 msgstr "Nichts"
 
-#: prefs.js:368
+#: prefs.js:375
 msgid "Toggle the menu"
 msgstr "Menü öffnen/schließen"
 
-#: prefs.js:370
+#: prefs.js:377
 msgid "Previous entry"
 msgstr "Vorheriger Eintrag"
 
-#: prefs.js:371
+#: prefs.js:378
 msgid "Next entry"
 msgstr "Nächster Eintrag"
 
-#: prefs.js:376
+#: prefs.js:383
 msgid "Enable shortcuts"
 msgstr "Tastenkombinationen aktivieren"
 
-#: prefs.js:401
+#: prefs.js:408
 msgid "Disabled"
 msgstr "Deaktiviert"
 
-#: prefs.js:410
+#: prefs.js:417
 msgid "Enter shortcut"
 msgstr "Tastenkombination eingeben"
 
-#: prefs.js:497
+#: prefs.js:504
 msgid "Window class name, e.g. \"KeePassXC\""
 msgstr "Name der Fensterklasse, z. B. \"KeePassXC\""
 
-#: prefs.js:509
+#: prefs.js:516
 msgid "Choose from installed applications"
 msgstr "Installierte Anwendung auswählen"
 
-#: prefs.js:526
+#: prefs.js:533
 msgid "Search applications..."
 msgstr "Anwendungen suchen..."
 

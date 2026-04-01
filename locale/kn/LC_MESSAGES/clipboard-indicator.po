@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-shell-extension-clipboard-indicator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-01 23:48+0300\n"
+"POT-Creation-Date: 2026-04-02 01:05+0300\n"
 "PO-Revision-Date: 2024-12-20 23:19+0530\n"
 "Last-Translator: Sachin <sachin.aralapura@gmail.com>\n"
 "Language-Team: Kannada <debian-l10n-kannada@lists.debian.org>\n"
@@ -16,120 +16,134 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: extension.js:144
+#: extension.js:145
 msgid "Text will be here"
 msgstr "ಪಠ್ಯ ಇಲ್ಲಿ ಇರುತ್ತದೆ"
 
-#: extension.js:240
+#: extension.js:241
 msgid "Type here to search..."
 msgstr "ಹುಡುಕಲು ಇಲ್ಲಿ ಟೈಪ್ ಮಾಡಿ..."
 
-#: extension.js:315 prefs.js:367
+#: extension.js:316 prefs.js:374
 msgid "Private mode"
 msgstr "ಖಾಸಗಿ ಮೋಡ್"
 
-#: extension.js:329 prefs.js:369
+#: extension.js:330 prefs.js:376
 msgid "Clear history"
 msgstr "ಇತಿಹಾಸವನ್ನು ಅಳಿಸಿ"
 
-#: extension.js:354
+#: extension.js:355
 msgid "Reset Timer"
 msgstr ""
 
-#: extension.js:375
+#: extension.js:376
 msgid "Settings"
 msgstr "ಸೆಟ್ಟಿಂಗ್‌ಗಳು"
 
-#: extension.js:397
+#: extension.js:398
 msgid "Clipboard is empty"
 msgstr "ಕ್ಲಿಪ್‌ಬೋರ್ಡ್ ಖಾಲಿಯಾಗಿದೆ"
 
-#: extension.js:696
+#: extension.js:706
 msgid "Preview Image"
 msgstr ""
 
-#: extension.js:714 prefs.js:192
+#: extension.js:724 prefs.js:197
 msgid "Edit"
 msgstr ""
 
-#: extension.js:752 prefs.js:182
+#: extension.js:762 prefs.js:187
 msgid "Paste"
 msgstr ""
 
-#: extension.js:831
-msgid "Clear all?"
-msgstr "ಎಲ್ಲಾ ಅಳಿಸಬಹುದೇ?"
+#: extension.js:845
+#, fuzzy
+msgid "Delete pinned item?"
+msgstr "ಪಿನ್ ಮಾಡಿರುವ ಐಟಂಗಳನ್ನು ಮಾತ್ರ ಕಾಶೆ ಮಾಡಿ"
 
-#: extension.js:832
-msgid "Are you sure you want to delete all clipboard items?"
+#: extension.js:846
+#, fuzzy
+msgid "Are you sure you want to delete this pinned item?"
 msgstr "ನೀವು ಎಲ್ಲಾ ಕ್ಲಿಪ್‌ಬೋರ್ಡ್ ಐಟಂಗಳನ್ನು ಅಳಿಸಲು ಖಚಿತವೇ?"
 
-#: extension.js:833
+#: extension.js:847 extension.js:858
 msgid "This operation cannot be undone."
 msgstr "ಈ ಕಾರ್ಯವನ್ನು ಹಿಂತೆಗೆದುಕೊಳ್ಳಲು ಸಾಧ್ಯವಿಲ್ಲ."
 
-#: extension.js:835
-msgid "Clear"
-msgstr "ಅಳಿಸಿ"
+#: extension.js:849 prefs.js:177
+msgid "Delete"
+msgstr ""
 
-#: extension.js:835 extension.js:1015
+#: extension.js:849 extension.js:860 extension.js:1040
 msgid "Cancel"
 msgstr "ರದ್ದುಗೊಳಿಸಿ"
 
-#: extension.js:851
+#: extension.js:856
+msgid "Clear all?"
+msgstr "ಎಲ್ಲಾ ಅಳಿಸಬಹುದೇ?"
+
+#: extension.js:857
+msgid "Are you sure you want to delete all clipboard items?"
+msgstr "ನೀವು ಎಲ್ಲಾ ಕ್ಲಿಪ್‌ಬೋರ್ಡ್ ಐಟಂಗಳನ್ನು ಅಳಿಸಲು ಖಚಿತವೇ?"
+
+#: extension.js:860
+msgid "Clear"
+msgstr "ಅಳಿಸಿ"
+
+#: extension.js:876
 #, fuzzy
 msgid "Clipboard history cleared automatically"
 msgstr "ಕ್ಲಿಪ್‌ಬೋರ್ಡ್ ಇತಿಹಾಸ ಅಳಿಸಲಾಗಿದೆ"
 
-#: extension.js:852
+#: extension.js:877
 msgid "Clipboard history cleared"
 msgstr "ಕ್ಲಿಪ್‌ಬೋರ್ಡ್ ಇತಿಹಾಸ ಅಳಿಸಲಾಗಿದೆ"
 
-#: extension.js:1014
+#: extension.js:1039
 msgid "Copied to clipboard"
 msgstr "ಕ್ಲಿಪ್‌ಬೋರ್ಡ್‌ಗೆ ನಕಲಿಸಲಾಗಿದೆ"
 
-#: extension.js:1730
+#: extension.js:1756
 msgid "Enter tag…"
 msgstr ""
 
-#: extension.js:1739 extension.js:1831
+#: extension.js:1765 extension.js:1857
 msgid "Discard"
 msgstr ""
 
-#: extension.js:1748 extension.js:1840
+#: extension.js:1774 extension.js:1866
 msgid "Save"
 msgstr ""
 
-#: prefs.js:15 prefs.js:256
+#: prefs.js:15 prefs.js:261
 msgid "UI"
 msgstr "ಬಳಕೆದಾರ ಇಂಟರ್‌ಫೇಸ್"
 
-#: prefs.js:16 prefs.js:257
+#: prefs.js:16 prefs.js:262
 msgid "Behavior"
 msgstr ""
 
-#: prefs.js:17 prefs.js:263
+#: prefs.js:17 prefs.js:268
 msgid "Search"
 msgstr ""
 
-#: prefs.js:18 prefs.js:259
+#: prefs.js:18 prefs.js:264
 msgid "Limits"
 msgstr "ಮಿತಿಗಳು"
 
-#: prefs.js:19 prefs.js:258
+#: prefs.js:19 prefs.js:263
 msgid "Exclusion"
 msgstr ""
 
-#: prefs.js:20 prefs.js:260
+#: prefs.js:20 prefs.js:265
 msgid "Topbar"
 msgstr "ಟಾಪ್‌ಬಾರ್"
 
-#: prefs.js:21 prefs.js:261
+#: prefs.js:21 prefs.js:266
 msgid "Notifications"
 msgstr "ಅಧಿಸೂಚನೆಗಳು"
 
-#: prefs.js:22 prefs.js:262
+#: prefs.js:22 prefs.js:267
 msgid "Shortcuts"
 msgstr "ಶಾರ್ಟ್‌ಕಟ್‌ಗಳು"
 
@@ -232,241 +246,245 @@ msgid "Ask before deleting all clipboard entries"
 msgstr "ನೀವು ಎಲ್ಲಾ ಕ್ಲಿಪ್‌ಬೋರ್ಡ್ ಐಟಂಗಳನ್ನು ಅಳಿಸಲು ಖಚಿತವೇ?"
 
 #: prefs.js:120
-msgid "Remove whitespace around text"
-msgstr "ಪಠ್ಯದ ಸುತ್ತಲಿನ ಖಾಲಿ ಸ್ಥಳವನ್ನು ತೆಗೆದುಹಾಕಿ"
+msgid "Prompt before deleting pinned item"
+msgstr ""
 
 #: prefs.js:121
-msgid "Strip leading and trailing whitespace from text entries on copy"
+msgid "Ask for confirmation before deleting a pinned item"
 msgstr ""
 
 #: prefs.js:125
-msgid "Move item to the top after selection"
-msgstr "ಆಯ್ಕೆ ಮಾಡಿದ ನಂತರ ಐಟಂವನ್ನು ಮೇಲಕ್ಕೆ ಸರಿಸಿ"
+msgid "Remove whitespace around text"
+msgstr "ಪಠ್ಯದ ಸುತ್ತಲಿನ ಖಾಲಿ ಸ್ಥಳವನ್ನು ತೆಗೆದುಹಾಕಿ"
 
 #: prefs.js:126
-msgid "When selecting an entry, bring it to the top of the history"
+msgid "Strip leading and trailing whitespace from text entries on copy"
 msgstr ""
 
 #: prefs.js:130
+msgid "Move item to the top after selection"
+msgstr "ಆಯ್ಕೆ ಮಾಡಿದ ನಂತರ ಐಟಂವನ್ನು ಮೇಲಕ್ಕೆ ಸರಿಸಿ"
+
+#: prefs.js:131
+msgid "When selecting an entry, bring it to the top of the history"
+msgstr ""
+
+#: prefs.js:135
 msgid "Keep selected entry after Clear History"
 msgstr "ಇತಿಹಾಸ ಅಳಿಸಿದ ನಂತರ ಆಯ್ಕೆ ಮಾಡಿದ ಎಂಟ್ರಿಯನ್ನು ಉಳಿಸಿ"
 
-#: prefs.js:131
+#: prefs.js:136
 msgid ""
 "The currently active clipboard entry will not be removed when clearing "
 "history"
 msgstr ""
 
-#: prefs.js:135
+#: prefs.js:140
 msgid "Place the pinned section on the bottom"
 msgstr "ಪಿನ್ ಮಾಡಿರುವ ವಿಭಾಗವನ್ನು ಕೆಳಭಾಗದಲ್ಲಿ ಇರಿಸಿ"
 
-#: prefs.js:136
+#: prefs.js:141
 #, fuzzy
 msgid "Move the pinned section to the bottom of the menu. Requires re-login"
 msgstr "ಪಿನ್ ಮಾಡಿರುವ ವಿಭಾಗವನ್ನು ಕೆಳಭಾಗದಲ್ಲಿ ಇರಿಸಿ"
 
-#: prefs.js:140
+#: prefs.js:145
 msgid "Show Search Bar"
 msgstr ""
 
-#: prefs.js:141
+#: prefs.js:146
 msgid "Display a search field at the top of the clipboard menu"
 msgstr ""
 
-#: prefs.js:144
+#: prefs.js:149
 #, fuzzy
 msgid "Show Private Mode"
 msgstr "ಖಾಸಗಿ ಮೋಡ್"
 
-#: prefs.js:145
+#: prefs.js:150
 msgid "Display the private mode toggle in the clipboard menu"
 msgstr ""
 
-#: prefs.js:148
+#: prefs.js:153
 #, fuzzy
 msgid "Show Settings Button"
 msgstr "ಪೇಸ್ಟ್ ಬಟನ್‌ಗಳನ್ನು ತೋರಿಸಿ"
 
-#: prefs.js:149
+#: prefs.js:154
 msgid "Display a shortcut to these settings in the clipboard menu"
-msgstr ""
-
-#: prefs.js:152
-#, fuzzy
-msgid "Show Clear History Button"
-msgstr "ಪೇಸ್ಟ್ ಬಟನ್‌ಗಳನ್ನು ತೋರಿಸಿ"
-
-#: prefs.js:153
-msgid "Display the clear history button in the clipboard menu"
 msgstr ""
 
 #: prefs.js:157
 #, fuzzy
-msgid "Clear clipboard history on system reboot"
-msgstr "ಕ್ಲಿಪ್‌ಬೋರ್ಡ್ ಇತಿಹಾಸ ಅಳಿಸಲಾಗಿದೆ"
+msgid "Show Clear History Button"
+msgstr "ಪೇಸ್ಟ್ ಬಟನ್‌ಗಳನ್ನು ತೋರಿಸಿ"
 
 #: prefs.js:158
-msgid "Delete all cached clipboard entries when the system starts"
+msgid "Display the clear history button in the clipboard menu"
 msgstr ""
 
 #: prefs.js:162
-msgid "Paste on select"
-msgstr ""
+#, fuzzy
+msgid "Clear clipboard history on system reboot"
+msgstr "ಕ್ಲಿಪ್‌ಬೋರ್ಡ್ ಇತಿಹಾಸ ಅಳಿಸಲಾಗಿದೆ"
 
 #: prefs.js:163
-msgid "Automatically paste the entry into the active window when selected"
+msgid "Delete all cached clipboard entries when the system starts"
 msgstr ""
 
 #: prefs.js:167
-msgid "Open menu at cursor"
+msgid "Paste on select"
 msgstr ""
 
 #: prefs.js:168
-msgid "When using the keyboard shortcut, open the menu at the cursor position"
+msgid "Automatically paste the entry into the active window when selected"
 msgstr ""
 
 #: prefs.js:172
-msgid "Delete"
+msgid "Open menu at cursor"
 msgstr ""
 
 #: prefs.js:173
-msgid "Show the delete button on each item"
-msgstr ""
-
-#: prefs.js:177
-msgid "Tag"
+msgid "When using the keyboard shortcut, open the menu at the cursor position"
 msgstr ""
 
 #: prefs.js:178
-msgid "Show the tag button on each item"
+msgid "Show the delete button on each item"
+msgstr ""
+
+#: prefs.js:182
+msgid "Tag"
 msgstr ""
 
 #: prefs.js:183
+msgid "Show the tag button on each item"
+msgstr ""
+
+#: prefs.js:188
 #, fuzzy
 msgid "Show the paste button on each item"
 msgstr "ಪೇಸ್ಟ್ ಬಟನ್‌ಗಳನ್ನು ತೋರಿಸಿ"
 
-#: prefs.js:187
+#: prefs.js:192
 msgid "Pin"
 msgstr ""
 
-#: prefs.js:188
+#: prefs.js:193
 msgid "Show the pin/favorite button on each item"
 msgstr ""
 
-#: prefs.js:193
+#: prefs.js:198
 msgid "Show the edit button on each text item"
 msgstr ""
 
-#: prefs.js:197
+#: prefs.js:202
 msgid "Preview"
 msgstr ""
 
-#: prefs.js:198
+#: prefs.js:203
 msgid "Show the preview button on each image item"
 msgstr ""
 
-#: prefs.js:202
+#: prefs.js:207
 msgid "Cache images"
 msgstr ""
 
-#: prefs.js:203
+#: prefs.js:208
 #, fuzzy
 msgid "Save copied images to clipboard history"
 msgstr "ಕ್ಲಿಪ್‌ಬೋರ್ಡ್‌ಗೆ ನಕಲಿಸಲಾಗಿದೆ"
 
-#: prefs.js:208
+#: prefs.js:213
 msgid "Excluded Apps"
 msgstr ""
 
-#: prefs.js:209
+#: prefs.js:214
 msgid "Content copied will not be saved while these apps are in focus"
 msgstr ""
 
-#: prefs.js:220
+#: prefs.js:225
 msgid "Case-sensitive"
 msgstr ""
 
-#: prefs.js:221
+#: prefs.js:226
 msgid "Match uppercase and lowercase letters exactly when searching"
 msgstr ""
 
-#: prefs.js:225
+#: prefs.js:230
 msgid "Regular expressions"
 msgstr ""
 
-#: prefs.js:226
+#: prefs.js:231
 msgid "Allow regular expressions to filter clipboard entries"
 msgstr ""
 
-#: prefs.js:239
+#: prefs.js:244
 #, fuzzy
 msgid "Clear clipboard history on interval"
 msgstr "ಕ್ಲಿಪ್‌ಬೋರ್ಡ್ ಇತಿಹಾಸ ಅಳಿಸಲಾಗಿದೆ"
 
-#: prefs.js:240
+#: prefs.js:245
 #, fuzzy
 msgid "Automatically clear clipboard history at a recurring interval"
 msgstr "ಕ್ಲಿಪ್‌ಬೋರ್ಡ್ ಇತಿಹಾಸ ಅಳಿಸಲಾಗಿದೆ"
 
-#: prefs.js:244
+#: prefs.js:249
 msgid "History clear interval (in minutes)"
 msgstr ""
 
-#: prefs.js:264
+#: prefs.js:269
 msgid "Item Actions"
 msgstr ""
 
-#: prefs.js:354
+#: prefs.js:361
 msgid "Icon"
 msgstr "ಚಿಹ್ನೆ"
 
-#: prefs.js:355
+#: prefs.js:362
 msgid "Clipboard Content"
 msgstr "ಕ್ಲಿಪ್‌ಬೋರ್ಡ್ ವಿಷಯ"
 
-#: prefs.js:356
+#: prefs.js:363
 msgid "Both"
 msgstr "ಎರಡೂ"
 
-#: prefs.js:357
+#: prefs.js:364
 msgid "Neither"
 msgstr "ಯಾವುದೂ ಇಲ್ಲ"
 
-#: prefs.js:368
+#: prefs.js:375
 msgid "Toggle the menu"
 msgstr "ಮೆನು ಪರಿವರ್ತನೆ ಮಾಡಿ"
 
-#: prefs.js:370
+#: prefs.js:377
 msgid "Previous entry"
 msgstr "ಹಿಂದಿನ ಎಂಟ್ರಿ"
 
-#: prefs.js:371
+#: prefs.js:378
 msgid "Next entry"
 msgstr "ಮುಂದಿನ ಎಂಟ್ರಿ"
 
-#: prefs.js:376
+#: prefs.js:383
 msgid "Enable shortcuts"
 msgstr "ಶಾರ್ಟ್‌ಕಟ್‌ಗಳನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ"
 
-#: prefs.js:401
+#: prefs.js:408
 msgid "Disabled"
 msgstr "ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ"
 
-#: prefs.js:410
+#: prefs.js:417
 msgid "Enter shortcut"
 msgstr "ಶಾರ್ಟ್‌ಕಟ್ ನಮೂದಿಸಿ"
 
-#: prefs.js:497
+#: prefs.js:504
 msgid "Window class name, e.g. \"KeePassXC\""
 msgstr ""
 
-#: prefs.js:509
+#: prefs.js:516
 msgid "Choose from installed applications"
 msgstr ""
 
-#: prefs.js:526
+#: prefs.js:533
 msgid "Search applications..."
 msgstr ""
 
