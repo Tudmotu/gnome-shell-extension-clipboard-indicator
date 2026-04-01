@@ -8,6 +8,7 @@ export const PrefsFields = {
     NOTIFY_ON_CYCLE                 : 'notify-on-cycle',
     NOTIFY_ON_CLEAR                 : 'notify-on-clear',
     CONFIRM_ON_CLEAR                : 'confirm-clear',
+    CONFIRM_ON_PINNED_DELETE        : 'confirm-pinned-delete',
     MOVE_ITEM_FIRST                 : 'move-item-first',
     ENABLE_KEYBINDING               : 'enable-keybindings',
     TOPBAR_PREVIEW_SIZE             : 'topbar-preview-size',

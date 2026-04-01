@@ -116,6 +116,11 @@ class Settings {
             subtitle: _("Ask before deleting all clipboard entries")
         });
 
+        this.field_confirm_pinned_delete_toggle = new Adw.SwitchRow({
+            title: _("Prompt before deleting pinned item"),
+            subtitle: _("Ask for confirmation before deleting a pinned item")
+        });
+
         this.field_strip_text = new Adw.SwitchRow({
             title: _("Remove whitespace around text"),
             subtitle: _("Strip leading and trailing whitespace from text entries on copy")
@@ -265,6 +270,7 @@ class Settings {
 
         this.ui.add(this.field_preview_size);
         this.ui.add(this.field_confirm_clear_toggle);
+        this.ui.add(this.field_confirm_pinned_delete_toggle);
         this.ui.add(this.field_pinned_on_bottom);
         this.ui.add(this.field_show_search_bar);
         this.ui.add(this.field_show_private_mode);
@@ -317,6 +323,7 @@ class Settings {
         this.schema.bind(PrefsFields.NOTIFY_ON_CYCLE, this.field_cycle_notification_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.NOTIFY_ON_CLEAR, this.field_clear_notification_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.CONFIRM_ON_CLEAR, this.field_confirm_clear_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.CONFIRM_ON_PINNED_DELETE, this.field_confirm_pinned_delete_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.MOVE_ITEM_FIRST, this.field_move_item_first, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.KEEP_SELECTED_ON_CLEAR, this.field_keep_selected_on_clear, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.TOPBAR_DISPLAY_MODE_ID, this.field_display_mode, 'selected', Gio.SettingsBindFlags.DEFAULT);
