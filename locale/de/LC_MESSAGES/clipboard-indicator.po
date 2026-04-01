@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-31 07:39+0300\n"
+"POT-Creation-Date: 2026-04-01 23:48+0300\n"
 "PO-Revision-Date: 2026-05-06 11:57+0200\n"
 "Last-Translator: Norman Henges <normanhenges@proton.me>\n"
 "Language-Team: Deutsch <openweather@jenslody.de>\n"
@@ -156,7 +156,9 @@ msgstr "Maximale Größe der Cachedatei (MB)"
 
 #: prefs.js:61
 msgid "Maximum disk space used for caching clipboard data"
-msgstr "Maximaler Speicherplatz, der zum Zwischenspeichern von Zwischenablagedaten verwendet wird"
+msgstr ""
+"Maximaler Speicherplatz, der zum Zwischenspeichern von Zwischenablagedaten "
+"verwendet wird"
 
 #: prefs.js:70
 msgid "Number of characters in top bar"
@@ -164,7 +166,8 @@ msgstr "Anzahl der Zeichen in oberer Leiste"
 
 #: prefs.js:71
 msgid "Length of the clipboard content preview shown in the panel"
-msgstr "Vorschaulänge des aktuellen Inhalts der Zwischenablage in der oberen Leiste"
+msgstr ""
+"Vorschaulänge des aktuellen Inhalts der Zwischenablage in der oberen Leiste"
 
 #: prefs.js:80
 msgid "What to show in top bar"
@@ -184,7 +187,8 @@ msgstr "Symbol beim Kopieren aufleuchten lassen"
 
 #: prefs.js:91
 msgid "Briefly flash the indicator icon when something is copied"
-msgstr "Symbol in oberer Leiste kurz aufleuchten lassen, wenn Inhalte kopiert werden"
+msgstr ""
+"Symbol in oberer Leiste kurz aufleuchten lassen, wenn Inhalte kopiert werden"
 
 #: prefs.js:95
 msgid "Cache only pinned items"
@@ -208,7 +212,9 @@ msgstr "Benachrichtigung beim Durchschalten anzeigen"
 
 #: prefs.js:106
 msgid "Display a notification when cycling through entries with shortcuts"
-msgstr "Eine Benachrichtigung anzeigen, wenn per Tastenkombination zwischen Einträgen gewechselt wird"
+msgstr ""
+"Eine Benachrichtigung anzeigen, wenn per Tastenkombination zwischen "
+"Einträgen gewechselt wird"
 
 #: prefs.js:110
 msgid "Show notification on Clear History"
@@ -250,8 +256,9 @@ msgstr "Aktiven Eintrag beim Löschen des Verlaufs beibehalten"
 msgid ""
 "The currently active clipboard entry will not be removed when clearing "
 "history"
-msgstr "Den derzeit ausgewählten Eintrag nicht löschen, wenn der Verlauf "
-"gelöscht wird"
+msgstr ""
+"Den derzeit ausgewählten Eintrag nicht löschen, wenn der Verlauf gelöscht "
+"wird"
 
 #: prefs.js:135
 msgid "Place the pinned section on the bottom"
@@ -259,7 +266,9 @@ msgstr "Favoriten am Ende der Liste anzeigen"
 
 #: prefs.js:136
 msgid "Move the pinned section to the bottom of the menu. Requires re-login"
-msgstr "Den Bereich mit angehefteten Einträgen ans Ende der Liste verschieben (erfordert Neuanmeldung)"
+msgstr ""
+"Den Bereich mit angehefteten Einträgen ans Ende der Liste verschieben "
+"(erfordert Neuanmeldung)"
 
 #: prefs.js:140
 msgid "Show Search Bar"
@@ -283,7 +292,9 @@ msgstr "Schaltfläche „Einstellungen“ anzeigen"
 
 #: prefs.js:149
 msgid "Display a shortcut to these settings in the clipboard menu"
-msgstr "Die Schaltfläche für den schnellen Zugriff auf diese Einstellungen im Menü anzeigen"
+msgstr ""
+"Die Schaltfläche für den schnellen Zugriff auf diese Einstellungen im Menü "
+"anzeigen"
 
 #: prefs.js:152
 msgid "Show Clear History Button"
@@ -299,7 +310,9 @@ msgstr "Verlauf bei Neustart löschen"
 
 #: prefs.js:158
 msgid "Delete all cached clipboard entries when the system starts"
-msgstr "Alle zwischengespeicherten Einträge im Verlauf beim Neustart des Systems löschen"
+msgstr ""
+"Alle zwischengespeicherten Einträge im Verlauf beim Neustart des Systems "
+"löschen"
 
 #: prefs.js:162
 msgid "Paste on select"
@@ -307,7 +320,9 @@ msgstr "Bei Auswahl einfügen"
 
 #: prefs.js:163
 msgid "Automatically paste the entry into the active window when selected"
-msgstr "Den jeweiligen Eintrag automatisch im aktiven Fenster einfügen, wenn dieser ausgewählt wird"
+msgstr ""
+"Den jeweiligen Eintrag automatisch im aktiven Fenster einfügen, wenn dieser "
+"ausgewählt wird"
 
 #: prefs.js:167
 msgid "Open menu at cursor"
@@ -315,7 +330,9 @@ msgstr "Menü an Zeigerposition öffnen"
 
 #: prefs.js:168
 msgid "When using the keyboard shortcut, open the menu at the cursor position"
-msgstr "Bei Nutzung der Tastenkombination das Menü an der aktuellen Position des Mauszeigers öffnen"
+msgstr ""
+"Bei Nutzung der Tastenkombination das Menü an der aktuellen Position des "
+"Mauszeigers öffnen"
 
 #: prefs.js:172
 msgid "Delete"
@@ -331,7 +348,8 @@ msgstr "Schlagwort hinzufügen"
 
 #: prefs.js:178
 msgid "Show the tag button on each item"
-msgstr "Die Schaltfläche zum Hinzufügen eines Schlagwortes an jedem Eintrag anzeigen"
+msgstr ""
+"Die Schaltfläche zum Hinzufügen eines Schlagwortes an jedem Eintrag anzeigen"
 
 #: prefs.js:183
 msgid "Show the paste button on each item"
@@ -389,7 +407,8 @@ msgstr "Reguläre Ausdrücke"
 
 #: prefs.js:226
 msgid "Allow regular expressions to filter clipboard entries"
-msgstr "Verwendung von regulären Ausdrücken beim Filtern von Einträgen zulassen"
+msgstr ""
+"Verwendung von regulären Ausdrücken beim Filtern von Einträgen zulassen"
 
 #: prefs.js:239
 msgid "Clear clipboard history on interval"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: unnamed project\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-31 07:39+0300\n"
+"POT-Creation-Date: 2026-04-01 23:48+0300\n"
 "PO-Revision-Date: 2026-04-03 19:53+0200\n"
 "Last-Translator: Freemans32\n"
 "Language-Team: French\n"
@@ -243,7 +243,8 @@ msgstr "Conserver l'entrée sélectionnée après l'effacement de l'historique"
 
 #: prefs.js:131
 msgid ""
-"The currently active clipboard entry will not be removed when clearing history"
+"The currently active clipboard entry will not be removed when clearing "
+"history"
 msgstr ""
 "L'entrée actuellement active ne sera pas supprimée lors de l'effacement de "
 "l'historique"
@@ -310,7 +311,8 @@ msgstr "Ouvrir le menu au curseur"
 
 #: prefs.js:168
 msgid "When using the keyboard shortcut, open the menu at the cursor position"
-msgstr "Ouvrir le menu à la position du curseur lors de l'utilisation du raccourci"
+msgstr ""
+"Ouvrir le menu à la position du curseur lors de l'utilisation du raccourci"
 
 #: prefs.js:172
 msgid "Delete"
@@ -367,7 +369,8 @@ msgstr "Applications exclues"
 #: prefs.js:209
 msgid "Content copied will not be saved while these apps are in focus"
 msgstr ""
-"Le contenu copié ne sera pas enregistré tant que ces applications sont actives"
+"Le contenu copié ne sera pas enregistré tant que ces applications sont "
+"actives"
 
 #: prefs.js:220
 msgid "Case-sensitive"
