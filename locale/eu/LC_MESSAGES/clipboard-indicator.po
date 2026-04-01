@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-shell-extension-clipboard-indicator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-01 23:48+0300\n"
-"PO-Revision-Date: 2026-01-11 23:26+0100\n"
+"POT-Creation-Date: 2026-03-28 18:04+0300\n"
+"PO-Revision-Date: 2026-04-02 17:17+0200\n"
 "Last-Translator: Ibai Oihanguren Sala <ibaios@disroot.org>\n"
 "Language-Team: Basque\n"
 "Language: eu\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Gtranslator 49.0\n"
+"X-Generator: Gtranslator 50.0\n"
 
 #: extension.js:144
 msgid "Text will be here"
@@ -35,28 +35,27 @@ msgstr "Garbitu historia"
 
 #: extension.js:354
 msgid "Reset Timer"
-msgstr ""
+msgstr "Berrezarri tenporizadorea"
 
 #: extension.js:375
 msgid "Settings"
 msgstr "Ezarpenak"
 
 #: extension.js:397
-#, fuzzy
 msgid "Clipboard is empty"
 msgstr "Arbela hutsik dago"
 
 #: extension.js:696
 msgid "Preview Image"
-msgstr ""
+msgstr "Irudiaren aurrebista"
 
 #: extension.js:714 prefs.js:192
 msgid "Edit"
-msgstr ""
+msgstr "Editatu"
 
 #: extension.js:752 prefs.js:182
 msgid "Paste"
-msgstr ""
+msgstr "Itsatsi"
 
 #: extension.js:831
 msgid "Clear all?"
@@ -81,27 +80,27 @@ msgstr "Utzi"
 #: extension.js:851
 #, fuzzy
 msgid "Clipboard history cleared automatically"
-msgstr "Arbelaren historia garbituta"
+msgstr "Arbelaren historia automatikoki garbitu da"
 
 #: extension.js:852
 msgid "Clipboard history cleared"
-msgstr "Arbelaren historia garbituta"
+msgstr "Arbelaren historia garbitu da"
 
 #: extension.js:1014
 msgid "Copied to clipboard"
-msgstr "Arbelera kopiatuta"
+msgstr "Arbelera kopiatu da"
 
 #: extension.js:1730
 msgid "Enter tag…"
-msgstr ""
+msgstr "Idatzi etiketa…"
 
 #: extension.js:1739 extension.js:1831
 msgid "Discard"
-msgstr ""
+msgstr "Baztertu"
 
 #: extension.js:1748 extension.js:1840
 msgid "Save"
-msgstr ""
+msgstr "Gorde"
 
 #: prefs.js:15 prefs.js:256
 msgid "UI"
@@ -113,7 +112,7 @@ msgstr "Portaera"
 
 #: prefs.js:17 prefs.js:263
 msgid "Search"
-msgstr ""
+msgstr "Bilaketa"
 
 #: prefs.js:18 prefs.js:259
 msgid "Limits"
@@ -141,25 +140,24 @@ msgstr "Historiaren tamaina"
 
 #: prefs.js:41
 msgid "Maximum number of entries to keep in clipboard history"
-msgstr ""
+msgstr "Arbelaren historian mantendu beharreko gehienezko sarrera kopurua"
 
 #: prefs.js:50
 msgid "Preview Size (characters)"
 msgstr "Aurrebistaren tamaina (karaktereak)"
 
 #: prefs.js:51
-#, fuzzy
 msgid "Number of characters shown per entry in the history menu"
-msgstr "Goiko barrako karaktere kopurua"
+msgstr ""
+"Historia menuko sarrera bakoitzeko erakutsi beharreko karaktere kopurua"
 
 #: prefs.js:60
-#, fuzzy
 msgid "Max cache file size (MB)"
 msgstr "Cache fitxategiaren gehienezko tamaina (MB)"
 
 #: prefs.js:61
 msgid "Maximum disk space used for caching clipboard data"
-msgstr ""
+msgstr "Arbeleko datuak cacheratzeko erabilitako diskoko gehienezko lekua"
 
 #: prefs.js:70
 msgid "Number of characters in top bar"
@@ -167,7 +165,7 @@ msgstr "Goiko barrako karaktere kopurua"
 
 #: prefs.js:71
 msgid "Length of the clipboard content preview shown in the panel"
-msgstr ""
+msgstr "Panelean erakutsitako arbeleko edukien aurrebistaren luzera"
 
 #: prefs.js:80
 msgid "What to show in top bar"
@@ -179,25 +177,23 @@ msgstr "Kendu beheranzko gezia goiko barran"
 
 #: prefs.js:86
 msgid "Hide the dropdown arrow next to the clipboard indicator"
-msgstr ""
+msgstr "Ezkutatu arbelaren adierazlearen alboan erakusten den gezia"
 
 #: prefs.js:90
-#, fuzzy
 msgid "Blink icon on copy"
-msgstr "Erakutsi jakinarazpena kopiatzean"
+msgstr "Keinatu ikonoa kopiatzean"
 
 #: prefs.js:91
 msgid "Briefly flash the indicator icon when something is copied"
-msgstr ""
+msgstr "Zerbait kopiatzen denean, keinatu une labur batez ikono adierazlea"
 
 #: prefs.js:95
-#, fuzzy
 msgid "Cache only pinned items"
-msgstr "Cacheratu ainguratutako elementuak soilik"
+msgstr "Ainguratutako sarrerak soilik cacheratu"
 
 #: prefs.js:96
 msgid "Only save pinned (favorite) entries to disk"
-msgstr ""
+msgstr "Ainguratutako (gogoko) sarrerak soilik gorde diskoan"
 
 #: prefs.js:100
 msgid "Show notification on copy"
@@ -205,43 +201,40 @@ msgstr "Erakutsi jakinarazpena kopiatzean"
 
 #: prefs.js:101
 msgid "Display a notification each time text is copied"
-msgstr ""
+msgstr "Erakutsi jakinarazpena eduki bat kopiatzen den aldiro"
 
 #: prefs.js:105
-#, fuzzy
 msgid "Show notification on cycle"
 msgstr "Erakutsi jakinarazpena nabigatzean"
 
 #: prefs.js:106
 msgid "Display a notification when cycling through entries with shortcuts"
-msgstr ""
+msgstr "Erakutsi jakinarazpena sarreren artean laster-tekla bidez nabigatzean"
 
 #: prefs.js:110
-#, fuzzy
 msgid "Show notification on Clear History"
-msgstr "Eskatu berrespena historia garbitzerakoan"
+msgstr "Erakutsi jakinarazpena historia garbitzerakoan"
 
 #: prefs.js:111
 msgid "Display a notification when clipboard history is cleared"
-msgstr ""
+msgstr "Erakutsi jakinarazpena arbeleko historia garbitzen denean"
 
 #: prefs.js:115
-#, fuzzy
 msgid "Prompt for confirmation on Clear History"
 msgstr "Eskatu berrespena historia garbitzerakoan"
 
 #: prefs.js:116
-#, fuzzy
 msgid "Ask before deleting all clipboard entries"
-msgstr "Ziur arbeleko elementu guztiak kendu nahi dituzula?"
+msgstr "Galdetu arbeleko sarrera guztiak ezabatu aurretik"
 
 #: prefs.js:120
 msgid "Remove whitespace around text"
-msgstr "Kendu testuaren inguruko hutsuneak"
+msgstr "Kendu testuaren inguruko zuriuneak"
 
 #: prefs.js:121
 msgid "Strip leading and trailing whitespace from text entries on copy"
 msgstr ""
+"Kendu hasierako eta amaierako zuriuneak testuzko sarrera bat kopiatzen denean"
 
 #: prefs.js:125
 msgid "Move item to the top after selection"
@@ -249,70 +242,70 @@ msgstr "Eraman elementua goraino hautatu ostean"
 
 #: prefs.js:126
 msgid "When selecting an entry, bring it to the top of the history"
-msgstr ""
+msgstr "Sarrera bat hautatzean, eraman hau historian goraino"
 
 #: prefs.js:130
 msgid "Keep selected entry after Clear History"
-msgstr "Gorde hautatutako elementua historia garbitu ondoren"
+msgstr "Mantendu hautatutako sarrera historia garbitzean"
 
 #: prefs.js:131
 msgid ""
 "The currently active clipboard entry will not be removed when clearing "
 "history"
 msgstr ""
+"Unean aukeratuta dagoen arbeleko sarrera ez da ezabatuko historia garbitzen "
+"denean"
 
 #: prefs.js:135
 msgid "Place the pinned section on the bottom"
 msgstr "Kokatu ainguratutakoen atala behealdean"
 
 #: prefs.js:136
-#, fuzzy
 msgid "Move the pinned section to the bottom of the menu. Requires re-login"
-msgstr "Kokatu ainguratutakoen atala behealdean"
+msgstr ""
+"Kokatu ainguratutakoen atala menuaren behealdean. Saioa berriro hasi beharra "
+"dago."
 
 #: prefs.js:140
 msgid "Show Search Bar"
-msgstr ""
+msgstr "Erakutsi bilaketa-barra"
 
 #: prefs.js:141
 msgid "Display a search field at the top of the clipboard menu"
-msgstr ""
+msgstr "Erakutsi bilaketa-eremua arbelaren menuko goialdean"
 
 #: prefs.js:144
-#, fuzzy
 msgid "Show Private Mode"
-msgstr "Modu pribatua"
+msgstr "Erakutsi 'Modu pribatua'"
 
 #: prefs.js:145
 msgid "Display the private mode toggle in the clipboard menu"
-msgstr ""
+msgstr "Erakutsi modu pribatua gaitu/ezgaitzeko botoia arbelaren menuan"
 
 #: prefs.js:148
-#, fuzzy
 msgid "Show Settings Button"
-msgstr "Erakutsi itsasteko botoiak"
+msgstr "Erakutsi 'Ezarpenak' botoia"
 
 #: prefs.js:149
 msgid "Display a shortcut to these settings in the clipboard menu"
-msgstr ""
+msgstr "Erakutsi ezarpen hauetarako lasterbidea arbelaren menuan"
 
 #: prefs.js:152
-#, fuzzy
 msgid "Show Clear History Button"
-msgstr "Erakutsi itsasteko botoiak"
+msgstr "Erakutsi 'Garbitu historia' botoia"
 
 #: prefs.js:153
 msgid "Display the clear history button in the clipboard menu"
-msgstr ""
+msgstr "Erakutsi historia garbitzeko botoia arbelaren menuan"
 
 #: prefs.js:157
-#, fuzzy
 msgid "Clear clipboard history on system reboot"
 msgstr "Garbitu arbelaren historia sistema berrabiaraztean"
 
 #: prefs.js:158
 msgid "Delete all cached clipboard entries when the system starts"
 msgstr ""
+"Ezabatu cacheratutako arbeleko sarrera guztiak sistema abiarazten denean"
 
 #: prefs.js:162
 msgid "Paste on select"
@@ -321,64 +314,64 @@ msgstr "Itsatsi hautatzean"
 #: prefs.js:163
 msgid "Automatically paste the entry into the active window when selected"
 msgstr ""
+"Sarrera bat hautatzean, itsatsi automatikoki sarreraren edukia aktibo dagoen "
+"leihoan"
 
 #: prefs.js:167
 msgid "Open menu at cursor"
-msgstr ""
+msgstr "Ireki menua kurtsorean"
 
 #: prefs.js:168
 msgid "When using the keyboard shortcut, open the menu at the cursor position"
-msgstr ""
+msgstr "Teklatuko lasterbidea erabiltzean, ireki menua kurtsorearen kokapenean"
 
 #: prefs.js:172
 msgid "Delete"
-msgstr ""
+msgstr "Ezabatu"
 
 #: prefs.js:173
 msgid "Show the delete button on each item"
-msgstr ""
+msgstr "Erakutsi ezabatzeko botoia sarrera bakoitzean"
 
 #: prefs.js:177
 msgid "Tag"
-msgstr ""
+msgstr "Etiketak"
 
 #: prefs.js:178
 msgid "Show the tag button on each item"
-msgstr ""
+msgstr "Erakutsi etiketen botoia sarrera bakoitzean"
 
 #: prefs.js:183
-#, fuzzy
 msgid "Show the paste button on each item"
-msgstr "Erakutsi itsasteko botoiak"
+msgstr "Erakutsi itsasteko botoia sarrera bakoitzean"
 
 #: prefs.js:187
 msgid "Pin"
-msgstr ""
+msgstr "Ainguratu"
 
 #: prefs.js:188
 msgid "Show the pin/favorite button on each item"
-msgstr ""
+msgstr "Erakutsi ainguratzeko botoia sarrera bakoitzean"
 
 #: prefs.js:193
 msgid "Show the edit button on each text item"
-msgstr ""
+msgstr "Erakutsi editatzeko botoia testuzko sarrera bakoitzean"
 
 #: prefs.js:197
 msgid "Preview"
-msgstr ""
+msgstr "Aurrebista"
 
 #: prefs.js:198
 msgid "Show the preview button on each image item"
-msgstr ""
+msgstr "Erakutsi aurreikusteko botoia irudizko sarrera bakoitzean"
 
 #: prefs.js:202
 msgid "Cache images"
 msgstr "Cacheratu irudiak"
 
 #: prefs.js:203
-#, fuzzy
 msgid "Save copied images to clipboard history"
-msgstr "Arbelera kopiatuta"
+msgstr "Gorde kopiatutako irudiak arbelaren historian"
 
 #: prefs.js:208
 msgid "Excluded Apps"
@@ -390,37 +383,35 @@ msgstr "Aplikazio hauek fokua dutenean kopiatutako edukia ez da gordeko"
 
 #: prefs.js:220
 msgid "Case-sensitive"
-msgstr ""
+msgstr "Bereizi maiuskulak/minuskulak"
 
 #: prefs.js:221
 msgid "Match uppercase and lowercase letters exactly when searching"
-msgstr ""
+msgstr "Bilatzerakoan, behartu maiuskulak eta minuskulak bat etortzea"
 
 #: prefs.js:225
 msgid "Regular expressions"
-msgstr ""
+msgstr "Adierazpen erregularrak"
 
 #: prefs.js:226
 msgid "Allow regular expressions to filter clipboard entries"
-msgstr ""
+msgstr "Onartu adierazpen erregularrak arbeleko sarrerak iragazteko"
 
 #: prefs.js:239
-#, fuzzy
 msgid "Clear clipboard history on interval"
-msgstr "Arbelaren historia garbituta"
+msgstr "Garbitu arbelaren historia tarteka"
 
 #: prefs.js:240
-#, fuzzy
 msgid "Automatically clear clipboard history at a recurring interval"
-msgstr "Arbelaren historia garbituta"
+msgstr "Garbitu arbelaren historia automatikoki tartean behin"
 
 #: prefs.js:244
 msgid "History clear interval (in minutes)"
-msgstr ""
+msgstr "Historia ezabatzeko bitartea (minututan)"
 
 #: prefs.js:264
 msgid "Item Actions"
-msgstr ""
+msgstr "Sarreretako ekintzak"
 
 #: prefs.js:354
 msgid "Icon"
@@ -451,7 +442,6 @@ msgid "Next entry"
 msgstr "Hurrengo sarrera"
 
 #: prefs.js:376
-#, fuzzy
 msgid "Enable shortcuts"
 msgstr "Gaitu laster-teklak"
 
@@ -460,7 +450,6 @@ msgid "Disabled"
 msgstr "Ezgaituta"
 
 #: prefs.js:410
-#, fuzzy
 msgid "Enter shortcut"
 msgstr "Sartu laster-tekla"
 
@@ -470,11 +459,11 @@ msgstr "Leihoaren klase-izena, adb. \"KeePassXC\""
 
 #: prefs.js:509
 msgid "Choose from installed applications"
-msgstr ""
+msgstr "Aukeratu instalatutako aplikazioetatik"
 
 #: prefs.js:526
 msgid "Search applications..."
-msgstr ""
+msgstr "Bilatu aplikazioak..."
 
 #~ msgid "Adds a paste button to each entry that lets you paste it directly"
 #~ msgstr ""
