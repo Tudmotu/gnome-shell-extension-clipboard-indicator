@@ -34,6 +34,7 @@ let NOTIFY_ON_COPY            = true;
 let NOTIFY_ON_CYCLE           = true;
 let NOTIFY_ON_CLEAR           = true;
 let CONFIRM_ON_CLEAR          = true;
+let CONFIRM_ON_PINNED_DELETE  = false;
 let MAX_TOPBAR_LENGTH         = 15;
 let TOPBAR_DISPLAY_MODE       = 1; //0 - only icon, 1 - only clipboard content, 2 - both, 3 - neither
 let CLEAR_ON_BOOT             = false;
@@ -630,8 +631,17 @@ const ClipboardIndicator = GObject.registerClass({
         menuItem.actor.connect('key-press-event', (actor, event) => {
             switch (event.get_key_symbol()) {
                 case Clutter.KEY_Delete:
-                    this.#selectNextMenuItem(menuItem);
-                    this._removeEntry(menuItem, 'delete');
+                    if (menuItem.entry.isFavorite()) {
+                        if (CONFIRM_ON_PINNED_DELETE) {
+                            this._confirmRemovePinnedEntry(menuItem, true);
+                        } else {
+                            this.#selectNextMenuItem(menuItem);
+                            this._removeEntry(menuItem, 'delete');
+                        }
+                    } else {
+                        this.#selectNextMenuItem(menuItem);
+                        this._removeEntry(menuItem, 'delete');
+                    }
                     return Clutter.EVENT_STOP;
                 case Clutter.KEY_p:
                     this.#selectNextMenuItem(menuItem);
@@ -800,7 +810,11 @@ const ClipboardIndicator = GObject.registerClass({
         menuItem.actor.add_child(icoBtn);
         menuItem.icoBtn = icoBtn;
         menuItem.deletePressId = icoBtn.connect('clicked',
-            () => this._removeEntry(menuItem, 'delete')
+            () => menuItem.entry.isFavorite()
+                ? (CONFIRM_ON_PINNED_DELETE
+                    ? this._confirmRemovePinnedEntry(menuItem)
+                    : this._removeEntry(menuItem, 'delete'))
+                : this._removeEntry(menuItem, 'delete')
         );
 
         if (entry.isFavorite()) {
@@ -825,6 +839,17 @@ const ClipboardIndicator = GObject.registerClass({
         this._moveItemFirst(menuItem);
         this._updateCache();
         this.#showElements();
+    }
+
+    _confirmRemovePinnedEntry (menuItem, selectNext = false) {
+        const title = _("Delete pinned item?");
+        const message = _("Are you sure you want to delete this pinned item?");
+        const sub_message = _("This operation cannot be undone.");
+
+        this.dialogManager.open(title, message, sub_message, _("Delete"), _("Cancel"), () => {
+            if (selectNext) this.#selectNextMenuItem(menuItem);
+            this._removeEntry(menuItem, 'delete');
+        });
     }
 
     _confirmRemoveAll () {
@@ -1359,6 +1384,7 @@ const ClipboardIndicator = GObject.registerClass({
         NOTIFY_ON_CYCLE             = settings.get_boolean(PrefsFields.NOTIFY_ON_CYCLE);
         NOTIFY_ON_CLEAR             = settings.get_boolean(PrefsFields.NOTIFY_ON_CLEAR);
         CONFIRM_ON_CLEAR            = settings.get_boolean(PrefsFields.CONFIRM_ON_CLEAR);
+        CONFIRM_ON_PINNED_DELETE    = settings.get_boolean(PrefsFields.CONFIRM_ON_PINNED_DELETE);
         ENABLE_KEYBINDING           = settings.get_boolean(PrefsFields.ENABLE_KEYBINDING);
         MAX_TOPBAR_LENGTH           = settings.get_int(PrefsFields.TOPBAR_PREVIEW_SIZE);
         TOPBAR_DISPLAY_MODE         = settings.get_int(PrefsFields.TOPBAR_DISPLAY_MODE_ID);

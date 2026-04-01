@@ -154,6 +154,14 @@
         </description>
     </key>
 
+    <key name="confirm-pinned-delete" type="b">
+        <default>false</default>
+        <summary>Show confirmation dialog on deleting pinned item</summary>
+        <description>
+            If true, a confirmation dialog is shown when attempting to delete a pinned item.
+        </description>
+    </key>
+
     <key name="strip-text" type="b">
         <default>false</default>
         <summary>Remove whitespace around text</summary>
