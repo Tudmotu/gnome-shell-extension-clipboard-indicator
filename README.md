@@ -56,6 +56,11 @@ Pasting from the menu works by sending Shift+Insert to programs or Ctrl+Shift+In
   keybind = ctrl+shift+insert=paste_from_clipboard
   ```
 
+### Known issues
+
+- Copying large images causes a short freeze
+- Pasting via menu doesn't work for every application
+
 ## 📦 Install from source
 
 Installation via git is performed by cloning the repo into your local gnome-shell extensions directory (usually `~/.local/share/gnome-shell/extensions/`):
