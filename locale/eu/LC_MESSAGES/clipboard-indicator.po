@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-shell-extension-clipboard-indicator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-28 18:04+0300\n"
+"POT-Creation-Date: 2026-03-31 07:39+0300\n"
 "PO-Revision-Date: 2026-01-11 23:26+0100\n"
 "Last-Translator: Ibai Oihanguren Sala <ibaios@disroot.org>\n"
 "Language-Team: Basque\n"
@@ -46,48 +46,48 @@ msgstr "Ezarpenak"
 msgid "Clipboard is empty"
 msgstr "Arbela hutsik dago"
 
-#: extension.js:691
+#: extension.js:696
 msgid "Preview Image"
 msgstr ""
 
-#: extension.js:710 prefs.js:192
+#: extension.js:714 prefs.js:192
 msgid "Edit"
 msgstr ""
 
-#: extension.js:750 prefs.js:182
+#: extension.js:752 prefs.js:182
 msgid "Paste"
 msgstr ""
 
-#: extension.js:832
+#: extension.js:831
 msgid "Clear all?"
 msgstr "Guztia garbitu?"
 
-#: extension.js:833
+#: extension.js:832
 msgid "Are you sure you want to delete all clipboard items?"
 msgstr "Ziur arbeleko elementu guztiak kendu nahi dituzula?"
 
-#: extension.js:834
+#: extension.js:833
 msgid "This operation cannot be undone."
 msgstr "Ezin da eragiketa hau desegin."
 
-#: extension.js:836
+#: extension.js:835
 msgid "Clear"
 msgstr "Garbitu"
 
-#: extension.js:836 extension.js:1016
+#: extension.js:835 extension.js:1015
 msgid "Cancel"
 msgstr "Utzi"
 
-#: extension.js:852
+#: extension.js:851
 #, fuzzy
 msgid "Clipboard history cleared automatically"
 msgstr "Arbelaren historia garbituta"
 
-#: extension.js:853
+#: extension.js:852
 msgid "Clipboard history cleared"
 msgstr "Arbelaren historia garbituta"
 
-#: extension.js:1015
+#: extension.js:1014
 msgid "Copied to clipboard"
 msgstr "Arbelera kopiatuta"
 

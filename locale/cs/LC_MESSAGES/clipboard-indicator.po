@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-28 18:04+0300\n"
+"POT-Creation-Date: 2026-03-31 07:39+0300\n"
 "PO-Revision-Date: 2026-04-01 15:05+0200\n"
 "Last-Translator: Ludek Vydra <lvtran@u.k2.cz>\n"
 "Language-Team: \n"
@@ -47,47 +47,47 @@ msgstr "Nastavení"
 msgid "Clipboard is empty"
 msgstr "Schránka je prázdná"
 
-#: extension.js:691
+#: extension.js:696
 msgid "Preview Image"
 msgstr "Náhled obrázku"
 
-#: extension.js:710 prefs.js:192
+#: extension.js:714 prefs.js:192
 msgid "Edit"
 msgstr "Editovat"
 
-#: extension.js:750 prefs.js:182
+#: extension.js:752 prefs.js:182
 msgid "Paste"
 msgstr "Vložit"
 
-#: extension.js:832
+#: extension.js:831
 msgid "Clear all?"
 msgstr "Vyčistit vše?"
 
-#: extension.js:833
+#: extension.js:832
 msgid "Are you sure you want to delete all clipboard items?"
 msgstr "Opravdu chcete smazat všechny položky schránky?"
 
-#: extension.js:834
+#: extension.js:833
 msgid "This operation cannot be undone."
 msgstr "Tato operace nejde vrátit."
 
-#: extension.js:836
+#: extension.js:835
 msgid "Clear"
 msgstr "Vyčistit"
 
-#: extension.js:836 extension.js:1016
+#: extension.js:835 extension.js:1015
 msgid "Cancel"
 msgstr "Storno"
 
-#: extension.js:852
+#: extension.js:851
 msgid "Clipboard history cleared automatically"
 msgstr "Historie schránky automaticky vyčištěna"
 
-#: extension.js:853
+#: extension.js:852
 msgid "Clipboard history cleared"
 msgstr "Historie schránky vyčištěna"
 
-#: extension.js:1015
+#: extension.js:1014
 msgid "Copied to clipboard"
 msgstr "Zkopírováno do schránky"
 
@@ -318,8 +318,7 @@ msgstr "Otevři nabídku na pozici kurzoru"
 #: prefs.js:168
 msgid "When using the keyboard shortcut, open the menu at the cursor position"
 msgstr ""
-"Při použití klávesové zkratky otevřete nabídku v místě, kde se nachází "
-"kurzor"
+"Při použití klávesové zkratky otevřete nabídku v místě, kde se nachází kurzor"
 
 #: prefs.js:172
 msgid "Delete"

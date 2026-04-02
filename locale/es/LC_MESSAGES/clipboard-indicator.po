@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-shell-extension-clipboard-indicator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-28 18:04+0300\n"
+"POT-Creation-Date: 2026-03-31 07:39+0300\n"
 "PO-Revision-Date: 2018-03-10 09:43-0600\n"
 "Last-Translator: Adolfo Jayme Barrientos <fitojb@ubuntu.com>\n"
 "Language-Team: \n"
@@ -46,48 +46,48 @@ msgstr "Configuración"
 msgid "Clipboard is empty"
 msgstr "El portapapeles está vacío"
 
-#: extension.js:691
+#: extension.js:696
 msgid "Preview Image"
 msgstr ""
 
-#: extension.js:710 prefs.js:192
+#: extension.js:714 prefs.js:192
 msgid "Edit"
 msgstr ""
 
-#: extension.js:750 prefs.js:182
+#: extension.js:752 prefs.js:182
 msgid "Paste"
 msgstr ""
 
-#: extension.js:832
+#: extension.js:831
 msgid "Clear all?"
 msgstr "¿Borrar todo?"
 
-#: extension.js:833
+#: extension.js:832
 msgid "Are you sure you want to delete all clipboard items?"
 msgstr "¿Está seguro de que quiere borrar todos los ítems del portapapeles?"
 
-#: extension.js:834
+#: extension.js:833
 msgid "This operation cannot be undone."
 msgstr "Esta operación no puede ser deshecha"
 
-#: extension.js:836
+#: extension.js:835
 msgid "Clear"
 msgstr "Borrar"
 
-#: extension.js:836 extension.js:1016
+#: extension.js:835 extension.js:1015
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: extension.js:852
+#: extension.js:851
 #, fuzzy
 msgid "Clipboard history cleared automatically"
 msgstr "Historial del portapapeles vaciado"
 
-#: extension.js:853
+#: extension.js:852
 msgid "Clipboard history cleared"
 msgstr "Historial del portapapeles vaciado"
 
-#: extension.js:1015
+#: extension.js:1014
 msgid "Copied to clipboard"
 msgstr "Copiado en el portapapeles"
 

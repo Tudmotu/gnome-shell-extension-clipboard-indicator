@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-28 18:04+0300\n"
+"POT-Creation-Date: 2026-03-31 07:39+0300\n"
 "PO-Revision-Date: 2026-01-07 23:58+0200\n"
 "Last-Translator: Norman Henges <normanhenges@proton.me>\n"
 "Language-Team: Deutsch <openweather@jenslody.de>\n"
@@ -46,47 +46,47 @@ msgstr "Einstellungen"
 msgid "Clipboard is empty"
 msgstr "Zwischenablage ist leer"
 
-#: extension.js:691
+#: extension.js:696
 msgid "Preview Image"
 msgstr ""
 
-#: extension.js:710 prefs.js:192
+#: extension.js:714 prefs.js:192
 msgid "Edit"
 msgstr ""
 
-#: extension.js:750 prefs.js:182
+#: extension.js:752 prefs.js:182
 msgid "Paste"
 msgstr ""
 
-#: extension.js:832
+#: extension.js:831
 msgid "Clear all?"
 msgstr "Alles löschen?"
 
-#: extension.js:833
+#: extension.js:832
 msgid "Are you sure you want to delete all clipboard items?"
 msgstr "Soll die Zwischenablage wirklich geleert werden?"
 
-#: extension.js:834
+#: extension.js:833
 msgid "This operation cannot be undone."
 msgstr "Diese Aktion kann nicht rückgängig gemacht werden."
 
-#: extension.js:836
+#: extension.js:835
 msgid "Clear"
 msgstr "Löschen"
 
-#: extension.js:836 extension.js:1016
+#: extension.js:835 extension.js:1015
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: extension.js:852
+#: extension.js:851
 msgid "Clipboard history cleared automatically"
 msgstr "Verlauf der Zwischenablage automatisch gelöscht"
 
-#: extension.js:853
+#: extension.js:852
 msgid "Clipboard history cleared"
 msgstr "Verlauf der Zwischenablage gelöscht"
 
-#: extension.js:1015
+#: extension.js:1014
 msgid "Copied to clipboard"
 msgstr "In Zwischenablage kopiert"
 

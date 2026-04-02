@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: unnamed project\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-28 18:04+0300\n"
+"POT-Creation-Date: 2026-03-31 07:39+0300\n"
 "PO-Revision-Date: 2025-09-09 20:02+0200\n"
 "Last-Translator: Adam Lewicki <a.lewick95@gmail.com>\n"
 "Language-Team: Polish\n"
@@ -50,48 +50,48 @@ msgstr "Ustawienia"
 msgid "Clipboard is empty"
 msgstr "Schowek jest pusty"
 
-#: extension.js:691
+#: extension.js:696
 msgid "Preview Image"
 msgstr ""
 
-#: extension.js:710 prefs.js:192
+#: extension.js:714 prefs.js:192
 msgid "Edit"
 msgstr ""
 
-#: extension.js:750 prefs.js:182
+#: extension.js:752 prefs.js:182
 msgid "Paste"
 msgstr ""
 
-#: extension.js:832
+#: extension.js:831
 msgid "Clear all?"
 msgstr "Wyczyścić wszystko?"
 
-#: extension.js:833
+#: extension.js:832
 msgid "Are you sure you want to delete all clipboard items?"
 msgstr "Czy jesteś pewien, że chcesz usunąć wszystkie elementy ze schowka?"
 
-#: extension.js:834
+#: extension.js:833
 msgid "This operation cannot be undone."
 msgstr "Tej operacji nie będzie można cofnąć."
 
-#: extension.js:836
+#: extension.js:835
 msgid "Clear"
 msgstr "Wyczyść"
 
-#: extension.js:836 extension.js:1016
+#: extension.js:835 extension.js:1015
 msgid "Cancel"
 msgstr "Anuluj"
 
-#: extension.js:852
+#: extension.js:851
 #, fuzzy
 msgid "Clipboard history cleared automatically"
 msgstr "Wyczyszczono historię schowka"
 
-#: extension.js:853
+#: extension.js:852
 msgid "Clipboard history cleared"
 msgstr "Wyczyszczono historię schowka"
 
-#: extension.js:1015
+#: extension.js:1014
 msgid "Copied to clipboard"
 msgstr "Skopiowano do schowka"
 
