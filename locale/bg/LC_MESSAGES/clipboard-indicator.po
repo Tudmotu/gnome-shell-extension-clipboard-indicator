@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-21 16:41+0300\n"
+"POT-Creation-Date: 2026-03-31 07:39+0300\n"
 "PO-Revision-Date: 2025-05-15 18:37+0300\n"
 "Last-Translator: @pacu23\n"
 "Language-Team: Bulgarian\n"
@@ -16,217 +16,454 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.6\n"
 
-#: extension.js:108
+#: extension.js:144
 msgid "Text will be here"
 msgstr "Текстът ще се показва тук"
 
-#: extension.js:181
+#: extension.js:240
 msgid "Type here to search..."
 msgstr "Въведете за търсене..."
 
-#: extension.js:250 prefs.js:220
+#: extension.js:315 prefs.js:367
 msgid "Private mode"
 msgstr "Поверителен режим"
 
-#: extension.js:264 prefs.js:222
+#: extension.js:329 prefs.js:369
 msgid "Clear history"
-msgstr "Изчисти историята"
+msgstr "Изчистване на историята"
 
-#: extension.js:276
+#: extension.js:354
+msgid "Reset Timer"
+msgstr "Нулиране на таймера"
+
+#: extension.js:375
 msgid "Settings"
 msgstr "Настройки"
 
-#: extension.js:299
+#: extension.js:397
 msgid "Clipboard is empty"
 msgstr "Буферната памет е празна"
 
-#: extension.js:571
+#: extension.js:696
+msgid "Preview Image"
+msgstr "Преглед на изображението"
+
+#: extension.js:714 prefs.js:192
+msgid "Edit"
+msgstr "Редактиране"
+
+#: extension.js:752 prefs.js:182
+msgid "Paste"
+msgstr "Поставяне"
+
+#: extension.js:831
 msgid "Clear all?"
 msgstr "Изчистване на всичко?"
 
-#: extension.js:572
+#: extension.js:832
 msgid "Are you sure you want to delete all clipboard items?"
-msgstr "Сигурни ли сте, че искате да изтриете всички елементи от буферната памет?"
+msgstr ""
+"Сигурни ли сте, че искате да изтриете всички елементи от буферната памет?"
 
-#: extension.js:573
+#: extension.js:833
 msgid "This operation cannot be undone."
 msgstr "Тази операция не може да бъде отменена."
 
-#: extension.js:575
+#: extension.js:835
 msgid "Clear"
 msgstr "Изчисти"
 
-#: extension.js:575 extension.js:740
+#: extension.js:835 extension.js:1015
 msgid "Cancel"
 msgstr "Отказ"
 
-#: extension.js:588
+#: extension.js:851
+msgid "Clipboard history cleared automatically"
+msgstr "Историята на буферната памет беше автоматично изчистена"
+
+#: extension.js:852
 msgid "Clipboard history cleared"
 msgstr "Историята на буферната памет беше изчистена"
 
-#: extension.js:739
+#: extension.js:1014
 msgid "Copied to clipboard"
 msgstr "Копирано в буферната памет"
 
-#: prefs.js:30
-msgid "History Size"
-msgstr "Размер на историята"
+#: extension.js:1730
+msgid "Enter tag…"
+msgstr "Въведете етикет…"
 
-#: prefs.js:39
-msgid "Preview Size (characters)"
-msgstr "Размер на визуализацията (в символи)"
+#: extension.js:1739 extension.js:1831
+msgid "Discard"
+msgstr "Отхвърляне"
 
-#: prefs.js:48
-msgid "Max cache file size (MB)"
-msgstr "Максимален размер на кеш файла (МБ)"
+#: extension.js:1748 extension.js:1840
+msgid "Save"
+msgstr "Запазване"
 
-#: prefs.js:57
-msgid "Number of characters in top bar"
-msgstr "Брой символи в горната лента"
-
-#: prefs.js:66
-msgid "What to show in top bar"
-msgstr "Какво да се показва в горната лента"
-
-#: prefs.js:71
-msgid "Remove down arrow in top bar"
-msgstr "Премахване на стрелката надолу в горната лента"
-
-#: prefs.js:75
-msgid "Cache only pinned items"
-msgstr "Кеширай само закрепените елементи"
-
-#: prefs.js:79
-msgid "Show notification on copy"
-msgstr "Показвай уведомление при копиране"
-
-#: prefs.js:83
-msgid "Show notification on cycle"
-msgstr "Показвай уведомление при циклично превключване"
-
-#: prefs.js:87
-msgid "Show confirmation on Clear History"
-msgstr "Показвай потвърждение при изчистване на историята"
-
-#: prefs.js:91
-msgid "Remove whitespace around text"
-msgstr "Премахвай интервалите около текста"
-
-#: prefs.js:95
-msgid "Move item to the top after selection"
-msgstr "Премести елемента в горната част след избиране"
-
-#: prefs.js:99
-msgid "Keep selected entry after Clear History"
-msgstr "Запази избрания запис след изчистване на историята"
-
-#: prefs.js:103
-msgid "Show paste buttons"
-msgstr "Показвай бутоните за поставяне"
-
-#: prefs.js:104
-msgid "Adds a paste button to each entry that lets you paste it directly"
-msgstr "Добавя бутон за поставяне към всеки запис, който позволява директно поставяне"
-
-#: prefs.js:108
-msgid "Place the pinned section on the bottom"
-msgstr "Постави секцията със закрепени в долната част"
-
-#: prefs.js:109
-msgid "Requires restarting the extension"
-msgstr "Изисква рестартиране на разширението"
-
-#: prefs.js:113
-msgid "Clear clipboard history on system reboot"
-msgstr "Изчистване на историята на паметта при рестартиране на системата"
-
-#: prefs.js:117
-msgid "Paste on select"
-msgstr "Поставяне при избор"
-
-#: prefs.js:121
-msgid "Cache images"
-msgstr "Кеширане на изображения"
-
-#: prefs.js:126
-msgid "Excluded Apps"
-msgstr "Изключени приложения"
-
-#: prefs.js:127
-msgid "Content copied will not be saved while these apps are in focus"
-msgstr "Копираното съдържание няма да се запазва, докато тези приложения са на фокус"
-
-#: prefs.js:146
+#: prefs.js:15 prefs.js:256
 msgid "UI"
 msgstr "Интерфейс"
 
-#: prefs.js:147
+#: prefs.js:16 prefs.js:257
 msgid "Behavior"
 msgstr "Поведение"
 
-#: prefs.js:148
-msgid "Exclusion"
-msgstr "Изключения"
+#: prefs.js:17 prefs.js:263
+msgid "Search"
+msgstr "Търсене"
 
-#: prefs.js:149
+#: prefs.js:18 prefs.js:259
 msgid "Limits"
 msgstr "Ограничения"
 
-#: prefs.js:150
+#: prefs.js:19 prefs.js:258
+msgid "Exclusion"
+msgstr "Изключения"
+
+#: prefs.js:20 prefs.js:260
 msgid "Topbar"
 msgstr "Горна лента"
 
-#: prefs.js:151
+#: prefs.js:21 prefs.js:261
 msgid "Notifications"
 msgstr "Уведомления"
 
-#: prefs.js:152
+#: prefs.js:22 prefs.js:262
 msgid "Shortcuts"
 msgstr "Клавишни комбинации"
 
-#: prefs.js:207
+#: prefs.js:40
+msgid "History Size"
+msgstr "Размер на историята"
+
+#: prefs.js:41
+msgid "Maximum number of entries to keep in clipboard history"
+msgstr "Максимален брой записи за съхранение в историята на буферната памет"
+
+#: prefs.js:50
+msgid "Preview Size (characters)"
+msgstr "Размер на визуализацията (в символи)"
+
+#: prefs.js:51
+msgid "Number of characters shown per entry in the history menu"
+msgstr "Брой символи, показвани за всеки запис в менюто с историята"
+
+#: prefs.js:60
+msgid "Max cache file size (MB)"
+msgstr "Максимален размер на кеш файла (МБ)"
+
+#: prefs.js:61
+msgid "Maximum disk space used for caching clipboard data"
+msgstr "Максимално дисково пространство, ползвано за кеширане на данните от буферната памет"
+
+#: prefs.js:70
+msgid "Number of characters in top bar"
+msgstr "Брой символи в горната лента"
+
+#: prefs.js:71
+msgid "Length of the clipboard content preview shown in the panel"
+msgstr "Дължина на визуализацията на съдържанието от буферната памет, показвана в панела"
+
+#: prefs.js:80
+msgid "What to show in top bar"
+msgstr "Какво да се показва в горната лента"
+
+#: prefs.js:85
+msgid "Remove down arrow in top bar"
+msgstr "Премахни стрелката надолу в горната лента"
+
+#: prefs.js:86
+msgid "Hide the dropdown arrow next to the clipboard indicator"
+msgstr "Скриване на стрелката за падащо меню до индикатора на буферната памет"
+
+#: prefs.js:90
+msgid "Blink icon on copy"
+msgstr "Премигване на иконата при копиране"
+
+#: prefs.js:91
+msgid "Briefly flash the indicator icon when something is copied"
+msgstr "Кратко премигване на иконата на индикатора при копиране"
+
+#: prefs.js:95
+msgid "Cache only pinned items"
+msgstr "Кеширай само закрепените елементи"
+
+#: prefs.js:96
+msgid "Only save pinned (favorite) entries to disk"
+msgstr "Запазване само на закрепените записи на диска"
+
+#: prefs.js:100
+msgid "Show notification on copy"
+msgstr "Показвай уведомление при копиране"
+
+#: prefs.js:101
+msgid "Display a notification each time text is copied"
+msgstr "Показване на известие всеки път, когато се копира текст"
+
+#: prefs.js:105
+msgid "Show notification on cycle"
+msgstr "Показвай уведомление при циклично превключване"
+
+#: prefs.js:106
+msgid "Display a notification when cycling through entries with shortcuts"
+msgstr "Показване на известие при преминаване през записите чрез клавишни комбинации"
+
+#: prefs.js:110
+msgid "Show notification on Clear History"
+msgstr "Показвай уведомление при изчистване на историята"
+
+#: prefs.js:111
+msgid "Display a notification when clipboard history is cleared"
+msgstr "Показване на известие, когато историята на буферната памет се изчисти"
+
+#: prefs.js:115
+msgid "Prompt for confirmation on Clear History"
+msgstr "Питай преди да се изтрият всички записи от буферната памет"
+
+#: prefs.js:116
+msgid "Ask before deleting all clipboard entries"
+msgstr "Питане преди да се изтрият всички записи от буферната памет"
+
+#: prefs.js:120
+msgid "Remove whitespace around text"
+msgstr "Премахвай интервалите около текста"
+
+#: prefs.js:121
+msgid "Strip leading and trailing whitespace from text entries on copy"
+msgstr "Премахване на празното пространство около текстовите записи при копиране"
+
+#: prefs.js:125
+msgid "Move item to the top after selection"
+msgstr "Премести елемента в горната част след избиране"
+
+#: prefs.js:126
+msgid "When selecting an entry, bring it to the top of the history"
+msgstr "При избиране на запис да се премества той най-отгоре в историята"
+
+#: prefs.js:130
+msgid "Keep selected entry after Clear History"
+msgstr "Запази избрания запис след изчистване на историята"
+
+#: prefs.js:131
+msgid ""
+"The currently active clipboard entry will not be removed when clearing "
+"history"
+msgstr ""
+"Текущият запис от буферната памет няма да бъде премахван при изчистване на историята"
+
+#: prefs.js:135
+msgid "Place the pinned section on the bottom"
+msgstr "Постави секцията със закрепени в долната част"
+
+#: prefs.js:136
+msgid "Move the pinned section to the bottom of the menu. Requires re-login"
+msgstr "Преместване на секцията със закрепени елементи в долната част на менюто. Изисква повторно влизане"
+
+#: prefs.js:140
+msgid "Show Search Bar"
+msgstr "Показвай лентата за търсене"
+
+#: prefs.js:141
+msgid "Display a search field at the top of the clipboard menu"
+msgstr "Показване на поле за търсене в горната част на менюто на буферната памет"
+
+#: prefs.js:144
+msgid "Show Private Mode"
+msgstr "Показвай поверителния режим"
+
+#: prefs.js:145
+msgid "Display the private mode toggle in the clipboard menu"
+msgstr "Показване на превключвателя за поверителен режим в менюто на буферната памет"
+
+#: prefs.js:148
+msgid "Show Settings Button"
+msgstr "Показвай бутона за настройки"
+
+#: prefs.js:149
+msgid "Display a shortcut to these settings in the clipboard menu"
+msgstr "Показване на пряк път към тези настройки в менюто на буферната памет"
+
+#: prefs.js:152
+msgid "Show Clear History Button"
+msgstr "Показвай бутона за изчистване на историята"
+
+#: prefs.js:153
+msgid "Display the clear history button in the clipboard menu"
+msgstr "Показване на бутона за изчистване на историята в менюто на буферната памет"
+
+#: prefs.js:157
+msgid "Clear clipboard history on system reboot"
+msgstr "Изчиствай историята на буферната памет при рестартиране"
+
+#: prefs.js:158
+msgid "Delete all cached clipboard entries when the system starts"
+msgstr "Изтриване на всички кеширани записи от буферната памет при стартиране на системата"
+
+#: prefs.js:162
+msgid "Paste on select"
+msgstr "Постави при избор"
+
+#: prefs.js:163
+msgid "Automatically paste the entry into the active window when selected"
+msgstr "Автоматично поставяне на записа в активния прозорец при избиране"
+
+#: prefs.js:167
+msgid "Open menu at cursor"
+msgstr "Отваряй менюто при курсора"
+
+#: prefs.js:168
+msgid "When using the keyboard shortcut, open the menu at the cursor position"
+msgstr "Отваряне на менюто на позицията на курсора при използване на клавишна комбинация"
+
+#: prefs.js:172
+msgid "Delete"
+msgstr "Изтриване"
+
+#: prefs.js:173
+msgid "Show the delete button on each item"
+msgstr "Показване на бутона за изтриване при всеки елемент"
+
+#: prefs.js:177
+msgid "Tag"
+msgstr "Етикет"
+
+#: prefs.js:178
+msgid "Show the tag button on each item"
+msgstr "Показване на бутона за етикетиране при всеки елемент"
+
+#: prefs.js:183
+msgid "Show the paste button on each item"
+msgstr "Показване на бутона за поставяне при всеки елемент"
+
+#: prefs.js:187
+msgid "Pin"
+msgstr "Закрепяне"
+
+#: prefs.js:188
+msgid "Show the pin/favorite button on each item"
+msgstr "Показване на бутона за закрепяне при всеки елемент"
+
+#: prefs.js:193
+msgid "Show the edit button on each text item"
+msgstr "Показване на бутона за редактиране при всеки текстов елемент"
+
+#: prefs.js:197
+msgid "Preview"
+msgstr "Преглед"
+
+#: prefs.js:198
+msgid "Show the preview button on each image item"
+msgstr "Показване на бутона за преглед при всеки елемент с изображение"
+
+#: prefs.js:202
+msgid "Cache images"
+msgstr "Кеширане на изображения"
+
+#: prefs.js:203
+msgid "Save copied images to clipboard history"
+msgstr "Запазване на копираните изображения в историята на буферната памет"
+
+#: prefs.js:208
+msgid "Excluded Apps"
+msgstr "Изключени приложения"
+
+#: prefs.js:209
+msgid "Content copied will not be saved while these apps are in focus"
+msgstr ""
+"Копираното съдържание няма да се запазва, докато тези приложения са на фокус"
+
+#: prefs.js:220
+msgid "Case-sensitive"
+msgstr "Съобразявай се с главни и малки букви"
+
+#: prefs.js:221
+msgid "Match uppercase and lowercase letters exactly when searching"
+msgstr "Точно съобразяване с главните и малките букви при търсене"
+
+#: prefs.js:225
+msgid "Regular expressions"
+msgstr "Регулярни изрази"
+
+#: prefs.js:226
+msgid "Allow regular expressions to filter clipboard entries"
+msgstr "Позволяване на използването на регулярни изрази за филтриране на записите от буферната памет"
+
+#: prefs.js:239
+msgid "Clear clipboard history on interval"
+msgstr "Изчиствай историята на буферната памет през определен интервал"
+
+#: prefs.js:240
+msgid "Automatically clear clipboard history at a recurring interval"
+msgstr "Автоматично изчистване на историята на буферната памет през повтарящ се интервал"
+
+#: prefs.js:244
+msgid "History clear interval (in minutes)"
+msgstr "Интервал за изчистване на историята (в минути)"
+
+#: prefs.js:264
+msgid "Item Actions"
+msgstr "Действия за елементите"
+
+#: prefs.js:354
 msgid "Icon"
 msgstr "Икона"
 
-#: prefs.js:208
+#: prefs.js:355
 msgid "Clipboard Content"
 msgstr "Съдържание на буферната памет"
 
-#: prefs.js:209
+#: prefs.js:356
 msgid "Both"
 msgstr "И двете"
 
-#: prefs.js:210
+#: prefs.js:357
 msgid "Neither"
 msgstr "Нито едно"
 
-#: prefs.js:221
+#: prefs.js:368
 msgid "Toggle the menu"
 msgstr "Показване/скриване на менюто"
 
-#: prefs.js:223
+#: prefs.js:370
 msgid "Previous entry"
 msgstr "Предишен запис"
 
-#: prefs.js:224
+#: prefs.js:371
 msgid "Next entry"
 msgstr "Следващ запис"
 
-#: prefs.js:229
+#: prefs.js:376
 msgid "Enable shortcuts"
 msgstr "Активиране на клавишни комбинации"
 
-#: prefs.js:254
+#: prefs.js:401
 msgid "Disabled"
 msgstr "Изключено"
 
-#: prefs.js:263
+#: prefs.js:410
 msgid "Enter shortcut"
 msgstr "Въведете клавишна комбинация"
 
-#: prefs.js:345
+#: prefs.js:497
 msgid "Window class name, e.g. \"KeePassXC\""
 msgstr "Име на клас на прозорец, напр. \"KeePassXC\""
+
+#: prefs.js:509
+msgid "Choose from installed applications"
+msgstr "Избиране от инсталираните приложения"
+
+#: prefs.js:526
+msgid "Search applications..."
+msgstr "Търсене на приложения..."
+
+#~ msgid "Adds a paste button to each entry that lets you paste it directly"
+#~ msgstr ""
+#~ "Добавя бутон за поставяне към всеки запис, който позволява директно "
+#~ "поставяне"
+
+#~ msgid "Requires restarting the extension"
+#~ msgstr "Изисква рестартиране на разширението"
 
 #~ msgid "Refresh Interval (ms)"
 #~ msgstr "Интервал на обновяване (мс)"
