@@ -514,8 +514,12 @@ const ClipboardIndicator = GObject.registerClass({
         menuItem.actor.connect('key-press-event', (actor, event) => {
             switch (event.get_key_symbol()) {
                 case Clutter.KEY_Delete:
-                    this.#selectNextMenuItem(menuItem);
-                    this._removeEntry(menuItem, 'delete');
+                    if (menuItem.entry.isFavorite()) {
+                        this._confirmRemovePinnedEntry(menuItem, true);
+                    } else {
+                        this.#selectNextMenuItem(menuItem);
+                        this._removeEntry(menuItem, 'delete');
+                    }
                     break;
                 case Clutter.KEY_p:
                     this.#selectNextMenuItem(menuItem);
@@ -596,7 +600,9 @@ const ClipboardIndicator = GObject.registerClass({
         menuItem.actor.add_child(icoBtn);
         menuItem.icoBtn = icoBtn;
         menuItem.deletePressId = icoBtn.connect('clicked',
-            () => this._removeEntry(menuItem, 'delete')
+            () => menuItem.entry.isFavorite()
+                ? this._confirmRemovePinnedEntry(menuItem)
+                : this._removeEntry(menuItem, 'delete')
         );
 
         if (entry.isFavorite()) {
@@ -620,6 +626,17 @@ const ClipboardIndicator = GObject.registerClass({
         this._moveItemFirst(menuItem);
         this._updateCache();
         this.#showElements();
+    }
+
+    _confirmRemovePinnedEntry (menuItem, selectNext = false) {
+        const title = _("Delete pinned item?");
+        const message = _("Are you sure you want to delete this pinned item?");
+        const sub_message = _("This operation cannot be undone.");
+
+        this.dialogManager.open(title, message, sub_message, _("Delete"), _("Cancel"), () => {
+            if (selectNext) this.#selectNextMenuItem(menuItem);
+            this._removeEntry(menuItem, 'delete');
+        });
     }
 
     _confirmRemoveAll () {
