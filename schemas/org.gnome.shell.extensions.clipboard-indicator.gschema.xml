@@ -44,6 +44,35 @@
         <summary>Remove down arrow in top bar</summary>
     </key>
 
+    <key name="blink-icon-on-copy" type="b">
+        <default>false</default>
+        <summary>Blink icon on copy</summary>
+        <description>
+            If true, the topbar icon will blink when content is copied to clipboard.
+        </description>
+    </key>
+
+    <key name="show-search-bar" type="b">
+        <default>true</default>
+        <summary>Show the search bar</summary>
+    </key>
+
+    <key name="show-private-mode" type="b">
+        <default>true</default>
+        <summary>Show the private mode toggle</summary>
+    </key>
+
+    <key name="show-settings-button" type="b">
+        <default>true</default>
+        <summary>Show the settings button</summary>
+    </key>
+
+    <key name="show-clear-history-button" type="b">
+        <default>true</default>
+        <summary>Show the clear history button</summary>
+        <description>If true, the clear history button will be displayed.</description>
+    </key>
+
     <key name="clear-on-boot" type="b">
         <default>false</default>
         <summary>Clear clipboard history on every system reboot.</summary>
@@ -106,6 +135,14 @@
         <summary>Show notification when cycling through the entries with hotkeys</summary>
         <description>
             If true, a notification is shown when cycling through the clipboard entries using hotkeys.
+        </description>
+    </key>
+
+    <key name="notify-on-clear" type="b">
+        <default>true</default>
+        <summary>Show notification on Clear History</summary>
+        <description>
+            If true, a notification is shown when the history is cleared.
         </description>
     </key>
 
@@ -225,5 +262,32 @@
             <summary>Regex-based search</summary>
             <description>Allow regex in search</description>
         </key>
+    <key name="open-at-cursor" type="b">
+        <default>false</default>
+        <summary>Open menu at cursor position</summary>
+        <description>
+            If true, the menu will open at the cursor position when using the keyboard shortcut.
+        </description>
+    </key>
+    <key name="show-delete-button" type="b">
+        <default>true</default>
+        <summary>Show the delete button on each item</summary>
+    </key>
+    <key name="show-tag-button" type="b">
+        <default>true</default>
+        <summary>Show the tag button on each item</summary>
+    </key>
+    <key name="show-pin-button" type="b">
+        <default>true</default>
+        <summary>Show the pin/favorite button on each item</summary>
+    </key>
+    <key name="show-edit-button" type="b">
+        <default>true</default>
+        <summary>Show the edit button on each text item</summary>
+    </key>
+    <key name="show-preview-button" type="b">
+        <default>true</default>
+        <summary>Show the preview button on each image item</summary>
+    </key>
     </schema>
 </schemalist>

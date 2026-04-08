@@ -73,3 +73,27 @@
     height:1em;
     margin-right:.25em;
 }
+
+.clipboard-indicator-hbox {
+    transition: background-color 150ms ease-in-out;
+}
+
+.clipboard-indicator-hbox .clipboard-indicator-icon {
+    transition: color 150ms ease-in-out;
+}
+
+.ci-tag-label {
+    font-size: 0.8em;
+    color: rgba(255, 255, 255, 0.6);
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    padding: 1px 6px;
+    margin: 0 6px;
+}
+
+.ci-edit-textbox {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    padding: 8px;
+    min-width: 384px;
+}
