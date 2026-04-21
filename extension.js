@@ -34,7 +34,7 @@ let NOTIFY_ON_COPY            = true;
 let NOTIFY_ON_CYCLE           = true;
 let NOTIFY_ON_CLEAR           = true;
 let CONFIRM_ON_CLEAR          = true;
-let CONFIRM_ON_PINNED_DELETE  = true;
+let CONFIRM_ON_PINNED_DELETE  = false;
 let MAX_TOPBAR_LENGTH         = 15;
 let TOPBAR_DISPLAY_MODE       = 1; //0 - only icon, 1 - only clipboard content, 2 - both, 3 - neither
 let CLEAR_ON_BOOT             = false;
@@ -632,7 +632,12 @@ const ClipboardIndicator = GObject.registerClass({
             switch (event.get_key_symbol()) {
                 case Clutter.KEY_Delete:
                     if (menuItem.entry.isFavorite()) {
-                        this._confirmRemovePinnedEntry(menuItem, true);
+                        if (CONFIRM_ON_PINNED_DELETE) {
+                            this._confirmRemovePinnedEntry(menuItem, true);
+                        } else {
+                            this.#selectNextMenuItem(menuItem);
+                            this._removeEntry(menuItem, 'delete');
+                        }
                     } else {
                         this.#selectNextMenuItem(menuItem);
                         this._removeEntry(menuItem, 'delete');
