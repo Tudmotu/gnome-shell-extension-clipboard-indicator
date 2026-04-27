@@ -41,7 +41,44 @@ let KEEP_SELECTED_ON_CLEAR    = false;
 let PASTE_BUTTON              = true;
 let PINNED_ON_BOTTOM          = false;
 let CACHE_IMAGES              = true;
+let SHOW_TIMESTAMPS           = true;
+let TIMESTAMP_FORMAT          = 0; // 0 = relative, 1 = absolute
+let SHOW_CONTENT_ICONS        = true;
 let EXCLUDED_APPS             = [];
+
+function formatTimestamp (timestamp, format) {
+    if (!timestamp) return '';
+    const now = Date.now();
+    const diff = now - timestamp;
+    const seconds = Math.floor(diff / 1000);
+
+    if (format === 1) {
+        // Absolute format
+        const date = new Date(timestamp);
+        const nowDate = new Date();
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const day = date.getDate();
+        const month = months[date.getMonth()];
+        if (date.getFullYear() !== nowDate.getFullYear()) {
+            return `${hours}:${minutes} ${day} ${month} ${date.getFullYear()}`;
+        }
+        return `${hours}:${minutes} ${day} ${month}`;
+    }
+
+    // Relative format
+    if (seconds < 10) return _('just now');
+    if (seconds < 60) return _('%d min ago').replace('%d', Math.floor(seconds / 60) || 1);
+    if (seconds < 3600) return _('%d min ago').replace('%d', Math.floor(seconds / 60));
+    if (seconds < 86400) return _('%d hr ago').replace('%d', Math.floor(seconds / 3600));
+    if (seconds < 604800) return _('%d days ago').replace('%d', Math.floor(seconds / 86400));
+    if (seconds < 2592000) return _('%d weeks ago').replace('%d', Math.floor(seconds / 604800));
+    if (seconds < 31536000) return _('%d months ago').replace('%d', Math.floor(seconds / 2592000));
+    return _('> 1 year ago');
+}
+
 let CLEAR_HISTORY_ON_INTERVAL = false;
 let CLEAR_HISTORY_INTERVAL    = 60;
 let NEXT_HISTORY_CLEAR        = -1;
@@ -462,6 +499,16 @@ const ClipboardIndicator = GObject.registerClass({
         }
     }
 
+    _updateTimestampLabel (menuItem) {
+        if (!menuItem.timestampLabel) return;
+        if (!SHOW_TIMESTAMPS) {
+            menuItem.timestampLabel.hide();
+            return;
+        }
+        menuItem.timestampLabel.show();
+        menuItem.timestampLabel.set_text(formatTimestamp(menuItem.entry.timestamp, TIMESTAMP_FORMAT));
+    }
+
     _findNextMenuItem (currentMenutItem) {
         let currentIndex = this.clipItemsRadioGroup.indexOf(currentMenutItem);
 
@@ -535,6 +582,16 @@ const ClipboardIndicator = GObject.registerClass({
         })
 
         this._setEntryLabel(menuItem);
+
+        // Timestamp label
+        menuItem.timestampLabel = new St.Label({
+            style_class: 'ci-timestamp-label',
+            text: '',
+            y_align: Clutter.ActorAlign.CENTER
+        });
+        menuItem.actor.insert_child_below(menuItem.timestampLabel, menuItem.label);
+        this._updateTimestampLabel(menuItem);
+
         this.clipItemsRadioGroup.push(menuItem);
 
         // Favorite button
@@ -1144,6 +1201,9 @@ const ClipboardIndicator = GObject.registerClass({
         NEXT_HISTORY_CLEAR          = settings.get_int(PrefsFields.NEXT_HISTORY_CLEAR);
         CASE_SENSITIVE_SEARCH       = settings.get_boolean(PrefsFields.CASE_SENSITIVE_SEARCH);
         REGEX_SEARCH                = settings.get_boolean(PrefsFields.REGEX_SEARCH);
+        SHOW_TIMESTAMPS             = settings.get_boolean(PrefsFields.SHOW_TIMESTAMPS);
+        TIMESTAMP_FORMAT            = settings.get_int(PrefsFields.TIMESTAMP_FORMAT);
+        SHOW_CONTENT_ICONS          = settings.get_boolean(PrefsFields.SHOW_CONTENT_ICONS);
     }
 
     async _onSettingsChange () {
@@ -1159,6 +1219,7 @@ const ClipboardIndicator = GObject.registerClass({
             // Re-set menu-items lables in case preview size changed
             this._getAllIMenuItems().forEach(function (mItem) {
                 that._setEntryLabel(mItem);
+                that._updateTimestampLabel(mItem);
                 mItem.pasteBtn.visible = PASTE_BUTTON;
             });
 
