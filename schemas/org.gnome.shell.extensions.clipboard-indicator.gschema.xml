@@ -225,5 +225,27 @@
             <summary>Regex-based search</summary>
             <description>Allow regex in search</description>
         </key>
+        <key name="show-timestamps" type="b">
+            <default>true</default>
+            <summary>Show timestamps in menu</summary>
+            <description>
+                If true, each clipboard entry shows when it was captured.
+            </description>
+        </key>
+        <key name="timestamp-format" type="i">
+            <default>0</default>
+            <summary>Timestamp display format</summary>
+            <description>
+                0 = relative ("2 min ago"), 1 = absolute ("14:30 27 Apr")
+            </description>
+            <range min="0" max="1"/>
+        </key>
+        <key name="show-content-icons" type="b">
+            <default>true</default>
+            <summary>Show smart content type icons</summary>
+            <description>
+                If true, each clipboard entry shows an icon indicating its content type (URL, email, path, code, text).
+            </description>
+        </key>
     </schema>
 </schemalist>

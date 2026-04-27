@@ -30,4 +30,7 @@ export const PrefsFields = {
     NEXT_HISTORY_CLEAR              : 'next-history-clear',
     CASE_SENSITIVE_SEARCH           : 'case-sensitive-search',
     REGEX_SEARCH                    : 'regex-search',
+    SHOW_TIMESTAMPS                : 'show-timestamps',
+    TIMESTAMP_FORMAT               : 'timestamp-format',
+    SHOW_CONTENT_ICONS             : 'show-content-icons',
 };
