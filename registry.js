@@ -88,8 +88,23 @@ export class Registry {
                         let [success, contents] = obj.load_contents_finish(res);
 
                         if (success) {
+                            const decoded = new TextDecoder().decode(contents);
+                            let registry;
+                            try {
+                                registry = JSON.parse(decoded);
+                            } catch (e) {
+                                console.error('Clipboard Indicator: failed to parse registry file');
+                                console.error(e);
+                                resolve([]);
+                                return;
+                            }
+
+                            if (!Array.isArray(registry)) {
+                                resolve([]);
+                                return;
+                            }
+
                             let max_size = this.settings.get_int(PrefsFields.HISTORY_SIZE);
-                            const registry = JSON.parse(new TextDecoder().decode(contents));
                             const entriesPromises = registry.map(
                                 jsonEntry => {
                                     return ClipboardEntry.fromJSON(jsonEntry)
@@ -100,26 +115,28 @@ export class Registry {
                                 clipboardEntries = clipboardEntries
                                     .filter(entry => entry !== null);
 
-                                let registryNoFavorite = clipboardEntries
-                                    .filter(entry => entry.isFavorite());
+                                let nonFavoriteEntries = clipboardEntries
+                                    .filter(entry => !entry.isFavorite());
 
-                                while (registryNoFavorite.length > max_size) {
-                                    let oldestNoFavorite = registryNoFavorite.shift();
+                                while (nonFavoriteEntries.length > max_size) {
+                                    let oldestNoFavorite = nonFavoriteEntries.shift();
                                     let itemIdx = clipboardEntries.indexOf(oldestNoFavorite);
-                                    clipboardEntries.splice(itemIdx,1);
+                                    clipboardEntries.splice(itemIdx, 1);
 
-                                    registryNoFavorite = clipboardEntries.filter(
-                                        entry => entry.isFavorite()
+                                    nonFavoriteEntries = clipboardEntries.filter(
+                                        entry => !entry.isFavorite()
                                     );
                                 }
 
                                 resolve(clipboardEntries);
                             }).catch(e => {
                                 console.error(e);
+                                resolve([]);
                             });
                         }
                         else {
                             console.error('Clipboard Indicator: failed to open registry file');
+                            resolve([]);
                         }
                     });
                 });
@@ -234,13 +251,15 @@ export class ClipboardEntry {
 
             let file = Gio.file_new_for_path(filename);
 
-            const contentType = await file.query_info_async('*', FileQueryInfoFlags.NONE, GLib.PRIORITY_DEFAULT, null, (obj, res) => {
-                try {
-                    const fileInfo = obj.query_info_finish(res);
-                    return fileInfo.get_content_type();
-                } catch (e) {
-                    console.error(e);
-                }
+            const contentType = await new Promise((resolveQuery, rejectQuery) => {
+                file.query_info_async('*', FileQueryInfoFlags.NONE, GLib.PRIORITY_DEFAULT, null, (obj, res) => {
+                    try {
+                        const fileInfo = obj.query_info_finish(res);
+                        resolveQuery(fileInfo.get_content_type());
+                    } catch (e) {
+                        rejectQuery(e);
+                    }
+                });
             });
 
             if (contentType && !contentType.startsWith('image/') && !contentType.startsWith('text/')) {
