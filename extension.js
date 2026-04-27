@@ -15,6 +15,7 @@ import { Registry, ClipboardEntry } from './registry.js';
 import { DialogManager } from './confirmDialog.js';
 import { PrefsFields } from './constants.js';
 import { Keyboard } from './keyboard.js';
+import { detectContentType } from './contentDetectors.js';
 
 const CLIPBOARD_TYPE = St.ClipboardType.CLIPBOARD;
 
@@ -542,6 +543,7 @@ const ClipboardIndicator = GObject.registerClass({
                 menuItem.insert_child_below(img, menuItem.label);
             });
         }
+        this._updateContentIcon(menuItem);
     }
 
     _updateTimestampLabel (menuItem) {
@@ -552,6 +554,23 @@ const ClipboardIndicator = GObject.registerClass({
         }
         menuItem.timestampLabel.show();
         menuItem.timestampLabel.set_text(formatTimestamp(menuItem.entry.timestamp, TIMESTAMP_FORMAT));
+    }
+
+    _updateContentIcon (menuItem) {
+        if (!menuItem.contentIcon || !SHOW_CONTENT_ICONS) {
+            if (menuItem.contentIcon) menuItem.contentIcon.hide();
+            return;
+        }
+        if (!menuItem.entry.isText()) {
+            menuItem.contentIcon.set_icon_name('image-x-generic-symbolic');
+            menuItem.contentIcon.show();
+            return;
+        }
+        const detector = detectContentType(menuItem.entry.getStringValue());
+        if (detector) {
+            menuItem.contentIcon.set_icon_name(detector.icon);
+        }
+        menuItem.contentIcon.show();
     }
 
     _findNextMenuItem (currentMenutItem) {
@@ -595,6 +614,13 @@ const ClipboardIndicator = GObject.registerClass({
         menuItem.menu = this.menu;
         menuItem.entry = entry;
         menuItem.clipContents = entry.getStringValue();
+        menuItem.contentIcon = new St.Icon({
+            style_class: 'ci-content-type-icon system-status-icon',
+            icon_name: 'text-x-generic-symbolic',
+            y_align: Clutter.ActorAlign.CENTER
+        });
+        menuItem.actor.insert_child_at_index(menuItem.contentIcon, 0);
+        this._updateContentIcon(menuItem);
         menuItem.radioGroup = this.clipItemsRadioGroup;
         menuItem.buttonPressId = menuItem.connect('activate',
             autoSet => this._onMenuItemSelectedAndMenuClose(menuItem, autoSet));
@@ -1320,6 +1346,7 @@ const ClipboardIndicator = GObject.registerClass({
             this._getAllIMenuItems().forEach(function (mItem) {
                 that._setEntryLabel(mItem);
                 that._updateTimestampLabel(mItem);
+                that._updateContentIcon(mItem);
                 mItem.pasteBtn.visible = PASTE_BUTTON;
             });
 
