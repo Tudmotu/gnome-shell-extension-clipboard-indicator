@@ -169,6 +169,25 @@ class Settings {
             this.field_clear_history_interval.set_sensitive(widget.active);
         });
 
+        this.field_show_timestamps = new Adw.SwitchRow({
+            title: _("Show timestamps in menu"),
+            subtitle: _("Displays when each clipboard item was captured")
+        });
+
+        this.field_timestamp_format = new Adw.ComboRow({
+            title: _("Timestamp format"),
+            model: this.#createTimestampFormatOptions()
+        });
+
+        this.field_show_content_icons = new Adw.SwitchRow({
+            title: _("Show content type icons"),
+            subtitle: _("Displays an icon indicating the content type (URL, email, file path, code)")
+        });
+
+        this.field_show_timestamps.connect('notify::active', (widget) => {
+            this.field_timestamp_format.set_sensitive(widget.active);
+        });
+
         this.ui =  new Adw.PreferencesGroup({ title: _('UI') });
         this.behavior = new Adw.PreferencesGroup({title: _('Behavior')});
         this.exclusion = new Adw.PreferencesGroup({ title: _('Exclusion') });
@@ -184,6 +203,9 @@ class Settings {
         this.ui.add(this.field_keep_selected_on_clear);
         this.ui.add(this.field_paste_button);
         this.ui.add(this.field_pinned_on_bottom);
+        this.ui.add(this.field_show_timestamps);
+        this.ui.add(this.field_timestamp_format);
+        this.ui.add(this.field_show_content_icons);
 
         this.behavior.add(this.field_paste_on_select);
         this.behavior.add(this.field_cache_images);
@@ -234,8 +256,12 @@ class Settings {
         this.schema.bind(PrefsFields.CLEAR_HISTORY_INTERVAL, this.field_clear_history_interval, 'value', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.CASE_SENSITIVE_SEARCH, this.case_sensitive_search, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.REGEX_SEARCH, this.regex_search, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.SHOW_TIMESTAMPS, this.field_show_timestamps, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.TIMESTAMP_FORMAT, this.field_timestamp_format, 'selected', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.SHOW_CONTENT_ICONS, this.field_show_content_icons, 'active', Gio.SettingsBindFlags.DEFAULT);
 
         this.field_clear_history_interval.set_sensitive(this.field_clear_history_on_interval.active);
+        this.field_timestamp_format.set_sensitive(this.field_show_timestamps.active);
         this.#fetchExludedAppsList();
     }
 
@@ -249,6 +275,18 @@ class Settings {
         let liststore = new Gtk.StringList();
         for (let option of options) {
             liststore.append(option)
+        }
+        return liststore;
+    }
+
+    #createTimestampFormatOptions () {
+        let options = [
+            _("Relative (2 min ago)"),
+            _("Absolute (14:30 27 Apr)")
+        ];
+        let liststore = new Gtk.StringList();
+        for (let option of options) {
+            liststore.append(option);
         }
         return liststore;
     }
