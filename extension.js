@@ -249,6 +249,28 @@ const ClipboardIndicator = GObject.registerClass({
             }, 50);
         });
 
+        that.menu.actor.connect('key-press-event', (actor, event) => {
+            const modifier = event.get_state();
+            const isAlt = modifier & Clutter.ModifierType.MOD1_MASK;
+            if (!isAlt) return Clutter.EVENT_PROPAGATE;
+
+            const keyMap = {
+                [Clutter.KEY_1]: 0, [Clutter.KEY_2]: 1, [Clutter.KEY_3]: 2,
+                [Clutter.KEY_4]: 3, [Clutter.KEY_5]: 4, [Clutter.KEY_6]: 5,
+                [Clutter.KEY_7]: 6, [Clutter.KEY_8]: 7, [Clutter.KEY_9]: 8,
+            };
+
+            const index = keyMap[event.get_key_symbol()];
+            if (index === undefined) return Clutter.EVENT_PROPAGATE;
+
+            const visibleItems = this.clipItemsRadioGroup.filter(m => m.actor.visible);
+            if (index < visibleItems.length) {
+                this._onMenuItemSelectedAndMenuClose(visibleItems[index], true);
+            }
+
+            return Clutter.EVENT_STOP;
+        });
+
         // Create menu sections for items
         // Favorites
         that.favoritesSection = new PopupMenu.PopupMenuSection();
