@@ -781,6 +781,15 @@ const ClipboardIndicator = GObject.registerClass({
             const result = await this.#getClipboardContent();
 
             if (result) {
+                // Duplicate detection: skip if identical to latest entry
+                if (this.clipItemsRadioGroup.length > 0) {
+                    const latestEntry = this.clipItemsRadioGroup[this.clipItemsRadioGroup.length - 1].entry;
+                    if (latestEntry.equals(result)) {
+                        this.#refreshInProgress = false;
+                        return;
+                    }
+                }
+
                 for (let menuItem of this.clipItemsRadioGroup) {
                     if (menuItem.entry.equals(result)) {
                         this._selectMenuItem(menuItem, false);
