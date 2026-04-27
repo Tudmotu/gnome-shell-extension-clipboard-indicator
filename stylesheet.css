@@ -73,3 +73,17 @@
     height:1em;
     margin-right:.25em;
 }
+
+.ci-timestamp-label {
+    font-size: 0.75em;
+    color: rgba(255, 255, 255, 0.5);
+    margin-left: 1.5em;
+}
+
+.ci-content-type-icon {
+    margin-right: 0.5em;
+}
+
+.ci-snippet-btn {
+    color: rgba(255, 255, 255, 0.3);
+}
