@@ -263,6 +263,18 @@ const ClipboardIndicator = GObject.registerClass({
         that.scrollViewFavoritesMenuSection.actor.add_child(this.favoritesScrollView);
         this.favoritesSeparator = new PopupMenu.PopupSeparatorMenuItem();
 
+        // Snippets
+        that.snippetsSection = new PopupMenu.PopupMenuSection();
+
+        that.scrollViewSnippetsMenuSection = new PopupMenu.PopupMenuSection();
+        this.snippetsScrollView = new St.ScrollView({
+            style_class: 'ci-history-menu-section',
+            overlay_scrollbars: true
+        });
+        this.snippetsScrollView.add_child(that.snippetsSection.actor);
+        that.scrollViewSnippetsMenuSection.actor.add_child(this.snippetsScrollView);
+        this.snippetsSeparator = new PopupMenu.PopupSeparatorMenuItem();
+
         // History
         that.historySection = new PopupMenu.PopupMenuSection();
 
@@ -278,7 +290,8 @@ const ClipboardIndicator = GObject.registerClass({
         // Add separator
         this.historySeparator = new PopupMenu.PopupSeparatorMenuItem();
 
-        // Add sections ordered according to settings
+        // Add sections ordered: Snippets (always on top) > Favorites/History
+        that.menu.addMenuItem(that.scrollViewSnippetsMenuSection);
         if (PINNED_ON_BOTTOM) {
             that.menu.addMenuItem(that.scrollViewMenuSection);
             that.menu.addMenuItem(that.scrollViewFavoritesMenuSection);
@@ -389,6 +402,7 @@ const ClipboardIndicator = GObject.registerClass({
     #hideElements() {
         if (this.menu.box.contains(this._entryItem)) this.menu.box.remove_child(this._entryItem);
         if (this.menu.box.contains(this.favoritesSeparator)) this.menu.box.remove_child(this.favoritesSeparator);
+        if (this.menu.box.contains(this.snippetsSeparator)) this.menu.box.remove_child(this.snippetsSeparator);
         if (this.menu.box.contains(this.historySeparator)) this.menu.box.remove_child(this.historySeparator);
         if (this.menu.box.contains(this.clearMenuItem)) this.menu.box.remove_child(this.clearMenuItem);
         if (this.menu.box.contains(this.emptyStateSection)) this.menu.box.remove_child(this.emptyStateSection);
@@ -404,6 +418,15 @@ const ClipboardIndicator = GObject.registerClass({
             }
             if (this.menu.box.contains(this.emptyStateSection) === true) {
                 this.menu.box.remove_child(this.emptyStateSection);
+            }
+
+            if (this.snippetsSection._getMenuItems().length > 0) {
+                if (this.menu.box.contains(this.snippetsSeparator) === false) {
+                    this.menu.box.insert_child_above(this.snippetsSeparator, this.scrollViewSnippetsMenuSection.actor);
+                }
+            }
+            else if (this.menu.box.contains(this.snippetsSeparator) === true) {
+                this.menu.box.remove_child(this.snippetsSeparator);
             }
 
             if (this.favoritesSection._getMenuItems().length > 0) {
@@ -554,8 +577,14 @@ const ClipboardIndicator = GObject.registerClass({
         menuItem.buttonPressId = menuItem.connect('activate',
             autoSet => this._onMenuItemSelectedAndMenuClose(menuItem, autoSet));
         menuItem.connect('key-focus-in', () => {
-            const viewToScroll = menuItem.entry.isFavorite() ?
-                this.favoritesScrollView : this.historyScrollView;
+            let viewToScroll;
+            if (menuItem.entry.isSnippet()) {
+                viewToScroll = this.snippetsScrollView;
+            } else if (menuItem.entry.isFavorite()) {
+                viewToScroll = this.favoritesScrollView;
+            } else {
+                viewToScroll = this.historyScrollView;
+            }
             AnimationUtils.ensureActorVisibleInScrollView(viewToScroll, menuItem);
         });
         menuItem.actor.connect('key-press-event', (actor, event) => {
@@ -567,6 +596,10 @@ const ClipboardIndicator = GObject.registerClass({
                 case Clutter.KEY_p:
                     this.#selectNextMenuItem(menuItem);
                     this._favoriteToggle(menuItem);
+                    break;
+                case Clutter.KEY_s:
+                    this.#selectNextMenuItem(menuItem);
+                    this._snippetToggle(menuItem);
                     break;
                 case Clutter.KEY_v:
                     this.#pasteItem(menuItem);
@@ -656,7 +689,32 @@ const ClipboardIndicator = GObject.registerClass({
             () => this._removeEntry(menuItem, 'delete')
         );
 
-        if (entry.isFavorite()) {
+        // Snippet button
+        let iconSnip = new St.Icon({
+            icon_name: 'bookmark-new-symbolic',
+            style_class: 'system-status-icon'
+        });
+
+        let snipBtn = new St.Button({
+            style_class: 'ci-snippet-btn ci-action-btn',
+            can_focus: true,
+            child: iconSnip,
+            x_align: Clutter.ActorAlign.END,
+            x_expand: false,
+            y_expand: true
+        });
+
+        menuItem.snipBtn = snipBtn;
+        menuItem.snipIcon = iconSnip;
+        menuItem.snippetPressId = snipBtn.connect('clicked',
+            () => this._snippetToggle(menuItem)
+        );
+        menuItem.actor.add_child(snipBtn);
+        this._setSnippetIcon(menuItem);
+
+        if (entry.isSnippet()) {
+            this.snippetsSection.addMenuItem(menuItem, 0);
+        } else if (entry.isFavorite()) {
             this.favoritesSection.addMenuItem(menuItem, 0);
         } else {
             this.historySection.addMenuItem(menuItem, 0);
@@ -679,6 +737,24 @@ const ClipboardIndicator = GObject.registerClass({
         this.#showElements();
     }
 
+    _snippetToggle (menuItem) {
+        const isSnippet = !menuItem.entry.isSnippet();
+        menuItem.entry.setSnippet(isSnippet);
+        menuItem.snipIcon.set_icon_name(
+            isSnippet ? 'bookmark-filled-symbolic' : 'bookmark-new-symbolic'
+        );
+        this._moveItemFirst(menuItem);
+        this._updateCache();
+        this.#showElements();
+    }
+
+    _setSnippetIcon (menuItem) {
+        if (!menuItem.snipIcon) return;
+        menuItem.snipIcon.set_icon_name(
+            menuItem.entry.isSnippet() ? 'bookmark-filled-symbolic' : 'bookmark-new-symbolic'
+        );
+    }
+
     _confirmRemoveAll () {
         const title = _("Clear all?");
         const message = _("Are you sure you want to delete all clipboard items?");
@@ -694,6 +770,7 @@ const ClipboardIndicator = GObject.registerClass({
         // Don't remove pinned items
         this.historySection._getMenuItems().forEach(mItem => {
             if (KEEP_SELECTED_ON_CLEAR === false || !mItem.currentlySelected) {
+                if (mItem.entry.isSnippet()) return;
                 this._removeEntry(mItem, 'delete');
             }
         });
@@ -739,7 +816,7 @@ const ClipboardIndicator = GObject.registerClass({
         let that = this;
 
         let clipItemsRadioGroupNoFavorite = that.clipItemsRadioGroup.filter(
-            item => item.entry.isFavorite() === false);
+            item => item.entry.isFavorite() === false && item.entry.isSnippet() === false);
 
         const origSize = clipItemsRadioGroupNoFavorite.length;
 
@@ -748,7 +825,7 @@ const ClipboardIndicator = GObject.registerClass({
             that._removeEntry(oldestNoFavorite);
 
             clipItemsRadioGroupNoFavorite = that.clipItemsRadioGroup.filter(
-                item => item.entry.isFavorite() === false);
+            item => item.entry.isFavorite() === false && item.entry.isSnippet() === false);
         }
 
         if (clipItemsRadioGroupNoFavorite.length < origSize) {
@@ -894,7 +971,7 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     _getAllIMenuItems () {
-        return this.historySection._getMenuItems().concat(this.favoritesSection._getMenuItems());
+        return this.snippetsSection._getMenuItems().concat(this.historySection._getMenuItems()).concat(this.favoritesSection._getMenuItems());
     }
 
     _setupListener () {
@@ -1139,6 +1216,7 @@ const ClipboardIndicator = GObject.registerClass({
         // We hide the history in private ModeTypee because it will be out of sync (selected item will not reflect clipboard)
         this.scrollViewMenuSection.actor.visible = !PRIVATEMODE;
         this.scrollViewFavoritesMenuSection.actor.visible = !PRIVATEMODE;
+        this.scrollViewSnippetsMenuSection.actor.visible = !PRIVATEMODE;
         // If we get out of private mode then we restore the clipboard to old state
         if (!PRIVATEMODE) {
             let selectList = this.clipItemsRadioGroup.filter((item) => !!item.currentlySelected);
