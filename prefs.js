@@ -10,16 +10,25 @@ export default class ClipboardIndicatorPreferences extends ExtensionPreferences 
     fillPreferencesWindow (window) {
         window._settings = this.getSettings();
         const settingsUI = new Settings(window._settings);
-        const page = new Adw.PreferencesPage();
-        page.add(settingsUI.ui);
-        page.add(settingsUI.behavior);
-        page.add(settingsUI.search);
-        page.add(settingsUI.limits);
-        page.add(settingsUI.exclusion);
-        page.add(settingsUI.topbar);
-        page.add(settingsUI.notifications);
-        page.add(settingsUI.shortcuts);
-        window.add(page);
+
+        const tabs = [
+            { title: _('UI'),            iconName: 'view-grid-symbolic',               groups: [settingsUI.ui, settingsUI.item_actions] },
+            { title: _('Behavior'),      iconName: 'system-run-symbolic',              groups: [settingsUI.behavior] },
+            { title: _('Search'),        iconName: 'system-search-symbolic',           groups: [settingsUI.search] },
+            { title: _('Limits'),        iconName: 'preferences-system-symbolic',      groups: [settingsUI.limits] },
+            { title: _('Exclusion'),     iconName: 'action-unavailable-symbolic',      groups: [settingsUI.exclusion] },
+            { title: _('Topbar'),        iconName: 'edit-paste-symbolic',              groups: [settingsUI.topbar] },
+            { title: _('Notifications'), iconName: 'emoji-objects-symbolic',           groups: [settingsUI.notifications] },
+            { title: _('Shortcuts'),     iconName: 'input-keyboard-symbolic',          groups: [settingsUI.shortcuts] },
+        ];
+
+        window.set_default_size(700, 650);
+
+        for (const { title, iconName, groups } of tabs) {
+            const page = new Adw.PreferencesPage({ title, icon_name: iconName });
+            groups.forEach(g => page.add(g));
+            window.add(page);
+        }
     }
 }
 
@@ -29,6 +38,7 @@ class Settings {
 
         this.field_size = new Adw.SpinRow({
             title: _("History Size"),
+            subtitle: _("Maximum number of entries to keep in clipboard history"),
             adjustment: new Gtk.Adjustment({
                 lower: 1,
                 upper: 10000,
@@ -38,6 +48,7 @@ class Settings {
 
         this.field_preview_size = new Adw.SpinRow({
             title: _("Preview Size (characters)"),
+            subtitle: _("Number of characters shown per entry in the history menu"),
             adjustment: new Gtk.Adjustment({
                 lower: 10,
                 upper: 100,
@@ -47,6 +58,7 @@ class Settings {
 
         this.field_cache_size = new Adw.SpinRow({
             title: _("Max cache file size (MB)"),
+            subtitle: _("Maximum disk space used for caching clipboard data"),
             adjustment: new Gtk.Adjustment({
                 lower: 1,
                 upper: 1024,
@@ -56,6 +68,7 @@ class Settings {
 
         this.field_topbar_preview_size = new Adw.SpinRow({
             title: _("Number of characters in top bar"),
+            subtitle: _("Length of the clipboard content preview shown in the panel"),
             adjustment: new Gtk.Adjustment({
                 lower: 1,
                 upper: 100,
@@ -69,57 +82,125 @@ class Settings {
         });
 
         this.field_disable_down_arrow = new Adw.SwitchRow({
-            title: _("Remove down arrow in top bar")
+            title: _("Remove down arrow in top bar"),
+            subtitle: _("Hide the dropdown arrow next to the clipboard indicator")
+        });
+
+        this.field_blink_icon_on_copy = new Adw.SwitchRow({
+            title: _("Blink icon on copy"),
+            subtitle: _("Briefly flash the indicator icon when something is copied")
         });
 
         this.field_cache_disable = new Adw.SwitchRow({
-            title: _("Cache only pinned items")
+            title: _("Cache only pinned items"),
+            subtitle: _("Only save pinned (favorite) entries to disk")
         });
 
-        this.field_clear_notification_toggle = new Adw.SwitchRow({
-            title: _("Show notification on copy")
+        this.field_copy_notification_toggle = new Adw.SwitchRow({
+            title: _("Show notification on copy"),
+            subtitle: _("Display a notification each time text is copied")
         });
 
         this.field_cycle_notification_toggle = new Adw.SwitchRow({
-            title: _("Show notification on cycle")
+            title: _("Show notification on cycle"),
+            subtitle: _("Display a notification when cycling through entries with shortcuts")
+        });
+
+        this.field_clear_notification_toggle = new Adw.SwitchRow({
+            title: _("Show notification on Clear History"),
+            subtitle: _("Display a notification when clipboard history is cleared")
         });
 
         this.field_confirm_clear_toggle = new Adw.SwitchRow({
-            title: _("Show confirmation on Clear History")
+            title: _("Prompt for confirmation on Clear History"),
+            subtitle: _("Ask before deleting all clipboard entries")
         });
 
         this.field_strip_text = new Adw.SwitchRow({
-            title: _("Remove whitespace around text")
+            title: _("Remove whitespace around text"),
+            subtitle: _("Strip leading and trailing whitespace from text entries on copy")
         });
 
         this.field_move_item_first = new Adw.SwitchRow({
-            title: _("Move item to the top after selection")
+            title: _("Move item to the top after selection"),
+            subtitle: _("When selecting an entry, bring it to the top of the history")
         });
 
         this.field_keep_selected_on_clear = new Adw.SwitchRow({
-            title: _("Keep selected entry after Clear History")
-        });
-
-        this.field_paste_button = new Adw.SwitchRow({
-            title: _("Show paste buttons"),
-            subtitle: _("Adds a paste button to each entry that lets you paste it directly")
+            title: _("Keep selected entry after Clear History"),
+            subtitle: _("The currently active clipboard entry will not be removed when clearing history")
         });
 
         this.field_pinned_on_bottom = new Adw.SwitchRow({
             title: _("Place the pinned section on the bottom"),
-            subtitle: _("Requires restarting the extension")
+            subtitle: _("Move the pinned section to the bottom of the menu. Requires re-login")
+        });
+
+        this.field_show_search_bar = new Adw.SwitchRow({
+            title: _("Show Search Bar"),
+            subtitle: _("Display a search field at the top of the clipboard menu")
+        });
+        this.field_show_private_mode = new Adw.SwitchRow({
+            title: _("Show Private Mode"),
+            subtitle: _("Display the private mode toggle in the clipboard menu")
+        });
+        this.field_show_settings_button = new Adw.SwitchRow({
+            title: _("Show Settings Button"),
+            subtitle: _("Display a shortcut to these settings in the clipboard menu")
+        });
+        this.field_show_clear_history_button = new Adw.SwitchRow({
+            title: _("Show Clear History Button"),
+            subtitle: _("Display the clear history button in the clipboard menu")
         });
 
         this.field_clear_on_boot = new Adw.SwitchRow({
-            title: _("Clear clipboard history on system reboot")
+            title: _("Clear clipboard history on system reboot"),
+            subtitle: _("Delete all cached clipboard entries when the system starts")
         });
 
         this.field_paste_on_select = new Adw.SwitchRow({
-            title: _("Paste on select")
+            title: _("Paste on select"),
+            subtitle: _("Automatically paste the entry into the active window when selected")
+        });
+
+        this.field_open_at_cursor = new Adw.SwitchRow({
+            title: _("Open menu at cursor"),
+            subtitle: _("When using the keyboard shortcut, open the menu at the cursor position")
+        });
+
+        this.field_show_delete_button = new Adw.SwitchRow({
+            title: _("Delete"),
+            subtitle: _("Show the delete button on each item")
+        });
+
+        this.field_show_tag_button = new Adw.SwitchRow({
+            title: _("Tag"),
+            subtitle: _("Show the tag button on each item")
+        });
+
+        this.field_paste_button = new Adw.SwitchRow({
+            title: _("Paste"),
+            subtitle: _("Show the paste button on each item")
+        });
+
+        this.field_show_pin_button = new Adw.SwitchRow({
+            title: _("Pin"),
+            subtitle: _("Show the pin/favorite button on each item")
+        });
+
+        this.field_show_edit_button = new Adw.SwitchRow({
+            title: _("Edit"),
+            subtitle: _("Show the edit button on each text item")
+        });
+
+        this.field_show_preview_button = new Adw.SwitchRow({
+            title: _("Preview"),
+            subtitle: _("Show the preview button on each image item")
         });
 
         this.field_cache_images = new Adw.SwitchRow({
             title: _("Cache images"),
+            subtitle: _("Save copied images to clipboard history"),
             active: true
         });
 
@@ -136,11 +217,13 @@ class Settings {
         });
 
         this.case_sensitive_search = new Adw.SwitchRow({
-            title: _("Case-sensitive search")
+            title: _("Case-sensitive"),
+            subtitle: _("Match uppercase and lowercase letters exactly when searching")
         });
 
         this.regex_search = new Adw.SwitchRow({
-            title: _("Regular expression matching in search")
+            title: _("Regular expressions"),
+            subtitle: _("Allow regular expressions to filter clipboard entries")
         });
 
         this.field_exclusion_row_add_button.connect('clicked', () => {
@@ -153,7 +236,8 @@ class Settings {
         this.field_exclusion_row.add_suffix(this.field_exclusion_row_add_button);
 
         this.field_clear_history_on_interval = new Adw.SwitchRow({
-            title: _("Clear clipboard history on interval")
+            title: _("Clear clipboard history on interval"),
+            subtitle: _("Automatically clear clipboard history at a recurring interval")
         });
 
         this.field_clear_history_interval = new Adw.SpinRow({
@@ -177,14 +261,20 @@ class Settings {
         this.notifications =  new Adw.PreferencesGroup({ title: _('Notifications') });
         this.shortcuts =  new Adw.PreferencesGroup({ title: _('Shortcuts') });
         this.search = new Adw.PreferencesGroup({title: _('Search')});
+        this.item_actions = new Adw.PreferencesGroup({ title: _('Item Actions') });
 
         this.ui.add(this.field_preview_size);
-        this.ui.add(this.field_move_item_first);
-        this.ui.add(this.field_strip_text);
-        this.ui.add(this.field_keep_selected_on_clear);
-        this.ui.add(this.field_paste_button);
+        this.ui.add(this.field_confirm_clear_toggle);
         this.ui.add(this.field_pinned_on_bottom);
+        this.ui.add(this.field_show_search_bar);
+        this.ui.add(this.field_show_private_mode);
+        this.ui.add(this.field_show_settings_button);
+        this.ui.add(this.field_show_clear_history_button);
 
+        this.behavior.add(this.field_strip_text);
+        this.behavior.add(this.field_move_item_first);
+        this.behavior.add(this.field_keep_selected_on_clear);
+        this.behavior.add(this.field_open_at_cursor);
         this.behavior.add(this.field_paste_on_select);
         this.behavior.add(this.field_cache_images);
         this.behavior.add(this.field_clear_on_boot);
@@ -201,13 +291,21 @@ class Settings {
         this.topbar.add(this.field_display_mode);
         this.topbar.add(this.field_topbar_preview_size);
         this.topbar.add(this.field_disable_down_arrow);
+        this.topbar.add(this.field_blink_icon_on_copy);
 
+        this.notifications.add(this.field_copy_notification_toggle);
+        this.notifications.add(this.field_cycle_notification_toggle);
         this.notifications.add(this.field_clear_notification_toggle);
-        this.notifications.add(this.field_cycle_notification_toggle)
-        this.notifications.add(this.field_confirm_clear_toggle);
 
         this.search.add(this.case_sensitive_search);
         this.search.add(this.regex_search);
+
+        this.item_actions.add(this.field_show_delete_button);
+        this.item_actions.add(this.field_show_tag_button);
+        this.item_actions.add(this.field_paste_button);
+        this.item_actions.add(this.field_show_pin_button);
+        this.item_actions.add(this.field_show_edit_button);
+        this.item_actions.add(this.field_show_preview_button);
 
         this.#buildShorcuts(this.shortcuts);
 
@@ -215,25 +313,37 @@ class Settings {
         this.schema.bind(PrefsFields.PREVIEW_SIZE, this.field_preview_size, 'value', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.CACHE_FILE_SIZE, this.field_cache_size, 'value', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.CACHE_ONLY_FAVORITE, this.field_cache_disable, 'active', Gio.SettingsBindFlags.DEFAULT);
-        this.schema.bind(PrefsFields.NOTIFY_ON_COPY, this.field_clear_notification_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.NOTIFY_ON_COPY, this.field_copy_notification_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.NOTIFY_ON_CYCLE, this.field_cycle_notification_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.NOTIFY_ON_CLEAR, this.field_clear_notification_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.CONFIRM_ON_CLEAR, this.field_confirm_clear_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.MOVE_ITEM_FIRST, this.field_move_item_first, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.KEEP_SELECTED_ON_CLEAR, this.field_keep_selected_on_clear, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.TOPBAR_DISPLAY_MODE_ID, this.field_display_mode, 'selected', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.DISABLE_DOWN_ARROW, this.field_disable_down_arrow, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.BLINK_ICON_ON_COPY, this.field_blink_icon_on_copy, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.TOPBAR_PREVIEW_SIZE, this.field_topbar_preview_size, 'value', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.STRIP_TEXT, this.field_strip_text, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.PASTE_BUTTON, this.field_paste_button, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.PINNED_ON_BOTTOM, this.field_pinned_on_bottom, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.SHOW_SEARCH_BAR, this.field_show_search_bar, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.SHOW_PRIVATE_MODE, this.field_show_private_mode, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.SHOW_SETTINGS_BUTTON, this.field_show_settings_button, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.SHOW_CLEAR_HISTORY_BUTTON, this.field_show_clear_history_button, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.ENABLE_KEYBINDING, this.field_keybinding_activation, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.CLEAR_ON_BOOT, this.field_clear_on_boot, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.PASTE_ON_SELECT, this.field_paste_on_select, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.OPEN_AT_CURSOR, this.field_open_at_cursor, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.CACHE_IMAGES, this.field_cache_images, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.CLEAR_HISTORY_ON_INTERVAL, this.field_clear_history_on_interval, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.CLEAR_HISTORY_INTERVAL, this.field_clear_history_interval, 'value', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.CASE_SENSITIVE_SEARCH, this.case_sensitive_search, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.REGEX_SEARCH, this.regex_search, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.SHOW_DELETE_BUTTON, this.field_show_delete_button, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.SHOW_TAG_BUTTON, this.field_show_tag_button, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.SHOW_PIN_BUTTON, this.field_show_pin_button, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.SHOW_EDIT_BUTTON, this.field_show_edit_button, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.SHOW_PREVIEW_BUTTON, this.field_show_preview_button, 'active', Gio.SettingsBindFlags.DEFAULT);
 
         this.field_clear_history_interval.set_sensitive(this.field_clear_history_on_interval.active);
         this.#fetchExludedAppsList();

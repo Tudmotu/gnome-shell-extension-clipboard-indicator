@@ -28,7 +28,7 @@ export class Registry {
 
             registryContent.push(item);
 
-            if (entry.isText()) {
+    if (entry.isText()) {
                 item.contents = entry.getStringValue();
             }
             else if (entry.isImage()) {
@@ -36,6 +36,8 @@ export class Registry {
                 item.contents = filename;
                 this.writeEntryFile(entry);
             }
+
+            if (entry.getTag()) item.tag = entry.getTag();
         }
 
         this.writeToFile(registryContent);
@@ -89,7 +91,13 @@ export class Registry {
 
                         if (success) {
                             let max_size = this.settings.get_int(PrefsFields.HISTORY_SIZE);
-                            const registry = JSON.parse(new TextDecoder().decode(contents));
+                            const cacheTextData = new TextDecoder().decode(contents);
+                            let registry;
+                            if (cacheTextData.trim().length == 0) {
+                                registry = [];
+                            } else {
+                                registry = JSON.parse(cacheTextData);
+                            }
                             const entriesPromises = registry.map(
                                 jsonEntry => {
                                     return ClipboardEntry.fromJSON(jsonEntry)
@@ -136,8 +144,6 @@ export class Registry {
     }
 
     async getEntryAsImage (entry) {
-        const filename = this.getEntryFilename(entry);
-
         if (entry.isImage() === false) return;
 
         if (this.#entryFileExists(entry) == false) {
@@ -147,6 +153,18 @@ export class Registry {
         const gicon = Gio.icon_new_for_string(this.getEntryFilename(entry));
         const stIcon = new St.Icon({ gicon });
         return stIcon;
+    }
+
+    async getEntryAsTexture (entry) {
+        if (entry.isImage() === false) return null;
+
+        if (this.#entryFileExists(entry) === false) {
+            await this.writeEntryFile(entry);
+        }
+
+        const file = Gio.file_new_for_path(this.getEntryFilename(entry));
+        const scaleFactor = St.ThemeContext.get_for_stage(global.stage).scale_factor;
+        return St.TextureCache.get_default().load_file_async(file, -1, -1, scaleFactor, 1.0);
     }
 
     getEntryFilename (entry) {
@@ -262,7 +280,9 @@ export class ClipboardEntry {
             }
         }
 
-        return new ClipboardEntry(mimetype, bytes, favorite);
+        const entry = new ClipboardEntry(mimetype, bytes, favorite);
+        if (jsonEntry.tag) entry.setTag(jsonEntry.tag);
+        return entry;
     }
 
     constructor (mimetype, bytes, favorite) {
@@ -306,6 +326,21 @@ export class ClipboardEntry {
 
     isImage () {
         return this.#mimetype.startsWith('image/');
+    }
+
+    setText (text) {
+        if (!this.isText()) return;
+        this.#bytes = new TextEncoder().encode(text);
+    }
+
+    #tag = null;
+
+    getTag () {
+        return this.#tag;
+    }
+
+    setTag (tag) {
+        this.#tag = tag || null;
     }
 
     asBytes () {
