@@ -972,16 +972,17 @@ const ClipboardIndicator = GObject.registerClass({
         if (!menuItem.entry.isFavorite() && MOVE_ITEM_FIRST) {
             this._skipMoveInRefresh = true;
             this._moveItemFirst(menuItem);
+        }
 
-            // #pasteItem sets preventIndicatorUpdate which blocks the
-            // indicator refresh inside _addEntry → _selectMenuItem, so
-            // force an update here to keep the panel in sync.
-            if (this.preventIndicatorUpdate) {
-                const saved = this.preventIndicatorUpdate;
-                this.preventIndicatorUpdate = false;
-                this.#updateIndicatorContent(menuItem.entry);
-                this.preventIndicatorUpdate = saved;
-            }
+        // #pasteItem sets preventIndicatorUpdate which blocks the
+        // indicator refresh inside _addEntry → _selectMenuItem, so
+        // force an update here to keep the panel in sync with the
+        // selected item (regardless of whether MOVE_ITEM_FIRST is on).
+        if (this.preventIndicatorUpdate) {
+            const saved = this.preventIndicatorUpdate;
+            this.preventIndicatorUpdate = false;
+            this.#updateIndicatorContent(menuItem.entry);
+            this.preventIndicatorUpdate = saved;
         }
 
         menuItem.menu.close();
