@@ -616,8 +616,8 @@ const ClipboardIndicator = GObject.registerClass({
         // CLICK fix for Paste on Select: clicking behaves like Enter
         menuItem.connect('activate', () => {
             if (PASTE_ON_SELECT) {
-                this.#pasteItem(menuItem);
                 this._onMenuItemSelectedAndMenuClose(menuItem, false);
+                this.#pasteItem(menuItem);
             } else {
                 this._onMenuItemSelectedAndMenuClose(menuItem, true);
             }
@@ -671,8 +671,8 @@ const ClipboardIndicator = GObject.registerClass({
                 case Clutter.KEY_KP_Enter:
                 case Clutter.KEY_Return:
                     if (PASTE_ON_SELECT) {
-                        this.#pasteItem(menuItem);
                         this._onMenuItemSelectedAndMenuClose(menuItem, false);
+                        this.#pasteItem(menuItem);
                     } else {
                         this._onMenuItemSelectedAndMenuClose(menuItem, true);
                     }
