@@ -168,7 +168,7 @@ export class Registry {
     }
 
     getEntryFilename (entry) {
-        return `${this.REGISTRY_DIR}/${entry.asBytes().hash()}`;
+        return `${this.REGISTRY_DIR}/${entry.getHash()}`;
     }
 
     async writeEntryFile (entry) {
@@ -345,6 +345,10 @@ export class ClipboardEntry {
 
     asBytes () {
         return GLib.Bytes.new(this.#bytes);
+    }
+
+    getHash () {
+        return this.asBytes().hash();
     }
 
     equals (otherEntry) {
