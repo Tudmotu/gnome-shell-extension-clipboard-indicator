@@ -891,11 +891,19 @@ const ClipboardIndicator = GObject.registerClass({
 
         let historyBlocks = [];
 
+        historyBlocks.push(
+            `Clipboard history export\n` +
+            `Exported: ${now.toLocaleString()}\n` +
+            `Total items: ${clipHistory.length}`
+        );
+
         for (let i = 0; i < clipHistory.length; i++) {
             const entry = clipHistory[i];
             let contentValue = '';
+            let entryType = 'Text';
 
             if (entry.isImage()) {
+                entryType = 'Image';
                 if (!CACHE_IMAGES) {
                     contentValue = `[Image not cached, cannot export]`;
                 } else {
@@ -926,16 +934,22 @@ const ClipboardIndicator = GObject.registerClass({
                 contentValue = entry.getStringValue();
             }
 
+            const contentBlock = contentValue
+                .split('\n')
+                .map(line => `    ${line}`)
+                .join('\n');
+
             historyBlocks.push(
-                `--- Entry ${i} ---\n` +
+                `Entry ${i + 1}\n` +
+                `Type: ${entryType}\n` +
                 `Favorite: ${entry.isFavorite() ? 'Yes' : 'No'}\n` +
                 `Tag: ${entry.getTag() || 'None'}\n` +
-                `Content: ${contentValue}\n` +
-                `-----------------`
+                `Content:\n` +
+                `${contentBlock}`
             );
         }
 
-        const finalContents = historyBlocks.join('\n\n');
+        const finalContents = historyBlocks.join('\n\n--------------------\n\n');
         await this._doExport(`${exportFolder}/history.txt`, finalContents);
         console.log(`Clipboard Indicator: History export completed successfully.`);
     }
