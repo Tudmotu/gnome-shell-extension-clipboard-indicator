@@ -1,4 +1,4 @@
-MODULES = *.js locale/*/LC_MESSAGES/*.mo metadata.json stylesheet.css LICENSE.rst README.rst schemas/
+MODULES = *.js locale/*/LC_MESSAGES/*.mo metadata.json stylesheet.css LICENSE.rst README.md schemas/
 INSTALLPATH=~/.local/share/gnome-shell/extensions/clipboard-indicator@tudmotu.com/
 
 all: compile-locales compile-settings
@@ -19,6 +19,9 @@ install: all
 	rm -rf $(INSTALLPATH)
 	mkdir -p $(INSTALLPATH)
 	cp -r --parents $(MODULES) $(INSTALLPATH)
+	mkdir -p ~/.local/share/glib-2.0/schemas/
+	cp schemas/org.gnome.shell.extensions.clipboard-indicator.gschema.xml ~/.local/share/glib-2.0/schemas/
+	glib-compile-schemas ~/.local/share/glib-2.0/schemas/
 
 nested-session:
 	dbus-run-session -- env MUTTER_DEBUG_NUM_DUMMY_MONITORS=1 \

@@ -297,5 +297,65 @@
         <default>true</default>
         <summary>Show the preview button on each image item</summary>
     </key>
+    <key name="show-clean-button" type="b">
+        <default>true</default>
+        <summary>Show the clean button on each text item</summary>
+        <description>
+            If true, a button to clean and normalize text is shown on each text entry.
+        </description>
+    </key>
+    <key name="clean-hidden-chars" type="b">
+        <default>true</default>
+        <summary>Remove hidden/invisible/control characters</summary>
+        <description>
+            Strip invisible Unicode characters including control codes,
+            private-use characters, and variation selectors.
+        </description>
+    </key>
+    <key name="clean-non-breaking-spaces" type="b">
+        <default>true</default>
+        <summary>Convert non-breaking spaces and typography space variants</summary>
+        <description>
+            Replace non-breaking spaces and other special Unicode space
+            characters with normal ASCII spaces.
+        </description>
+    </key>
+    <key name="clean-trim-trailing" type="b">
+        <default>true</default>
+        <summary>Trim trailing whitespace per line</summary>
+        <description>
+            Remove spaces and tabs from the end of each line.
+        </description>
+    </key>
+    <key name="clean-typography" type="b">
+        <default>true</default>
+        <summary>Normalize quotes, dashes and ellipsis</summary>
+        <description>
+            Convert smart quotes to straight quotes, em/en dashes to
+            plain hyphens, and ellipsis characters to three dots.
+        </description>
+    </key>
+    <key name="clean-double-spaces" type="b">
+        <default>false</default>
+        <summary>Collapse multiple spaces and tabs</summary>
+        <description>
+            Reduce multiple consecutive spaces or tabs to a single space.
+        </description>
+    </key>
+    <key name="clean-zero-width-joiners" type="b">
+        <default>false</default>
+        <summary>Strip zero-width joiners (ZWJ) and non-joiners (ZWNJ)</summary>
+        <description>
+            Remove zero-width joiner and non-joiner characters. This may
+            break composed emojis and some complex scripts.
+        </description>
+    </key>
+    <key name="clean-emojis" type="b">
+        <default>false</default>
+        <summary>Strip emojis and symbols</summary>
+        <description>
+            Remove emoji characters and pictographs from clipboard text.
+        </description>
+    </key>
     </schema>
 </schemalist>

@@ -43,4 +43,12 @@ export const PrefsFields = {
     SHOW_PIN_BUTTON                 : 'show-pin-button',
     SHOW_EDIT_BUTTON                : 'show-edit-button',
     SHOW_PREVIEW_BUTTON             : 'show-preview-button',
+    SHOW_CLEAN_BUTTON               : 'show-clean-button',
+    CLEAN_HIDDEN_CHARS              : 'clean-hidden-chars',
+    CLEAN_NON_BREAKING_SPACES       : 'clean-non-breaking-spaces',
+    CLEAN_TRIM_TRAILING             : 'clean-trim-trailing',
+    CLEAN_TYPOGRAPHY                : 'clean-typography',
+    CLEAN_DOUBLE_SPACES             : 'clean-double-spaces',
+    CLEAN_ZERO_WIDTH_JOINERS        : 'clean-zero-width-joiners',
+    CLEAN_EMOJIS                    : 'clean-emojis',
 };
