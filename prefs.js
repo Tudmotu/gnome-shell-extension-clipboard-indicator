@@ -13,7 +13,7 @@ export default class ClipboardIndicatorPreferences extends ExtensionPreferences 
 
         const tabs = [
             { title: _('UI'),            iconName: 'view-grid-symbolic',               groups: [settingsUI.ui, settingsUI.item_actions] },
-            { title: _('Behavior'),      iconName: 'system-run-symbolic',              groups: [settingsUI.behavior] },
+            { title: _('Behavior'),      iconName: 'system-run-symbolic',              groups: [settingsUI.behavior, settingsUI.clean_settings] },
             { title: _('Search'),        iconName: 'system-search-symbolic',           groups: [settingsUI.search] },
             { title: _('Limits'),        iconName: 'preferences-system-symbolic',      groups: [settingsUI.limits] },
             { title: _('Exclusion'),     iconName: 'action-unavailable-symbolic',      groups: [settingsUI.exclusion] },
@@ -203,6 +203,46 @@ class Settings {
             subtitle: _("Show the preview button on each image item")
         });
 
+        this.field_show_clean_button = new Adw.SwitchRow({
+            title: _("Clean"),
+            subtitle: _("Show the clean/normalize button on each text item")
+        });
+
+        this.field_clean_hidden_chars = new Adw.SwitchRow({
+            title: _("Remove hidden characters"),
+            subtitle: _("Strip invisible control and private-use characters")
+        });
+
+        this.field_clean_non_breaking_spaces = new Adw.SwitchRow({
+            title: _("Convert non-breaking spaces"),
+            subtitle: _("Replace non-breaking and special spaces with normal spaces")
+        });
+
+        this.field_clean_trim_trailing = new Adw.SwitchRow({
+            title: _("Trim trailing whitespace"),
+            subtitle: _("Remove spaces and tabs from line endings")
+        });
+
+        this.field_clean_typography = new Adw.SwitchRow({
+            title: _("Typography"),
+            subtitle: _("Convert smart quotes, em/en dashes, and ellipsis to plain ASCII")
+        });
+
+        this.field_clean_double_spaces = new Adw.SwitchRow({
+            title: _("Collapse spaces and tabs"),
+            subtitle: _("Reduce multiple consecutive spaces or tabs to one space")
+        });
+
+        this.field_clean_zero_width_joiners = new Adw.SwitchRow({
+            title: _("Strip zero-width joiners"),
+            subtitle: _("Remove ZWJ/ZWNJ characters (may break composed emojis and some scripts)")
+        });
+
+        this.field_clean_emojis = new Adw.SwitchRow({
+            title: _("Strip emojis"),
+            subtitle: _("Remove emoji characters and pictographs")
+        });
+
         this.field_cache_images = new Adw.SwitchRow({
             title: _("Cache images"),
             subtitle: _("Save copied images to clipboard history"),
@@ -267,6 +307,7 @@ class Settings {
         this.shortcuts =  new Adw.PreferencesGroup({ title: _('Shortcuts') });
         this.search = new Adw.PreferencesGroup({title: _('Search')});
         this.item_actions = new Adw.PreferencesGroup({ title: _('Item Actions') });
+        this.clean_settings = new Adw.PreferencesGroup({ title: _('Clean Settings') });
 
         this.ui.add(this.field_preview_size);
         this.ui.add(this.field_confirm_clear_toggle);
@@ -312,6 +353,15 @@ class Settings {
         this.item_actions.add(this.field_show_pin_button);
         this.item_actions.add(this.field_show_edit_button);
         this.item_actions.add(this.field_show_preview_button);
+        this.item_actions.add(this.field_show_clean_button);
+
+        this.clean_settings.add(this.field_clean_hidden_chars);
+        this.clean_settings.add(this.field_clean_non_breaking_spaces);
+        this.clean_settings.add(this.field_clean_trim_trailing);
+        this.clean_settings.add(this.field_clean_typography);
+        this.clean_settings.add(this.field_clean_double_spaces);
+        this.clean_settings.add(this.field_clean_zero_width_joiners);
+        this.clean_settings.add(this.field_clean_emojis);
 
         this.#buildShorcuts(this.shortcuts);
 
@@ -351,6 +401,14 @@ class Settings {
         this.schema.bind(PrefsFields.SHOW_PIN_BUTTON, this.field_show_pin_button, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.SHOW_EDIT_BUTTON, this.field_show_edit_button, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.SHOW_PREVIEW_BUTTON, this.field_show_preview_button, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.SHOW_CLEAN_BUTTON, this.field_show_clean_button, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.CLEAN_HIDDEN_CHARS, this.field_clean_hidden_chars, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.CLEAN_NON_BREAKING_SPACES, this.field_clean_non_breaking_spaces, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.CLEAN_TRIM_TRAILING, this.field_clean_trim_trailing, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.CLEAN_TYPOGRAPHY, this.field_clean_typography, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.CLEAN_DOUBLE_SPACES, this.field_clean_double_spaces, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.CLEAN_ZERO_WIDTH_JOINERS, this.field_clean_zero_width_joiners, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.CLEAN_EMOJIS, this.field_clean_emojis, 'active', Gio.SettingsBindFlags.DEFAULT);
 
         this.field_clear_history_interval.set_sensitive(this.field_clear_history_on_interval.active);
         this.#fetchExludedAppsList();
