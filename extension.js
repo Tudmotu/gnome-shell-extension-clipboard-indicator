@@ -1,5 +1,6 @@
 import Clutter from 'gi://Clutter';
 import Cogl from 'gi://Cogl';
+import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
 import Meta from 'gi://Meta';
 import Shell from 'gi://Shell';
@@ -64,20 +65,37 @@ let SHOW_EDIT_BUTTON          = true;
 let SHOW_PREVIEW_BUTTON       = true;
 
 export default class ClipboardIndicatorExtension extends Extension {
-    enable () {
-        this.clipboardIndicator = new ClipboardIndicator({
-            clipboard: St.Clipboard.get_default(),
-            settings: this.getSettings(),
-            openSettings: this.openPreferences,
-            uuid: this.uuid
-        });
+    _idleId = null;
 
-        Main.panel.addToStatusArea('clipboardIndicator', this.clipboardIndicator, 1);
+    enable () {
+        // Defer heavy actor/menu creation to idle to avoid blocking Shell init
+        // init.js:21 AsyncReadyCallback during GC sweep (mutter 46.2 Wayland + nvidia-drm
+        // secondary causes sweep to overlap with Clutter/St actor construction).
+        // See Tudmotu#499.
+        this._idleId = GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
+            if (this.clipboardIndicator) return GLib.SOURCE_REMOVE;
+            this.clipboardIndicator = new ClipboardIndicator({
+                clipboard: St.Clipboard.get_default(),
+                settings: this.getSettings(),
+                openSettings: this.openPreferences.bind(this),
+                uuid: this.uuid
+            });
+
+            Main.panel.addToStatusArea('clipboardIndicator', this.clipboardIndicator, 1);
+            this._idleId = null;
+            return GLib.SOURCE_REMOVE;
+        });
     }
 
     disable () {
-        this.clipboardIndicator.destroy();
-        this.clipboardIndicator = null;
+        if (this._idleId) {
+            GLib.source_remove(this._idleId);
+            this._idleId = null;
+        }
+        if (this.clipboardIndicator) {
+            this.clipboardIndicator.destroy();
+            this.clipboardIndicator = null;
+        }
         EXCLUDED_APPS = [];
     }
 }
