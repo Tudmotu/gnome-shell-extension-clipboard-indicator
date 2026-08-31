@@ -983,8 +983,8 @@ const ClipboardIndicator = GObject.registerClass({
     #addToCache (entry) {
         const entries = this.clipItemsRadioGroup
             .map(menuItem => menuItem.entry)
-            .filter(entry => CACHE_ONLY_FAVORITE == false || entry.isFavorite())
-            .concat([entry]);
+            .concat([entry])
+            .filter(entry => CACHE_ONLY_FAVORITE == false || entry.isFavorite());
         this.registry.write(entries);
     }
 
