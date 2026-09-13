@@ -1627,7 +1627,6 @@ const ClipboardIndicator = GObject.registerClass({
 
     #pasteItem (menuItem) {
         this.menu.close();
-        const currentlySelected = this._getCurrentlySelectedItem();
         this.preventIndicatorUpdate = true;
         this.#updateClipboard(menuItem.entry);
         this._pastingKeypressTimeout = setTimeout(() => {
@@ -1648,8 +1647,6 @@ const ClipboardIndicator = GObject.registerClass({
 
             this._pastingResetTimeout = setTimeout(() => {
                 this.preventIndicatorUpdate = false;
-                if (currentlySelected && currentlySelected.entry)
-                    this.#updateClipboard(currentlySelected.entry);
             }, 50);
         }, 50);
     }
