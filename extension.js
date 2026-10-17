@@ -1848,6 +1848,11 @@ const ClipboardIndicator = GObject.registerClass({
             vertical: true,
         });
 
+        // Use the theme's text color, so the text shows in light mode too
+        textBox.connect('style-changed', () => {
+            clutterText.color = textBox.get_theme_node().get_foreground_color();
+        });
+
         textBox.add_child(clutterText);
 
         scrollView.add_child(textBox);
