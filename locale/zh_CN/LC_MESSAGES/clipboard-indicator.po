@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-02 01:05+0300\n"
-"PO-Revision-Date: 2024-01-27 14:47+0800\n"
+"PO-Revision-Date: 2026-10-18 00:00+0800\n"
 "Last-Translator: hiiiha\n"
 "Language-Team: \n"
 "Language: zh_CN\n"
@@ -40,7 +40,7 @@ msgstr "清空历史"
 
 #: extension.js:355
 msgid "Reset Timer"
-msgstr ""
+msgstr "重置计时器"
 
 #: extension.js:376
 msgid "Settings"
@@ -52,25 +52,23 @@ msgstr "剪贴板为空"
 
 #: extension.js:706
 msgid "Preview Image"
-msgstr ""
+msgstr "预览图片"
 
 #: extension.js:724 prefs.js:197
 msgid "Edit"
-msgstr ""
+msgstr "编辑"
 
 #: extension.js:762 prefs.js:187
 msgid "Paste"
-msgstr ""
+msgstr "粘贴"
 
 #: extension.js:845
-#, fuzzy
 msgid "Delete pinned item?"
-msgstr "仅缓存收藏条目"
+msgstr "删除收藏条目？"
 
 #: extension.js:846
-#, fuzzy
 msgid "Are you sure you want to delete this pinned item?"
-msgstr "确定要删除所有剪贴板条目吗？"
+msgstr "确定要删除此收藏条目吗？"
 
 #: extension.js:847 extension.js:858
 msgid "This operation cannot be undone."
@@ -78,7 +76,7 @@ msgstr "此操作不可撤销。"
 
 #: extension.js:849 prefs.js:177
 msgid "Delete"
-msgstr ""
+msgstr "删除"
 
 #: extension.js:849 extension.js:860 extension.js:1040
 msgid "Cancel"
@@ -86,7 +84,7 @@ msgstr "取消"
 
 #: extension.js:856
 msgid "Clear all?"
-msgstr "清除所有记录吗？"
+msgstr "清空全部？"
 
 #: extension.js:857
 msgid "Are you sure you want to delete all clipboard items?"
@@ -97,13 +95,12 @@ msgid "Clear"
 msgstr "清除"
 
 #: extension.js:876
-#, fuzzy
 msgid "Clipboard history cleared automatically"
-msgstr "剪贴板已清空"
+msgstr "已自动清空剪贴板历史"
 
 #: extension.js:877
 msgid "Clipboard history cleared"
-msgstr "剪贴板已清空"
+msgstr "已清空剪贴板历史"
 
 #: extension.js:1039
 msgid "Copied to clipboard"
@@ -111,15 +108,15 @@ msgstr "已复制到剪贴板"
 
 #: extension.js:1756
 msgid "Enter tag…"
-msgstr ""
+msgstr "输入标签…"
 
 #: extension.js:1765 extension.js:1857
 msgid "Discard"
-msgstr ""
+msgstr "放弃"
 
 #: extension.js:1774 extension.js:1866
 msgid "Save"
-msgstr ""
+msgstr "保存"
 
 #: prefs.js:15 prefs.js:261
 msgid "UI"
@@ -131,7 +128,7 @@ msgstr "行为"
 
 #: prefs.js:17 prefs.js:268
 msgid "Search"
-msgstr ""
+msgstr "搜索"
 
 #: prefs.js:18 prefs.js:264
 msgid "Limits"
@@ -139,7 +136,7 @@ msgstr "限制"
 
 #: prefs.js:19 prefs.js:263
 msgid "Exclusion"
-msgstr ""
+msgstr "排除"
 
 #: prefs.js:20 prefs.js:265
 msgid "Topbar"
@@ -159,16 +156,15 @@ msgstr "历史条数"
 
 #: prefs.js:41
 msgid "Maximum number of entries to keep in clipboard history"
-msgstr ""
+msgstr "剪贴板历史中保留的最大条目数"
 
 #: prefs.js:50
 msgid "Preview Size (characters)"
 msgstr "预览长度（字符）"
 
 #: prefs.js:51
-#, fuzzy
 msgid "Number of characters shown per entry in the history menu"
-msgstr "顶栏显示的字符数量"
+msgstr "历史菜单中每个条目显示的字符数"
 
 #: prefs.js:60
 msgid "Max cache file size (MB)"
@@ -176,7 +172,7 @@ msgstr "最大缓存文件大小 (MB)"
 
 #: prefs.js:61
 msgid "Maximum disk space used for caching clipboard data"
-msgstr ""
+msgstr "缓存剪贴板数据所占的最大磁盘空间"
 
 #: prefs.js:70
 msgid "Number of characters in top bar"
@@ -184,7 +180,7 @@ msgstr "顶栏显示的字符数量"
 
 #: prefs.js:71
 msgid "Length of the clipboard content preview shown in the panel"
-msgstr ""
+msgstr "面板中显示的剪贴板内容预览长度"
 
 #: prefs.js:80
 msgid "What to show in top bar"
@@ -196,16 +192,15 @@ msgstr "移除顶栏中的下拉箭头"
 
 #: prefs.js:86
 msgid "Hide the dropdown arrow next to the clipboard indicator"
-msgstr ""
+msgstr "隐藏剪贴板指示器旁边的下拉箭头"
 
 #: prefs.js:90
-#, fuzzy
 msgid "Blink icon on copy"
-msgstr "复制时显示通知"
+msgstr "复制时闪烁图标"
 
 #: prefs.js:91
 msgid "Briefly flash the indicator icon when something is copied"
-msgstr ""
+msgstr "有内容被复制时短暂闪烁指示器图标"
 
 #: prefs.js:95
 msgid "Cache only pinned items"
@@ -213,7 +208,7 @@ msgstr "仅缓存收藏条目"
 
 #: prefs.js:96
 msgid "Only save pinned (favorite) entries to disk"
-msgstr ""
+msgstr "仅将收藏条目保存到磁盘"
 
 #: prefs.js:100
 msgid "Show notification on copy"
@@ -221,43 +216,39 @@ msgstr "复制时显示通知"
 
 #: prefs.js:101
 msgid "Display a notification each time text is copied"
-msgstr ""
+msgstr "每次复制文本时显示通知"
 
 #: prefs.js:105
-#, fuzzy
 msgid "Show notification on cycle"
-msgstr "复制时显示通知"
+msgstr "切换条目时显示通知"
 
 #: prefs.js:106
 msgid "Display a notification when cycling through entries with shortcuts"
-msgstr ""
+msgstr "使用快捷键循环切换条目时显示通知"
 
 #: prefs.js:110
-#, fuzzy
 msgid "Show notification on Clear History"
-msgstr "清除历史时显示通知"
+msgstr "清空历史时显示通知"
 
 #: prefs.js:111
 msgid "Display a notification when clipboard history is cleared"
-msgstr ""
+msgstr "清除剪贴板历史时显示通知"
 
 #: prefs.js:115
-#, fuzzy
 msgid "Prompt for confirmation on Clear History"
-msgstr "清除历史时显示通知"
+msgstr "清空历史前请求确认"
 
 #: prefs.js:116
-#, fuzzy
 msgid "Ask before deleting all clipboard entries"
-msgstr "确定要删除所有剪贴板条目吗？"
+msgstr "删除所有剪贴板条目前先询问"
 
 #: prefs.js:120
 msgid "Prompt before deleting pinned item"
-msgstr ""
+msgstr "删除收藏条目前请求确认"
 
 #: prefs.js:121
 msgid "Ask for confirmation before deleting a pinned item"
-msgstr ""
+msgstr "删除收藏条目前要求确认"
 
 #: prefs.js:125
 msgid "Remove whitespace around text"
@@ -265,7 +256,7 @@ msgstr "移除文字周围的空白字符"
 
 #: prefs.js:126
 msgid "Strip leading and trailing whitespace from text entries on copy"
-msgstr ""
+msgstr "复制时去除文本条目首尾的空白字符"
 
 #: prefs.js:130
 msgid "Move item to the top after selection"
@@ -273,61 +264,57 @@ msgstr "选择后将项目移到顶部"
 
 #: prefs.js:131
 msgid "When selecting an entry, bring it to the top of the history"
-msgstr ""
+msgstr "选中条目后将其移至历史顶部"
 
 #: prefs.js:135
 msgid "Keep selected entry after Clear History"
-msgstr "清除历史后保存选中条目"
+msgstr "清空历史后保留选中条目"
 
 #: prefs.js:136
 msgid ""
 "The currently active clipboard entry will not be removed when clearing "
 "history"
-msgstr ""
+msgstr "清空历史时不清除当前正在使用的剪贴板条目"
 
 #: prefs.js:140
 msgid "Place the pinned section on the bottom"
 msgstr "将收藏的内容置底"
 
 #: prefs.js:141
-#, fuzzy
 msgid "Move the pinned section to the bottom of the menu. Requires re-login"
-msgstr "将收藏的内容置底"
+msgstr "将收藏区域移至菜单底部。需要重新登录"
 
 #: prefs.js:145
 msgid "Show Search Bar"
-msgstr ""
+msgstr "显示搜索栏"
 
 #: prefs.js:146
 msgid "Display a search field at the top of the clipboard menu"
-msgstr ""
+msgstr "在剪贴板菜单顶部显示搜索框"
 
 #: prefs.js:149
-#, fuzzy
 msgid "Show Private Mode"
-msgstr "隐私模式"
+msgstr "显示隐私模式"
 
 #: prefs.js:150
 msgid "Display the private mode toggle in the clipboard menu"
-msgstr ""
+msgstr "在剪贴板菜单中显示隐私模式开关"
 
 #: prefs.js:153
-#, fuzzy
 msgid "Show Settings Button"
-msgstr "显示粘贴按钮"
+msgstr "显示设置按钮"
 
 #: prefs.js:154
 msgid "Display a shortcut to these settings in the clipboard menu"
-msgstr ""
+msgstr "在剪贴板菜单中显示设置入口"
 
 #: prefs.js:157
-#, fuzzy
 msgid "Show Clear History Button"
-msgstr "显示粘贴按钮"
+msgstr "显示清空历史按钮"
 
 #: prefs.js:158
 msgid "Display the clear history button in the clipboard menu"
-msgstr ""
+msgstr "在剪贴板菜单中显示清空历史按钮"
 
 #: prefs.js:162
 msgid "Clear clipboard history on system reboot"
@@ -335,111 +322,107 @@ msgstr "系统重启时清除历史记录"
 
 #: prefs.js:163
 msgid "Delete all cached clipboard entries when the system starts"
-msgstr ""
+msgstr "系统启动时删除所有缓存的剪贴板条目"
 
 #: prefs.js:167
 msgid "Paste on select"
-msgstr ""
+msgstr "选中即粘贴"
 
 #: prefs.js:168
 msgid "Automatically paste the entry into the active window when selected"
-msgstr ""
+msgstr "选中条目时自动将其粘贴到活动窗口"
 
 #: prefs.js:172
 msgid "Open menu at cursor"
-msgstr ""
+msgstr "在光标处打开菜单"
 
 #: prefs.js:173
 msgid "When using the keyboard shortcut, open the menu at the cursor position"
-msgstr ""
+msgstr "使用键盘快捷键时，在光标位置打开菜单"
 
 #: prefs.js:178
 msgid "Show the delete button on each item"
-msgstr ""
+msgstr "在每个条目上显示删除按钮"
 
 #: prefs.js:182
 msgid "Tag"
-msgstr ""
+msgstr "标签"
 
 #: prefs.js:183
 msgid "Show the tag button on each item"
-msgstr ""
+msgstr "在每个条目上显示标签按钮"
 
 #: prefs.js:188
-#, fuzzy
 msgid "Show the paste button on each item"
-msgstr "显示粘贴按钮"
+msgstr "在每个条目上显示粘贴按钮"
 
 #: prefs.js:192
 msgid "Pin"
-msgstr ""
+msgstr "收藏"
 
 #: prefs.js:193
 msgid "Show the pin/favorite button on each item"
-msgstr ""
+msgstr "在每个条目上显示收藏按钮"
 
 #: prefs.js:198
 msgid "Show the edit button on each text item"
-msgstr ""
+msgstr "在每个文本条目上显示编辑按钮"
 
 #: prefs.js:202
 msgid "Preview"
-msgstr ""
+msgstr "预览"
 
 #: prefs.js:203
 msgid "Show the preview button on each image item"
-msgstr ""
+msgstr "在每个图片条目上显示预览按钮"
 
 #: prefs.js:207
 msgid "Cache images"
-msgstr ""
+msgstr "缓存图片"
 
 #: prefs.js:208
-#, fuzzy
 msgid "Save copied images to clipboard history"
-msgstr "已复制到剪贴板"
+msgstr "将复制的图片保存到剪贴板历史"
 
 #: prefs.js:213
 msgid "Excluded Apps"
-msgstr ""
+msgstr "排除的应用"
 
 #: prefs.js:214
 msgid "Content copied will not be saved while these apps are in focus"
-msgstr ""
+msgstr "这些应用获得焦点时，复制的内容将不会被保存"
 
 #: prefs.js:225
 msgid "Case-sensitive"
-msgstr ""
+msgstr "区分大小写"
 
 #: prefs.js:226
 msgid "Match uppercase and lowercase letters exactly when searching"
-msgstr ""
+msgstr "搜索时严格区分大小写字母"
 
 #: prefs.js:230
 msgid "Regular expressions"
-msgstr ""
+msgstr "正则表达式"
 
 #: prefs.js:231
 msgid "Allow regular expressions to filter clipboard entries"
-msgstr ""
+msgstr "允许使用正则表达式过滤剪贴板条目"
 
 #: prefs.js:244
-#, fuzzy
 msgid "Clear clipboard history on interval"
-msgstr "系统重启时清除历史记录"
+msgstr "定时清空剪贴板历史"
 
 #: prefs.js:245
-#, fuzzy
 msgid "Automatically clear clipboard history at a recurring interval"
-msgstr "系统重启时清除历史记录"
+msgstr "按设定的时间间隔自动清空剪贴板历史"
 
 #: prefs.js:249
 msgid "History clear interval (in minutes)"
-msgstr ""
+msgstr "历史清空间隔（分钟）"
 
 #: prefs.js:269
 msgid "Item Actions"
-msgstr ""
+msgstr "条目操作"
 
 #: prefs.js:361
 msgid "Icon"
@@ -483,15 +466,15 @@ msgstr "输入键盘快捷键"
 
 #: prefs.js:504
 msgid "Window class name, e.g. \"KeePassXC\""
-msgstr ""
+msgstr "窗口类名，例如 \"KeePassXC\""
 
 #: prefs.js:516
 msgid "Choose from installed applications"
-msgstr ""
+msgstr "从已安装的应用中选择"
 
 #: prefs.js:533
 msgid "Search applications..."
-msgstr ""
+msgstr "搜索应用…"
 
 #~ msgid "Adds a paste button to each entry that lets you paste it directly"
 #~ msgstr "在每个条目之后显示直接粘贴按钮"
