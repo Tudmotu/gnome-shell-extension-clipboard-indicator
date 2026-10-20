@@ -142,7 +142,7 @@ const ClipboardIndicator = GObject.registerClass({
         });
 
         this._buttonText = new St.Label({
-            text: _('Text will be here'),
+            text: _('...'),
             y_align: Clutter.ActorAlign.CENTER
         });
 
@@ -158,6 +158,7 @@ const ClipboardIndicator = GObject.registerClass({
         this.add_child(hbox);
         this._createHistoryLabel();
         this._loadSettings();
+        this._updateTopbarLayout();
 
         if (CLEAR_ON_BOOT) this.registry.clearCacheFolder();
 
