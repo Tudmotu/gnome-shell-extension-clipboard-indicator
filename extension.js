@@ -24,6 +24,12 @@ const CLIPBOARD_TYPE = St.ClipboardType.CLIPBOARD;
 const INDICATOR_ICON = 'edit-paste-symbolic';
 
 let DELAYED_SELECTION_TIMEOUT = 750;
+
+// Paste speed tuning (milliseconds)
+let PASTE_KEYPRESS_DELAY = 16; // wait after closing the menu before injecting Shift+Insert
+let PASTE_RESET_DELAY    = 16; // wait after the keystroke before restoring clipboard (paste-btn/Ctrl+V path)
+
+let CACHE_WRITE_DELAY = 250;   // coalesce registry cache writes so they never block interactions
 let MAX_REGISTRY_LENGTH       = 15;
 let MAX_ENTRY_LENGTH          = 50;
 let CACHE_ONLY_FAVORITE       = false;
@@ -617,7 +623,7 @@ const ClipboardIndicator = GObject.registerClass({
         // CLICK fix for Paste on Select: clicking behaves like Enter
         menuItem.connect('activate', () => {
             if (PASTE_ON_SELECT) {
-                this.#pasteItem(menuItem);
+                this.#pasteItem(menuItem, false);
                 this._onMenuItemSelectedAndMenuClose(menuItem, false);
             } else {
                 this._onMenuItemSelectedAndMenuClose(menuItem, true);
@@ -672,7 +678,7 @@ const ClipboardIndicator = GObject.registerClass({
                 case Clutter.KEY_KP_Enter:
                 case Clutter.KEY_Return:
                     if (PASTE_ON_SELECT) {
-                        this.#pasteItem(menuItem);
+                        this.#pasteItem(menuItem, false);
                         this._onMenuItemSelectedAndMenuClose(menuItem, false);
                     } else {
                         this._onMenuItemSelectedAndMenuClose(menuItem, true);
@@ -838,7 +844,7 @@ const ClipboardIndicator = GObject.registerClass({
     _favoriteToggle (menuItem) {
         menuItem.entry.favorite = menuItem.entry.isFavorite() ? false : true;
         this._moveItemFirst(menuItem);
-        this._updateCache();
+        this.#scheduleCacheUpdate();
         this.#showElements();
     }
 
@@ -904,7 +910,7 @@ const ClipboardIndicator = GObject.registerClass({
             this.registry.deleteEntryFile(menuItem.entry);
         }
 
-        this._updateCache();
+        this.#scheduleCacheUpdate();
         this.#showElements();
     }
 
@@ -981,12 +987,26 @@ const ClipboardIndicator = GObject.registerClass({
         return this.registry.read();
     }
 
+    // Registry updates only need to persist "eventually", but _updateCache()
+    // synchronizes the whole history (JSON.stringify of all texts, plus copying
+    // and hashing every cached image). Called from ranking/deletion paths, it
+    // can easily stall a frame right when a menu item is being chosen, so it
+    // is throttled: the actual write happens once, after things settle.
+    #cacheWriteTimeoutId = null;
+
+    #scheduleCacheUpdate () {
+        if (this.#cacheWriteTimeoutId)
+            clearTimeout(this.#cacheWriteTimeoutId);
+
+        this.#cacheWriteTimeoutId = setTimeout(() => {
+            this.#cacheWriteTimeoutId = null;
+            this._updateCache();
+        }, CACHE_WRITE_DELAY);
+    }
+
     #addToCache (entry) {
-        const entries = this.clipItemsRadioGroup
-            .map(menuItem => menuItem.entry)
-            .filter(entry => CACHE_ONLY_FAVORITE == false || entry.isFavorite())
-            .concat([entry]);
-        this.registry.write(entries);
+        // The new entry has already been added to the menu; just persist it lazily.
+        this.#scheduleCacheUpdate();
     }
 
     _updateCache () {
@@ -1004,6 +1024,13 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     async _refreshIndicator () {
+        // Skip clipboard-triggered refreshes caused by our own bookkeeping
+        // (select/paste/restore). The state is already correct at that point;
+        // running this anyway would re-read the clipboard, re-select and even
+        // re-create the just-clicked menu item - the main source of the jank
+        // between clicking an entry and seeing it pasted.
+        if (this.preventIndicatorUpdate) return;
+
         if (PRIVATEMODE || this._destroyed) return; // Private mode, do not.
 
         const focussedWindow = Shell.Global.get().display.focusWindow;
@@ -1021,11 +1048,15 @@ const ClipboardIndicator = GObject.registerClass({
             }
 
             if (result) {
-                for (let menuItem of this.clipItemsRadioGroup) {
+                for (let i = 0; i < this.clipItemsRadioGroup.length; i++) {
+                    const menuItem = this.clipItemsRadioGroup[i];
+
                     if (menuItem.entry.equals(result)) {
                         this._selectMenuItem(menuItem, false);
 
-                        if (!menuItem.entry.isFavorite() && MOVE_ITEM_FIRST) {
+                        // Skip destroy/re-create + cache write when the item
+                        // is already at the top of the list.
+                        if (i > 0 && !menuItem.entry.isFavorite() && MOVE_ITEM_FIRST) {
                             this._moveItemFirst(menuItem);
                         }
 
@@ -1056,7 +1087,7 @@ const ClipboardIndicator = GObject.registerClass({
     _moveItemFirst (item) {
         this._removeEntry(item);
         this._addEntry(item.entry, item.currentlySelected, false);
-        this._updateCache();
+        this.#scheduleCacheUpdate();
     }
 
     _findItem (text) {
@@ -1626,9 +1657,33 @@ const ClipboardIndicator = GObject.registerClass({
 
 
 
-    #pasteItem (menuItem) {
-        this.menu.close();
+    // Close the popup without the 150ms fade-out. GNOME's item-activation path
+    // re-closes the top menu with PopupAnimation.FULL right after our own
+    // instant close(), keeping the popup mapped and fading for POPUP_ANIMATION_TIME.
+    // Hiding the box-pointer synchronously makes that animated close a no-op, so
+    // window focus is handed back and the injected paste keystroke lands immediately.
+    #closeMenuInstantly () {
+        const menu = this.menu;
+        if (menu.isOpen) menu.close();
+
+        const boxPointer = menu._boxPointer;
+        if (boxPointer?.visible) {
+            boxPointer.remove_all_transitions();
+            boxPointer.opacity = 0;
+            boxPointer.hide();
+        }
+    }
+
+    #pasteItem (menuItem, restorePrevious = true) {
+        this.#closeMenuInstantly();
         const currentlySelected = this._getCurrentlySelectedItem();
+        // When pasting through "select an entry" (click / Enter) the pasted entry
+        // becomes the selected one, so it must stay on the clipboard. Restoring
+        // the previously selected entry here raced with the paste (apps that read
+        // the clipboard slightly late received the OLD entry) and made
+        // _refreshIndicator() re-select the old entry, undoing the selection.
+        const restoreClipboardToOldItem = restorePrevious &&
+            currentlySelected && currentlySelected !== menuItem;
         this.preventIndicatorUpdate = true;
         this.#updateClipboard(menuItem.entry);
         this._pastingKeypressTimeout = setTimeout(() => {
@@ -1648,11 +1703,13 @@ const ClipboardIndicator = GObject.registerClass({
             }
 
             this._pastingResetTimeout = setTimeout(() => {
-                this.preventIndicatorUpdate = false;
-                if (currentlySelected && currentlySelected.entry)
+                if (restoreClipboardToOldItem && currentlySelected.entry)
                     this.#updateClipboard(currentlySelected.entry);
-            }, 50);
-        }, 50);
+                // Only stop suppressing refreshes after the paste finished, so
+                // every ownership change we caused during the paste is ignored.
+                this.preventIndicatorUpdate = false;
+            }, PASTE_RESET_DELAY);
+        }, PASTE_KEYPRESS_DELAY);
     }
 
     #showImagePreview (entry, onClose = null) {
@@ -1905,6 +1962,7 @@ const ClipboardIndicator = GObject.registerClass({
         if (this._historyClearTimeoutId) clearTimeout(this._historyClearTimeoutId);
         if (this._timerIntervalId) clearInterval(this._timerIntervalId);
         if (this._blinkAnimationTimeout) clearTimeout(this._blinkAnimationTimeout);
+        if (this.#cacheWriteTimeoutId) clearTimeout(this.#cacheWriteTimeoutId);
     }
 
     #clearClipboard () {
