@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: gnome-shell-extension-clipboard-indicator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-02 01:05+0300\n"
-"PO-Revision-Date: 2026-04-02 17:17+0200\n"
+"PO-Revision-Date: 2026-10-14 22:02+0200\n"
 "Last-Translator: Ibai Oihanguren Sala <ibaios@disroot.org>\n"
 "Language-Team: Basque\n"
 "Language: eu\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Gtranslator 50.0\n"
+"X-Generator: Gtranslator 51.0\n"
 
 #: extension.js:145
 msgid "Text will be here"
@@ -58,14 +58,12 @@ msgid "Paste"
 msgstr "Itsatsi"
 
 #: extension.js:845
-#, fuzzy
 msgid "Delete pinned item?"
-msgstr "Ainguratutako sarrerak soilik cacheratu"
+msgstr "Ainguratutako elementua ezabatu?"
 
 #: extension.js:846
-#, fuzzy
 msgid "Are you sure you want to delete this pinned item?"
-msgstr "Ziur arbeleko elementu guztiak kendu nahi dituzula?"
+msgstr "Ziur ainguratutako elementu hau ezabatu nahi duzula?"
 
 #: extension.js:847 extension.js:858
 msgid "This operation cannot be undone."
@@ -85,14 +83,13 @@ msgstr "Guztia garbitu?"
 
 #: extension.js:857
 msgid "Are you sure you want to delete all clipboard items?"
-msgstr "Ziur arbeleko elementu guztiak kendu nahi dituzula?"
+msgstr "Ziur arbeleko elementu guztiak ezabatu nahi dituzula?"
 
 #: extension.js:860
 msgid "Clear"
 msgstr "Garbitu"
 
 #: extension.js:876
-#, fuzzy
 msgid "Clipboard history cleared automatically"
 msgstr "Arbelaren historia automatikoki garbitu da"
 
@@ -243,11 +240,11 @@ msgstr "Galdetu arbeleko sarrera guztiak ezabatu aurretik"
 
 #: prefs.js:120
 msgid "Prompt before deleting pinned item"
-msgstr ""
+msgstr "Eskatu berrespena ainguratutako elementuak ezabatzerakoan"
 
 #: prefs.js:121
 msgid "Ask for confirmation before deleting a pinned item"
-msgstr ""
+msgstr "Galdetu ainguratutako elementu bat ezabatu aurretik"
 
 #: prefs.js:125
 msgid "Remove whitespace around text"
