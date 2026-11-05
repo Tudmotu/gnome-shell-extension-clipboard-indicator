@@ -21,9 +21,7 @@ install: all
 	cp -r --parents $(MODULES) $(INSTALLPATH)
 
 nested-session:
-	dbus-run-session -- env MUTTER_DEBUG_NUM_DUMMY_MONITORS=1 \
-		MUTTER_DEBUG_DUMMY_MODE_SPECS=2048x1536 \
-		MUTTER_DEBUG_DUMMY_MONITOR_SCALES=2 gnome-shell --nested --wayland
+	dbus-run-session -- gnome-shell --devkit --wayland
 
 bundle: all
 	zip -FSr bundle.zip $(MODULES)
