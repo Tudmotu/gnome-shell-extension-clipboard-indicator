@@ -6,7 +6,7 @@ export class Keyboard {
     #contentPurpose;
 
     constructor () {
-        let seat = Clutter.get_default_backend().get_default_seat();
+        const seat = global.stage.context.get_backend().get_default_seat();
         this.#device = seat.create_virtual_device(Clutter.InputDeviceType.KEYBOARD_DEVICE);
 
         Main.inputMethod.connectObject('notify::content-purpose', (method) => {

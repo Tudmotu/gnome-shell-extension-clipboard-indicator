@@ -17,6 +17,7 @@ import { Registry, ClipboardEntry } from './registry.js';
 import { DialogManager } from './confirmDialog.js';
 import { PrefsFields } from './constants.js';
 import { Keyboard } from './keyboard.js';
+import { boxLayoutOrientation } from './compat.js';
 
 const CLIPBOARD_TYPE = St.ClipboardType.CLIPBOARD;
 
@@ -169,7 +170,7 @@ const ClipboardIndicator = GObject.registerClass({
             this._updateTopbarLayout();
             this._setupListener();
             this._setupHistoryIntervalClearing();
-        });
+        }).catch(e => console.error('Clipboard Indicator: _buildMenu failed', e));
     }
 
     #updateIndicatorContent(entry) {
@@ -387,7 +388,7 @@ const ClipboardIndicator = GObject.registerClass({
         // Empty state section
         this.emptyStateSection = new St.BoxLayout({
             style_class: 'clipboard-indicator-empty-state',
-            vertical: true
+            ...boxLayoutOrientation(true)
         });
         this.emptyStateSection.add_child(new St.Icon({
             icon_name: INDICATOR_ICON,
@@ -1845,7 +1846,7 @@ const ClipboardIndicator = GObject.registerClass({
             style_class: 'ci-edit-textbox',
             x_expand: true,
             y_expand: true,
-            vertical: true,
+            ...boxLayoutOrientation(true),
         });
 
         textBox.add_child(clutterText);

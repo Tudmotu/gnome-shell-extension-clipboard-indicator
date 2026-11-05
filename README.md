@@ -80,8 +80,10 @@ $ gnome-extensions enable clipboard-indicator@tudmotu.com
 Depending on your GNOME version, you will need to install the following
 Clipboard Indicator versions:
 
-* GNOME 46 and above:
+* GNOME 47 and above:
   * Use latest version
+* GNOME 46:
+  * v71
 * GNOME 45:
   * v57
 * GNOME 42-44
