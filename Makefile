@@ -24,4 +24,4 @@ nested-session:
 	dbus-run-session -- gnome-shell --devkit --wayland
 
 bundle: all
-	zip -FSr bundle.zip $(MODULES)
+	zip -FSr bundle.zip $(MODULES) -x schemas/gschemas.compiled
