@@ -85,7 +85,10 @@ Always take screenshots of the states a test exercised, such as the menu, a dial
 - `E` prints the gdbus result, such as `(true, '"text"')`. Strings come back JSON-encoded, so return `JSON.stringify(...)` for structured values. Code that returns nothing gives `(true, '')`, and a JS exception gives `(false, '...')`
 - Eval code has `Main`, `Meta`, `GLib` and `global` in scope. Get other libraries with `imports.gi.St`, `imports.gi.Clutter` and so on. There is no top-level `await`, but if the code returns a promise, Eval waits for it
 - New windows don't get focus by themselves, and after `Main.overview.hide()` the hidden overview can keep the keyboard focus, which swallows key presses. `__ci.focus(wmClass)` handles both. Call it before typing into an app
-- A freshly created virtual keyboard can drop its first key events. Send a throwaway key first, as `seed-history.sh` does
+- A freshly created virtual input device can drop its first events. This applies to every such device:
+  - `__kb`: send a throwaway key first, as `seed-history.sh` does
+  - the extension's own paste keyboard, which is created when the extension is enabled: the first menu paste after that can paste nothing. Do one throwaway paste before the ones you measure
+  - a virtual pointer you create with `create_virtual_device`: send a throwaway motion first, and don't count the first click
 - `wl-copy` hangs when no window has focus. Copy from inside a focused app with Ctrl+C instead, as `seed-history.sh` does
 - To put something on the clipboard without an app, which is faster for large histories and also works for images, set it from inside the shell. The extension records it like any other copy:
   - text: `E "imports.gi.St.Clipboard.get_default().set_text(imports.gi.St.ClipboardType.CLIPBOARD, 'text'); 'ok'"`
