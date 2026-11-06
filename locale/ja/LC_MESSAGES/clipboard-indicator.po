@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-02 01:05+0300\n"
-"PO-Revision-Date: 2021-08-27 16:24+0900\n"
-"Last-Translator: nexryai <nexryai@outlook.com>\n"
+"PO-Revision-Date: 2026-09-16 14:55+0900\n"
+"Last-Translator: Rinrin.rs <rinrin0413.rs@gmail.com>\n"
 "Language-Team: \n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr ""
 
 #: extension.js:145
 msgid "Text will be here"
-msgstr "ここにテキストを入力"
+msgstr "ここにテキストが表示されます"
 
 #: extension.js:241
 msgid "Type here to search..."
@@ -46,9 +46,8 @@ msgid "Settings"
 msgstr "設定"
 
 #: extension.js:398
-#, fuzzy
 msgid "Clipboard is empty"
-msgstr "クリップボードの内容"
+msgstr "クリップボードは空です"
 
 #: extension.js:706
 msgid "Preview Image"
@@ -63,14 +62,12 @@ msgid "Paste"
 msgstr ""
 
 #: extension.js:845
-#, fuzzy
 msgid "Delete pinned item?"
-msgstr "お気に入りのみをキャッシュ"
+msgstr "ピン留めした項目を削除しますか？"
 
 #: extension.js:846
-#, fuzzy
 msgid "Are you sure you want to delete this pinned item?"
-msgstr "クリップボードの履歴を全て削除してよろしいですか？"
+msgstr "このピン留めした項目を削除してもよろしいですか？"
 
 #: extension.js:847 extension.js:858
 msgid "This operation cannot be undone."
@@ -97,9 +94,8 @@ msgid "Clear"
 msgstr "クリア"
 
 #: extension.js:876
-#, fuzzy
 msgid "Clipboard history cleared automatically"
-msgstr "消去しました"
+msgstr "クリップボードの履歴を自動的に消去しました"
 
 #: extension.js:877
 msgid "Clipboard history cleared"
@@ -166,14 +162,12 @@ msgid "Preview Size (characters)"
 msgstr "プレビュー文字数"
 
 #: prefs.js:51
-#, fuzzy
 msgid "Number of characters shown per entry in the history menu"
-msgstr "トップバーの単語数"
+msgstr "履歴メニューの各項目に表示する文字数"
 
 #: prefs.js:60
-#, fuzzy
 msgid "Max cache file size (MB)"
-msgstr "最大キャッシュサイズ（KB）"
+msgstr "最大キャッシュサイズ（MB）"
 
 #: prefs.js:61
 msgid "Maximum disk space used for caching clipboard data"
@@ -181,7 +175,7 @@ msgstr ""
 
 #: prefs.js:70
 msgid "Number of characters in top bar"
-msgstr "トップバーの単語数"
+msgstr "トップバーに表示する文字数"
 
 #: prefs.js:71
 msgid "Length of the clipboard content preview shown in the panel"
@@ -193,25 +187,23 @@ msgstr "表示内容"
 
 #: prefs.js:85
 msgid "Remove down arrow in top bar"
-msgstr "トップバーの単語数"
+msgstr "トップバーの下向き矢印を非表示にする"
 
 #: prefs.js:86
 msgid "Hide the dropdown arrow next to the clipboard indicator"
 msgstr ""
 
 #: prefs.js:90
-#, fuzzy
 msgid "Blink icon on copy"
-msgstr "コピー時に通知を表示する"
+msgstr "コピー時にアイコンを点滅させる"
 
 #: prefs.js:91
 msgid "Briefly flash the indicator icon when something is copied"
 msgstr ""
 
 #: prefs.js:95
-#, fuzzy
 msgid "Cache only pinned items"
-msgstr "お気に入りのみをキャッシュ"
+msgstr "ピン留めした項目のみをキャッシュ"
 
 #: prefs.js:96
 msgid "Only save pinned (favorite) entries to disk"
@@ -226,32 +218,28 @@ msgid "Display a notification each time text is copied"
 msgstr ""
 
 #: prefs.js:105
-#, fuzzy
 msgid "Show notification on cycle"
-msgstr "コピー時に通知を表示する"
+msgstr "項目切り替え時に通知を表示する"
 
 #: prefs.js:106
 msgid "Display a notification when cycling through entries with shortcuts"
 msgstr ""
 
 #: prefs.js:110
-#, fuzzy
 msgid "Show notification on Clear History"
-msgstr "コピー時に通知を表示する"
+msgstr "履歴消去時に通知を表示する"
 
 #: prefs.js:111
 msgid "Display a notification when clipboard history is cleared"
 msgstr ""
 
 #: prefs.js:115
-#, fuzzy
 msgid "Prompt for confirmation on Clear History"
-msgstr "コピー時に通知を表示する"
+msgstr "履歴消去時に確認する"
 
 #: prefs.js:116
-#, fuzzy
 msgid "Ask before deleting all clipboard entries"
-msgstr "クリップボードの履歴を全て削除してよろしいですか？"
+msgstr "すべてのクリップボード項目を削除する前に確認する"
 
 #: prefs.js:120
 msgid "Prompt before deleting pinned item"
@@ -304,9 +292,8 @@ msgid "Display a search field at the top of the clipboard menu"
 msgstr ""
 
 #: prefs.js:149
-#, fuzzy
 msgid "Show Private Mode"
-msgstr "プライベートモード"
+msgstr "プライベートモードを表示する"
 
 #: prefs.js:150
 msgid "Display the private mode toggle in the clipboard menu"
@@ -321,18 +308,16 @@ msgid "Display a shortcut to these settings in the clipboard menu"
 msgstr ""
 
 #: prefs.js:157
-#, fuzzy
 msgid "Show Clear History Button"
-msgstr "履歴を消去"
+msgstr "履歴消去ボタンを表示する"
 
 #: prefs.js:158
 msgid "Display the clear history button in the clipboard menu"
 msgstr ""
 
 #: prefs.js:162
-#, fuzzy
 msgid "Clear clipboard history on system reboot"
-msgstr "消去しました"
+msgstr "システムの再起動時にクリップボード履歴を消去する"
 
 #: prefs.js:163
 msgid "Delete all cached clipboard entries when the system starts"
@@ -395,9 +380,8 @@ msgid "Cache images"
 msgstr ""
 
 #: prefs.js:208
-#, fuzzy
 msgid "Save copied images to clipboard history"
-msgstr "コピーしました"
+msgstr "コピーした画像をクリップボード履歴に保存する"
 
 #: prefs.js:213
 msgid "Excluded Apps"
@@ -424,14 +408,12 @@ msgid "Allow regular expressions to filter clipboard entries"
 msgstr ""
 
 #: prefs.js:244
-#, fuzzy
 msgid "Clear clipboard history on interval"
-msgstr "消去しました"
+msgstr "一定間隔でクリップボード履歴を消去する"
 
 #: prefs.js:245
-#, fuzzy
 msgid "Automatically clear clipboard history at a recurring interval"
-msgstr "消去しました"
+msgstr "一定間隔でクリップボード履歴を自動的に消去する"
 
 #: prefs.js:249
 msgid "History clear interval (in minutes)"
@@ -459,7 +441,7 @@ msgstr ""
 
 #: prefs.js:375
 msgid "Toggle the menu"
-msgstr "メニュー"
+msgstr "メニューの開閉"
 
 #: prefs.js:377
 msgid "Previous entry"
@@ -470,18 +452,16 @@ msgid "Next entry"
 msgstr "次へ"
 
 #: prefs.js:383
-#, fuzzy
 msgid "Enable shortcuts"
-msgstr "キーボードショートカット"
+msgstr "ショートカットを有効にする"
 
 #: prefs.js:408
 msgid "Disabled"
 msgstr ""
 
 #: prefs.js:417
-#, fuzzy
 msgid "Enter shortcut"
-msgstr "キーボードショートカット"
+msgstr "ショートカットを入力"
 
 #: prefs.js:504
 msgid "Window class name, e.g. \"KeePassXC\""
