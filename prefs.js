@@ -285,7 +285,7 @@ class Settings {
         exportButton.connect('clicked', () => this.#exportHistory());
         const exportRow = new Adw.ActionRow({
             title: _('Export clipboard history'),
-            subtitle: _('Save the registry and cached files as a ZIP archive'),
+            subtitle: _('Save the registry and cached files as an archive'),
         });
         exportRow.add_suffix(exportButton);
         this.archive.add(exportRow);
@@ -298,7 +298,7 @@ class Settings {
         importButton.connect('clicked', () => this.#importHistory());
         const importRow = new Adw.ActionRow({
             title: _('Import clipboard history'),
-            subtitle: _('Restore a ZIP archive created by this extension'),
+            subtitle: _('Restore an archive created by this extension'),
         });
         importRow.add_suffix(importButton);
         this.archive.add(importRow);
@@ -413,10 +413,10 @@ class Settings {
                 action: save ? Gtk.FileChooserAction.SAVE : Gtk.FileChooserAction.OPEN,
             });
             const filter = new Gtk.FileFilter();
-            filter.set_name(_('ZIP archives'));
-            filter.add_pattern('*.zip');
+            filter.set_name(_('Clipboard history archives'));
+            filter.add_pattern('*.tar.gz');
             dialog.add_filter(filter);
-            if (save) dialog.set_current_name('clipboard-history.zip');
+            if (save) dialog.set_current_name('clipboard-history.tar.gz');
             dialog.set_transient_for(this.window);
             dialog.connect('response', (source, response) => {
                 resolve(response === Gtk.ResponseType.ACCEPT ? source.get_file()?.get_path() : null);
@@ -545,7 +545,7 @@ class Settings {
                         throw new Error(_('A cached clipboard file is missing'));
                 }
             }
-            await this.#runCommand(['zip', '-qr', archivePath, 'registry.txt', 'cache'], temporaryDirectory);
+            await this.#runCommand(['tar', '-czf', archivePath, 'registry.txt', 'cache'], temporaryDirectory);
             this.schema.set_string(PrefsFields.HISTORY_OPERATION_MESSAGE,
                 _('Clipboard history exported successfully'));
         }
@@ -565,12 +565,12 @@ class Settings {
         let temporaryDirectory;
         try {
             temporaryDirectory = GLib.dir_make_tmp('clipboard-indicator-import-XXXXXX');
-            const listing = await this.#runCommand(['unzip', '-Z1', archivePath]);
+            const listing = await this.#runCommand(['tar', '-tzf', archivePath]);
             const paths = listing.trim().split('\n').filter(path => path && path !== 'cache/');
             if (!paths.includes('registry.txt') || paths.some(path =>
                 !/^registry\.txt$|^(cache|images)\/[A-Za-z0-9._-]+$|^[A-Za-z0-9._-]+$/.test(path)))
                 throw new Error(_('The selected file is not a valid clipboard history archive'));
-            await this.#runCommand(['unzip', '-q', archivePath, '-d', temporaryDirectory]);
+            await this.#runCommand(['tar', '-xzf', archivePath, '-C', temporaryDirectory]);
 
             const registryPath = `${temporaryDirectory}/registry.txt`;
             if (!this.#isRegularFile(registryPath))

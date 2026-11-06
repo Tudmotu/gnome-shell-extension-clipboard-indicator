@@ -78,11 +78,9 @@ $ gnome-extensions enable clipboard-indicator@tudmotu.com
 
 ### Clipboard history import/export
 
-The clipboard history import and export actions use the `zip` and `unzip`
-command-line tools. These are optional dependencies because normal clipboard
-tracking, history management, and pasting work without them. Install the
-packages provided by your distribution if you want to use the archive actions;
-if either command is unavailable, the preferences window reports an error.
+History is exported as a `.tar.gz` archive with the registry and any cached
+images, and can be imported from the same settings tab. Both use the `tar`
+command, which is part of the base system on most distributions.
 
 ## ✅ GNOME Version Support
 
