@@ -978,8 +978,20 @@ const ClipboardIndicator = GObject.registerClass({
         }
 
         // Ensure MOVE_ITEM_FIRST also applies when PASTE_ON_SELECT fast-path skips _refreshIndicator()
-        if (PASTE_ON_SELECT && MOVE_ITEM_FIRST && !menuItem.entry.isFavorite()) {
+        if (!menuItem.entry.isFavorite() && MOVE_ITEM_FIRST) {
+            this._skipMoveInRefresh = true;
             this._moveItemFirst(menuItem);
+        }
+
+        // #pasteItem sets preventIndicatorUpdate which blocks the
+        // indicator refresh inside _addEntry → _selectMenuItem, so
+        // force an update here to keep the panel in sync with the
+        // selected item (regardless of whether MOVE_ITEM_FIRST is on).
+        if (this.preventIndicatorUpdate) {
+            const saved = this.preventIndicatorUpdate;
+            this.preventIndicatorUpdate = false;
+            this.#updateIndicatorContent(menuItem.entry);
+            this.preventIndicatorUpdate = saved;
         }
 
         menuItem.menu.close();
@@ -1034,7 +1046,11 @@ const ClipboardIndicator = GObject.registerClass({
                         this._selectMenuItem(menuItem, false);
 
                         if (!menuItem.entry.isFavorite() && MOVE_ITEM_FIRST) {
-                            this._moveItemFirst(menuItem);
+                            if (this._skipMoveInRefresh) {
+                                this._skipMoveInRefresh = false;
+                            } else {
+                                this._moveItemFirst(menuItem);
+                            }
                         }
 
                         return;
@@ -1657,8 +1673,6 @@ const ClipboardIndicator = GObject.registerClass({
 
             this._pastingResetTimeout = setTimeout(() => {
                 this.preventIndicatorUpdate = false;
-                if (currentlySelected && currentlySelected.entry)
-                    this.#updateClipboard(currentlySelected.entry);
             }, 50);
         }, 50);
     }
