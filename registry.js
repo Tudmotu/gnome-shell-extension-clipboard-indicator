@@ -64,10 +64,14 @@ export class Registry {
         // Make sure dir exists
         GLib.mkdir_with_parents(this.REGISTRY_DIR, parseInt('0775', 8));
 
-        // replace_contents writes all bytes (a single write_bytes call may not)
+        // replace_contents writes all bytes (a single write_bytes call may not).
+        // REPLACE_DESTINATION makes GIO always write a temp file and rename it
+        // over the registry, instead of falling back to rewriting it in place
+        // (hardlinks, symlinks, ownership that can't be copied). Owner and
+        // mode of the old file are not kept, which is fine for a cache file.
         let file = Gio.file_new_for_path(this.REGISTRY_PATH);
         file.replace_contents_bytes_async(contents, null, false,
-                            Gio.FileCreateFlags.NONE, null, (obj, res) => {
+                            Gio.FileCreateFlags.REPLACE_DESTINATION, null, (obj, res) => {
             try {
                 obj.replace_contents_finish(res);
             } catch (e) {
