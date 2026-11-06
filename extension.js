@@ -866,11 +866,16 @@ const ClipboardIndicator = GObject.registerClass({
 
     _clearHistory (invokedAutomatically = false) {
         // Don't remove pinned items
-        this.historySection._getMenuItems().forEach(mItem => {
-            if (KEEP_SELECTED_ON_CLEAR === false || !mItem.currentlySelected) {
-                this._removeEntry(mItem, 'delete');
-            }
-        });
+        const toRemove = this.historySection._getMenuItems().filter(mItem =>
+            KEEP_SELECTED_ON_CLEAR === false || !mItem.currentlySelected);
+
+        // Remove everything first, then write the registry and update the
+        // menu once, instead of once per removed entry.
+        toRemove.forEach(mItem => this._removeEntry(mItem, 'delete', true));
+        if (toRemove.length > 0) {
+            this._updateCache();
+            this.#showElements();
+        }
 
         if (NOTIFY_ON_CLEAR) {
             const message = invokedAutomatically
@@ -890,7 +895,7 @@ const ClipboardIndicator = GObject.registerClass({
         }
     }
 
-    _removeEntry (menuItem, event) {
+    _removeEntry (menuItem, event, deferUpdates = false) {
         let itemIdx = this.clipItemsRadioGroup.indexOf(menuItem);
 
         if(event === 'delete' && menuItem.currentlySelected) {
@@ -903,6 +908,9 @@ const ClipboardIndicator = GObject.registerClass({
         if (menuItem.entry.isImage()) {
             this.registry.deleteEntryFile(menuItem.entry);
         }
+
+        // The caller updates the cache and the menu once when removing many
+        if (deferUpdates) return;
 
         this._updateCache();
         this.#showElements();
