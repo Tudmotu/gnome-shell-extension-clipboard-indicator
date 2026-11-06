@@ -1,6 +1,9 @@
+import GLib from 'gi://GLib';
+import Gio from 'gi://Gio';
 import Clutter from 'gi://Clutter';
 import Cogl from 'gi://Cogl';
 import GObject from 'gi://GObject';
+import Gtk from 'gi://Gtk';
 import Meta from 'gi://Meta';
 import Shell from 'gi://Shell';
 import St from 'gi://St';
@@ -34,6 +37,7 @@ let PRIVATEMODE               = false;
 let NOTIFY_ON_COPY            = true;
 let NOTIFY_ON_CYCLE           = true;
 let NOTIFY_ON_CLEAR           = true;
+let NOTIFY_ON_IMPORT_EXPORT   = true;
 let CONFIRM_ON_CLEAR          = true;
 let CONFIRM_ON_PINNED_DELETE  = false;
 let MAX_TOPBAR_LENGTH         = 15;
@@ -1417,6 +1421,7 @@ const ClipboardIndicator = GObject.registerClass({
         NOTIFY_ON_COPY              = settings.get_boolean(PrefsFields.NOTIFY_ON_COPY);
         NOTIFY_ON_CYCLE             = settings.get_boolean(PrefsFields.NOTIFY_ON_CYCLE);
         NOTIFY_ON_CLEAR             = settings.get_boolean(PrefsFields.NOTIFY_ON_CLEAR);
+          NOTIFY_ON_IMPORT_EXPORT     = settings.get_boolean(PrefsFields.NOTIFY_ON_IMPORT_EXPORT);
         CONFIRM_ON_CLEAR            = settings.get_boolean(PrefsFields.CONFIRM_ON_CLEAR);
         CONFIRM_ON_PINNED_DELETE    = settings.get_boolean(PrefsFields.CONFIRM_ON_PINNED_DELETE);
         ENABLE_KEYBINDING           = settings.get_boolean(PrefsFields.ENABLE_KEYBINDING);
@@ -1449,8 +1454,30 @@ const ClipboardIndicator = GObject.registerClass({
         SHOW_PREVIEW_BUTTON         = settings.get_boolean(PrefsFields.SHOW_PREVIEW_BUTTON);
     }
 
-    async _onSettingsChange () {
+    async _onSettingsChange (_settings, key) {
         try {
+            if (key === PrefsFields.HISTORY_OPERATION_MESSAGE) {
+                const message = this.extension.settings.get_string(
+                    PrefsFields.HISTORY_OPERATION_MESSAGE
+                );
+                if (message) {
+                    if (NOTIFY_ON_IMPORT_EXPORT)
+                        this._showNotification(message);
+                    this.extension.settings.set_string(
+                        PrefsFields.HISTORY_OPERATION_MESSAGE, ''
+                    );
+                }
+                return;
+            }
+
+            if (key === PrefsFields.HISTORY_IMPORTED) {
+                this.favoritesSection.removeAll();
+                this.historySection.removeAll();
+                this.clipItemsRadioGroup = [];
+                (await this._getCache()).forEach(entry => this._addEntry(entry));
+                return;
+            }
+
             // Load the settings into variables
             this._fetchSettings();
 
