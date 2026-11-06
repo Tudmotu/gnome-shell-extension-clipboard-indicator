@@ -76,12 +76,6 @@ After cloning the repo, the extension is practically installed yet disabled. In 
 $ gnome-extensions enable clipboard-indicator@tudmotu.com
 ```
 
-### Clipboard history import/export
-
-History is exported as a `.tar.gz` archive with the registry and any cached
-images, and can be imported from the same settings tab. Both use the `tar`
-command, which is part of the base system on most distributions.
-
 ## ✅ GNOME Version Support
 
 Depending on your GNOME version, you will need to install the following
