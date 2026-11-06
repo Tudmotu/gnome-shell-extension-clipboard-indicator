@@ -37,6 +37,7 @@ let PRIVATEMODE               = false;
 let NOTIFY_ON_COPY            = true;
 let NOTIFY_ON_CYCLE           = true;
 let NOTIFY_ON_CLEAR           = true;
+let NOTIFY_ON_IMPORT_EXPORT   = true;
 let CONFIRM_ON_CLEAR          = true;
 let CONFIRM_ON_PINNED_DELETE  = false;
 let MAX_TOPBAR_LENGTH         = 15;
@@ -375,19 +376,6 @@ const ClipboardIndicator = GObject.registerClass({
         this.clearMenuItem.add_child(timerBox);
 
         this.clearMenuItem.connect('activate', this._removeAll.bind(this));
-
-        // Add 'Export' menu item to save history to a file
-        this.exportMenuItem = new PopupMenu.PopupMenuItem(_('Export history'));
-        this.exportMenuItem.insert_child_at_index(
-            new St.Icon({
-                icon_name: 'document-save-symbolic',
-                style_class: 'clipboard-menu-icon',
-                y_align: Clutter.ActorAlign.CENTER
-            }),
-            0
-        );
-        this.exportMenuItem.connect('activate', this._exportHistory.bind(this));
-        this.menu.addMenuItem(this.exportMenuItem);
 
         // Add 'Settings' menu item to open settings
         this.settingsMenuItem = new PopupMenu.PopupMenuItem(_('Settings'));
@@ -867,146 +855,6 @@ const ClipboardIndicator = GObject.registerClass({
             if (selectNext) this.#selectNextMenuItem(menuItem);
             this._removeEntry(menuItem, 'delete');
         });
-    }
-
-    async _exportHistory () {
-        const clipHistory = await this._getCache();
-        if (clipHistory.length === 0) {
-            this._showNotification(_("Clipboard is empty, nothing to export"));
-            return;
-        }
-
-        const now = new Date();
-        const pad = (n) => n.toString().padStart(2, '0');
-        const timestamp = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
-        const home = GLib.get_home_dir();
-        const documentsDir = GLib.get_user_special_dir(GLib.UserDirectory.DIRECTORY_DOCUMENTS) || home;
-        const exportFolder = `${documentsDir}/clipboard_export_${timestamp}`;
-
-        console.log(`Clipboard Indicator: Starting history export to ${exportFolder}`);
-        GLib.mkdir_with_parents(exportFolder, parseInt('0775', 8));
-
-        // Create a subfolder for images
-        const imagesFolder = `${exportFolder}/images`;
-        GLib.mkdir_with_parents(imagesFolder, parseInt('0775', 8));
-
-        let historyBlocks = [];
-
-        historyBlocks.push(
-            `Clipboard history export\n` +
-            `Exported: ${now.toLocaleString()}\n` +
-            `Total items: ${clipHistory.length}`
-        );
-
-        for (let i = 0; i < clipHistory.length; i++) {
-            const entry = clipHistory[i];
-            let contentValue = '';
-            let entryType = 'Text';
-
-            if (entry.isImage()) {
-                entryType = 'Image';
-                if (!CACHE_IMAGES) {
-                    contentValue = `[Image not cached, cannot export]`;
-                } else {
-                    const srcPath = this.registry.getEntryFilename(entry);
-                    const hash = entry.asBytes().hash();
-
-                    const extMap = {
-                        'image/png': '.png',
-                        'image/jpeg': '.jpg',
-                        'image/jpg': '.jpg',
-                        'image/gif': '.gif',
-                        'image/webp': '.webp'
-                    };
-                    const ext = extMap[entry.mimetype()] || '';
-                    const fileName = `image_${hash}${ext}`;
-                    const destPath = `${imagesFolder}/${fileName}`;
-
-                    try {
-                        await this._copyFile(srcPath, destPath);
-                        contentValue = `Reference: images/${fileName}`;
-                        console.log(`Clipboard Indicator: Exported image ${fileName}`);
-                    } catch (e) {
-                        console.error(`Clipboard Indicator: Failed to copy image ${hash}: ${e}`);
-                        contentValue = `[Error copying image ${hash}: ${e.message || e}]`;
-                    }
-                }
-            } else {
-                contentValue = entry.getStringValue();
-            }
-
-            const contentBlock = contentValue
-                .split('\n')
-                .map(line => `    ${line}`)
-                .join('\n');
-
-            historyBlocks.push(
-                `Entry ${i + 1}\n` +
-                `Type: ${entryType}\n` +
-                `Favorite: ${entry.isFavorite() ? 'Yes' : 'No'}\n` +
-                `Tag: ${entry.getTag() || 'None'}\n` +
-                `Content:\n` +
-                `${contentBlock}`
-            );
-        }
-
-        const finalContents = historyBlocks.join('\n\n--------------------\n\n');
-        await this._doExport(`${exportFolder}/history.txt`, finalContents);
-        console.log(`Clipboard Indicator: History export completed successfully.`);
-    }
-
-    async _copyFile (srcPath, destPath) {
-        const srcFile = Gio.file_new_for_path(srcPath);
-        const destFile = Gio.file_new_for_path(destPath);
-        await new Promise((resolve, reject) => {
-            srcFile.copy_async(
-                destFile,
-                Gio.FileCopyFlags.OVERWRITE,
-                GLib.PRIORITY_DEFAULT,
-                null,
-                null,
-                (obj, res) => {
-                    try {
-                        obj.copy_finish(res);
-                        resolve();
-                    } catch (e) {
-                        reject(e);
-                    }
-                }
-            );
-        });
-    }
-
-
-    async _doExport (exportPath, contents) {
-        try {
-            const file = Gio.file_new_for_path(exportPath);
-            const bytes = new GLib.Bytes(new TextEncoder().encode(contents));
-
-            await new Promise((resolve, reject) => {
-                file.replace_async(null, false, Gio.FileCreateFlags.NONE, GLib.PRIORITY_DEFAULT, null, (obj, res) => {
-                    try {
-                        const stream = obj.replace_finish(res);
-                        stream.write_bytes_async(bytes, GLib.PRIORITY_DEFAULT, null, (w_obj, w_res) => {
-                            try {
-                                w_obj.write_bytes_finish(w_res);
-                                stream.close(null);
-                                resolve();
-                            } catch (e) {
-                                reject(e);
-                            }
-                        });
-                    } catch (e) {
-                        reject(e);
-                    }
-                });
-            });
-
-            this._showNotification(_('History exported to %s').replace('%s', exportPath));
-        } catch (e) {
-            console.error(`Clipboard Indicator: Failed to export history: ${e}`);
-            this._showNotification(_("Failed to export history"));
-        }
     }
 
     _confirmRemoveAll () {
@@ -1540,6 +1388,7 @@ const ClipboardIndicator = GObject.registerClass({
         NOTIFY_ON_COPY              = settings.get_boolean(PrefsFields.NOTIFY_ON_COPY);
         NOTIFY_ON_CYCLE             = settings.get_boolean(PrefsFields.NOTIFY_ON_CYCLE);
         NOTIFY_ON_CLEAR             = settings.get_boolean(PrefsFields.NOTIFY_ON_CLEAR);
+          NOTIFY_ON_IMPORT_EXPORT     = settings.get_boolean(PrefsFields.NOTIFY_ON_IMPORT_EXPORT);
         CONFIRM_ON_CLEAR            = settings.get_boolean(PrefsFields.CONFIRM_ON_CLEAR);
         CONFIRM_ON_PINNED_DELETE    = settings.get_boolean(PrefsFields.CONFIRM_ON_PINNED_DELETE);
         ENABLE_KEYBINDING           = settings.get_boolean(PrefsFields.ENABLE_KEYBINDING);
@@ -1572,8 +1421,30 @@ const ClipboardIndicator = GObject.registerClass({
         SHOW_PREVIEW_BUTTON         = settings.get_boolean(PrefsFields.SHOW_PREVIEW_BUTTON);
     }
 
-    async _onSettingsChange () {
+    async _onSettingsChange (_settings, key) {
         try {
+            if (key === PrefsFields.HISTORY_OPERATION_MESSAGE) {
+                const message = this.extension.settings.get_string(
+                    PrefsFields.HISTORY_OPERATION_MESSAGE
+                );
+                if (message) {
+                    if (NOTIFY_ON_IMPORT_EXPORT)
+                        this._showNotification(message);
+                    this.extension.settings.set_string(
+                        PrefsFields.HISTORY_OPERATION_MESSAGE, ''
+                    );
+                }
+                return;
+            }
+
+            if (key === PrefsFields.HISTORY_IMPORTED) {
+                this.favoritesSection.removeAll();
+                this.historySection.removeAll();
+                this.clipItemsRadioGroup = [];
+                (await this._getCache()).forEach(entry => this._addEntry(entry));
+                return;
+            }
+
             // Load the settings into variables
             this._fetchSettings();
 

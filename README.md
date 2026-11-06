@@ -23,6 +23,7 @@ This extension is also packaged by the community for many popular Linux distros
 * **Auto-clear history** — Schedule automatic clipboard cleanup at regular intervals or at boot time
 * **Private mode** — Temporarily pause clipboard history when working with sensitive data
 * **Exclude apps** — Prevent clipboard tracking when specific applications are in focus (e.g., password managers)
+* **Import/export history** — Back up and restore clipboard history, including cached images
 * **Highly configurable** — Many more settings to control UI & behavior
 
 ### In-Menu Keyboard Controls
@@ -74,6 +75,14 @@ After cloning the repo, the extension is practically installed yet disabled. In 
 ```bash
 $ gnome-extensions enable clipboard-indicator@tudmotu.com
 ```
+
+### Clipboard history import/export
+
+The clipboard history import and export actions use the `zip` and `unzip`
+command-line tools. These are optional dependencies because normal clipboard
+tracking, history management, and pasting work without them. Install the
+packages provided by your distribution if you want to use the archive actions;
+if either command is unavailable, the preferences window reports an error.
 
 ## ✅ GNOME Version Support
 

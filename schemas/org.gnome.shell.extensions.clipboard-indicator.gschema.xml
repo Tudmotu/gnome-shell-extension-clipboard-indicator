@@ -2,6 +2,19 @@
     <schema id="org.gnome.shell.extensions.clipboard-indicator"
         path="/org/gnome/shell/extensions/clipboard-indicator/">
 
+    <key name="history-imported" type="i">
+        <default>0</default>
+    </key>
+
+    <key name="history-operation-message" type="s">
+        <default>''</default>
+    </key>
+
+    <key name="notify-on-import-export" type="b">
+        <default>true</default>
+        <summary>Show notification on history import or export</summary>
+    </key>
+
     <key name="paste-button" type="b">
         <default>true</default>
         <summary>Add button to paste an entry</summary>
