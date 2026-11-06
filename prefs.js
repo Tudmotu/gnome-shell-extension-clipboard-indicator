@@ -419,9 +419,12 @@ class Settings {
             if (save) dialog.set_current_name('clipboard-history.tar.gz');
             dialog.set_transient_for(this.window);
             dialog.connect('response', (source, response) => {
+                this._fileChooser = null;
                 resolve(response === Gtk.ResponseType.ACCEPT ? source.get_file()?.get_path() : null);
                 source.destroy();
             });
+            // GTK does not keep a native dialog alive; hold it until it responds
+            this._fileChooser = dialog;
             dialog.show();
         });
     }
