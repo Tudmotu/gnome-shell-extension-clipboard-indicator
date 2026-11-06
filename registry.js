@@ -108,11 +108,27 @@ export class Registry {
                         if (success) {
                             let max_size = this.settings.get_int(PrefsFields.HISTORY_SIZE);
                             const cacheTextData = new TextDecoder().decode(contents);
-                            let registry;
-                            if (cacheTextData.trim().length == 0) {
-                                registry = [];
-                            } else {
-                                registry = JSON.parse(cacheTextData);
+                            let registry = [];
+                            if (cacheTextData.trim().length > 0) {
+                                try {
+                                    const parsed = JSON.parse(cacheTextData);
+                                    if (!Array.isArray(parsed))
+                                        throw new Error('not a list of entries');
+                                    registry = parsed;
+                                } catch (e) {
+                                    // Start with an empty history instead of never
+                                    // loading. Keep the unreadable file as the backup,
+                                    // so the next write does not overwrite it
+                                    console.error(`Clipboard Indicator: could not read registry file, starting with an empty history: ${e.message}`);
+                                    if (!isOversized) {
+                                        try {
+                                            file.move(Gio.file_new_for_path(this.BACKUP_REGISTRY_PATH),
+                                                      FileCopyFlags.OVERWRITE, null, null);
+                                        } catch (moveError) {
+                                            console.error(moveError);
+                                        }
+                                    }
+                                }
                             }
                             const entriesPromises = registry.map(
                                 jsonEntry => {
