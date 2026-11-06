@@ -920,22 +920,18 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     _removeOldestEntries () {
-        let clipItemsRadioGroupNoFavorite = this.clipItemsRadioGroup.filter(
+        const noFavorite = this.clipItemsRadioGroup.filter(
             item => item.entry.isFavorite() === false);
+        const excess = noFavorite.length - MAX_REGISTRY_LENGTH;
 
-        const origSize = clipItemsRadioGroupNoFavorite.length;
+        if (excess <= 0) return;
 
-        while (clipItemsRadioGroupNoFavorite.length > MAX_REGISTRY_LENGTH) {
-            let oldestNoFavorite = clipItemsRadioGroupNoFavorite.shift();
-            this._removeEntry(oldestNoFavorite);
-
-            clipItemsRadioGroupNoFavorite = this.clipItemsRadioGroup.filter(
-                item => item.entry.isFavorite() === false);
-        }
-
-        if (clipItemsRadioGroupNoFavorite.length < origSize) {
-            this._updateCache();
-        }
+        // Remove the oldest first, then write the registry and update the
+        // menu once, instead of once per removed entry
+        noFavorite.slice(0, excess)
+            .forEach(item => this._removeEntry(item, undefined, true));
+        this._updateCache();
+        this.#showElements();
     }
 
     _onMenuItemSelected (menuItem, autoSet) {

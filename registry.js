@@ -152,17 +152,19 @@ export class Registry {
                                     return;
                                 }
 
-                                let registryNoFavorite = clipboardEntries
-                                    .filter(entry => !entry.isFavorite());
+                                // Drop the oldest unpinned entries beyond the
+                                // history size, in a single pass
+                                let excess = clipboardEntries
+                                    .filter(entry => !entry.isFavorite()).length - max_size;
 
-                                while (registryNoFavorite.length > max_size) {
-                                    let oldestNoFavorite = registryNoFavorite.shift();
-                                    let itemIdx = clipboardEntries.indexOf(oldestNoFavorite);
-                                    clipboardEntries.splice(itemIdx,1);
-
-                                    registryNoFavorite = clipboardEntries.filter(
-                                        entry => !entry.isFavorite()
-                                    );
+                                if (excess > 0) {
+                                    clipboardEntries = clipboardEntries.filter(entry => {
+                                        if (excess > 0 && !entry.isFavorite()) {
+                                            excess--;
+                                            return false;
+                                        }
+                                        return true;
+                                    });
                                 }
 
                                 resolve(clipboardEntries);
