@@ -92,18 +92,17 @@ export class Registry {
                 file.query_info_async('*', FileQueryInfoFlags.NONE,
                                       GLib.PRIORITY_DEFAULT, null, (src, res) => {
                     // Check if file size is larger than CACHE_FILE_SIZE
-                    // If so, make a backup of file, and resolve with empty array
+                    // If so, make a backup of file, and keep only its favorites
                     let file_info = src.query_info_finish(res);
+                    let isOversized = file_info.get_size() >= CACHE_FILE_SIZE * 1024 * 1024;
+                    let source = file;
 
-                    if (file_info.get_size() >= CACHE_FILE_SIZE * 1024 * 1024) {
-                        let destination = Gio.file_new_for_path(this.BACKUP_REGISTRY_PATH);
-
-                        file.move(destination, FileCopyFlags.OVERWRITE, null, null);
-                        resolve([]);
-                        return;
+                    if (isOversized) {
+                        source = Gio.file_new_for_path(this.BACKUP_REGISTRY_PATH);
+                        file.move(source, FileCopyFlags.OVERWRITE, null, null);
                     }
 
-                    file.load_contents_async(null, (obj, res) => {
+                    source.load_contents_async(null, (obj, res) => {
                         let [success, contents] = obj.load_contents_finish(res);
 
                         if (success) {
@@ -124,6 +123,18 @@ export class Registry {
                             Promise.all(entriesPromises).then(clipboardEntries => {
                                 clipboardEntries = clipboardEntries
                                     .filter(entry => entry !== null);
+
+                                if (isOversized) {
+                                    const favorites = clipboardEntries
+                                        .filter(entry => entry.isFavorite());
+
+                                    // Nothing else rewrites the registry until the
+                                    // next clipboard change, so persist favorites now
+                                    resolve(favorites);
+                                    this.write(favorites);
+
+                                    return;
+                                }
 
                                 let registryNoFavorite = clipboardEntries
                                     .filter(entry => !entry.isFavorite());
