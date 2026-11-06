@@ -92,7 +92,7 @@
 }
 
 .ci-edit-textbox {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(127, 127, 127, 0.15);
     border-radius: 4px;
     padding: 8px;
     min-width: 384px;
