@@ -88,6 +88,8 @@ const ClipboardIndicator = GObject.registerClass({
 }, class ClipboardIndicator extends PanelMenu.Button {
     #refreshInProgress = false;
     #_imagePreviewOverlay = null;
+    #moveFirstOnClose = [];
+    #moveFirstClosedId = 0;
 
     destroy () {
         this._destroyed = true;
@@ -980,7 +982,7 @@ const ClipboardIndicator = GObject.registerClass({
 
         // Ensure MOVE_ITEM_FIRST also applies when PASTE_ON_SELECT fast-path skips _refreshIndicator()
         if (PASTE_ON_SELECT && MOVE_ITEM_FIRST && !menuItem.entry.isFavorite()) {
-            this._moveItemFirst(menuItem);
+            this.#moveItemFirstWhenClosed(menuItem);
         }
 
         menuItem.menu.close();
@@ -1035,7 +1037,7 @@ const ClipboardIndicator = GObject.registerClass({
                         this._selectMenuItem(menuItem, false);
 
                         if (!menuItem.entry.isFavorite() && MOVE_ITEM_FIRST) {
-                            this._moveItemFirst(menuItem);
+                            this.#moveItemFirstWhenClosed(menuItem);
                         }
 
                         return;
@@ -1066,6 +1068,32 @@ const ClipboardIndicator = GObject.registerClass({
         this._removeEntry(item);
         this._addEntry(item.entry, item.currentlySelected, false);
         this._updateCache();
+    }
+
+    // Reordering the items while the menu is on screen, open or closing, can put
+    // another item under the pointer. That item then takes the key focus and
+    // swallows the keys of a paste, so wait until the menu has closed
+    #moveItemFirstWhenClosed (item) {
+        if (!this.menu.isOpen && !this.menu.actor.visible) {
+            this._moveItemFirst(item);
+            return;
+        }
+
+        // Replay the requests in order, so the result matches moving each right away
+        this.#moveFirstOnClose.push(item.entry);
+        if (this.#moveFirstClosedId) return;
+
+        this.#moveFirstClosedId = this.menu.connect('menu-closed', () => {
+            this.menu.disconnect(this.#moveFirstClosedId);
+            this.#moveFirstClosedId = 0;
+
+            const entries = this.#moveFirstOnClose;
+            this.#moveFirstOnClose = [];
+            for (const entry of entries) {
+                const pending = this.clipItemsRadioGroup.find(m => m.entry === entry);
+                if (pending && !pending.entry.isFavorite()) this._moveItemFirst(pending);
+            }
+        });
     }
 
     _findItem (text) {
