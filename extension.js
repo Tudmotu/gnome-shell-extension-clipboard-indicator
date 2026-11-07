@@ -1,5 +1,6 @@
 import Clutter from 'gi://Clutter';
 import Cogl from 'gi://Cogl';
+import Gio from 'gi://Gio';
 import GObject from 'gi://GObject';
 import Meta from 'gi://Meta';
 import Shell from 'gi://Shell';
@@ -20,6 +21,11 @@ import { Keyboard } from './keyboard.js';
 import { boxLayoutOrientation } from './compat.js';
 
 const CLIPBOARD_TYPE = St.ClipboardType.CLIPBOARD;
+
+// A file copied in a file manager is a reference, not image data. Reading the referenced
+// file is the only way to show an image instead of its path.
+const COPIED_FILE_URI_TYPES = ['x-special/gnome-copied-files', 'text/uri-list'];
+const MAX_COPIED_FILE_BYTES = 10 * 1024 * 1024;
 
 const INDICATOR_ICON = 'edit-paste-symbolic';
 
@@ -88,6 +94,8 @@ const ClipboardIndicator = GObject.registerClass({
     GTypeName: 'ClipboardIndicator'
 }, class ClipboardIndicator extends PanelMenu.Button {
     #refreshInProgress = false;
+    #copiedFileOrigin = null;
+    #restoringClipboard = false;
     #_imagePreviewOverlay = null;
     #moveFirstOnClose = [];
     #moveFirstClosedId = 0;
@@ -1979,7 +1987,118 @@ const ClipboardIndicator = GObject.registerClass({
         this.#updateIndicatorContent(entry);
     }
 
+    #copiedFileEntry () {
+        const clipboard = this.extension.clipboard;
+
+        // Without get_mimetypes() this cannot be told apart from the probes below, and a
+        // request the owner does not answer would leave the promise pending.
+        if (!CACHE_IMAGES || typeof clipboard.get_mimetypes !== 'function')
+            return null;
+
+        const offered = clipboard.get_mimetypes(CLIPBOARD_TYPE) ?? [];
+        const uriType = COPIED_FILE_URI_TYPES.find(type => offered.includes(type));
+        if (!uriType)
+            return null;
+
+        return new Promise(resolve => clipboard.get_content(CLIPBOARD_TYPE, uriType, (cb, bytes) => {
+            resolve(this.#entryFromUriList(bytes));
+        }));
+    }
+
+    #entryFromUriList (bytes) {
+        if (bytes === null || bytes.get_size() === 0)
+            return null;
+
+        // x-special/gnome-copied-files prefixes the action, so only keep the uris.
+        const uris = new TextDecoder().decode(bytes.get_data())
+            .split('\n')
+            .map(line => line.trim())
+            .filter(line => line.startsWith('file://'));
+
+        if (uris.length !== 1)
+            return null;
+
+        try {
+            const file = Gio.File.new_for_uri(uris[0]);
+            const info = file.query_info('standard::content-type,standard::size',
+                                         Gio.FileQueryInfoFlags.NONE, null);
+            const mimetype = info.get_content_type();
+
+            if (!mimetype.startsWith('image/') || info.get_size() > MAX_COPIED_FILE_BYTES)
+                return null;
+
+            const [ok, contents] = file.load_contents(null);
+            if (!ok)
+                return null;
+
+            const entry = new ClipboardEntry(mimetype, contents, false);
+            if (CACHE_IMAGES && entry.isImage())
+                this.registry.writeEntryFile(entry);
+
+            // Remember the source: when the source application exits, the selection is
+            // republished as text (its path) and would be captured as a second entry.
+            this.#copiedFileOrigin = { uri: uris[0], path: file.get_path(), entry };
+
+            return entry;
+        }
+        catch (e) {
+            console.warn(`Clipboard Indicator: cannot read copied file: ${e}`);
+            return null;
+        }
+    }
+
+    // The file reference degrades to the bare path when the source client exits, which
+    // fires another owner-changed capture. Drop that entry and put the image back on the
+    // clipboard, so pasting no longer depends on the source process being alive.
+    #isDegradedFileCopy (entry) {
+        const origin = this.#copiedFileOrigin;
+        if (!origin || !entry.isText())
+            return false;
+
+        const value = entry.getStringValue().trim();
+        const match = value === origin.uri || value === origin.path;
+
+        if (!match) {
+            // Any other capture means the guard has done its job.
+            this.#copiedFileOrigin = null;
+            return false;
+        }
+
+        try {
+            this.#restoringClipboard = true;
+            this.extension.clipboard.set_content(CLIPBOARD_TYPE,
+                origin.entry.mimetype(), origin.entry.asBytes());
+        }
+        catch (e) {
+            this.#restoringClipboard = false;
+            console.warn(`Clipboard Indicator: cannot restore copied image: ${e}`);
+        }
+
+        this.#copiedFileOrigin = null;
+        return true;
+    }
+
     async #getClipboardContent () {
+        // Ignore the owner change our own restore just caused.
+        if (this.#restoringClipboard) {
+            this.#restoringClipboard = false;
+            return null;
+        }
+
+        // Copying an image file only puts a uri list on the clipboard, so the probes below
+        // would store the path. Read the file when it is an image. Never let this break the
+        // normal path: any failure falls through to the probes.
+        let copiedFile = null;
+        try {
+            copiedFile = await this.#copiedFileEntry();
+        }
+        catch (e) {
+            console.warn(`Clipboard Indicator: copied file lookup failed: ${e}`);
+        }
+
+        if (copiedFile)
+            return copiedFile;
+
         const mimetypes = [
             "text/plain;charset=utf-8",
             "UTF8_STRING",
@@ -2015,6 +2134,9 @@ const ClipboardIndicator = GObject.registerClass({
             }));
 
             if (result) {
+                if (this.#isDegradedFileCopy(result))
+                    return null;
+
                 if (!CACHE_IMAGES && result.isImage()) {
                     return null;
                 }
