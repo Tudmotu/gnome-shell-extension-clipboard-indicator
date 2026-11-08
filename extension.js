@@ -34,7 +34,6 @@ let PRIVATEMODE               = false;
 let NOTIFY_ON_COPY            = true;
 let NOTIFY_ON_CYCLE           = true;
 let NOTIFY_ON_CLEAR           = true;
-let NOTIFY_ON_IMPORT_EXPORT   = true;
 let CONFIRM_ON_CLEAR          = true;
 let CONFIRM_ON_PINNED_DELETE  = false;
 let MAX_TOPBAR_LENGTH         = 15;
@@ -91,6 +90,7 @@ const ClipboardIndicator = GObject.registerClass({
     #_imagePreviewOverlay = null;
     #moveFirstOnClose = [];
     #moveFirstClosedId = 0;
+    #historyLoaded = false;
 
     destroy () {
         this._destroyed = true;
@@ -174,6 +174,9 @@ const ClipboardIndicator = GObject.registerClass({
             this._updateTopbarLayout();
             this._setupListener();
             this._setupHistoryIntervalClearing();
+            this.#historyLoaded = true;
+            // An import that was requested while the extension was off
+            this.#importHistory();
         }).catch(e => console.error('Clipboard Indicator: _buildMenu failed', e));
     }
 
@@ -610,7 +613,7 @@ const ClipboardIndicator = GObject.registerClass({
         }
     }
 
-    _addEntry (entry, autoSelect, autoSetClip) {
+    _addEntry (entry, autoSelect, autoSetClip, asOldest = false) {
         let menuItem = new PopupMenu.PopupMenuItem('');
 
         menuItem.menu = this.menu;
@@ -687,7 +690,8 @@ const ClipboardIndicator = GObject.registerClass({
         });
 
         this._setEntryLabel(menuItem);
-        this.clipItemsRadioGroup.push(menuItem);
+        if (asOldest) this.clipItemsRadioGroup.unshift(menuItem);
+        else this.clipItemsRadioGroup.push(menuItem);
 
         if (entry.getTag()) {
             menuItem.tagLabel = new St.Label({
@@ -822,11 +826,8 @@ const ClipboardIndicator = GObject.registerClass({
                 : this._removeEntry(menuItem, 'delete')
         );
 
-        if (entry.isFavorite()) {
-            this.favoritesSection.addMenuItem(menuItem, 0);
-        } else {
-            this.historySection.addMenuItem(menuItem, 0);
-        }
+        const section = entry.isFavorite() ? this.favoritesSection : this.historySection;
+        section.addMenuItem(menuItem, asOldest ? undefined : 0);
 
         if (autoSelect === true) {
             this._selectMenuItem(menuItem, autoSetClip);
@@ -987,6 +988,42 @@ const ClipboardIndicator = GObject.registerClass({
 
     _getCache () {
         return this.registry.read();
+    }
+
+    // The preferences window extracts a history archive and passes its directory.
+    // Its entries go below the current ones, as the oldest. An entry already in
+    // the history is kept as it is, but pinned if the imported one is pinned
+    async #importHistory () {
+        const { settings } = this.extension;
+        const directory = settings.get_string(PrefsFields.IMPORT_HISTORY_FROM);
+        if (!directory) return;
+
+        try {
+            const entries = await this.registry.readImport(directory);
+            if (this._destroyed) return;
+
+            const current = new Map(this.clipItemsRadioGroup.map(item => [item.entry.getStringValue(), item]));
+            const added = new Set();
+            for (const entry of entries.reverse()) {
+                const value = entry.getStringValue();
+                const item = current.get(value);
+                if (item) {
+                    if (entry.isFavorite() && !item.entry.isFavorite()) this._favoriteToggle(item);
+                }
+                else if (!added.has(value)) {
+                    added.add(value);
+                    this._addEntry(entry, false, false, true);
+                }
+            }
+            this._updateCache();
+            this._removeOldestEntries();
+        }
+        catch (e) {
+            console.error('Clipboard Indicator: could not import history', e);
+        }
+        finally {
+            settings.set_string(PrefsFields.IMPORT_HISTORY_FROM, '');
+        }
     }
 
     #addToCache (entry) {
@@ -1418,7 +1455,6 @@ const ClipboardIndicator = GObject.registerClass({
         NOTIFY_ON_COPY              = settings.get_boolean(PrefsFields.NOTIFY_ON_COPY);
         NOTIFY_ON_CYCLE             = settings.get_boolean(PrefsFields.NOTIFY_ON_CYCLE);
         NOTIFY_ON_CLEAR             = settings.get_boolean(PrefsFields.NOTIFY_ON_CLEAR);
-          NOTIFY_ON_IMPORT_EXPORT     = settings.get_boolean(PrefsFields.NOTIFY_ON_IMPORT_EXPORT);
         CONFIRM_ON_CLEAR            = settings.get_boolean(PrefsFields.CONFIRM_ON_CLEAR);
         CONFIRM_ON_PINNED_DELETE    = settings.get_boolean(PrefsFields.CONFIRM_ON_PINNED_DELETE);
         ENABLE_KEYBINDING           = settings.get_boolean(PrefsFields.ENABLE_KEYBINDING);
@@ -1453,25 +1489,8 @@ const ClipboardIndicator = GObject.registerClass({
 
     async _onSettingsChange (_settings, key) {
         try {
-            if (key === PrefsFields.HISTORY_OPERATION_MESSAGE) {
-                const message = this.extension.settings.get_string(
-                    PrefsFields.HISTORY_OPERATION_MESSAGE
-                );
-                if (message) {
-                    if (NOTIFY_ON_IMPORT_EXPORT)
-                        this._showNotification(message);
-                    this.extension.settings.set_string(
-                        PrefsFields.HISTORY_OPERATION_MESSAGE, ''
-                    );
-                }
-                return;
-            }
-
-            if (key === PrefsFields.HISTORY_IMPORTED) {
-                this.favoritesSection.removeAll();
-                this.historySection.removeAll();
-                this.clipItemsRadioGroup = [];
-                (await this._getCache()).forEach(entry => this._addEntry(entry));
+            if (key === PrefsFields.IMPORT_HISTORY_FROM) {
+                if (this.#historyLoaded) await this.#importHistory();
                 return;
             }
 

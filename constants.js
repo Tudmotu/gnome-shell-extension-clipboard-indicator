@@ -7,7 +7,6 @@ export const PrefsFields = {
     NOTIFY_ON_COPY                  : 'notify-on-copy',
     NOTIFY_ON_CYCLE                 : 'notify-on-cycle',
     NOTIFY_ON_CLEAR                 : 'notify-on-clear',
-    NOTIFY_ON_IMPORT_EXPORT         : 'notify-on-import-export',
     CONFIRM_ON_CLEAR                : 'confirm-clear',
     CONFIRM_ON_PINNED_DELETE        : 'confirm-pinned-delete',
     MOVE_ITEM_FIRST                 : 'move-item-first',
@@ -44,6 +43,5 @@ export const PrefsFields = {
     SHOW_PIN_BUTTON                 : 'show-pin-button',
     SHOW_EDIT_BUTTON                : 'show-edit-button',
     SHOW_PREVIEW_BUTTON             : 'show-preview-button',
-    HISTORY_IMPORTED                : 'history-imported',
-    HISTORY_OPERATION_MESSAGE       : 'history-operation-message',
+    IMPORT_HISTORY_FROM             : 'import-history-from',
 };

@@ -113,11 +113,6 @@ class Settings {
             subtitle: _("Display a notification when clipboard history is cleared")
         });
 
-        this.field_import_export_notification_toggle = new Adw.SwitchRow({
-            title: _("Show notification on Import/Export"),
-            subtitle: _("Display a notification when clipboard history is imported or exported")
-        });
-
         this.field_confirm_clear_toggle = new Adw.SwitchRow({
             title: _("Prompt for confirmation on Clear History"),
             subtitle: _("Ask before deleting all clipboard entries")
@@ -336,7 +331,6 @@ class Settings {
         this.notifications.add(this.field_copy_notification_toggle);
         this.notifications.add(this.field_cycle_notification_toggle);
         this.notifications.add(this.field_clear_notification_toggle);
-        this.notifications.add(this.field_import_export_notification_toggle);
 
         this.search.add(this.case_sensitive_search);
         this.search.add(this.regex_search);
@@ -357,7 +351,6 @@ class Settings {
         this.schema.bind(PrefsFields.NOTIFY_ON_COPY, this.field_copy_notification_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.NOTIFY_ON_CYCLE, this.field_cycle_notification_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.NOTIFY_ON_CLEAR, this.field_clear_notification_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
-        this.schema.bind(PrefsFields.NOTIFY_ON_IMPORT_EXPORT, this.field_import_export_notification_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.CONFIRM_ON_CLEAR, this.field_confirm_clear_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.CONFIRM_ON_PINNED_DELETE, this.field_confirm_pinned_delete_toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.MOVE_ITEM_FIRST, this.field_move_item_first, 'active', Gio.SettingsBindFlags.DEFAULT);
@@ -390,9 +383,12 @@ class Settings {
 
         this.field_clear_history_interval.set_sensitive(this.field_clear_history_on_interval.active);
         this.#fetchExludedAppsList();
+
+        this.schema.connect(`changed::${PrefsFields.IMPORT_HISTORY_FROM}`, () => this.#onImportDone());
     }
 
     #cacheDirectory = `${GLib.get_user_cache_dir()}/clipboard-indicator@tudmotu.com`;
+    #importDirectory = null;
 
     #showError (message) {
         const dialog = new Gtk.AlertDialog({
@@ -403,246 +399,110 @@ class Settings {
         dialog.choose(this.window, null, () => {});
     }
 
+    // Resolves to the chosen path, or null when the dialog is dismissed
     #chooseFile (save) {
-        return new Promise(resolve => {
-            const dialog = new Gtk.FileChooserNative({
-                title: save ? _('Export clipboard history') : _('Import clipboard history'),
-                accept_label: save ? _('Export') : _('Import'),
-                cancel_label: _('Cancel'),
-                action: save ? Gtk.FileChooserAction.SAVE : Gtk.FileChooserAction.OPEN,
-            });
-            const filter = new Gtk.FileFilter();
-            filter.set_name(_('Clipboard history archives'));
-            filter.add_pattern('*.tar.gz');
-            dialog.add_filter(filter);
-            if (save) dialog.set_current_name('clipboard-history.tar.gz');
-            dialog.set_transient_for(this.window);
-            dialog.connect('response', (source, response) => {
-                this._fileChooser = null;
-                resolve(response === Gtk.ResponseType.ACCEPT ? source.get_file()?.get_path() : null);
-                source.destroy();
-            });
-            // GTK does not keep a native dialog alive; hold it until it responds
-            this._fileChooser = dialog;
-            dialog.show();
+        const filter = new Gtk.FileFilter({ name: _('Clipboard history archives') });
+        filter.add_pattern('*.tar.gz');
+        const dialog = new Gtk.FileDialog({
+            title: save ? _('Export clipboard history') : _('Import clipboard history'),
+            accept_label: save ? _('Export') : _('Import'),
+            default_filter: filter,
+        });
+        if (save) dialog.initial_name = 'clipboard-history.tar.gz';
+
+        return new Promise((resolve, reject) => {
+            const done = (source, result) => {
+                try {
+                    resolve((save ? source.save_finish(result) : source.open_finish(result)).get_path());
+                }
+                catch (e) {
+                    if (e.matches(Gtk.DialogError, Gtk.DialogError.DISMISSED)) resolve(null);
+                    else reject(e);
+                }
+            };
+            if (save) dialog.save(this.window, null, done);
+            else dialog.open(this.window, null, done);
         });
     }
 
-    async #runCommand (argv, cwd = null) {
-        if (!GLib.find_program_in_path(argv[0]))
-            throw new Error(_('%s is required for clipboard history import/export').replace('%s', argv[0]));
-
-        const launcher = new Gio.SubprocessLauncher({
-            flags: Gio.SubprocessFlags.STDOUT_PIPE | Gio.SubprocessFlags.STDERR_PIPE,
-        });
-        if (cwd) launcher.set_cwd(cwd);
-        const process = launcher.spawnv(argv);
-        const [success, stdout, stderr] = await new Promise((resolve, reject) => {
+    #runCommand (argv) {
+        const process = Gio.Subprocess.new(argv, Gio.SubprocessFlags.STDERR_PIPE);
+        return new Promise((resolve, reject) => {
             process.communicate_utf8_async(null, null, (source, result) => {
                 try {
-                    resolve(source.communicate_utf8_finish(result));
+                    const [, , stderr] = source.communicate_utf8_finish(result);
+                    if (source.get_successful()) resolve();
+                    else reject(new Error(stderr || argv[0]));
                 }
                 catch (e) {
                     reject(e);
                 }
             });
         });
-        if (!success || !process.get_successful()) throw new Error(stderr || argv[0]);
-        return stdout;
     }
 
-    async #copyFile (sourcePath, destinationPath) {
-        const source = Gio.file_new_for_path(sourcePath);
-        const destination = Gio.file_new_for_path(destinationPath);
-        await new Promise((resolve, reject) => {
-            source.copy_async(destination, Gio.FileCopyFlags.OVERWRITE,
-                GLib.PRIORITY_DEFAULT, null, null, (object, result) => {
-                    try {
-                        object.copy_finish(result);
-                        resolve();
-                    }
-                    catch (e) {
-                        reject(e);
-                    }
-                });
-        });
-    }
-
-    #removeDirectory (path) {
-        const directory = Gio.file_new_for_path(path);
-        if (!directory.query_exists(null)) return;
-        const enumerator = directory.enumerate_children('standard::name',
-            Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS, null);
-        let info;
-        while ((info = enumerator.next_file(null)) !== null) {
-            const child = directory.get_child(info.get_name());
-            if (info.get_file_type() === Gio.FileType.DIRECTORY)
-                this.#removeDirectory(child.get_path());
-            else
-                child.delete(null);
-        }
-        enumerator.close(null);
-        directory.delete(null);
-    }
-
-    #isTextMimetype (mimetype) {
-        return mimetype.startsWith('text/') || mimetype === 'STRING' ||
-            mimetype === 'UTF8_STRING';
-    }
-
-    #isRegularFile (path) {
-        try {
-            const info = Gio.file_new_for_path(path).query_info(
-                'standard::type', Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS, null);
-            return info.get_file_type() === Gio.FileType.REGULAR;
-        }
-        catch (e) {
-            return false;
-        }
-    }
-
-    #validateCachedFile (path, filename) {
-        if (!this.#isRegularFile(path)) return false;
-        const [, contents] = GLib.file_get_contents(path);
-        return GLib.Bytes.new(contents).hash().toString() === filename;
-    }
-
-    async #installCachedFile (sourcePath, filename) {
-        const destinationPath = `${this.#cacheDirectory}/${filename}`;
-        if (GLib.file_test(destinationPath, GLib.FileTest.EXISTS)) {
-            if (!this.#isRegularFile(destinationPath))
-                throw new Error(_('The clipboard cache contains an invalid file'));
-            return;
-        }
-        await this.#copyFile(sourcePath, destinationPath);
-    }
-
+    // The archive holds registry.txt and the image files it names,
+    // the same layout as the cache directory
     async #exportHistory () {
-        const archivePath = await this.#chooseFile(true);
-        if (!archivePath) return;
-        let temporaryDirectory;
         try {
-            temporaryDirectory = GLib.dir_make_tmp('clipboard-indicator-export-XXXXXX');
+            const archivePath = await this.#chooseFile(true);
+            if (!archivePath) return;
+
             const registryPath = `${this.#cacheDirectory}/registry.txt`;
             if (!GLib.file_test(registryPath, GLib.FileTest.EXISTS))
                 throw new Error(_('Clipboard history is empty'));
-            GLib.mkdir_with_parents(`${temporaryDirectory}/cache`, 0o775);
-            await this.#copyFile(registryPath, `${temporaryDirectory}/registry.txt`);
+            const [, contents] = GLib.file_get_contents(registryPath);
+            const images = JSON.parse(new TextDecoder().decode(contents))
+                .filter(entry => entry.mimetype?.startsWith('image/'))
+                .map(entry => GLib.path_get_basename(entry.contents))
+                .filter(name => GLib.file_test(`${this.#cacheDirectory}/${name}`, GLib.FileTest.EXISTS));
 
-            const [, registryContents] = GLib.file_get_contents(registryPath);
-            const registry = JSON.parse(new TextDecoder().decode(registryContents));
-            if (!Array.isArray(registry)) throw new Error(_('The registry is invalid'));
-            for (const entry of registry) {
-                if (!entry || typeof entry !== 'object' || typeof entry.mimetype !== 'string')
-                    throw new Error(_('The registry is invalid'));
-                const isText = this.#isTextMimetype(entry.mimetype);
-                if (!isText) {
-                    const filename = GLib.path_get_basename(entry.contents);
-                    const sourcePath = `${this.#cacheDirectory}/${filename}`;
-                    if (filename !== entry.contents && GLib.file_test(entry.contents, GLib.FileTest.EXISTS))
-                        await this.#copyFile(entry.contents, `${temporaryDirectory}/cache/${filename}`);
-                    else if (GLib.file_test(sourcePath, GLib.FileTest.EXISTS))
-                        await this.#copyFile(sourcePath, `${temporaryDirectory}/cache/${filename}`);
-                    else
-                        throw new Error(_('A cached clipboard file is missing'));
-                }
-            }
-            await this.#runCommand(['tar', '-czf', archivePath, 'registry.txt', 'cache'], temporaryDirectory);
-            this.schema.set_string(PrefsFields.HISTORY_OPERATION_MESSAGE,
-                _('Clipboard history exported successfully'));
+            await this.#runCommand(['tar', '-czf', archivePath, '-C', this.#cacheDirectory,
+                'registry.txt', ...new Set(images)]);
+            this.window.add_toast(new Adw.Toast({ title: _('Clipboard history exported') }));
         }
         catch (e) {
-            this.#showError(e.message || String(e));
-        }
-        finally {
-            if (temporaryDirectory) {
-                try { this.#removeDirectory(temporaryDirectory); } catch (e) {}
-            }
+            this.#showError(e.message);
         }
     }
 
+    // Extract the archive and hand its directory to the extension, which
+    // merges it into the history. Remove the directory once it is done
     async #importHistory () {
-        const archivePath = await this.#chooseFile(false);
-        if (!archivePath) return;
-        let temporaryDirectory;
+        let directory = null;
         try {
-            temporaryDirectory = GLib.dir_make_tmp('clipboard-indicator-import-XXXXXX');
-            const listing = await this.#runCommand(['tar', '-tzf', archivePath]);
-            const paths = listing.trim().split('\n').filter(path => path && path !== 'cache/');
-            if (!paths.includes('registry.txt') || paths.some(path =>
-                !/^registry\.txt$|^(cache|images)\/[A-Za-z0-9._-]+$|^[A-Za-z0-9._-]+$/.test(path)))
-                throw new Error(_('The selected file is not a valid clipboard history archive'));
-            await this.#runCommand(['tar', '-xzf', archivePath, '-C', temporaryDirectory]);
+            const archivePath = await this.#chooseFile(false);
+            if (!archivePath) return;
 
-            const registryPath = `${temporaryDirectory}/registry.txt`;
-            if (!this.#isRegularFile(registryPath))
-                throw new Error(_('The archive registry is not a regular file'));
-            const [, contents] = GLib.file_get_contents(registryPath);
-            const registry = JSON.parse(new TextDecoder().decode(contents));
-            if (!Array.isArray(registry)) throw new Error(_('The registry is invalid'));
-            const cachedFiles = [];
-            for (const entry of registry) {
-                if (!entry || typeof entry !== 'object' || typeof entry.mimetype !== 'string' ||
-                    typeof entry.contents !== 'string')
-                    throw new Error(_('The registry is invalid'));
-                const isText = this.#isTextMimetype(entry.mimetype);
-                if (!isText) {
-                    const filename = GLib.path_get_basename(entry.contents);
-                    const sourcePath = ['cache', 'images', ''].map(directory =>
-                        `${temporaryDirectory}/${directory ? `${directory}/` : ''}${filename}`
-                    ).find(path => this.#validateCachedFile(path, filename));
-                    if (!filename || !sourcePath)
-                        throw new Error(_('The archive is missing a cached clipboard file'));
-                    entry.contents = `${this.#cacheDirectory}/${filename}`;
-                    cachedFiles.push([sourcePath, filename]);
-                }
-            }
+            directory = GLib.dir_make_tmp('clipboard-indicator-import-XXXXXX');
+            await this.#runCommand(['tar', '-xzf', archivePath, '-C', directory])
+                .then(() => {
+                    const registry = Gio.file_new_for_path(`${directory}/registry.txt`);
+                    const type = registry.query_info('standard::type',
+                        Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS, null).get_file_type();
+                    if (type !== Gio.FileType.REGULAR) throw new Error();
+                    const [, contents] = registry.load_contents(null);
+                    if (!Array.isArray(JSON.parse(new TextDecoder().decode(contents))))
+                        throw new Error();
+                })
+                .catch(() => {
+                    throw new Error(_('The selected file is not a clipboard history archive'));
+                });
 
-            const currentRegistryPath = `${this.#cacheDirectory}/registry.txt`;
-            let currentRegistry = [];
-            if (GLib.file_test(currentRegistryPath, GLib.FileTest.EXISTS)) {
-                const [, currentContents] = GLib.file_get_contents(currentRegistryPath);
-                currentRegistry = JSON.parse(new TextDecoder().decode(currentContents));
-                if (!Array.isArray(currentRegistry)) throw new Error(_('The current registry is invalid'));
-            }
-
-            const entryKey = entry => {
-                const isText = this.#isTextMimetype(entry.mimetype);
-                return `${entry.mimetype}\u0000${isText ? entry.contents : GLib.path_get_basename(entry.contents)}`;
-            };
-            const mergedRegistry = [...currentRegistry];
-            const existingEntries = new Map(mergedRegistry.map(entry => [entryKey(entry), entry]));
-            for (const entry of registry) {
-                const existingEntry = existingEntries.get(entryKey(entry));
-                if (existingEntry) {
-                    existingEntry.favorite = existingEntry.favorite || entry.favorite;
-                    if (!existingEntry.tag && entry.tag) existingEntry.tag = entry.tag;
-                }
-                else {
-                    mergedRegistry.push(entry);
-                    existingEntries.set(entryKey(entry), entry);
-                }
-            }
-
-            GLib.mkdir_with_parents(this.#cacheDirectory, 0o775);
-            for (const [sourcePath, filename] of cachedFiles)
-                await this.#installCachedFile(sourcePath, filename);
-            Gio.file_new_for_path(`${this.#cacheDirectory}/registry.txt`).replace_contents(
-                new TextEncoder().encode(JSON.stringify(mergedRegistry)), null, false,
-                Gio.FileCreateFlags.NONE, null);
-            this.schema.set_int(PrefsFields.HISTORY_IMPORTED,
-                this.schema.get_int(PrefsFields.HISTORY_IMPORTED) + 1);
-            this.schema.set_string(PrefsFields.HISTORY_OPERATION_MESSAGE,
-                _('Clipboard history imported successfully'));
+            this.#importDirectory = directory;
+            this.schema.set_string(PrefsFields.IMPORT_HISTORY_FROM, directory);
         }
         catch (e) {
-            this.#showError(e.message || String(e));
+            if (directory) this.#runCommand(['rm', '-rf', '--', directory]).catch(() => {});
+            this.#showError(e.message);
         }
-        finally {
-            if (temporaryDirectory) {
-                try { this.#removeDirectory(temporaryDirectory); } catch (e) {}
-            }
-        }
+    }
+
+    #onImportDone () {
+        if (this.schema.get_string(PrefsFields.IMPORT_HISTORY_FROM) || !this.#importDirectory) return;
+        this.#runCommand(['rm', '-rf', '--', this.#importDirectory]).catch(() => {});
+        this.#importDirectory = null;
+        this.window.add_toast(new Adw.Toast({ title: _('Clipboard history imported') }));
     }
 
     #createDisplayModeOptions () {

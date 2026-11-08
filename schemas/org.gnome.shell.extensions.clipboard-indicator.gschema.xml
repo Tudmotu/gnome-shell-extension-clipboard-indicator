@@ -2,17 +2,12 @@
     <schema id="org.gnome.shell.extensions.clipboard-indicator"
         path="/org/gnome/shell/extensions/clipboard-indicator/">
 
-    <key name="history-imported" type="i">
-        <default>0</default>
-    </key>
-
-    <key name="history-operation-message" type="s">
+    <key name="import-history-from" type="s">
         <default>''</default>
-    </key>
-
-    <key name="notify-on-import-export" type="b">
-        <default>true</default>
-        <summary>Show notification on history import or export</summary>
+        <summary>Directory of an extracted history archive for the extension to import</summary>
+        <description>
+            Set by the preferences window. The extension clears it once the import is done.
+        </description>
     </key>
 
     <key name="paste-button" type="b">

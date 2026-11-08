@@ -184,6 +184,38 @@ export class Registry {
         });
     }
 
+    // Entries of a history archive extracted into directory. An image is
+    // read only from a regular file in directory, never through a link
+    async readImport (directory) {
+        const contents = await new Promise((resolve, reject) => {
+            Gio.file_new_for_path(`${directory}/registry.txt`).load_contents_async(null, (file, res) => {
+                try {
+                    resolve(file.load_contents_finish(res)[1]);
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        });
+        const registry = JSON.parse(new TextDecoder().decode(contents));
+        if (!Array.isArray(registry)) throw new Error('not a list of entries');
+
+        const jsonEntries = registry.filter(jsonEntry => {
+            if (typeof jsonEntry?.contents !== 'string') return false;
+            if (ClipboardEntry.__isText(jsonEntry.mimetype || 'text/plain')) return true;
+
+            jsonEntry.contents = `${directory}/${GLib.path_get_basename(jsonEntry.contents)}`;
+            try {
+                return Gio.file_new_for_path(jsonEntry.contents)
+                    .query_info('standard::type', FileQueryInfoFlags.NOFOLLOW_SYMLINKS, null)
+                    .get_file_type() === Gio.FileType.REGULAR;
+            } catch (e) {
+                return false;
+            }
+        });
+        const entries = await Promise.all(jsonEntries.map(jsonEntry => ClipboardEntry.fromJSON(jsonEntry)));
+        return entries.filter(entry => entry !== null);
+    }
+
     #entryFileExists (entry) {
         const filename = this.getEntryFilename(entry);
         return GLib.file_test(filename, FileTest.EXISTS);
