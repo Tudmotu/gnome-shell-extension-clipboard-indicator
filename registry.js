@@ -214,7 +214,7 @@ export class Registry {
     }
 
     getEntryFilename (entry) {
-        return `${this.REGISTRY_DIR}/${entry.asBytes().hash()}`;
+        return `${this.REGISTRY_DIR}/${entry.hash()}`;
     }
 
     async writeEntryFile (entry) {
@@ -273,6 +273,8 @@ export class ClipboardEntry {
     #mimetype;
     #bytes;
     #favorite;
+    #cachedHash = null;
+    #cachedString = null;
 
     static #decode (contents) {
         return Uint8Array.from(contents.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)));
@@ -349,9 +351,9 @@ export class ClipboardEntry {
 
     getStringValue () {
         if (this.isImage()) {
-            return `[Image ${this.asBytes().hash()}]`;
+            return `[Image ${this.hash()}]`;
         }
-        return new TextDecoder().decode(this.#bytes);
+        return (this.#cachedString ??= new TextDecoder().decode(this.#bytes));
     }
 
     mimetype () {
@@ -377,6 +379,8 @@ export class ClipboardEntry {
     setText (text) {
         if (!this.isText()) return;
         this.#bytes = new TextEncoder().encode(text);
+        this.#cachedHash = null;
+        this.#cachedString = null;
     }
 
     #tag = null;
@@ -396,5 +400,9 @@ export class ClipboardEntry {
     equals (otherEntry) {
         return this.getStringValue() === otherEntry.getStringValue();
         // this.asBytes().equal(otherEntry.asBytes());
+    }
+
+    hash () {
+        return (this.#cachedHash ??= GLib.Bytes.new(this.#bytes).hash());
     }
 }
