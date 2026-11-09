@@ -76,6 +76,18 @@
 
 .clipboard-indicator-hbox {
     transition: background-color 150ms ease-in-out;
+    spacing: 4px;
+}
+
+/* The indicator is its own top-level panel button, so the theme already
+ * spaces it from its neighbours with -natural-hpadding. The padding and
+ * margin the theme applies to .system-status-icon are meant to be shared
+ * between icons inside the status area; applied here they double the
+ * spacing and make the indicator wider than GNOME's own single-icon
+ * indicators. Reset them so the width matches. */
+#panel .panel-button .clipboard-indicator-hbox .clipboard-indicator-icon {
+    padding: 0;
+    margin: 0;
 }
 
 .clipboard-indicator-hbox .clipboard-indicator-icon {
