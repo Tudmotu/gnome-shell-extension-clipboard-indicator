@@ -1690,12 +1690,37 @@ const ClipboardIndicator = GObject.registerClass({
         });
     }
 
-    _toggleMenu () {
-        if (!this.menu.isOpen && OPEN_AT_CURSOR) {
+    #getMenuSourceActor () {
+        if (OPEN_AT_CURSOR) {
             const [x, y] = global.get_pointer();
             this._cursorActor.set_position(x, y);
-            this.menu.sourceActor = this._cursorActor;
+            return this._cursorActor;
         }
+
+        if (!this.is_visible()) {
+            const anchors = [
+                Main.panel.statusArea.quickSettings,
+                Main.panel._rightBox
+            ];
+
+            const anchor = anchors.find(actor => actor?.is_visible());
+            if (anchor)
+                return anchor;
+        }
+
+        if (!this.is_visible()) {
+            const [x, y] = global.get_pointer();
+            this._cursorActor.set_position(x, y);
+            return this._cursorActor;
+        }
+
+        return this;
+    }
+
+    _toggleMenu () {
+        if (!this.menu.isOpen)
+            this.menu.sourceActor = this.#getMenuSourceActor();
+
         this.menu.toggle();
     }
 
