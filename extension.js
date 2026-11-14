@@ -1693,7 +1693,24 @@ const ClipboardIndicator = GObject.registerClass({
     _toggleMenu () {
         if (!this.menu.isOpen && OPEN_AT_CURSOR) {
             const [x, y] = global.get_pointer();
-            this._cursorActor.set_position(x, y);
+
+            // BoxPointer keeps a menu on screen horizontally, but vertically it
+            // only flips it above the source, and only when it fits there. A menu
+            // taller than the space below the pointer therefore hangs off the
+            // edge (#655), so move the anchor up just enough for the menu to fit
+            // between it and the bottom of the work area. The menu still opens
+            // next to the pointer, and stays fully on screen.
+            const workArea = Main.layoutManager.getWorkAreaForMonitor(
+                global.display.get_current_monitor());
+            const gap = this.menu.actor.get_theme_node().get_length('-boxpointer-gap');
+            const [, menuHeight] = this.menu.actor.get_preferred_height(-1);
+            // The anchor is this 1px actor, and the menu sits below its bottom
+            // edge, hence the extra height and gap.
+            const maxAnchorY = workArea.y + workArea.height - menuHeight -
+                gap - this._cursorActor.height;
+            const anchorY = Math.max(workArea.y, Math.min(y, maxAnchorY));
+
+            this._cursorActor.set_position(x, anchorY);
             this.menu.sourceActor = this._cursorActor;
         }
         this.menu.toggle();
