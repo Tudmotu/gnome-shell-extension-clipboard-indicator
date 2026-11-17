@@ -23,6 +23,10 @@ const CLIPBOARD_TYPE = St.ClipboardType.CLIPBOARD;
 
 const INDICATOR_ICON = 'edit-paste-symbolic';
 
+const CLIPBOARD_READ_TIMEOUT = 5000; // ms. A read that takes longer is abandoned
+const ERROR_NOTIFY_COOLDOWN_MS = 60 * 1000; // the same read error is notified at most once a minute
+const READ_TIMED_OUT = Symbol('clipboard read timed out');
+
 let DELAYED_SELECTION_TIMEOUT = 750;
 let MAX_REGISTRY_LENGTH       = 15;
 let MAX_ENTRY_LENGTH          = 50;
@@ -87,6 +91,9 @@ const ClipboardIndicator = GObject.registerClass({
     GTypeName: 'ClipboardIndicator'
 }, class ClipboardIndicator extends PanelMenu.Button {
     #refreshInProgress = false;
+    #readTimeoutId = 0;
+    #readErrorKey = null;
+    #readErrorAt = 0;
     #_imagePreviewOverlay = null;
     #moveFirstOnClose = [];
     #moveFirstClosedId = 0;
@@ -1060,8 +1067,14 @@ const ClipboardIndicator = GObject.registerClass({
         this.#refreshInProgress = true;
 
         try {
-            const result = await this.#getClipboardContent();
+            const result = await this.#raceReadTimeout(this.#getClipboardContent());
             if (this._destroyed) {
+                return;
+            }
+
+            if (result === READ_TIMED_OUT) {
+                this.#notifyReadError(
+                    _("Clipboard read timed out. The app it was copied from may have stopped responding."));
                 return;
             }
 
@@ -1094,8 +1107,47 @@ const ClipboardIndicator = GObject.registerClass({
             console.error(e);
         }
         finally {
+            if (this.#readTimeoutId) {
+                clearTimeout(this.#readTimeoutId);
+                this.#readTimeoutId = 0;
+            }
             this.#refreshInProgress = false;
         }
+    }
+
+    /*
+     * A clipboard read whose owner never answers would otherwise never
+     * resolve, leaving #refreshInProgress true forever: the indicator
+     * then silently stops recording new copies until the extension is
+     * reloaded.  Racing a timeout releases the flag so the next copy is
+     * recorded as usual, and tells the user why the copy was missed.
+     * The abandoned read keeps running; its eventual result, if any, is
+     * discarded by the race.
+     */
+    #raceReadTimeout (readPromise) {
+        return Promise.race([
+            readPromise,
+            new Promise(resolve => {
+                this.#readTimeoutId = setTimeout(() => resolve(READ_TIMED_OUT), CLIPBOARD_READ_TIMEOUT);
+            }),
+        ]);
+    }
+
+    /*
+     * Reports a read failure to the user but never nags: the same
+     * message is notified at most once a minute while the failing
+     * condition persists and repeats.
+     */
+    #notifyReadError (message) {
+        const now = Date.now();
+
+        if (message === this.#readErrorKey && now - this.#readErrorAt < ERROR_NOTIFY_COOLDOWN_MS)
+            return;
+        this.#readErrorKey = message;
+        this.#readErrorAt = now;
+
+        console.warn(`Clipboard Indicator: ${message}`);
+        this._showNotification(message);
     }
 
     _moveItemFirst (item) {
@@ -1979,6 +2031,7 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     #clearTimeouts () {
+        if (this.#readTimeoutId) clearTimeout(this.#readTimeoutId);
         if (this._imagePreviewTimeout) clearTimeout(this._imagePreviewTimeout);
         if (this._setFocusOnOpenTimeout) clearTimeout(this._setFocusOnOpenTimeout);
         if (this._pastingKeypressTimeout) clearTimeout(this._pastingKeypressTimeout);
