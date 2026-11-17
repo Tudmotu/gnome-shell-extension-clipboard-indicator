@@ -15,6 +15,8 @@ import { Extension, gettext as _ } from 'resource:///org/gnome/shell/extensions/
 
 import { Registry, ClipboardEntry } from './registry.js';
 import { DialogManager } from './confirmDialog.js';
+import { PasswordDialog } from './passwordDialog.js';
+import { Key } from './crypto.js';
 import { PrefsFields } from './constants.js';
 import { Keyboard } from './keyboard.js';
 import { boxLayoutOrientation } from './compat.js';
@@ -22,6 +24,10 @@ import { boxLayoutOrientation } from './compat.js';
 const CLIPBOARD_TYPE = St.ClipboardType.CLIPBOARD;
 
 const INDICATOR_ICON = 'edit-paste-symbolic';
+
+const ENCRYPTION_OFF = 0;
+const ENCRYPTION_SESSION = 1;
+const ENCRYPTION_PASSWORD = 2;
 
 let DELAYED_SELECTION_TIMEOUT = 750;
 let MAX_REGISTRY_LENGTH       = 15;
@@ -47,6 +53,7 @@ let KEEP_SELECTED_ON_CLEAR    = false;
 let PASTE_BUTTON              = true;
 let PINNED_ON_BOTTOM          = false;
 let CACHE_IMAGES              = true;
+let ENCRYPTION_MODE            = 0;
 let EXCLUDED_APPS             = [];
 let CLEAR_HISTORY_ON_INTERVAL = false;
 let CLEAR_HISTORY_INTERVAL    = 60;
@@ -99,6 +106,10 @@ const ClipboardIndicator = GObject.registerClass({
         this._disconnectSelectionListener();
         this._clearDelayedSelectionTimeout();
         this.#clearTimeouts();
+        if (this.passwordDialog) {
+            this.passwordDialog.close();
+            this.passwordDialog = null;
+        }
         this.#closeImagePreview();
         this._removeHistoryLabel();
         this._destroyNotifSource();
@@ -124,6 +135,10 @@ const ClipboardIndicator = GObject.registerClass({
         this.extension = extension;
         this._destroyed = false;
         this.registry = new Registry(extension);
+        /* Saved history stays hidden while locked, until it is unlocked */
+        this.locked = false;
+        this.needsNewPassword = false;
+        this.passwordDialog = null;
         this.keyboard = new Keyboard();
         this._settingsChangedId = null;
         this._selectionOwnerChangedId = null;
@@ -227,6 +242,7 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     async _buildMenu () {
+        await this.#initEncryption();
         const clipHistory = await this._getCache();
         if (this._destroyed) {
             return;
@@ -392,6 +408,19 @@ const ClipboardIndicator = GObject.registerClass({
         );
         this.settingsMenuItem.connect('activate', this._openSettings.bind(this));
 
+        // Shown while saved history is encrypted but locked; asks for the
+        // password, or a new one when none exists yet
+        this.unlockMenuItem = new PopupMenu.PopupMenuItem(_('Unlock saved history'));
+        this.unlockMenuItem.insert_child_at_index(
+            new St.Icon({
+                icon_name: 'changes-prevent-symbolic',
+                style_class: 'clipboard-menu-icon',
+                y_align: Clutter.ActorAlign.CENTER
+            }),
+            0
+        );
+        this.unlockMenuItem.connect('activate', () => this.#promptUnlockHistory());
+
         // Empty state section
         this.emptyStateSection = new St.BoxLayout({
             style_class: 'clipboard-indicator-empty-state',
@@ -414,7 +443,42 @@ const ClipboardIndicator = GObject.registerClass({
             this._selectMenuItem(clipItemsArr[lastIdx]);
         }
 
+        // Anything just loaded from a plain registry is re-stored encrypted
+        // right away in session mode, so nothing readable is left on disk
+        if (ENCRYPTION_MODE === ENCRYPTION_SESSION && this.registry.key === null) {
+            this.registry.key = Key.random();
+            this._updateCache();
+        }
+
         this.#showElements();
+    }
+
+    /*
+     * History on disk is encrypted either with a random key that lives only
+     * for this login session, or with a key derived from a password.
+     */
+    async #initEncryption () {
+        switch (ENCRYPTION_MODE) {
+            case ENCRYPTION_SESSION:
+                // The key of the previous login is gone, so its history can
+                // never be read again; discard it and start fresh. A plain
+                // registry is still readable and loads normally below, before
+                // the new random key is applied
+                this.registry.clearEncryptedRegistry();
+                break;
+
+            case ENCRYPTION_PASSWORD:
+                // Saved history stays hidden until the password is given
+                this.locked = true;
+                this.needsNewPassword = !this.registry.hasEncryptedRegistry();
+                break;
+
+            default:
+                // Encryption off: history saved under a password stays
+                // locked until it is unlocked from the menu
+                this.locked = this.registry.hasEncryptedRegistry();
+                break;
+        }
     }
 
     #hideElements() {
@@ -429,11 +493,22 @@ const ClipboardIndicator = GObject.registerClass({
         if (this.settingsMenuItem?.actor && this.menu.box.contains(this.settingsMenuItem.actor))
             this.menu.box.remove_child(this.settingsMenuItem.actor);
         if (this.menu.box.contains(this.emptyStateSection)) this.menu.box.remove_child(this.emptyStateSection);
+        if (this.unlockMenuItem?.actor && this.menu.box.contains(this.unlockMenuItem.actor))
+            this.menu.box.remove_child(this.unlockMenuItem.actor);
     }
 
     #showElements() {
         if (this._destroyed) {
             return;
+        }
+
+        // Locked history: offer the unlock entry above everything else
+        if (this.locked && this.unlockMenuItem?.actor) {
+            if (!this.menu.box.contains(this.unlockMenuItem.actor))
+                this.menu.box.insert_child_at_index(this.unlockMenuItem.actor, 0);
+        }
+        else if (this.unlockMenuItem?.actor && this.menu.box.contains(this.unlockMenuItem.actor)) {
+            this.menu.box.remove_child(this.unlockMenuItem.actor);
         }
 
         // Remove empty-state if items exist
@@ -987,7 +1062,148 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     _getCache () {
+        if (this.locked)
+            return Promise.resolve([]);
+
         return this.registry.read();
+    }
+
+    /*
+     * Applies an encryption-mode change. History cannot be silently moved
+     * between forms: switching while locked asks before discarding, and
+     * the password form asks for the password before history is first
+     * encrypted. Canceling restores the previous mode.
+     */
+    #onEncryptionModeChange (previousMode) {
+        const mode = ENCRYPTION_MODE;
+
+        if (this.locked) {
+            if (mode === ENCRYPTION_SESSION) {
+                // The locked history cannot be decrypted without its
+                // password; switching to a session key discards it
+                this.dialogManager.open(
+                    _('Discard locked history?'),
+                    _('History locked with a password cannot be decrypted without it.'),
+                    _('Switching to a session key discards the saved history.'),
+                    _('Discard'), _('Cancel'),
+                    () => {
+                        this.registry.clearEncryptedRegistry();
+                        this.registry.key = Key.random();
+                        this.needsNewPassword = false;
+                        this.locked = false;
+                        this._updateCache();
+                        this.#showElements();
+                    },
+                    () => this.extension.settings.set_int(PrefsFields.ENCRYPTION_MODE, previousMode)
+                );
+                return;
+            }
+
+            // Otherwise it stays locked; the history joins the chosen mode
+            // once the password is given at the unlock entry
+            return;
+        }
+
+        switch (mode) {
+            case ENCRYPTION_OFF:
+                this.registry.key = null;
+                this._updateCache();
+                break;
+
+            case ENCRYPTION_SESSION:
+                this.registry.key = Key.random();
+                this._updateCache();
+                break;
+
+            case ENCRYPTION_PASSWORD:
+                this.#openPasswordDialog({
+                    title: _('Set a password for the clipboard history'),
+                    confirm: true,
+                    onSubmit: password => {
+                        this.registry.key = Key.fromPassword(password);
+                        this._updateCache();
+                        return null;
+                    },
+                    onCancel: () => this.extension.settings.set_int(PrefsFields.ENCRYPTION_MODE, previousMode)
+                });
+                break;
+        }
+    }
+
+    #promptUnlockHistory () {
+        this.menu.close();
+
+        if (this.needsNewPassword) {
+            this.#openPasswordDialog({
+                title: _('Set a password for the clipboard history'),
+                confirm: true,
+                onSubmit: password => {
+                    this.registry.key = Key.fromPassword(password);
+                    this.locked = false;
+                    this.needsNewPassword = false;
+                    this._updateCache();
+                    this.#showElements();
+                    return null;
+                }
+            });
+            return;
+        }
+
+        this.#openPasswordDialog({
+            title: _('Unlock the clipboard history'),
+            onSubmit: async password => {
+                const salt = this.registry.storedSalt();
+                this.registry.key = Key.fromPassword(password, salt);
+
+                const stored = await this.registry.read();
+                if (this._destroyed) {
+                    return null;
+                }
+                if (this.registry.lastDecryptFailed) {
+                    this.registry.key = null;
+                    this.registry.lastDecryptFailed = false;
+                    return _('Wrong password');
+                }
+
+                // Anything copied while locked joins the stored history as
+                // the newest entries, the way #importHistory merges an
+                // imported archive
+                const pending = this.clipItemsRadioGroup.map(menuItem => menuItem.entry);
+                for (const menuItem of [...this.clipItemsRadioGroup])
+                    this._removeEntry(menuItem, null, true);
+                for (const entry of stored)
+                    this._addEntry(entry, false, false, true);
+                for (const entry of pending)
+                    this._addEntry(entry, false, false, true);
+
+                this.locked = false;
+
+                // A mode chosen while locked takes effect now
+                if (ENCRYPTION_MODE === ENCRYPTION_SESSION)
+                    this.registry.key = Key.random();
+                else if (ENCRYPTION_MODE === ENCRYPTION_OFF)
+                    this.registry.key = null;
+
+                this._removeOldestEntries();
+                this._updateCache();
+                this.#showElements();
+
+                const latest = this.clipItemsRadioGroup[this.clipItemsRadioGroup.length - 1];
+                if (latest) this._selectMenuItem(latest);
+                return null;
+            }
+        });
+    }
+
+    #openPasswordDialog (params) {
+        if (this._destroyed) return;
+        if (this.passwordDialog) {
+            this.passwordDialog.close();
+            this.passwordDialog = null;
+        }
+        this.passwordDialog = new PasswordDialog(params);
+        this.passwordDialog.onFinish = () => { this.passwordDialog = null; };
+        this.passwordDialog.open();
     }
 
     // The preferences window extracts a history archive and passes its directory.
@@ -1027,6 +1243,10 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     #addToCache (entry) {
+        // While locked nothing is written; anything captured joins the
+        // saved history at the unlock entry
+        if (this.locked) return;
+
         const entries = this.clipItemsRadioGroup
             .map(menuItem => menuItem.entry)
             .concat([entry])
@@ -1035,6 +1255,10 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     _updateCache () {
+        // While locked nothing is written; anything captured joins the
+        // saved history at the unlock entry
+        if (this.locked) return;
+
         const entries = this.clipItemsRadioGroup
             .map(menuItem => menuItem.entry)
             .filter(entry => CACHE_ONLY_FAVORITE == false || entry.isFavorite());
@@ -1469,6 +1693,7 @@ const ClipboardIndicator = GObject.registerClass({
         PASTE_BUTTON                = settings.get_boolean(PrefsFields.PASTE_BUTTON);
         PINNED_ON_BOTTOM            = settings.get_boolean(PrefsFields.PINNED_ON_BOTTOM);
         CACHE_IMAGES                = settings.get_boolean(PrefsFields.CACHE_IMAGES);
+        ENCRYPTION_MODE             = settings.get_int(PrefsFields.ENCRYPTION_MODE);
         EXCLUDED_APPS               = settings.get_strv(PrefsFields.EXCLUDED_APPS);
         CLEAR_HISTORY_ON_INTERVAL   = settings.get_boolean(PrefsFields.CLEAR_HISTORY_ON_INTERVAL);
         CLEAR_HISTORY_INTERVAL      = settings.get_int(PrefsFields.CLEAR_HISTORY_INTERVAL);
@@ -1491,6 +1716,13 @@ const ClipboardIndicator = GObject.registerClass({
         try {
             if (key === PrefsFields.IMPORT_HISTORY_FROM) {
                 if (this.#historyLoaded) await this.#importHistory();
+                return;
+            }
+
+            if (key === PrefsFields.ENCRYPTION_MODE) {
+                const previousMode = ENCRYPTION_MODE;
+                this._fetchSettings();
+                this.#onEncryptionModeChange(previousMode);
                 return;
             }
 

@@ -2,6 +2,7 @@ import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
 import St from 'gi://St';
 import { PrefsFields } from './constants.js';
+import { saltOf } from './crypto.js';
 
 const FileQueryInfoFlags = Gio.FileQueryInfoFlags;
 const FileCopyFlags = Gio.FileCopyFlags;
@@ -10,6 +11,10 @@ const FileTest = GLib.FileTest;
 export class Registry {
     #writing = false;
     #pendingWrite = null;
+    #key = null;
+
+    /* True when the last read() could not decrypt the registry. */
+    lastDecryptFailed = false;
 
     constructor ({ settings, uuid }) {
         this.uuid = uuid;
@@ -18,6 +23,49 @@ export class Registry {
         this.REGISTRY_DIR = GLib.get_user_cache_dir() + '/' + this.uuid;
         this.REGISTRY_PATH = this.REGISTRY_DIR + '/' + this.REGISTRY_FILE;
         this.BACKUP_REGISTRY_PATH = this.REGISTRY_PATH + '~';
+        this.ENCRYPTED_REGISTRY_PATH = this.REGISTRY_DIR + '/registry.enc';
+        this.BACKUP_ENCRYPTED_REGISTRY_PATH = this.ENCRYPTED_REGISTRY_PATH + '~';
+    }
+
+    /*
+     * While a key is set, writes go to registry.enc encrypted and the
+     * plain registry is deleted afterwards; cleared, writes go to
+     * registry.txt and any encrypted registry is deleted, so no stale
+     * file of the other kind is left behind on disk.
+     */
+    get key () {
+        return this.#key;
+    }
+
+    set key (key) {
+        this.#key = key;
+    }
+
+    hasEncryptedRegistry () {
+        return GLib.file_test(this.ENCRYPTED_REGISTRY_PATH, FileTest.EXISTS);
+    }
+
+    /* The salt the encrypted registry was written with, to re-derive a password key. */
+    storedSalt () {
+        if (!this.hasEncryptedRegistry())
+            return null;
+        try {
+            const [success, contents] = GLib.file_get_contents(this.ENCRYPTED_REGISTRY_PATH);
+            return success ? saltOf(new Uint8Array(contents)) : null;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    clearEncryptedRegistry () {
+        for (const path of [this.ENCRYPTED_REGISTRY_PATH, this.BACKUP_ENCRYPTED_REGISTRY_PATH]) {
+            try {
+                Gio.file_new_for_path(path).delete(null);
+            }
+            catch (e) {
+                /* already gone */
+            }
+        }
     }
 
     write (entries) {
@@ -57,7 +105,11 @@ export class Registry {
     }
 
     #flushWrite () {
-        const contents = new GLib.Bytes(this.#pendingWrite);
+        const encrypted = this.#key !== null;
+        const target = encrypted ? this.ENCRYPTED_REGISTRY_PATH : this.REGISTRY_PATH;
+        const contents = encrypted
+            ? new GLib.Bytes(this.#key.encrypt(new TextEncoder().encode(this.#pendingWrite)))
+            : new GLib.Bytes(this.#pendingWrite);
         this.#pendingWrite = null;
         this.#writing = true;
 
@@ -69,11 +121,12 @@ export class Registry {
         // over the registry, instead of falling back to rewriting it in place
         // (hardlinks, symlinks, ownership that can't be copied). Owner and
         // mode of the old file are not kept, which is fine for a cache file.
-        let file = Gio.file_new_for_path(this.REGISTRY_PATH);
+        let file = Gio.file_new_for_path(target);
         file.replace_contents_bytes_async(contents, null, false,
                             Gio.FileCreateFlags.REPLACE_DESTINATION, null, (obj, res) => {
             try {
                 obj.replace_contents_finish(res);
+                this.#deleteStaleRegistry(encrypted);
             } catch (e) {
                 console.error('Clipboard Indicator: failed to write registry file', e);
             }
@@ -83,10 +136,32 @@ export class Registry {
         });
     }
 
+    #deleteStaleRegistry (encrypted) {
+        const stale = encrypted ? this.REGISTRY_PATH : this.ENCRYPTED_REGISTRY_PATH;
+        try {
+            Gio.file_new_for_path(stale).delete(null);
+        }
+        catch (e) {
+            /* already gone */
+        }
+    }
+
     async read () {
         return new Promise(resolve => {
-            if (GLib.file_test(this.REGISTRY_PATH, FileTest.EXISTS)) {
-                let file = Gio.file_new_for_path(this.REGISTRY_PATH);
+            this.lastDecryptFailed = false;
+
+            const plainExists = GLib.file_test(this.REGISTRY_PATH, FileTest.EXISTS);
+            const encrypted = this.#key !== null || (!plainExists && this.hasEncryptedRegistry());
+            const path = encrypted ? this.ENCRYPTED_REGISTRY_PATH : this.REGISTRY_PATH;
+
+            if (encrypted && this.#key === null) {
+                // Locked history is not readable until it is unlocked
+                resolve([]);
+                return;
+            }
+
+            if (GLib.file_test(path, FileTest.EXISTS)) {
+                let file = Gio.file_new_for_path(path);
                 let CACHE_FILE_SIZE = this.settings.get_int(PrefsFields.CACHE_FILE_SIZE);
 
                 file.query_info_async('*', FileQueryInfoFlags.NONE,
@@ -98,7 +173,7 @@ export class Registry {
                     let source = file;
 
                     if (isOversized) {
-                        source = Gio.file_new_for_path(this.BACKUP_REGISTRY_PATH);
+                        source = Gio.file_new_for_path(path + '~');
                         file.move(source, FileCopyFlags.OVERWRITE, null, null);
                     }
 
@@ -106,8 +181,19 @@ export class Registry {
                         let [success, contents] = obj.load_contents_finish(res);
 
                         if (success) {
+                            const plain = encrypted && this.#key
+                                ? this.#key.decrypt(new Uint8Array(contents))
+                                : contents;
+
+                            if (plain === null) {
+                                console.error('Clipboard Indicator: could not decrypt the registry file');
+                                this.lastDecryptFailed = true;
+                                resolve([]);
+                                return;
+                            }
+
                             let max_size = this.settings.get_int(PrefsFields.HISTORY_SIZE);
-                            const cacheTextData = new TextDecoder().decode(contents);
+                            const cacheTextData = new TextDecoder().decode(plain);
                             let registry = [];
                             if (cacheTextData.trim().length > 0) {
                                 try {
@@ -122,7 +208,7 @@ export class Registry {
                                     console.error(`Clipboard Indicator: could not read registry file, starting with an empty history: ${e.message}`);
                                     if (!isOversized) {
                                         try {
-                                            file.move(Gio.file_new_for_path(this.BACKUP_REGISTRY_PATH),
+                                            file.move(Gio.file_new_for_path(path + '~'),
                                                       FileCopyFlags.OVERWRITE, null, null);
                                         } catch (moveError) {
                                             console.error(moveError);

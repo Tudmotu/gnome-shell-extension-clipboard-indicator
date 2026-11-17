@@ -105,6 +105,7 @@ export default class ClipboardIndicatorPreferences extends ExtensionPreferences 
             { title: _('Search'),        iconName: 'system-search-symbolic',           groups: [settingsUI.search] },
             { title: _('Limits'),        iconName: 'preferences-system-symbolic',      groups: [settingsUI.limits] },
             { title: _('Exclusion'),     iconName: 'action-unavailable-symbolic',      groups: [settingsUI.exclusion] },
+            { title: _('Encryption'),     iconName: 'security-medium-symbolic',       groups: [settingsUI.encryption] },
             { title: _('Topbar'),        iconName: 'edit-paste-symbolic',              groups: [settingsUI.topbar] },
             { title: _('Notifications'), iconName: 'emoji-objects-symbolic',           groups: [settingsUI.notifications] },
             { title: _('Shortcuts'),     iconName: 'input-keyboard-symbolic',          groups: [settingsUI.shortcuts] },
@@ -298,6 +299,25 @@ class Settings {
             active: true
         });
 
+        this.field_encryption_mode = new Adw.ComboRow({
+            title: _("Encrypt stored history"),
+            subtitle: _("How the history file on disk is secured"),
+            model: this.#createEncryptionModeOptions()
+        });
+
+        this.field_encryption_session_note = new Adw.ActionRow({
+            title: _("Per-session key"),
+            subtitle: _("History is encrypted with a new random key at each login. Nothing saved in previous sessions is read back after restarting.")
+        });
+
+        this.field_encryption_password_note = new Adw.ActionRow({
+            title: _("Password"),
+            subtitle: _("The password is asked for once after login, before the saved history is shown. Anything copied before that joins the saved history.")
+        });
+
+        this.field_encryption_mode.connect('notify::selected', this.#updateEncryptionNotes.bind(this));
+        this.#updateEncryptionNotes();
+
         this.field_exclusion_row = new Adw.ExpanderRow({
             title: _('Excluded Apps'),
             subtitle: _('Content copied will not be saved while these apps are in focus'),
@@ -356,6 +376,7 @@ class Settings {
         this.shortcuts =  new Adw.PreferencesGroup({ title: _('Shortcuts') });
         this.search = new Adw.PreferencesGroup({title: _('Search')});
         this.item_actions = new Adw.PreferencesGroup({ title: _('Item Actions') });
+        this.encryption = new Adw.PreferencesGroup({ title: _('Encryption') });
         this.archive = new Adw.PreferencesGroup({ title: _('Import / Export History') });
 
         const exportButton = new Gtk.Button({
@@ -402,6 +423,10 @@ class Settings {
         this.behavior.add(this.field_clear_on_boot);
         this.behavior.add(this.field_clear_history_on_interval);
         this.behavior.add(this.field_clear_history_interval);
+
+        this.encryption.add(this.field_encryption_mode);
+        this.encryption.add(this.field_encryption_session_note);
+        this.encryption.add(this.field_encryption_password_note);
 
         this.exclusion.add(this.field_exclusion_row);
         this.exclusion.add(this.field_exclusion_row_add_button);
@@ -458,6 +483,7 @@ class Settings {
         this.schema.bind(PrefsFields.PASTE_ON_SELECT, this.field_paste_on_select, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.OPEN_AT_CURSOR, this.field_open_at_cursor, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.CACHE_IMAGES, this.field_cache_images, 'active', Gio.SettingsBindFlags.DEFAULT);
+        this.schema.bind(PrefsFields.ENCRYPTION_MODE, this.field_encryption_mode, 'selected', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.CLEAR_HISTORY_ON_INTERVAL, this.field_clear_history_on_interval, 'active', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.CLEAR_HISTORY_INTERVAL, this.field_clear_history_interval, 'value', Gio.SettingsBindFlags.DEFAULT);
         this.schema.bind(PrefsFields.CASE_SENSITIVE_SEARCH, this.case_sensitive_search, 'active', Gio.SettingsBindFlags.DEFAULT);
@@ -604,6 +630,25 @@ class Settings {
             liststore.append(option)
         }
         return liststore;
+    }
+
+    #createEncryptionModeOptions () {
+        let options = [
+            _("Never"),
+            _("Per-session key"),
+            _("Password")
+        ];
+        let liststore = new Gtk.StringList();
+        for (let option of options) {
+            liststore.append(option)
+        }
+        return liststore;
+    }
+
+    #updateEncryptionNotes () {
+        const selected = this.field_encryption_mode.selected;
+        this.field_encryption_session_note.visible = selected === 1;
+        this.field_encryption_password_note.visible = selected === 2;
     }
 
     #shortcuts = {

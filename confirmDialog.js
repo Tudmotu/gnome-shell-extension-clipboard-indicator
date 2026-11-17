@@ -7,9 +7,9 @@ import { boxLayoutOrientation } from './compat.js';
 export class DialogManager {
     #openDialog;
 
-    open (title, message, sub_message, ok_label, cancel_label, callback) {
+    open (title, message, sub_message, ok_label, cancel_label, callback, onCancel) {
         if (this.#openDialog) return;
-        this.#openDialog = new ConfirmDialog(title, message + "\n" + sub_message, ok_label, cancel_label, callback);
+        this.#openDialog = new ConfirmDialog(title, message + "\n" + sub_message, ok_label, cancel_label, callback, onCancel);
         this.#openDialog.onFinish = () => this.#openDialog = null;
         this.#openDialog.open();
     }
@@ -23,7 +23,7 @@ export class DialogManager {
 const ConfirmDialog = GObject.registerClass(
   class ConfirmDialog extends ModalDialog.ModalDialog {
 
-    _init(title, desc, ok_label, cancel_label, callback) {
+    _init(title, desc, ok_label, cancel_label, callback, onCancel) {
       super._init();
 
       let main_box = new St.BoxLayout();
@@ -54,6 +54,7 @@ const ConfirmDialog = GObject.registerClass(
           action: () => {
             this.close();
             this.onFinish();
+            if (onCancel) onCancel();
           },
           key: Clutter.KEY_Escape
         },
