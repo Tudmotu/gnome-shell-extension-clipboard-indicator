@@ -305,5 +305,17 @@
         <default>true</default>
         <summary>Show the preview button on each image item</summary>
     </key>
+    <key type="i" name="encryption-mode">
+        <default>0</default>
+        <summary>How the stored clipboard history is secured</summary>
+        <description>
+            0 keeps the history file in plain text. 1 encrypts it with a random
+            key that only lives for the login session, so nothing from previous
+            sessions can be recovered. 2 encrypts it with a key derived from a
+            password that is asked for once after login, before the saved
+            history is shown.
+        </description>
+        <range min="0" max="2"/>
+    </key>
     </schema>
 </schemalist>
