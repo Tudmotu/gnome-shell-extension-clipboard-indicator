@@ -2,14 +2,15 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-shell-extension-clipboard-indicator package.
 # Javier Junquera <javier.junquera.sanchez@gmail.com>, 2016.
+# Pedro Flores, 2026.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-shell-extension-clipboard-indicator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-14 17:43+0200\n"
-"PO-Revision-Date: 2018-03-10 09:43-0600\n"
-"Last-Translator: Adolfo Jayme Barrientos <fitojb@ubuntu.com>\n"
+"PO-Revision-Date: 2026-11-19 03:00+0100\n"
+"Last-Translator: Pedro Flores\n"
 "Language-Team: \n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +21,7 @@ msgstr ""
 
 #: extension.js:149
 msgid "..."
-msgstr ""
+msgstr "..."
 
 #: extension.js:249
 msgid "Type here to search..."
@@ -36,7 +37,7 @@ msgstr "Vaciar historial"
 
 #: extension.js:363
 msgid "Reset Timer"
-msgstr ""
+msgstr "Reiniciar el temporizador"
 
 #: extension.js:384
 msgid "Settings"
@@ -48,25 +49,23 @@ msgstr "El portapapeles está vacío"
 
 #: extension.js:715
 msgid "Preview Image"
-msgstr ""
+msgstr "Previsualizar imagen"
 
 #: extension.js:733 prefs.js:286
 msgid "Edit"
-msgstr ""
+msgstr "Editar"
 
 #: extension.js:771 prefs.js:276
 msgid "Paste"
-msgstr ""
+msgstr "Pegar"
 
 #: extension.js:851
-#, fuzzy
 msgid "Delete pinned item?"
-msgstr "Cachear sólo los items anclados"
+msgstr "¿Eliminar el ítem anclado?"
 
 #: extension.js:852
-#, fuzzy
 msgid "Are you sure you want to delete this pinned item?"
-msgstr "¿Está seguro de que quiere borrar todos los ítems del portapapeles?"
+msgstr "¿Está seguro de que quiere eliminar este ítem anclado?"
 
 #: extension.js:853 extension.js:864
 msgid "This operation cannot be undone."
@@ -74,7 +73,7 @@ msgstr "Esta operación no puede ser deshecha"
 
 #: extension.js:855 prefs.js:266
 msgid "Delete"
-msgstr ""
+msgstr "Eliminar"
 
 #: extension.js:855 extension.js:866 extension.js:1086
 msgid "Cancel"
@@ -93,9 +92,8 @@ msgid "Clear"
 msgstr "Borrar"
 
 #: extension.js:887
-#, fuzzy
 msgid "Clipboard history cleared automatically"
-msgstr "Historial del portapapeles vaciado"
+msgstr "Historial del portapapeles vaciado automáticamente"
 
 #: extension.js:888
 msgid "Clipboard history cleared"
@@ -107,15 +105,15 @@ msgstr "Copiado en el portapapeles"
 
 #: extension.js:1833
 msgid "Enter tag…"
-msgstr ""
+msgstr "Escriba una etiqueta…"
 
 #: extension.js:1842 extension.js:1939
 msgid "Discard"
-msgstr ""
+msgstr "Descartar"
 
 #: extension.js:1851 extension.js:1948
 msgid "Save"
-msgstr ""
+msgstr "Guardar"
 
 #: prefs.js:103 prefs.js:350
 msgid "UI"
@@ -123,19 +121,19 @@ msgstr "Interfaz de Usuario"
 
 #: prefs.js:104 prefs.js:351
 msgid "Behavior"
-msgstr ""
+msgstr "Comportamiento"
 
 #: prefs.js:105 prefs.js:357
 msgid "Search"
-msgstr ""
+msgstr "Búsqueda"
 
 #: prefs.js:106 prefs.js:353
 msgid "Limits"
-msgstr "Limites"
+msgstr "Límites"
 
 #: prefs.js:107 prefs.js:352
 msgid "Exclusion"
-msgstr ""
+msgstr "Exclusiones"
 
 #: prefs.js:108 prefs.js:354
 msgid "Topbar"
@@ -151,7 +149,7 @@ msgstr "Atajos de teclado"
 
 #: prefs.js:111
 msgid "Import / Export"
-msgstr ""
+msgstr "Importar / Exportar"
 
 #: prefs.js:129
 msgid "History Size"
@@ -160,23 +158,25 @@ msgstr "Tamaño del historial"
 #: prefs.js:130
 msgid "Maximum number of entries to keep in clipboard history"
 msgstr ""
+"Número máximo de entradas que se guardan en el historial del portapapeles"
 
 #: prefs.js:139
 msgid "Preview Size (characters)"
 msgstr "Tamaño de previsualización (caracteres)"
 
 #: prefs.js:140
-#, fuzzy
 msgid "Number of characters shown per entry in the history menu"
-msgstr "Número de caracteres en la barra superior"
+msgstr ""
+"Número de caracteres que se muestran por entrada en el menú del historial"
 
 #: prefs.js:149
 msgid "Max cache file size (MB)"
-msgstr "Tamaño máximo de cache (MB)"
+msgstr "Tamaño máximo de caché (MB)"
 
 #: prefs.js:150
 msgid "Maximum disk space used for caching clipboard data"
 msgstr ""
+"Espacio máximo en disco para guardar en caché los datos del portapapeles"
 
 #: prefs.js:159
 msgid "Number of characters in top bar"
@@ -185,6 +185,8 @@ msgstr "Número de caracteres en la barra superior"
 #: prefs.js:160
 msgid "Length of the clipboard content preview shown in the panel"
 msgstr ""
+"Longitud de la previsualización del contenido del portapapeles en la barra "
+"superior"
 
 #: prefs.js:169
 msgid "What to show in top bar"
@@ -196,24 +198,23 @@ msgstr "Quitar la flecha hacia abajo de la barra de arriba"
 
 #: prefs.js:175
 msgid "Hide the dropdown arrow next to the clipboard indicator"
-msgstr ""
+msgstr "Ocultar la flecha desplegable junto al indicador del portapapeles"
 
 #: prefs.js:179
-#, fuzzy
 msgid "Blink icon on copy"
-msgstr "Mostrar una notificación al copiar"
+msgstr "Hacer parpadear el icono al copiar"
 
 #: prefs.js:180
 msgid "Briefly flash the indicator icon when something is copied"
-msgstr ""
+msgstr "Hacer parpadear brevemente el icono del indicador cuando se copia algo"
 
 #: prefs.js:184
 msgid "Cache only pinned items"
-msgstr "Cachear sólo los items anclados"
+msgstr "Cachear sólo los ítems anclados"
 
 #: prefs.js:185
 msgid "Only save pinned (favorite) entries to disk"
-msgstr ""
+msgstr "Guardar en disco solo las entradas ancladas (favoritas)"
 
 #: prefs.js:189
 msgid "Show notification on copy"
@@ -221,43 +222,40 @@ msgstr "Mostrar una notificación al copiar"
 
 #: prefs.js:190
 msgid "Display a notification each time text is copied"
-msgstr ""
+msgstr "Mostrar una notificación cada vez que se copia texto"
 
 #: prefs.js:194
-#, fuzzy
 msgid "Show notification on cycle"
-msgstr "Mostrar una notificación al copiar"
+msgstr "Mostrar una notificación al cambiar de entrada"
 
 #: prefs.js:195
 msgid "Display a notification when cycling through entries with shortcuts"
 msgstr ""
+"Mostrar una notificación al recorrer las entradas con los atajos de teclado"
 
 #: prefs.js:199
-#, fuzzy
 msgid "Show notification on Clear History"
-msgstr "Mostrar una confirmación al borrar el historial"
+msgstr "Mostrar una notificación al vaciar el historial"
 
 #: prefs.js:200
 msgid "Display a notification when clipboard history is cleared"
-msgstr ""
+msgstr "Mostrar una notificación cuando se vacía el historial del portapapeles"
 
 #: prefs.js:204
-#, fuzzy
 msgid "Prompt for confirmation on Clear History"
-msgstr "Mostrar una confirmación al borrar el historial"
+msgstr "Pedir confirmación al vaciar el historial"
 
 #: prefs.js:205
-#, fuzzy
 msgid "Ask before deleting all clipboard entries"
-msgstr "¿Está seguro de que quiere borrar todos los ítems del portapapeles?"
+msgstr "Preguntar antes de eliminar todas las entradas del portapapeles"
 
 #: prefs.js:209
 msgid "Prompt before deleting pinned item"
-msgstr ""
+msgstr "Confirmar la eliminación de ítems anclados"
 
 #: prefs.js:210
 msgid "Ask for confirmation before deleting a pinned item"
-msgstr ""
+msgstr "Pedir confirmación antes de eliminar un ítem anclado"
 
 #: prefs.js:214
 msgid "Remove whitespace around text"
@@ -266,14 +264,16 @@ msgstr "Eliminar espacios en blanco alrededor del texto"
 #: prefs.js:215
 msgid "Strip leading and trailing whitespace from text entries on copy"
 msgstr ""
+"Quitar los espacios en blanco al principio y al final de las entradas de "
+"texto al copiar"
 
 #: prefs.js:219
 msgid "Move item to the top after selection"
-msgstr "Mover el ítem hacia arriba despues de seleccionarlo"
+msgstr "Mover el ítem hacia arriba después de seleccionarlo"
 
 #: prefs.js:220
 msgid "When selecting an entry, bring it to the top of the history"
-msgstr ""
+msgstr "Al seleccionar una entrada, moverla al principio del historial"
 
 #: prefs.js:224
 msgid "Keep selected entry after Clear History"
@@ -284,237 +284,230 @@ msgid ""
 "The currently active clipboard entry will not be removed when clearing "
 "history"
 msgstr ""
+"La entrada activa del portapapeles no se eliminará al vaciar el historial"
 
 #: prefs.js:229
 msgid "Place the pinned section on the bottom"
 msgstr "Situar la sección anclada abajo"
 
 #: prefs.js:230
-#, fuzzy
 msgid "Move the pinned section to the bottom of the menu. Requires re-login"
-msgstr "Situar la sección anclada abajo"
+msgstr ""
+"Mover la sección anclada a la parte inferior del menú. Requiere volver a "
+"iniciar sesión"
 
 #: prefs.js:234
 msgid "Show Search Bar"
-msgstr ""
+msgstr "Mostrar la barra de búsqueda"
 
 #: prefs.js:235
 msgid "Display a search field at the top of the clipboard menu"
 msgstr ""
+"Mostrar un campo de búsqueda en la parte superior del menú del portapapeles"
 
 #: prefs.js:238
-#, fuzzy
 msgid "Show Private Mode"
-msgstr "Modo privado"
+msgstr "Mostrar el modo privado"
 
 #: prefs.js:239
 msgid "Display the private mode toggle in the clipboard menu"
-msgstr ""
+msgstr "Mostrar el interruptor del modo privado en el menú del portapapeles"
 
 #: prefs.js:242
-#, fuzzy
 msgid "Show Settings Button"
-msgstr "Mostrar botones de pegar"
+msgstr "Mostrar el botón de configuración"
 
 #: prefs.js:243
 msgid "Display a shortcut to these settings in the clipboard menu"
 msgstr ""
+"Mostrar un acceso directo a esta configuración en el menú del portapapeles"
 
 #: prefs.js:246
-#, fuzzy
 msgid "Show Clear History Button"
-msgstr "Mostrar botones de pegar"
+msgstr "Mostrar el botón de vaciar el historial"
 
 #: prefs.js:247
 msgid "Display the clear history button in the clipboard menu"
-msgstr ""
+msgstr "Mostrar el botón de vaciar el historial en el menú del portapapeles"
 
 #: prefs.js:251
-#, fuzzy
 msgid "Clear clipboard history on system reboot"
-msgstr "Historial del portapapeles vaciado"
+msgstr "Vaciar el historial del portapapeles al reiniciar el sistema"
 
 #: prefs.js:252
 msgid "Delete all cached clipboard entries when the system starts"
 msgstr ""
+"Eliminar todas las entradas del portapapeles en caché al iniciar el sistema"
 
 #: prefs.js:256
 msgid "Paste on select"
-msgstr ""
+msgstr "Pegar al seleccionar"
 
 #: prefs.js:257
 msgid "Automatically paste the entry into the active window when selected"
-msgstr ""
+msgstr "Pegar automáticamente la entrada en la ventana activa al seleccionarla"
 
 #: prefs.js:261
 msgid "Open menu at cursor"
-msgstr ""
+msgstr "Abrir el menú en el cursor"
 
 #: prefs.js:262
 msgid "When using the keyboard shortcut, open the menu at the cursor position"
-msgstr ""
+msgstr "Al usar el atajo de teclado, abrir el menú en la posición del cursor"
 
 #: prefs.js:267
 msgid "Show the delete button on each item"
-msgstr ""
+msgstr "Mostrar el botón de eliminar en cada ítem"
 
 #: prefs.js:271
 msgid "Tag"
-msgstr ""
+msgstr "Etiquetar"
 
 #: prefs.js:272
 msgid "Show the tag button on each item"
-msgstr ""
+msgstr "Mostrar el botón de etiquetar en cada ítem"
 
 #: prefs.js:277
-#, fuzzy
 msgid "Show the paste button on each item"
-msgstr "Mostrar botones de pegar"
+msgstr "Mostrar el botón de pegar en cada ítem"
 
 #: prefs.js:281
 msgid "Pin"
-msgstr ""
+msgstr "Anclar"
 
 #: prefs.js:282
 msgid "Show the pin/favorite button on each item"
-msgstr ""
+msgstr "Mostrar el botón de anclar/favorito en cada ítem"
 
 #: prefs.js:287
 msgid "Show the edit button on each text item"
-msgstr ""
+msgstr "Mostrar el botón de editar en cada ítem de texto"
 
 #: prefs.js:291
 msgid "Preview"
-msgstr ""
+msgstr "Previsualizar"
 
 #: prefs.js:292
 msgid "Show the preview button on each image item"
-msgstr ""
+msgstr "Mostrar el botón de previsualizar en cada ítem de imagen"
 
 #: prefs.js:296
 msgid "Cache images"
-msgstr ""
+msgstr "Guardar imágenes en caché"
 
 #: prefs.js:297
-#, fuzzy
 msgid "Save copied images to clipboard history"
-msgstr "Copiado en el portapapeles"
+msgstr "Guardar las imágenes copiadas en el historial del portapapeles"
 
 #: prefs.js:302
 msgid "Excluded Apps"
-msgstr ""
+msgstr "Aplicaciones excluidas"
 
 #: prefs.js:303
 msgid "Content copied will not be saved while these apps are in focus"
 msgstr ""
+"El contenido copiado no se guardará mientras estas aplicaciones tengan el "
+"foco"
 
 #: prefs.js:314
 msgid "Case-sensitive"
-msgstr ""
+msgstr "Distinguir mayúsculas y minúsculas"
 
 #: prefs.js:315
 msgid "Match uppercase and lowercase letters exactly when searching"
-msgstr ""
+msgstr "Tener en cuenta las mayúsculas y minúsculas al buscar"
 
 #: prefs.js:319
 msgid "Regular expressions"
-msgstr ""
+msgstr "Expresiones regulares"
 
 #: prefs.js:320
 msgid "Allow regular expressions to filter clipboard entries"
 msgstr ""
+"Permitir expresiones regulares para filtrar las entradas del portapapeles"
 
 #: prefs.js:333
-#, fuzzy
 msgid "Clear clipboard history on interval"
-msgstr "Historial del portapapeles vaciado"
+msgstr "Vaciar el historial del portapapeles periódicamente"
 
 #: prefs.js:334
-#, fuzzy
 msgid "Automatically clear clipboard history at a recurring interval"
-msgstr "Historial del portapapeles vaciado"
+msgstr ""
+"Vaciar automáticamente el historial del portapapeles cada cierto tiempo"
 
 #: prefs.js:338
 msgid "History clear interval (in minutes)"
-msgstr ""
+msgstr "Intervalo de vaciado del historial (en minutos)"
 
 #: prefs.js:358
 msgid "Item Actions"
-msgstr ""
+msgstr "Acciones de los ítems"
 
 #: prefs.js:359
 msgid "Import / Export History"
-msgstr ""
+msgstr "Importar / Exportar historial"
 
 #: prefs.js:362
-#, fuzzy
 msgid "Export history"
-msgstr "Vaciar historial"
+msgstr "Exportar historial"
 
 #: prefs.js:368 prefs.js:494
-#, fuzzy
 msgid "Export clipboard history"
-msgstr "Historial del portapapeles vaciado"
+msgstr "Exportar el historial del portapapeles"
 
 #: prefs.js:369
 msgid "Save the registry and cached files as an archive"
-msgstr ""
+msgstr "Guardar el registro y los archivos en caché en un archivo comprimido"
 
 #: prefs.js:375
-#, fuzzy
 msgid "Import history"
-msgstr "Vaciar historial"
+msgstr "Importar historial"
 
 #: prefs.js:381 prefs.js:494
-#, fuzzy
 msgid "Import clipboard history"
-msgstr "Historial del portapapeles vaciado"
+msgstr "Importar el historial del portapapeles"
 
 #: prefs.js:382
 msgid "Restore an archive created by this extension"
-msgstr ""
+msgstr "Restaurar un archivo comprimido creado por esta extensión"
 
 #: prefs.js:482
-#, fuzzy
 msgid "Clipboard history import/export failed"
-msgstr "Historial del portapapeles vaciado"
+msgstr "Error al importar o exportar el historial del portapapeles"
 
 #: prefs.js:484
 msgid "OK"
-msgstr ""
+msgstr "Aceptar"
 
 #: prefs.js:491
-#, fuzzy
 msgid "Clipboard history archives"
-msgstr "Historial del portapapeles vaciado"
+msgstr "Archivos comprimidos del historial del portapapeles"
 
 #: prefs.js:495
 msgid "Export"
-msgstr ""
+msgstr "Exportar"
 
 #: prefs.js:495
 msgid "Import"
-msgstr ""
+msgstr "Importar"
 
 #: prefs.js:540
-#, fuzzy
 msgid "Clipboard history is empty"
-msgstr "El portapapeles está vacío"
+msgstr "El historial del portapapeles está vacío"
 
 #: prefs.js:549
-#, fuzzy
 msgid "Clipboard history exported"
-msgstr "Historial del portapapeles vaciado"
+msgstr "Historial del portapapeles exportado"
 
 #: prefs.js:576
-#, fuzzy
 msgid "The selected file is not a clipboard history archive"
-msgstr "Copiado en el portapapeles"
+msgstr ""
+"El archivo seleccionado no es un archivo comprimido del historial del "
+"portapapeles"
 
 #: prefs.js:592
-#, fuzzy
 msgid "Clipboard history imported"
-msgstr "Historial del portapapeles vaciado"
+msgstr "Historial del portapapeles importado"
 
 #: prefs.js:597
 msgid "Icon"
@@ -530,7 +523,7 @@ msgstr "Ambos"
 
 #: prefs.js:600
 msgid "Neither"
-msgstr ""
+msgstr "Ninguno"
 
 #: prefs.js:611
 msgid "Toggle the menu"
@@ -558,15 +551,15 @@ msgstr "Introduce atajo de teclado"
 
 #: prefs.js:740
 msgid "Window class name, e.g. \"KeePassXC\""
-msgstr ""
+msgstr "Nombre de la clase de ventana, p. ej., \"KeePassXC\""
 
 #: prefs.js:752
 msgid "Choose from installed applications"
-msgstr ""
+msgstr "Elegir entre las aplicaciones instaladas"
 
 #: prefs.js:769
 msgid "Search applications..."
-msgstr ""
+msgstr "Buscar aplicaciones..."
 
 #~ msgid "Text will be here"
 #~ msgstr "El texto aparecerá aquí"
