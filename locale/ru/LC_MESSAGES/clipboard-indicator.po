@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-14 17:43+0200\n"
-"PO-Revision-Date: 2025-05-15 18:37+0300\n"
-"Last-Translator: Mariya Shikunova <translation-team@basealt.ru>\n"
+"PO-Revision-Date: 2026-11-24 16:48+0300\n"
+"Last-Translator: Alexander Rusakevich <mr.alexander.rusakevich@gmail.com>\n"
 "Language-Team: Basealt Translation Team\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,7 @@ msgstr ""
 
 #: extension.js:149
 msgid "..."
-msgstr ""
+msgstr "..."
 
 #: extension.js:249
 msgid "Type here to search..."
@@ -37,7 +37,7 @@ msgstr "Очистить историю"
 
 #: extension.js:363
 msgid "Reset Timer"
-msgstr ""
+msgstr "Сбросить таймер"
 
 #: extension.js:384
 msgid "Settings"
@@ -49,25 +49,23 @@ msgstr "Буфер обмена пуст"
 
 #: extension.js:715
 msgid "Preview Image"
-msgstr ""
+msgstr "Предпросмотр изображения"
 
 #: extension.js:733 prefs.js:286
 msgid "Edit"
-msgstr ""
+msgstr "Изменить"
 
 #: extension.js:771 prefs.js:276
 msgid "Paste"
-msgstr ""
+msgstr "Вставить"
 
 #: extension.js:851
-#, fuzzy
 msgid "Delete pinned item?"
-msgstr "Кэшировать только избранное"
+msgstr "Удалить закрепленный элемент?"
 
 #: extension.js:852
-#, fuzzy
 msgid "Are you sure you want to delete this pinned item?"
-msgstr "Вы уверены, что хотите удалить все элементы буфера обмена?"
+msgstr "Вы уверены, что хотите удалить данный закрепленный элемент?"
 
 #: extension.js:853 extension.js:864
 msgid "This operation cannot be undone."
@@ -75,7 +73,7 @@ msgstr "Эту операцию нельзя отменить."
 
 #: extension.js:855 prefs.js:266
 msgid "Delete"
-msgstr ""
+msgstr "Удалить"
 
 #: extension.js:855 extension.js:866 extension.js:1086
 msgid "Cancel"
@@ -94,9 +92,8 @@ msgid "Clear"
 msgstr "Очистить"
 
 #: extension.js:887
-#, fuzzy
 msgid "Clipboard history cleared automatically"
-msgstr "История буфера обмена очищена"
+msgstr "История буфера обмена очищена автоматически"
 
 #: extension.js:888
 msgid "Clipboard history cleared"
@@ -108,15 +105,15 @@ msgstr "Скопировано в буфер обмена"
 
 #: extension.js:1833
 msgid "Enter tag…"
-msgstr ""
+msgstr "Введите тег..."
 
 #: extension.js:1842 extension.js:1939
 msgid "Discard"
-msgstr ""
+msgstr "Отмена"
 
 #: extension.js:1851 extension.js:1948
 msgid "Save"
-msgstr ""
+msgstr "Сохранить"
 
 #: prefs.js:103 prefs.js:350
 msgid "UI"
@@ -128,7 +125,7 @@ msgstr "Поведение"
 
 #: prefs.js:105 prefs.js:357
 msgid "Search"
-msgstr ""
+msgstr "Поиск"
 
 #: prefs.js:106 prefs.js:353
 msgid "Limits"
@@ -136,7 +133,7 @@ msgstr "Ограничения"
 
 #: prefs.js:107 prefs.js:352
 msgid "Exclusion"
-msgstr "Исключение"
+msgstr "Исключения"
 
 #: prefs.js:108 prefs.js:354
 msgid "Topbar"
@@ -152,7 +149,7 @@ msgstr "Горячие клавиши"
 
 #: prefs.js:111
 msgid "Import / Export"
-msgstr ""
+msgstr "Импорт / Экспорт"
 
 #: prefs.js:129
 msgid "History Size"
@@ -160,24 +157,23 @@ msgstr "Размер истории"
 
 #: prefs.js:130
 msgid "Maximum number of entries to keep in clipboard history"
-msgstr ""
+msgstr "Максимальное число элементов в истории буфера обмена"
 
 #: prefs.js:139
 msgid "Preview Size (characters)"
 msgstr "Длина строки в меню (символов)"
 
 #: prefs.js:140
-#, fuzzy
 msgid "Number of characters shown per entry in the history menu"
-msgstr "Количество символов в верхней панели"
+msgstr "Количество символов в элементе в меню истории"
 
 #: prefs.js:149
 msgid "Max cache file size (MB)"
-msgstr "Максимальный размер кэша (мб)"
+msgstr "Максимальный размер кэша (МБ)"
 
 #: prefs.js:150
 msgid "Maximum disk space used for caching clipboard data"
-msgstr ""
+msgstr "Максимальный размер кэша"
 
 #: prefs.js:159
 msgid "Number of characters in top bar"
@@ -185,7 +181,7 @@ msgstr "Количество символов в верхней панели"
 
 #: prefs.js:160
 msgid "Length of the clipboard content preview shown in the panel"
-msgstr ""
+msgstr "Длина превью в панели"
 
 #: prefs.js:169
 msgid "What to show in top bar"
@@ -197,16 +193,15 @@ msgstr "Убрать стрелку вниз в верхней панели"
 
 #: prefs.js:175
 msgid "Hide the dropdown arrow next to the clipboard indicator"
-msgstr ""
+msgstr "Спрятать стрелку раскрывающегося списка возле индикатора буфера обмена"
 
 #: prefs.js:179
-#, fuzzy
 msgid "Blink icon on copy"
-msgstr "Показывать уведомление при копировании"
+msgstr "Мигающая иконка при копировании"
 
 #: prefs.js:180
 msgid "Briefly flash the indicator icon when something is copied"
-msgstr ""
+msgstr "Краткое мигание иконки индикатора при копировании"
 
 #: prefs.js:184
 msgid "Cache only pinned items"
@@ -214,7 +209,7 @@ msgstr "Кэшировать только избранное"
 
 #: prefs.js:185
 msgid "Only save pinned (favorite) entries to disk"
-msgstr ""
+msgstr "Сохранять только избранные элементы"
 
 #: prefs.js:189
 msgid "Show notification on copy"
@@ -222,7 +217,7 @@ msgstr "Показывать уведомление при копировани�
 
 #: prefs.js:190
 msgid "Display a notification each time text is copied"
-msgstr ""
+msgstr "Показывать уведомление каждый раз при копировании текста"
 
 #: prefs.js:194
 msgid "Show notification on cycle"
@@ -231,33 +226,32 @@ msgstr "Показывать уведомление при циклическо�
 #: prefs.js:195
 msgid "Display a notification when cycling through entries with shortcuts"
 msgstr ""
+"Показывать уведомление при перемещении по списку элементов при помощи "
+"сочетаний клавиш"
 
 #: prefs.js:199
-#, fuzzy
 msgid "Show notification on Clear History"
 msgstr "Показывать уведомление при очистке истории"
 
 #: prefs.js:200
 msgid "Display a notification when clipboard history is cleared"
-msgstr ""
+msgstr "Показывать уведомление при очистке истории буфера обмена"
 
 #: prefs.js:204
-#, fuzzy
 msgid "Prompt for confirmation on Clear History"
-msgstr "Показывать уведомление при очистке истории"
+msgstr "Спрашивать разрешение при удалении всех элементов"
 
 #: prefs.js:205
-#, fuzzy
 msgid "Ask before deleting all clipboard entries"
-msgstr "Вы уверены, что хотите удалить все элементы буфера обмена?"
+msgstr "Спрашивать при удалении всех элементов"
 
 #: prefs.js:209
 msgid "Prompt before deleting pinned item"
-msgstr ""
+msgstr "Спрашивать разрешение при удалении закрепленного элемента"
 
 #: prefs.js:210
 msgid "Ask for confirmation before deleting a pinned item"
-msgstr ""
+msgstr "Спрашивать при удалении закрепленного элемента"
 
 #: prefs.js:214
 msgid "Remove whitespace around text"
@@ -265,7 +259,7 @@ msgstr "Удалить пробелы в тексте"
 
 #: prefs.js:215
 msgid "Strip leading and trailing whitespace from text entries on copy"
-msgstr ""
+msgstr "Удалять пробелы в начале и в конце копируемого элемента"
 
 #: prefs.js:219
 msgid "Move item to the top after selection"
@@ -273,7 +267,7 @@ msgstr "Переместить запись в начало после выде�
 
 #: prefs.js:220
 msgid "When selecting an entry, bring it to the top of the history"
-msgstr ""
+msgstr "Перемещать элемент вверх истории при выборе"
 
 #: prefs.js:224
 msgid "Keep selected entry after Clear History"
@@ -283,59 +277,57 @@ msgstr "Не очищать выбранную запись после очит�
 msgid ""
 "The currently active clipboard entry will not be removed when clearing "
 "history"
-msgstr ""
+msgstr "Текущий элемент не будет удален при очистке истории"
 
 #: prefs.js:229
 msgid "Place the pinned section on the bottom"
 msgstr "Переместить избранный элемент в конец истории"
 
 #: prefs.js:230
-#, fuzzy
 msgid "Move the pinned section to the bottom of the menu. Requires re-login"
-msgstr "Переместить избранный элемент в конец истории"
+msgstr ""
+"Переместить блок закрепленных элементов в конец меню. Требует повторный вход "
+"в систему"
 
 #: prefs.js:234
 msgid "Show Search Bar"
-msgstr ""
+msgstr "Показывать поисковую строку"
 
 #: prefs.js:235
 msgid "Display a search field at the top of the clipboard menu"
-msgstr ""
+msgstr "Показывать поисковую строку вверху меню буфера обмена"
 
 #: prefs.js:238
-#, fuzzy
 msgid "Show Private Mode"
 msgstr "Приватный режим"
 
 #: prefs.js:239
 msgid "Display the private mode toggle in the clipboard menu"
-msgstr ""
+msgstr "Показывать переключатель приватного режима в меню буфера обмена"
 
 #: prefs.js:242
-#, fuzzy
 msgid "Show Settings Button"
-msgstr "Показывать кнопки вставки"
+msgstr "Показывать кнопку настройки"
 
 #: prefs.js:243
 msgid "Display a shortcut to these settings in the clipboard menu"
-msgstr ""
+msgstr "Показывать кнопку Настройки в меню буфера обмена"
 
 #: prefs.js:246
-#, fuzzy
 msgid "Show Clear History Button"
-msgstr "Показывать кнопки вставки"
+msgstr "Показывать кнопку очистки истории"
 
 #: prefs.js:247
 msgid "Display the clear history button in the clipboard menu"
-msgstr ""
+msgstr "Показывать кнопку очистки истории в меню буфера обмена"
 
 #: prefs.js:251
 msgid "Clear clipboard history on system reboot"
-msgstr "История буфера обмена очищена"
+msgstr "Очищать историю буфера обмена при перезагрузке системы"
 
 #: prefs.js:252
 msgid "Delete all cached clipboard entries when the system starts"
-msgstr ""
+msgstr "Удалить все сохраненные элементы при старте системы"
 
 #: prefs.js:256
 msgid "Paste on select"
@@ -343,61 +335,60 @@ msgstr "Вставка при выделении"
 
 #: prefs.js:257
 msgid "Automatically paste the entry into the active window when selected"
-msgstr ""
+msgstr "Автоматически вставлять элемент в активное окно при выборе"
 
 #: prefs.js:261
 msgid "Open menu at cursor"
-msgstr ""
+msgstr "Открыть меню в месте, где находится курсор"
 
 #: prefs.js:262
 msgid "When using the keyboard shortcut, open the menu at the cursor position"
 msgstr ""
+"При использовании сочетания клавиш открыть меню в месте, где находится курсор"
 
 #: prefs.js:267
 msgid "Show the delete button on each item"
-msgstr ""
+msgstr "Показать кнопку Удалить возле каждого элемента"
 
 #: prefs.js:271
 msgid "Tag"
-msgstr ""
+msgstr "Тег"
 
 #: prefs.js:272
 msgid "Show the tag button on each item"
-msgstr ""
+msgstr "Показать кнопку тега возле каждого элемента"
 
 #: prefs.js:277
-#, fuzzy
 msgid "Show the paste button on each item"
-msgstr "Показывать кнопки вставки"
+msgstr "Показать кнопку Вставить возле каждого элемента"
 
 #: prefs.js:281
 msgid "Pin"
-msgstr ""
+msgstr "Закрепить"
 
 #: prefs.js:282
 msgid "Show the pin/favorite button on each item"
-msgstr ""
+msgstr "Показать кнопку Закрепить возле каждого элемента"
 
 #: prefs.js:287
 msgid "Show the edit button on each text item"
-msgstr ""
+msgstr "Показать кнопку Изменить возле каждого элемента"
 
 #: prefs.js:291
 msgid "Preview"
-msgstr ""
+msgstr "Предпросмотр"
 
 #: prefs.js:292
 msgid "Show the preview button on each image item"
-msgstr ""
+msgstr "Показать кнопку предпросмотра возле каждого элемента"
 
 #: prefs.js:296
 msgid "Cache images"
 msgstr "Кеш изображений"
 
 #: prefs.js:297
-#, fuzzy
 msgid "Save copied images to clipboard history"
-msgstr "Скопировано в буфер обмена"
+msgstr "Сохранять скопированные изображения в истории"
 
 #: prefs.js:302
 msgid "Excluded Apps"
@@ -411,111 +402,99 @@ msgstr ""
 
 #: prefs.js:314
 msgid "Case-sensitive"
-msgstr ""
+msgstr "С учетом регистра"
 
 #: prefs.js:315
 msgid "Match uppercase and lowercase letters exactly when searching"
-msgstr ""
+msgstr "Искать текст с учетом регистра"
 
 #: prefs.js:319
 msgid "Regular expressions"
-msgstr ""
+msgstr "Регулярные выражения"
 
 #: prefs.js:320
 msgid "Allow regular expressions to filter clipboard entries"
-msgstr ""
+msgstr "Разрешить фильтрацию элементов при помощи регулярных выражений"
 
 #: prefs.js:333
-#, fuzzy
 msgid "Clear clipboard history on interval"
-msgstr "История буфера обмена очищена"
+msgstr "Очистка истории с интервалом"
 
 #: prefs.js:334
-#, fuzzy
 msgid "Automatically clear clipboard history at a recurring interval"
-msgstr "История буфера обмена очищена"
+msgstr "Автоматически очищать историю с определенным интервалом"
 
 #: prefs.js:338
 msgid "History clear interval (in minutes)"
-msgstr ""
+msgstr "Интервал очистки истории (в минутах)"
 
 #: prefs.js:358
 msgid "Item Actions"
-msgstr ""
+msgstr "Действия с элементами"
 
 #: prefs.js:359
 msgid "Import / Export History"
-msgstr ""
+msgstr "Импортировать / Экспортировать историю"
 
 #: prefs.js:362
-#, fuzzy
 msgid "Export history"
-msgstr "Очистить историю"
+msgstr "Экспортировать историю"
 
 #: prefs.js:368 prefs.js:494
-#, fuzzy
 msgid "Export clipboard history"
-msgstr "История буфера обмена очищена"
+msgstr "Экспортировать историю буфера обмена"
 
 #: prefs.js:369
 msgid "Save the registry and cached files as an archive"
-msgstr ""
+msgstr "Сохранить элементы и файлы как архив"
 
 #: prefs.js:375
-#, fuzzy
 msgid "Import history"
-msgstr "Очистить историю"
+msgstr "Импортировать историю"
 
 #: prefs.js:381 prefs.js:494
-#, fuzzy
 msgid "Import clipboard history"
-msgstr "История буфера обмена очищена"
+msgstr "Импортировать историю буфера обмена"
 
 #: prefs.js:382
 msgid "Restore an archive created by this extension"
-msgstr ""
+msgstr "Восстановить из архива, созданного расширением"
 
 #: prefs.js:482
-#, fuzzy
 msgid "Clipboard history import/export failed"
-msgstr "История буфера обмена очищена"
+msgstr "Ошибка импорта / экспорта истории"
 
 #: prefs.js:484
 msgid "OK"
-msgstr ""
+msgstr "ОК"
 
 #: prefs.js:491
-#, fuzzy
 msgid "Clipboard history archives"
-msgstr "История буфера обмена очищена"
+msgstr "Архивы истории буфера обмена"
 
 #: prefs.js:495
 msgid "Export"
-msgstr ""
+msgstr "Экспорт"
 
 #: prefs.js:495
 msgid "Import"
-msgstr ""
+msgstr "Импорт"
 
 #: prefs.js:540
-#, fuzzy
 msgid "Clipboard history is empty"
 msgstr "Буфер обмена пуст"
 
 #: prefs.js:549
-#, fuzzy
 msgid "Clipboard history exported"
-msgstr "История буфера обмена очищена"
+msgstr "Буфер обмена экспортирован"
 
 #: prefs.js:576
-#, fuzzy
 msgid "The selected file is not a clipboard history archive"
-msgstr "Скопировано в буфер обмена"
+msgstr "Выбранный файл не является историей буфера обмена"
 
 #: prefs.js:592
-#, fuzzy
 msgid "Clipboard history imported"
-msgstr "История буфера обмена очищена"
+msgstr "История буфера импортирована"
 
 #: prefs.js:597
 msgid "Icon"
@@ -559,15 +538,15 @@ msgstr "Ввести горячие клавиши"
 
 #: prefs.js:740
 msgid "Window class name, e.g. \"KeePassXC\""
-msgstr ""
+msgstr "Имя класса окна, например, \"KeePassXC\""
 
 #: prefs.js:752
 msgid "Choose from installed applications"
-msgstr ""
+msgstr "Выбрать приложение из установленных"
 
 #: prefs.js:769
 msgid "Search applications..."
-msgstr ""
+msgstr "Поиск приложений"
 
 #~ msgid "Text will be here"
 #~ msgstr "Текст будет здесь"
