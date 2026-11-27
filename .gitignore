@@ -1,3 +1,6 @@
 *.zip
 
 .idea/
+
+# forkhub draft
+.forkhub-draft.md
