@@ -20,6 +20,8 @@ import { Keyboard } from './keyboard.js';
 import { boxLayoutOrientation } from './compat.js';
 
 const CLIPBOARD_TYPE = St.ClipboardType.CLIPBOARD;
+// How long to wait for the clipboard owner to answer a single read request.
+const CLIPBOARD_READ_TIMEOUT_MS = 5000;
 
 const INDICATOR_ICON = 'edit-paste-symbolic';
 
@@ -86,7 +88,11 @@ export default class ClipboardIndicatorExtension extends Extension {
 const ClipboardIndicator = GObject.registerClass({
     GTypeName: 'ClipboardIndicator'
 }, class ClipboardIndicator extends PanelMenu.Button {
-    #refreshInProgress = false;
+    // Incremented on every clipboard change; a refresh whose generation is no
+    // longer current has been superseded and must not touch the history.
+    #refreshGeneration = 0;
+    // Settle functions of clipboard reads still waiting for an answer.
+    #pendingReads = new Set();
     #_imagePreviewOverlay = null;
     #moveFirstOnClose = [];
     #moveFirstClosedId = 0;
@@ -99,6 +105,7 @@ const ClipboardIndicator = GObject.registerClass({
         this._disconnectSelectionListener();
         this._clearDelayedSelectionTimeout();
         this.#clearTimeouts();
+        this.#cancelPendingReads();
         this.#closeImagePreview();
         this._removeHistoryLabel();
         this._destroyNotifSource();
@@ -1056,12 +1063,15 @@ const ClipboardIndicator = GObject.registerClass({
 
         if (wmClass && EXCLUDED_APPS.includes(wmClass)) return; // Excluded app, do not.
 
-        if (this.#refreshInProgress) return;
-        this.#refreshInProgress = true;
+        // Never drop a clipboard change because an earlier read is still
+        // pending: some apps (e.g. flameshot on GNOME Wayland) exit right after
+        // the compositor fetches their data, so our read is never answered.
+        // A newer change supersedes the stale refresh instead.
+        const generation = ++this.#refreshGeneration;
 
         try {
-            const result = await this.#getClipboardContent();
-            if (this._destroyed) {
+            const result = await this.#getClipboardContent(generation);
+            if (this._destroyed || generation !== this.#refreshGeneration) {
                 return;
             }
 
@@ -1092,9 +1102,6 @@ const ClipboardIndicator = GObject.registerClass({
         catch (e) {
             console.error('Clipboard Indicator: Failed to refresh indicator');
             console.error(e);
-        }
-        finally {
-            this.#refreshInProgress = false;
         }
     }
 
@@ -1998,7 +2005,57 @@ const ClipboardIndicator = GObject.registerClass({
         this.#updateIndicatorContent(entry);
     }
 
-    async #getClipboardContent () {
+    #cancelPendingReads () {
+        for (const settle of [...this.#pendingReads])
+            settle(null);
+    }
+
+    // Reads one mimetype. Resolves to a ClipboardEntry, to null when the owner
+    // has no data for that type, or to undefined when the owner never
+    // answered. St.Clipboard.get_content() has no timeout of its own: if the
+    // owning app exits or hangs mid-request, the callback is never called.
+    #readClipboard (type) {
+        return new Promise(resolve => {
+            let timeoutId = null;
+            const settle = value => {
+                if (!this.#pendingReads.delete(settle))
+                    return;
+                if (timeoutId !== null)
+                    clearTimeout(timeoutId);
+                timeoutId = null;
+                resolve(value);
+            };
+            this.#pendingReads.add(settle);
+            timeoutId = setTimeout(() => {
+                timeoutId = null;
+                settle(undefined);
+            }, CLIPBOARD_READ_TIMEOUT_MS);
+
+            this.extension.clipboard.get_content(CLIPBOARD_TYPE, type, (clipBoard, bytes) => {
+                if (!this.#pendingReads.has(settle))
+                    return; // timed out or destroyed meanwhile
+
+                if (bytes === null || bytes.get_size() === 0) {
+                    settle(null);
+                    return;
+                }
+
+                // HACK: workaround for GNOME 2nd+ copy mangling mimetypes https://gitlab.gnome.org/GNOME/gnome-shell/-/issues/8233
+                // In theory GNOME or XWayland should auto-convert this back to UTF8_STRING for legacy apps when it's needed https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/5300
+                if (type === "UTF8_STRING") {
+                    type = "text/plain;charset=utf-8";
+                }
+
+                const entry = new ClipboardEntry(type, bytes.get_data(), false);
+                if (CACHE_IMAGES && entry.isImage()) {
+                    this.registry.writeEntryFile(entry);
+                }
+                settle(entry);
+            });
+        });
+    }
+
+    async #getClipboardContent (generation) {
         const mimetypes = [
             "text/plain;charset=utf-8",
             "UTF8_STRING",
@@ -2014,24 +2071,18 @@ const ClipboardIndicator = GObject.registerClass({
         ];
 
         for (let type of mimetypes) {
-            let result = await new Promise(resolve => this.extension.clipboard.get_content(CLIPBOARD_TYPE, type, (clipBoard, bytes) => {
-                if (bytes === null || bytes.get_size() === 0) {
-                    resolve(null);
-                    return;
-                }
+            // Stop probing once a newer clipboard change has superseded us.
+            if (this._destroyed ||
+                (generation !== undefined && generation !== this.#refreshGeneration)) {
+                return null;
+            }
 
-                // HACK: workaround for GNOME 2nd+ copy mangling mimetypes https://gitlab.gnome.org/GNOME/gnome-shell/-/issues/8233
-                // In theory GNOME or XWayland should auto-convert this back to UTF8_STRING for legacy apps when it's needed https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/5300
-                if (type === "UTF8_STRING") {
-                    type = "text/plain;charset=utf-8";
-                }
+            const result = await this.#readClipboard(type);
 
-                const entry = new ClipboardEntry(type, bytes.get_data(), false);
-                if (CACHE_IMAGES && entry.isImage()) {
-                    this.registry.writeEntryFile(entry);
-                }
-                resolve(entry);
-            }));
+            // The owner never answered; it will not answer the next type either.
+            if (result === undefined) {
+                return null;
+            }
 
             if (result) {
                 if (!CACHE_IMAGES && result.isImage()) {
