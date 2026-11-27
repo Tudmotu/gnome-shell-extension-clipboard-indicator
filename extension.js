@@ -1999,6 +1999,7 @@ const ClipboardIndicator = GObject.registerClass({
     }
 
     async #getClipboardContent () {
+        const TRANSFER_TIMED_OUT = Symbol('clipboard-transfer-timed-out');
         const mimetypes = [
             "text/plain;charset=utf-8",
             "UTF8_STRING",
@@ -2014,24 +2015,39 @@ const ClipboardIndicator = GObject.registerClass({
         ];
 
         for (let type of mimetypes) {
-            let result = await new Promise(resolve => this.extension.clipboard.get_content(CLIPBOARD_TYPE, type, (clipBoard, bytes) => {
-                if (bytes === null || bytes.get_size() === 0) {
-                    resolve(null);
-                    return;
-                }
+            let result = await new Promise(resolve => {
+                // A vanished selection owner never fires the callback; resolve a sentinel so #refreshInProgress cannot wedge permanently
+                let timeoutId = setTimeout(() => {
+                    timeoutId = null;
+                    resolve(TRANSFER_TIMED_OUT);
+                }, 5000);
+                this.extension.clipboard.get_content(CLIPBOARD_TYPE, type, (clipBoard, bytes) => {
+                    if (timeoutId === null) return;
+                    clearTimeout(timeoutId);
+                    timeoutId = null;
+                    if (bytes === null || bytes.get_size() === 0) {
+                        resolve(null);
+                        return;
+                    }
 
-                // HACK: workaround for GNOME 2nd+ copy mangling mimetypes https://gitlab.gnome.org/GNOME/gnome-shell/-/issues/8233
-                // In theory GNOME or XWayland should auto-convert this back to UTF8_STRING for legacy apps when it's needed https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/5300
-                if (type === "UTF8_STRING") {
-                    type = "text/plain;charset=utf-8";
-                }
+                    // HACK: workaround for GNOME 2nd+ copy mangling mimetypes https://gitlab.gnome.org/GNOME/gnome-shell/-/issues/8233
+                    // In theory GNOME or XWayland should auto-convert this back to UTF8_STRING for legacy apps when it's needed https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/5300
+                    if (type === "UTF8_STRING") {
+                        type = "text/plain;charset=utf-8";
+                    }
 
-                const entry = new ClipboardEntry(type, bytes.get_data(), false);
-                if (CACHE_IMAGES && entry.isImage()) {
-                    this.registry.writeEntryFile(entry);
-                }
-                resolve(entry);
-            }));
+                    const entry = new ClipboardEntry(type, bytes.get_data(), false);
+                    if (CACHE_IMAGES && entry.isImage()) {
+                        this.registry.writeEntryFile(entry);
+                    }
+                    resolve(entry);
+                });
+            });
+
+            if (result === TRANSFER_TIMED_OUT) {
+                console.error('Clipboard Indicator: clipboard content transfer timed out');
+                return null;
+            }
 
             if (result) {
                 if (!CACHE_IMAGES && result.isImage()) {
